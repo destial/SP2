@@ -10,17 +10,6 @@
 #include "LoadTGA.h"
 
 #include "Scene.h"
-#include "Scene1.h"
-#include "Scene2.h"
-#include "Scene4.h"
-#include "Scene5.h"
-#include "SceneLight.h"
-#include "SceneLight2.h"
-#include "AssignmentScene.h"
-#include "Scene9.h"
-#include "SceneSkybox.h"
-#include "SceneModel.h"
-#include "SceneText.h"
 #include "AssignmentScene2.h"
 #include "SceneUI.h"
 

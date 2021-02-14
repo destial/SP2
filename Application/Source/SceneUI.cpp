@@ -167,7 +167,7 @@ void SceneUI::Update(double dt, Mouse mouse) {
 
 	Render();
 
-	RenderTextOnScreen(meshList[GEO_TEXT], "203344W - A02", WHITE, 4, 5, 55);
+	RenderTextOnScreen(meshList[GEO_TEXT], "SP2 - Group 2", WHITE, 4, 5, 55);
 	RenderImageOnScreen(meshList[GEO_BUTTON], 10, 40, 40);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Play", BLACK, 4, 38, 38);
 

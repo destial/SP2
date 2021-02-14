@@ -10,7 +10,6 @@
 #include "LoadTGA.h"
 
 #include "Scene.h"
-#include "AssignmentScene2.h"
 #include "SceneUI.h"
 
 const unsigned char FPS = 120; // FPS of this game
@@ -223,9 +222,7 @@ void Application::Run() {
 	//Main Loop
 	Scene* scene;
 	Scene *scene1 = new SceneUI();
-	Scene* scene2 = new AssignmentScene2();
 	scene1->Init();
-	scene2->Init();
 	scene = scene1;
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window)) {// && !IsKeyPressed(VK_ESCAPE)) {
@@ -240,10 +237,7 @@ void Application::Run() {
 				float posY = (y / m_height) * 60;
 				//Application::log(("(" + std::to_string(posX) + ", " + std::to_string(posY) + ")"));
 				if (posX >= 35 && posX <= 45 && posY <= 22 && posY >= 17) {
-					if (scene == scene1) {
-						scene = scene2;
-						toggleState();
-					}
+
 				} else if (posX >= 35 && posX <= 45 && posY <= 52 && posY >= 47) {
 					if (scene == scene1) {
 						break;
@@ -255,9 +249,6 @@ void Application::Run() {
 		if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
 			if (state == GAME) {
 				scene = scene1;
-				toggleState();
-			} else if (state == MENU) {
-				scene = scene2;
 				toggleState();
 			}
 		}
@@ -273,9 +264,7 @@ void Application::Run() {
 
 	} //Check if the ESC key had been pressed or if the window had been closed
 	scene1->Exit();
-	scene2->Exit();
 	delete scene1;
-	delete scene2;
 }
 
 void Application::Exit() {

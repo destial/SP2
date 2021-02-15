@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Material.h"
+#include "Vector3.h"
 #include <vector>
 
 /******************************************************************************/
@@ -20,6 +21,14 @@ public:
 		DRAW_TRIANGLE_STRIP,
 		DRAW_LINES,
 		DRAW_MODE_LAST,
+	};
+	enum CORNER
+	{
+		C1 = 0,
+		C2,
+		C3,
+		C4,
+		TOTAL_CORNERS
 	};
 	Mesh(const std::string& meshName);
 	~Mesh();
@@ -42,6 +51,8 @@ public:
 	unsigned textureID;
 	unsigned defaultID;
 	unsigned fakeID;
+	Vector3 centre;
+	Vector3 corner[TOTAL_CORNERS];
 };
 
 #endif

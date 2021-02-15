@@ -397,15 +397,9 @@ void OverworldScene::GetInCar() {
 		for (unsigned car = TRUCK1; car < NUM_CAR; car++) {
 			if (meshList[car]) {
 				if (isNear(meshList[car])) {
-					switch (car) {
-					case TRUCK1:
-						RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", WHITE, 4, 3, 7);
-						if (Application::IsKeyPressedOnce('F')) {
-							currentCar = meshList[TRUCK1];
-						}
-						break;
-					default:
-						break;
+					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", WHITE, 4, 3, 7);
+					if (Application::IsKeyPressedOnce('F')) {
+						currentCar = meshList[TRUCK1];
 					}
 				}
 			}

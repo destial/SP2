@@ -10,8 +10,7 @@
 \brief	Provides methods to generate mesh of different shapes
 */
 /******************************************************************************/
-class MeshBuilder
-{
+class MeshBuilder {
 public:
 	static Mesh* GenerateAxes(const std::string& meshName, float lengthX, float lengthY, float lengthZ);
 	static Mesh* GenerateQuad(const std::string& meshName, Color color, float size);
@@ -29,6 +28,7 @@ public:
 	static Mesh* GenerateText(const std::string& meshName, unsigned numRow, unsigned numCol);
 	static Mesh* GenerateOBJMTL(const std::string& meshName, const std::string& file_path, const std::string& mtl_path);
 	static Mesh* GenerateSkybox(const std::string& meshName, Color color, float lengthX, float lengthY);
+	static Mesh* GenerateGround(const std::string& meshName, Color color, float size, unsigned texturesuze);
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <string>
 #include "Material.h"
 #include "Vector3.h"
+#include "Vertex.h"
 #include <vector>
 
 /******************************************************************************/
@@ -21,6 +22,11 @@ public:
 		DRAW_TRIANGLE_STRIP,
 		DRAW_LINES,
 		DRAW_MODE_LAST,
+	};
+	enum TYPE {
+		IMAGE,
+		OBJECT,
+		TEXT
 	};
 	enum CORNER
 	{
@@ -51,7 +57,8 @@ public:
 	unsigned textureID;
 	unsigned defaultID;
 	unsigned fakeID;
-	Vector3 centre;
+	unsigned type;
+	Transform transform;
 	Vector3 corner[TOTAL_CORNERS];
 };
 

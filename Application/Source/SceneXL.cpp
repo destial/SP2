@@ -153,8 +153,13 @@ void SceneXL::Init()
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//bluecloud_rt.tga");
 
+	meshList[GEO_FLOORFUTURE] = MeshBuilder::GenerateQuad("floor",
+		Color(1, 1, 1), 50.1f);
+	meshList[GEO_FLOORFUTURE]->textureID = LoadTGA("Image//floorfuture.tga");
+
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+
 }
 
 void SceneXL::RenderMesh(Mesh* mesh, bool enableLight)
@@ -427,8 +432,15 @@ void SceneXL::Render()
 	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
 	modelStack.Scale(4.5, 4.5, 4.5);
 	RenderSkybox();
-	modelStack.PopMatrix();
+	modelStack.PopMatrix(); //skybox
 
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	//modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_FLOORFUTURE], false);
+	modelStack.PopMatrix();
 
 }
 

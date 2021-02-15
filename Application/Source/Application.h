@@ -34,8 +34,12 @@ public:
 	void Exit();
 	enum SCENES
 	{
-		SCENEHOUSEINSIDE,
-		SCENEOUTSIDE,
+		SCENESHAQ,
+		SCENEWALTON,
+		SCENERYAN,
+		SCENEXL,
+		SCENERANCE,
+		OVERWORLD,
 		TOTALSCENES,
 	};
 	static bool IsKeyPressed(unsigned short key);

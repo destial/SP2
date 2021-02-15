@@ -28,15 +28,12 @@ Mesh* MeshBuilder::GenerateAxes(const std::string& meshName, float lengthX, floa
 
 	v.pos.Set(-10.0f * lengthX, 0.0f * lengthY, 0.0f * lengthZ); v.color.Set(1, 0, 0); vertex_buffer_data.push_back(v);
 	v.pos.Set(10.0f * lengthX, 0.0f * lengthY, 0.0f * lengthZ); v.color.Set(1, 0, 0); vertex_buffer_data.push_back(v);
-	v.pos.Set(0.0f * lengthX, 0.0f * lengthY, 0.0f * lengthZ); v.color.Set(0, 1, 0); vertex_buffer_data.push_back(v);
 
 	v.pos.Set(0.0f * lengthX, -10.0f * lengthY, 0.0f * lengthZ); v.color.Set(0, 1, 0); vertex_buffer_data.push_back(v);
 	v.pos.Set(0.0f * lengthX, 10.0f * lengthY, 0.0f * lengthZ); v.color.Set(0, 1, 0); vertex_buffer_data.push_back(v);
-	v.pos.Set(0.0f * lengthX, 0.0f * lengthY, 0.0f * lengthZ); v.color.Set(0, 1, 0); vertex_buffer_data.push_back(v);
 
 	v.pos.Set(0.0f * lengthX, 0.0f * lengthY, -10.0f * lengthZ); v.color.Set(0, 0, 1); vertex_buffer_data.push_back(v);
 	v.pos.Set(0.0f * lengthX, 0.0f * lengthY, 10.0f * lengthZ); v.color.Set(0, 0, 1); vertex_buffer_data.push_back(v);
-	v.pos.Set(0.0f * lengthX, 0.0f * lengthY, 0.0f * lengthZ); v.color.Set(0, 0, 1); vertex_buffer_data.push_back(v);
 
 
 	for (int i = 0; i < 9; i++)
@@ -97,6 +94,71 @@ Mesh* MeshBuilder::GenerateSkybox(const std::string& meshName, Color color, floa
 	mesh->indexSize = index_buffer_data.size();
 	mesh->mode = Mesh::DRAW_TRIANGLE_STRIP;
 
+	return mesh;
+}
+
+Mesh* MeshBuilder::GenerateGround(const std::string& meshName, Color color, float size, unsigned texturesize) {
+	Vertex v;
+	Mesh* mesh = new Mesh(meshName);
+
+	std::vector<Vertex> vertex_buffer_data;
+	std::vector<unsigned> index_buffer_data;
+
+	float s = 1 * size;
+
+	v.pos.Set(s, 0, s);
+	mesh->corner[Mesh::C1] = Vector3(s, 0, s);
+	v.texCoord.Set(texturesize, 0);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	v.pos.Set(-s, 0, s);
+	mesh->corner[Mesh::C2] = Vector3(-s, 0, s);
+	v.texCoord.Set(0, 0);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	v.pos.Set(-s, 0.f, -s);
+	mesh->corner[Mesh::C3] = Vector3(-s, 0, -s);
+	v.texCoord.Set(0, texturesize);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	v.pos.Set(s, 0, s);
+	v.texCoord.Set(texturesize, 0);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	v.pos.Set(-s, 0, -s);
+	v.texCoord.Set(0, texturesize);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	v.pos.Set(s, 0, -s);
+	mesh->corner[Mesh::C4] = Vector3(s, 0, -s);
+	v.texCoord.Set(texturesize, texturesize);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	for (int i = 0; i < 6; i++) {
+		index_buffer_data.push_back(i);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, vertex_buffer_data.size() * sizeof(Vertex), &vertex_buffer_data[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->indexBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_data.size() * sizeof(GLuint), &index_buffer_data[0], GL_STATIC_DRAW);
+
+	mesh->mode = Mesh::DRAW_MODE::DRAW_TRIANGLES;
+	mesh->indexSize = index_buffer_data.size();
+	mesh->type = Mesh::TYPE::OBJECT;
 	return mesh;
 }
 
@@ -176,6 +238,7 @@ Mesh* MeshBuilder::GenerateQuad(const std::string& meshName, Color color, float 
 
 	mesh->mode = Mesh::DRAW_MODE::DRAW_TRIANGLES;
 	mesh->indexSize = index_buffer_data.size();
+	mesh->type = Mesh::TYPE::IMAGE;
 	return mesh;
 }
 
@@ -266,6 +329,7 @@ Mesh* MeshBuilder::GenerateCube(const std::string& meshName, float lengthX, floa
 
 	mesh->mode = Mesh::DRAW_TRIANGLES;
 	mesh->indexSize = 36;
+	mesh->type = Mesh::TYPE::OBJECT;
 	return mesh;
 }
 
@@ -323,6 +387,7 @@ Mesh* MeshBuilder::GenerateSphere(const std::string& meshName, Color color, unsi
 
 	mesh->indexSize = index_buffer_data.size();
 	mesh->mode = Mesh::DRAW_TRIANGLE_STRIP;
+	mesh->type = Mesh::TYPE::OBJECT;
 
 	return mesh;
 }
@@ -361,6 +426,7 @@ Mesh* MeshBuilder::GenerateCircle(const std::string& meshName, Color color, unsi
 
 	mesh->indexSize = index_buffer_data.size();
 	mesh->mode = Mesh::DRAW_TRIANGLE_STRIP;
+	mesh->type = Mesh::TYPE::IMAGE;
 
 	return mesh;
 }
@@ -396,6 +462,7 @@ Mesh* MeshBuilder::GenerateRing(const std::string& meshName, Color color, float 
 
 	mesh->mode = Mesh::DRAW_TRIANGLE_STRIP;
 	mesh->indexSize = 720;
+	mesh->type = Mesh::TYPE::IMAGE;
 	return mesh;
 }
 
@@ -439,6 +506,7 @@ Mesh* MeshBuilder::GenerateHemisphere(const std::string& meshName, Color color, 
 
 	mesh->mode = Mesh::DRAW_TRIANGLE_STRIP;
 	mesh->indexSize = index_buffer_data.size();
+	mesh->type = Mesh::TYPE::OBJECT;
 
 	return mesh;
 }
@@ -515,6 +583,7 @@ Mesh* MeshBuilder::GenerateCylinder(const std::string& meshName, Color color, fl
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_data.size() * sizeof(GLuint), &index_buffer_data[0], GL_STATIC_DRAW);
 	mesh->mode = Mesh::DRAW_MODE::DRAW_TRIANGLE_STRIP;
 	mesh->indexSize = index_buffer_data.size();
+	mesh->type = Mesh::TYPE::OBJECT;
 	return mesh;
 }
 
@@ -571,6 +640,7 @@ Mesh* MeshBuilder::GeneratehemiSphereWithCircle(const std::string& meshName, Col
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_data.size() * sizeof(GLuint), &index_buffer_data[0], GL_STATIC_DRAW);
 	mesh->mode = Mesh::DRAW_MODE::DRAW_TRIANGLE_STRIP;
 	mesh->indexSize = index_buffer_data.size();
+	mesh->type = Mesh::TYPE::OBJECT;
 	return mesh;
 }
 
@@ -633,6 +703,7 @@ Mesh* MeshBuilder::GenerateCone(const std::string& meshName, Color color, float 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_data.size() * sizeof(GLuint), &index_buffer_data[0], GL_STATIC_DRAW);
 	mesh->mode = Mesh::DRAW_MODE::DRAW_TRIANGLE_STRIP;
 	mesh->indexSize = index_buffer_data.size();
+	mesh->type = Mesh::TYPE::OBJECT;
 	return mesh;
 }
 
@@ -673,6 +744,7 @@ Mesh* MeshBuilder::GenerateTorus(const std::string& meshName, unsigned numStack,
 		&index_buffer_data[0], GL_STATIC_DRAW);;
 	mesh->mode = Mesh::DRAW_TRIANGLE_STRIP;
 	mesh->indexSize = 1800;
+	mesh->type = Mesh::TYPE::OBJECT;
 	return mesh;
 }
 
@@ -759,6 +831,7 @@ Mesh* MeshBuilder::GeneratePyramid(const std::string& meshName, Color color, flo
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_data.size() * sizeof(GLuint), &index_buffer_data[0], GL_STATIC_DRAW);
 	mesh->mode = Mesh::DRAW_MODE::DRAW_TRIANGLES;
 	mesh->indexSize = index_buffer_data.size();
+	mesh->type = Mesh::TYPE::OBJECT;
 	return mesh;
 }
 
@@ -787,6 +860,7 @@ Mesh* MeshBuilder::GenerateOBJ(const std::string& meshName, const std::string& f
 
 	mesh->mode = Mesh::DRAW_TRIANGLES;
 	mesh->indexSize = index_buffer_data.size();
+	mesh->type = Mesh::TYPE::OBJECT;
 	return mesh;
 }
 
@@ -831,6 +905,7 @@ Mesh* MeshBuilder::GenerateText(const std::string& meshName, unsigned numRow, un
 
 	mesh->mode = Mesh::DRAW_TRIANGLES;
 	mesh->indexSize = index_buffer_data.size();
+	mesh->type = Mesh::TYPE::TEXT;
 
 	return mesh;
 }
@@ -865,7 +940,6 @@ Mesh* MeshBuilder::GenerateOBJMTL(const std::string& meshName, const std::string
 
 	mesh->indexSize = index_buffer_data.size();
 	mesh->mode = Mesh::DRAW_MODE::DRAW_TRIANGLES;
+	mesh->type = Mesh::TYPE::OBJECT;
 	return mesh;
 }
-
-

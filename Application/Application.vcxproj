@@ -31,6 +31,7 @@
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\SceneLight.cpp" />
     <ClCompile Include="Source\SceneHouseInside.cpp" />
+    <ClCompile Include="Source\SceneShaq.cpp" />
     <ClCompile Include="Source\SceneText.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\TemplateScene.cpp" />
@@ -51,6 +52,7 @@
     <ClInclude Include="Source\SceneLight.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneHouseInside.h" />
+    <ClInclude Include="Source\SceneShaq.h" />
     <ClInclude Include="Source\SceneText.h" />
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\TemplateScene.h" />

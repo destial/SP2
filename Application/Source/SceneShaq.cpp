@@ -1,4 +1,4 @@
-#include "TemplateScene.h"
+#include "SceneShaq.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -8,11 +8,11 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-TemplateScene::TemplateScene() {}
+SceneShaq::SceneShaq() {}
 
-TemplateScene::~TemplateScene() {}
+SceneShaq::~SceneShaq() {}
 
-void TemplateScene::Init()
+void SceneShaq::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
@@ -129,6 +129,12 @@ void TemplateScene::Init()
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
+
+	meshList[GEO_QUAD1] = MeshBuilder::GenerateQuad("quad1", Color(1, 0, 0), 1.f);
+	meshList[GEO_QUAD1]->textureID = LoadTGA("Image//RoadTopDown.tga");
+
+	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad2", Color(1.6, 0.82, 0.45), 1.f);
+
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//bluecloud_bk.tga");
@@ -157,7 +163,7 @@ void TemplateScene::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 }
 
-void TemplateScene::RenderMesh(Mesh* mesh, bool enableLight)
+void SceneShaq::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -199,7 +205,7 @@ void TemplateScene::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void TemplateScene::RenderText(Mesh* mesh, std::string text, Color color)
+void SceneShaq::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -226,7 +232,7 @@ void TemplateScene::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void TemplateScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void SceneShaq::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -268,7 +274,7 @@ void TemplateScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color
 	glEnable(GL_DEPTH_TEST);
 }
 
-void TemplateScene::Update(double dt, Mouse mouse) {
+void SceneShaq::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 
@@ -281,16 +287,30 @@ void TemplateScene::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
+	static const float LSPEED = 40.f;
+	if (Application::IsKeyPressed('I'))
+		light[0].position.z -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('K'))
+		light[0].position.z += (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('J'))
+		light[0].position.x -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('L'))
+		light[0].position.x += (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('O'))
+		light[0].position.y -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('P'))
+		light[0].position.y += (float)(LSPEED * dt);
+
 	camera.Update(dt, mouse);
 }
 
-void TemplateScene::Update(double dt)
+void SceneShaq::Update(double dt)
 {
 	Mouse mouse;
 	Update(dt, mouse);
 }
 
-void TemplateScene::RenderSkybox() {
+void SceneShaq::RenderSkybox() {
 	float translate = 50;
 	float scaleVal = (translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
@@ -337,7 +357,7 @@ void TemplateScene::RenderSkybox() {
 	modelStack.PopMatrix();
 }
 
-void TemplateScene::Render()
+void SceneShaq::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -394,10 +414,25 @@ void TemplateScene::Render()
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -2, 0);
+	modelStack.Scale(10, 10, 20);
+	RenderMesh(meshList[GEO_QUAD1], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -2.02, 0);
+	modelStack.Scale(20, 20, 20);
+	RenderMesh(meshList[GEO_QUAD2], true);
+	modelStack.PopMatrix();
+
+
+
 	//RenderSkybox();
 }
 
-void TemplateScene::Exit() {
+void SceneShaq::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}

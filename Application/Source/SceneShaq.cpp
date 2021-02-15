@@ -12,7 +12,7 @@ SceneShaq::SceneShaq() {}
 
 SceneShaq::~SceneShaq() {}
 
-void SceneShaq::Init() // new change
+void SceneShaq::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
@@ -32,7 +32,7 @@ void SceneShaq::Init() // new change
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(-1, 6, -1), Vector3(0, 5, 0), Vector3(0, 1, 0), (float)50); //
+	camera.Init(Vector3(-1, 6, -1), Vector3(0, 5, 0), Vector3(0, 1, 0),(float)50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -129,12 +129,6 @@ void SceneShaq::Init() // new change
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
-
-	meshList[GEO_QUAD1] = MeshBuilder::GenerateQuad("quad1", Color(1, 0, 0), 1.f);
-	meshList[GEO_QUAD1]->textureID = LoadTGA("Image//RoadTopDown.tga");
-
-	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad2", Color(1.6, 0.82, 0.45), 1.f);
-
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//bluecloud_bk.tga");
@@ -287,20 +281,6 @@ void SceneShaq::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
-	static const float LSPEED = 40.f;
-	if (Application::IsKeyPressed('I'))
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('P'))
-		light[0].position.y += (float)(LSPEED * dt);
-
 	camera.Update(dt, mouse);
 }
 
@@ -414,21 +394,6 @@ void SceneShaq::Render()
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, -2, 0);
-	modelStack.Scale(10, 10, 20);
-	RenderMesh(meshList[GEO_QUAD1], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, -2.02, 0);
-	modelStack.Scale(20, 20, 20);
-	RenderMesh(meshList[GEO_QUAD2], true);
-	modelStack.PopMatrix();
-
-
-
 	//RenderSkybox();
 }
 

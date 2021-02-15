@@ -1,4 +1,4 @@
-#include "SceneShaq.h"
+#include "TemplateScene.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -8,11 +8,11 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneShaq::SceneShaq() {}
+TemplateScene::TemplateScene() {}
 
-SceneShaq::~SceneShaq() {}
+TemplateScene::~TemplateScene() {}
 
-void SceneShaq::Init()
+void TemplateScene::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
@@ -157,7 +157,7 @@ void SceneShaq::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 }
 
-void SceneShaq::RenderMesh(Mesh* mesh, bool enableLight)
+void TemplateScene::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -199,7 +199,7 @@ void SceneShaq::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void SceneShaq::RenderText(Mesh* mesh, std::string text, Color color)
+void TemplateScene::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -226,7 +226,7 @@ void SceneShaq::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneShaq::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void TemplateScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -268,7 +268,7 @@ void SceneShaq::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneShaq::Update(double dt, Mouse mouse) {
+void TemplateScene::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 
@@ -284,13 +284,13 @@ void SceneShaq::Update(double dt, Mouse mouse) {
 	camera.Update(dt, mouse);
 }
 
-void SceneShaq::Update(double dt)
+void TemplateScene::Update(double dt)
 {
 	Mouse mouse;
 	Update(dt, mouse);
 }
 
-void SceneShaq::RenderSkybox() {
+void TemplateScene::RenderSkybox() {
 	float translate = 50;
 	float scaleVal = (translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
@@ -337,7 +337,7 @@ void SceneShaq::RenderSkybox() {
 	modelStack.PopMatrix();
 }
 
-void SceneShaq::Render()
+void TemplateScene::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -397,7 +397,7 @@ void SceneShaq::Render()
 	//RenderSkybox();
 }
 
-void SceneShaq::Exit() {
+void TemplateScene::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}

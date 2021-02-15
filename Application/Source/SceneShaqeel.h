@@ -26,6 +26,11 @@ class SceneShaqeel : public Scene
 		GEO_BUS,
 		GEO_CAR1,
 		GEO_CAR2,
+		GEO_TREE,
+		GEO_BUSH,
+		GEO_BENCH,
+		GEO_CITY1,
+		GEO_CITY2,
 		NUM_GEOMETRY,
 	};
 

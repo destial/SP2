@@ -32,7 +32,7 @@ void TemplateScene::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(-1, 6, -1), Vector3(0, 5, 0), Vector3(0, 1, 0));
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0));
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -129,29 +129,23 @@ void TemplateScene::Init()
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
-	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front",
-		Color(1, 1, 1), 50.1f);
-	meshList[GEO_FRONT]->textureID = LoadTGA("Image//bluecloud_bk.tga");
+	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", WHITE, 1.f);
+	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
-	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back",
-		Color(1, 1, 1), 50.1f);
-	meshList[GEO_BACK]->textureID = LoadTGA("Image//bluecloud_ft.tga");
+	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", WHITE, 1.f);
+	meshList[GEO_BACK]->textureID = LoadTGA("Image//back-space.tga");
 
-	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top",
-		Color(1, 1, 1), 50.1f);
-	meshList[GEO_TOP]->textureID = LoadTGA("Image//bluecloud_dn.tga");
+	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", WHITE, 1.f);
+	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right-space.tga");
 
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom",
-		Color(1, 1, 1), 50.1f);
-	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bluecloud_up.tga");
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", WHITE, 1.f);
+	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left-space.tga");
 
-	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left",
-		Color(1, 1, 1), 50.1f);
-	meshList[GEO_LEFT]->textureID = LoadTGA("Image//bluecloud_lf.tga");
+	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", WHITE, 1.f);
+	meshList[GEO_TOP]->textureID = LoadTGA("Image//top-space.tga");
 
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right",
-		Color(1, 1, 1), 50.1f);
-	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//bluecloud_rt.tga");
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", WHITE, 1.f);
+	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -268,6 +262,39 @@ void TemplateScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color
 	glEnable(GL_DEPTH_TEST);
 }
 
+void TemplateScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
+	if (!mesh || mesh->textureID <= 0) //Proper error check
+		return;
+
+	glDisable(GL_DEPTH_TEST);
+	Mtx44 ortho;
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
+	projectionStack.PushMatrix();
+	projectionStack.LoadMatrix(ortho);
+	viewStack.PushMatrix();
+	viewStack.LoadIdentity(); //No need camera for ortho mode
+	modelStack.PushMatrix();
+	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.Translate(x, y, 0);
+	modelStack.Scale(size, size, size);
+
+	glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
+	glUniform1i(m_parameters[U_LIGHTENABLED], 0);
+	glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
+	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+	mesh->Render();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
+	projectionStack.PopMatrix();
+	viewStack.PopMatrix();
+	modelStack.PopMatrix();
+	glEnable(GL_DEPTH_TEST);
+}
+
 void TemplateScene::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -342,40 +369,33 @@ void TemplateScene::Render()
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	if (light[0].type == Light::LIGHT_DIRECTIONAL)
-	{
+	if (light[0].type == Light::LIGHT_DIRECTIONAL) {
 		Vector3 lightDir(light[0].position.x, light[0].position.y, light[0].position.z);
 		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
+
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_cameraspace.x);
-	}
-	else if (light[0].type == Light::LIGHT_SPOT)
-	{
+	} else if (light[0].type == Light::LIGHT_SPOT) {
 		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
+
 		Vector3 spotDirection_cameraspace = viewStack.Top() * light[0].spotDirection;
 		glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	}
-	else
-	{
+	} else {
 		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
+		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
 	}
 
-	if (light[1].type == Light::LIGHT_DIRECTIONAL)
-	{
+	if (light[1].type == Light::LIGHT_DIRECTIONAL) {
 		Vector3 lightDir(light[1].position.x, light[1].position.y, light[1].position.z);
 		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
 		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
-	}
-	else if (light[1].type == Light::LIGHT_SPOT)
-	{
+	} else if (light[1].type == Light::LIGHT_SPOT) {
 		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
 		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
+
 		Vector3 spotDirection_cameraspace = viewStack.Top() * light[1].spotDirection;
 		glUniform3fv(m_parameters[U_LIGHT1_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	}
-	else
-	{
+	} else {
 		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
 		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
 	}
@@ -394,7 +414,7 @@ void TemplateScene::Render()
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
-	//RenderSkybox();
+	RenderSkybox();
 }
 
 void TemplateScene::Exit() {

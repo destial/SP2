@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "TemplateScene.h"
+#include "SceneShaq.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 120; // FPS of this game
@@ -236,7 +236,7 @@ void toggleState() {
 void Application::Run()
 {
 	//Main Loop
-	scene[SCENEHOUSEINSIDE] = new TemplateScene();
+	scene[SCENEHOUSEINSIDE] = new SceneShaq();
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
 		if (scene[i])
 			scene[i]->Init();

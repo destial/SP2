@@ -48,6 +48,9 @@
     <ClCompile Include="Source\SceneShaq.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Source\SceneXL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

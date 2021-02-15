@@ -238,7 +238,7 @@ void toggleState() {
 void Application::Run()
 {
 	//Main Loop
-	scene[SCENEHOUSEINSIDE] = new SceneW();
+	scene[SCENEHOUSEINSIDE] = new SceneShaqeel();
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
 		if (scene[i])
 			scene[i]->Init();

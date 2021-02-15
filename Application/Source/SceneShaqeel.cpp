@@ -319,6 +319,16 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 
 	translateTruckZ += (float)(5 * dt);
 
+	if (translateTruckZ >= 30)
+	{
+		truckRespawn = true;
+	}
+
+	if (truckRespawn == true)
+	{
+		translateTruckZ = -30;
+	}
+
 	camera.Update(dt, mouse);
 }
 

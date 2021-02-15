@@ -10,7 +10,7 @@
 //Include the standard C++ headers
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "SceneXL.h"
 #include "TemplateScene.h"
 
 GLFWwindow* m_window;
@@ -236,7 +236,7 @@ void toggleState() {
 void Application::Run()
 {
 	//Main Loop
-	scene[SCENEHOUSEINSIDE] = new TemplateScene();
+	scene[SCENEHOUSEINSIDE] = new SceneXL();
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
 		if (scene[i])
 			scene[i]->Init();

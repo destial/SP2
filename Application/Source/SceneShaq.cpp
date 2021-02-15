@@ -32,7 +32,7 @@ void TemplateScene::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(-1, 6, -1), Vector3(0, 5, 0), Vector3(0, 1, 0));
+	camera.Init(Vector3(-1, 6, -1), Vector3(0, 5, 0), Vector3(0, 1, 0),(float)50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);

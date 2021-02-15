@@ -56,7 +56,7 @@ void SceneLight::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera3.Init(Vector3(4, 3, 3), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	camera3.Init(Vector3(4, 3, 3), Vector3(0, 0, 0), Vector3(0, 1, 0),(float) 50);
 
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", 1, 1, 1);
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);

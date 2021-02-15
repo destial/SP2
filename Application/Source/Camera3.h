@@ -2,6 +2,7 @@
 #define CAMERA_3_H
 
 #include "Camera.h"
+#include "Application.h"
 
 class Camera3 : public Camera
 {
@@ -18,6 +19,7 @@ public:
 	~Camera3();
 	virtual void Init(const Vector3& pos, const Vector3& target, const Vector3& up);
 	virtual void Update(double dt);
+	virtual void Update(double &dt, Mouse& mouse);
 	virtual void Reset();
 	float yaw;
 	float pitch;
@@ -29,6 +31,7 @@ public:
 	bool Collision(float x1, float x2, float z1, float z2);
 private:
 	float getCameraFinal(float pitch); //get the camera's final rotation
+	float jumpFrame;
 };
 
 #endif

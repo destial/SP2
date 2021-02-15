@@ -11,13 +11,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "SceneText.h"
-#include "SceneHouseInside.h"
+#include "TemplateScene.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
-SCENES Application::sceneswitch;
+unsigned Application::sceneswitch;
 //Define an error callback
 static void error_callback(int error, const char* description)
 {
@@ -34,7 +33,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 unsigned Application::m_width;
 unsigned Application::m_height;
-
+unsigned Application::ui_width;
+unsigned Application::ui_height;
+std::set<unsigned short> Application::activeKeys;
+Mouse mouse;
 
 bool Application::IsKeyPressed(unsigned short key)
 {
@@ -51,14 +53,22 @@ void Application::GetCursorPos(double* xpos, double* ypos)
 	glfwGetCursorPos(m_window, xpos, ypos);
 }
 
-int Application::GetWindowWidth()
+unsigned Application::GetWindowWidth()
 {
 	return m_width;
 }
 
-int Application::GetWindowHeight()
+unsigned Application::GetWindowHeight()
 {
 	return m_height;
+}
+
+unsigned Application::GetUIHeight() {
+	return ui_height;
+}
+
+unsigned Application::GetUIWidth() {
+	return ui_width;
 }
 
 Application::Application()
@@ -73,7 +83,74 @@ void resize_callback(GLFWwindow* window, int w, int h)
 {
 	Application::m_width = w;
 	Application::m_height = h;
+	Application::ui_width = w / 10;
+	Application::ui_height = h / 10;
 	glViewport(0, 0, w, h);
+}
+
+void mouse_callback(GLFWwindow* window, double x, double y) {
+	if (x < Application::m_width / 2) {
+		mouse.left = true;
+		mouse.right = false;
+		mouse.x = (Application::m_width / 2) - x;
+	} else if (x > Application::m_width / 2) {
+		mouse.left = false;
+		mouse.right = true;
+		mouse.x = x - (Application::m_width / 2);
+	}
+	if (y < Application::m_height / 2) {
+		mouse.up = true;
+		mouse.down = false;
+		mouse.y = (Application::m_height / 2) - y;
+	} else if (y > Application::m_height / 2) {
+		mouse.up = false;
+		mouse.down = true;
+		mouse.y = y - (Application::m_height / 2);
+	}
+}
+
+static void scroll_callback(GLFWwindow* window, double nan, double offSet) {
+	mouse.scroll = offSet;
+}
+
+bool Application::IsMousePressedOnce(unsigned short key) {
+	std::pair<std::set<unsigned short>::iterator, bool> ret;
+	if (glfwGetMouseButton(m_window, key) != 0) {
+		ret = activeKeys.insert(key);
+		if (!ret.second) {
+			return false;
+		} else {
+			if (key == 0) {
+				mouse.rightclick = false;
+				mouse.leftclick = true;
+			} else if (key == 1) {
+				mouse.leftclick = false;
+				mouse.rightclick = true;
+			}
+			return true;
+		}
+	} else {
+		activeKeys.erase(key);
+		return false;
+	}
+}
+
+bool Application::IsKeyPressedOnce(unsigned short key) {
+	std::pair<std::set<unsigned short>::iterator, bool> ret;
+	if ((GetAsyncKeyState(key) & 0x8001) != 0) {
+		ret = activeKeys.insert(key);
+		if (!ret.second)
+			return false;
+		else
+			return true;
+	} else {
+		activeKeys.erase(key);
+		return false;
+	}
+}
+
+void Application::log(std::string string) {
+	std::cout << string << std::endl;
 }
 
 void Application::Init()
@@ -100,7 +177,9 @@ void Application::Init()
 	//Create a window and create its OpenGL context
 	m_width = 800;
 	m_height = 600;
-	m_window = glfwCreateWindow(m_width, m_height, "Test Window", NULL, NULL);
+	ui_height = 60;
+	ui_width = 80;
+	m_window = glfwCreateWindow(m_width, m_height, "SP2 - Group 2", NULL, NULL);
 	//m_window = glfwCreateWindow(800, 600, "Test Window", NULL, NULL);
 
 	//If the window couldn't be created
@@ -129,59 +208,53 @@ void Application::Init()
 	}
 }
 
+void toggleState() {
+	switch (Application::sceneswitch) {
+	case Application::SCENEOUTSIDE:
+		glfwSetCursorPosCallback(m_window, mouse_callback);
+		glfwSetScrollCallback(m_window, scroll_callback);
+		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		mouse.reset();
+		glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
+		break;
+	case Application::SCENEHOUSEINSIDE:
+		glfwSetCursorPosCallback(m_window, mouse_callback);
+		glfwSetScrollCallback(m_window, scroll_callback);
+		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		mouse.reset();
+		glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
+		break;
+	default:
+		break;
+	}
+}
+
 void Application::Run()
 {
 	//Main Loop
-	Scene* scene = new SceneText();
+	Scene* scene = new TemplateScene();
 	scene->Init();
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 
-	Scene* scene1 = new SceneText();	
-	scene1->Init();
-
-	Scene* scene2 = new SceneHouseInside();
-	scene2->Init();
-    scene = scene1;
-
-
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
 	{
-		scene->Update(m_timer.getElapsedTime());
+		scene->Update(m_timer.getElapsedTime(), mouse);
 		scene->Render();
-
-		std::cout << sceneswitch << std::endl;
-
-		//if (IsKeyPressed(VK_F1))
-		//	scene = scene1;
-		//else if (IsKeyPressed(VK_F2))
-		//	scene = scene2;
 
 		//Swap buffers
 		glfwSwapBuffers(m_window);
 		//Get and organize events, like keyboard and mouse input, window resizing, etc...
 		glfwPollEvents();
 		m_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.   
-		switch (sceneswitch)
-		{
-		case SCENEOUTSIDE:
-			scene = scene2; //original scene is scene2
-			break;
-		case SCENEHOUSEINSIDE:
-			scene = scene1; //original scene is scene1
-			break;
-		}
+		toggleState();
 
-		if (IsKeyPressed(VK_F1))
+		/*if (IsKeyPressed(VK_F1))
 			scene = scene1;
 		else if (IsKeyPressed(VK_F2))
-			scene = scene2;
+			scene = scene2;*/
 	} //Check if the ESC key had been pressed or if the window had been closed
-	scene1->Exit();
-	scene2->Exit();
-	delete scene1;
-	delete scene2;
-	//scene->Exit();
-	//delete scene;
+	scene->Exit();
+	delete scene;
 }
 
 void Application::Exit()

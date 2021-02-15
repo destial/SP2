@@ -9,9 +9,6 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneText c;
-SceneText c2;
-
 void SceneText::RenderSkybox()
 {
 	modelStack.PushMatrix();
@@ -75,8 +72,6 @@ void SceneText::RenderTree()
 	RenderMesh(meshList[GEO_MODEL8], false);
 	modelStack.PopMatrix(); //tree
 }
-
-
 
 void SceneText::RenderMesh(Mesh* mesh, bool enableLight)
 {
@@ -548,7 +543,7 @@ void SceneText::Update(double dt)
 	if (Application::IsKeyPressed('F') && camera4.position.x > -0.6 && camera4.position.x < -0.23 && camera4.position.z > -24 && camera4.position.z < -16 && justpress == false)
 	{
 		justpress = true;
-		Application::sceneswitch = SCENEOUTSIDE;
+		Application::sceneswitch = Application::SCENEOUTSIDE;
 		std::cout << "F is pressed" << std::endl;
 	}
 	else if (!Application::IsKeyPressed('F') && camera4.position.x > -0.6 && camera4.position.x < -0.23 && camera4.position.z > -24 && camera4.position.z < -16 && justpress == true)

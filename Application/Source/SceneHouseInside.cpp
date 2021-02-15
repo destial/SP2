@@ -9,10 +9,6 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneHouseInside c;
-SceneHouseInside c2;
-
-
 void SceneHouseInside::RenderSkybox()
 {
 	modelStack.PushMatrix();
@@ -561,7 +557,7 @@ void SceneHouseInside::Update(double dt)
 	if (Application::IsKeyPressed('F') && camera4.position.x > -0.0238 && camera4.position.x < 37.7 && camera4.position.z > -28.6 && camera4.position.z < 23.8 && justpress == false)
 	{
 		justpress = true;
-		Application::sceneswitch = SCENEHOUSEINSIDE;
+		Application::sceneswitch = Application::SCENEHOUSEINSIDE;
 		std::cout << "F is pressed" << std::endl;
 	}
 	else if(!Application::IsKeyPressed('F') && camera4.position.x > -0.0238 && camera4.position.x < 37.7 && camera4.position.z > -28.6 && camera4.position.z < 23.8 && justpress == true)

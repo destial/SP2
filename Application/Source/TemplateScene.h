@@ -1,77 +1,25 @@
-#ifndef SCENE_HOUSEINSIDE_H
-#define SCENE_HOUSEINSIDE_H
+#ifndef TEMPLATE_SCENE_H
+#define TEMPLATE_SCENE_H
 
 #include "Scene.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
-#include "Camera.h"
-#include "Camera2.h"
-#include "CameraSceneInsideHouse.h"
+#include "Camera3.h"
 
-
-
-
-class SceneHouseInside : public Scene
+class TemplateScene : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
 		GEO_AXES = 0,
 		GEO_QUAD,
-		GEO_CUBE,
-		GEO_CIRCLE,
-		GEO_RING,
-		GEO_SPHERE,
-		GEO_SPHERE2,
-		GEO_SPHERE3,
-		GEO_SPHERE4,
-		GEO_SPHERE5,
-		GEO_SPHERE6,
-		GEO_SPHERE7,
-		GEO_SPHERE8,
-		GEO_SPHERE9,
-		GEO_HEMISPHERE,
-		GEO_LIGHTBALL,
-		GEO_LIGHTBALL2,
-		GEO_QUADWHITE,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
-		GEO_SIDM,
-		GEO_TWOMAD,
-		GEO_JORDAN,
-		GEO_MODEL1,
-		GEO_MODEL2,
-		GEO_MODEL3,
-		GEO_MODEL4,
-		GEO_MODEL5,
-		GEO_MODEL6,
-		GEO_MODEL7,
-		GEO_MODEL8,
-		GEO_ISABELLE,
-		GEO_TOM,
-		GEO_DOOR,
-		GEO_HOUSE1,
-		GEO_HOUSE2,
-		GEO_HOUSETYPE1,
-		GEO_COTTAGE,
-		GEO_MAILBOX,
-		GEO_CAFE,
-		//add these enum in GEOMETRY_TYPE before NUM_GEOMETRY
 		GEO_TEXT,
-		GEO_BED,
-		GEO_DESK,
-		GEO_CHAIR,
-		GEO_KEYBOARD,
-		GEO_SCREEN,
-		GEO_MOUSE,
-		GEO_TV,
-		GEO_SOFA,
-		GEO_CABINET,
-		GEO_BEDCABINET,
 		NUM_GEOMETRY,
 	};
 
@@ -126,42 +74,28 @@ private:
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
-	void RenderTree();
-
-	float rotateAngle;
-	float rotateAngle2;
-	float translateX;
-	float scaleAll;
-	float LSPEED;
-	float fps;
 
 	bool rotate;
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];
 
-	CameraSceneInsideHouse camera4;
+	Camera3 camera;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-
+	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
 public:
 
-	SceneHouseInside();
-	~SceneHouseInside();
+	TemplateScene();
+	~TemplateScene();
 
 	virtual void Init();
 	virtual void Update(double dt);
-	virtual void Update(double dt, Mouse mouse) = 0;
+	virtual void Update(double dt, Mouse mouse);
 	virtual void Render();
 	virtual void Exit();
-
-	bool DoorExit;
-	bool justpress = false;
-
-	void bruhmoment(int a, int b, int c);
-
 	MS modelStack, viewStack, projectionStack;
 };
 

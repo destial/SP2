@@ -7,9 +7,6 @@
 #include "MeshBuilder.h"
 #include "Utility.h"
 
-SceneLight c;
-SceneLight c2;
-
 void SceneLight::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;

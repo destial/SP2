@@ -19,6 +19,7 @@ class OverworldScene : public Scene
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
+		GEO_GROUND,
 		GEO_TEXT,
 		NUM_GEOMETRY,
 	};

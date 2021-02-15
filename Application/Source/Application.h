@@ -21,8 +21,7 @@ struct Mouse {
 		rightclick = 0;
 	}
 	bool left, right, up, down, leftclick, rightclick;
-	int x, y
-		;
+	int x, y;
 	float scroll;
 };
 class Application
@@ -35,8 +34,12 @@ public:
 	void Exit();
 	enum SCENES
 	{
-		SCENEHOUSEINSIDE,
-		SCENEOUTSIDE,
+		SCENESHAQ,
+		SCENEWALTON,
+		SCENERYAN,
+		SCENEXL,
+		SCENERANCE,
+		OVERWORLD,
 		TOTALSCENES,
 	};
 	static bool IsKeyPressed(unsigned short key);

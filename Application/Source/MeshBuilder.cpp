@@ -100,6 +100,71 @@ Mesh* MeshBuilder::GenerateSkybox(const std::string& meshName, Color color, floa
 	return mesh;
 }
 
+Mesh* MeshBuilder::GenerateGround(const std::string& meshName, Color color, float size) {
+	Vertex v;
+	Mesh* mesh = new Mesh(meshName);
+
+	std::vector<Vertex> vertex_buffer_data;
+	std::vector<unsigned> index_buffer_data;
+
+	float s = 1 * size;
+	float texturesize = 1;
+
+	v.pos.Set(s, 0, s);
+	mesh->corner[Mesh::C1] = Vector3(s, 0, s);
+	v.texCoord.Set(texturesize, 0);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	v.pos.Set(-s, 0, s);
+	mesh->corner[Mesh::C2] = Vector3(-s, 0, s);
+	v.texCoord.Set(0, 0);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	v.pos.Set(-s, 0.f, -s);
+	mesh->corner[Mesh::C3] = Vector3(-s, 0, -s);
+	v.texCoord.Set(0, texturesize);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	v.pos.Set(s, 0, s);
+	v.texCoord.Set(texturesize, 0);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	v.pos.Set(-s, 0, -s);
+	v.texCoord.Set(0, texturesize);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	v.pos.Set(s, 0, -s);
+	mesh->corner[Mesh::C4] = Vector3(s, 0, -s);
+	v.texCoord.Set(texturesize, texturesize);
+	v.normal = Vector3(0, 1, 0);
+	v.color = color;
+	vertex_buffer_data.push_back(v);
+
+	for (int i = 0; i < 6; i++) {
+		index_buffer_data.push_back(i);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, vertex_buffer_data.size() * sizeof(Vertex), &vertex_buffer_data[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->indexBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_data.size() * sizeof(GLuint), &index_buffer_data[0], GL_STATIC_DRAW);
+
+	mesh->mode = Mesh::DRAW_MODE::DRAW_TRIANGLES;
+	mesh->indexSize = index_buffer_data.size();
+	return mesh;
+}
+
 /******************************************************************************/
 /*!
 \brief

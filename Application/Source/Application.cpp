@@ -14,6 +14,7 @@
 #include "TemplateScene.h"
 #include "SceneShaqeel.h"
 #include "SceneW.h"
+#include "OverworldScene.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 120; // FPS of this game
@@ -181,6 +182,7 @@ void Application::Init()
 	m_height = 600;
 	ui_height = 60;
 	ui_width = 80;
+	sceneswitch = OVERWORLD;
 	m_window = glfwCreateWindow(m_width, m_height, "SP2 - Group 2", NULL, NULL);
 	mouse.reset();
 	glfwSetWindowSizeCallback(m_window, resize_callback);
@@ -214,23 +216,15 @@ void Application::Init()
 
 void toggleState() {
 	switch (Application::sceneswitch) {
-	case Application::SCENEOUTSIDE:
-		glfwSetCursorPosCallback(m_window, mouse_callback);
-		glfwSetScrollCallback(m_window, scroll_callback);
-		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-		Application::sceneswitch = Application::SCENEOUTSIDE;
-		break;
-	case Application::SCENEHOUSEINSIDE:
-		glfwSetCursorPosCallback(m_window, mouse_callback);
-		glfwSetScrollCallback(m_window, scroll_callback);
-		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-		Application::sceneswitch = Application::SCENEHOUSEINSIDE;
-		break;
+	case Application::SCENESHAQ:
+	case Application::SCENEWALTON:
+	case Application::SCENERYAN:
+	case Application::SCENEXL:
+	case Application::SCENERANCE:
 	default:
 		glfwSetCursorPosCallback(m_window, mouse_callback);
 		glfwSetScrollCallback(m_window, scroll_callback);
 		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-		Application::sceneswitch = Application::SCENEHOUSEINSIDE;
 		break;
 	}
 }
@@ -238,7 +232,10 @@ void toggleState() {
 void Application::Run()
 {
 	//Main Loop
-	scene[SCENEHOUSEINSIDE] = new SceneShaqeel();
+	scene[SCENESHAQ] = new SceneShaqeel();
+	scene[SCENEWALTON] = new SceneW();
+	scene[SCENEXL] = new SceneXL();
+	scene[OVERWORLD] = new OverworldScene();
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
 		if (scene[i])
 			scene[i]->Init();
@@ -252,16 +249,37 @@ void Application::Run()
 		scene[Application::sceneswitch]->Render();
 		toggleState();
 		switch (Application::sceneswitch) {
-		case Application::SCENEOUTSIDE:
+		case Application::SCENESHAQ:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::SCENEWALTON;
+			}
 			mouse.reset();
 			glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
-			//scene = scene1;
 			break;
-		case Application::SCENEHOUSEINSIDE:
+		case Application::SCENEWALTON:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::SCENEXL;
+			}
 			mouse.reset();
 			glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
+			break;
+		case Application::SCENERYAN:
+			break;
+		case Application::SCENEXL:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::OVERWORLD;
+			}
+			mouse.reset();
+			glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
+			break;
+		case Application::SCENERANCE:
 			break;
 		default:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::SCENESHAQ;
+			}
+			mouse.reset();
+			glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
 			break;
 		}
 

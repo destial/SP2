@@ -149,6 +149,8 @@ void OverworldScene::Init()
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+
+	meshList[GEO_GROUND] = MeshBuilder::GenerateGround("ground", GRAY, 50.f);
 }
 
 void OverworldScene::RenderMesh(Mesh* mesh, bool enableLight)
@@ -361,6 +363,10 @@ void OverworldScene::RenderSkybox() {
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_LEFT], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	RenderMesh(meshList[GEO_GROUND], true);
 	modelStack.PopMatrix();
 }
 

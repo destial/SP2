@@ -40,6 +40,8 @@ public:
 	unsigned indexBuffer;
 	unsigned indexSize;
 	unsigned textureID;
+	unsigned defaultID;
+	unsigned fakeID;
 };
 
 #endif

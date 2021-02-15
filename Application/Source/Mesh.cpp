@@ -1,89 +1,107 @@
+
+
 #include "Mesh.h"
-#include "Vertex.h"
 #include "GL\glew.h"
+#include "Vertex.h"
 
-Mesh::Mesh(const std::string &meshName): name(meshName), mode(DRAW_TRIANGLES), textureID(0) {
-	glGenBuffers(1, &vertexBuffer);
-	glGenBuffers(1, &indexBuffer);
-}
-
-Mesh::~Mesh() {
-	glDeleteBuffers(1, &vertexBuffer);
-	glDeleteBuffers(1, &indexBuffer);
-	if (textureID > 0) {
-		glDeleteTextures(1, &textureID);
-	}
-}
 
 unsigned Mesh::locationKa;
 unsigned Mesh::locationKd;
 unsigned Mesh::locationKs;
 unsigned Mesh::locationNs;
-void Mesh::SetMaterialLoc(unsigned kA, unsigned kD, unsigned kS, unsigned nS) {
-	locationKa = kA;
-	locationKd = kD;
-	locationKs = kS;
-	locationNs = nS;
+
+void Mesh::SetMaterialLoc(unsigned ambient, unsigned diffuse, unsigned specular, unsigned shininess)
+{
+	locationKa = ambient;
+	locationKd = diffuse;
+	locationKs = specular;
+	locationNs = shininess;
+}
+/******************************************************************************/
+/*!
+\brief
+Default constructor - generate VBO/IBO here
+
+\param meshName - name of mesh
+*/
+/******************************************************************************/
+Mesh::Mesh(const std::string& meshName)
+	: name(meshName)
+	, mode(DRAW_TRIANGLES)
+	, textureID(0)
+{
+	//generate buffers
+	glGenBuffers(1, &vertexBuffer);
+	//glGenBuffers(1, &colorBuffer);
+	glGenBuffers(1, &indexBuffer);
 }
 
-void Mesh::Render() {
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-	if (textureID > 0) glEnableVertexAttribArray(3);
+/******************************************************************************/
+/*!
+\brief
+Destructor - delete VBO/IBO here
+*/
+/******************************************************************************/
+Mesh::~Mesh()
+{
+	if (textureID > 0)
+		glDeleteTextures(1, &textureID);
+
+	glDeleteBuffers(1, &vertexBuffer);
+	//glDeleteBuffers(1, &colorBuffer);
+	glDeleteBuffers(1, &indexBuffer);
+}
+
+void Mesh::Render()
+{
+	glEnableVertexAttribArray(0); //1st attribute buffer : Vertices
+	glEnableVertexAttribArray(1); //2nd attribute buffer : Colors
+	glEnableVertexAttribArray(2); // 3rd attribute : normals
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(Position) + sizeof(Color)));
+	//glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)sizeof(Position));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(Position) + sizeof(Color)));
-	if (textureID > 0) 
+
+	if (textureID > 0) {
+		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(Position) + sizeof(Color) + sizeof(Vector3)));
+	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
 	if (materials.size() == 0) {
-		switch (mode) {
-		case (DRAW_TRIANGLES):
-			glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0);
-			break;
-		case (DRAW_TRIANGLE_STRIP):
-			glDrawElements(GL_TRIANGLE_STRIP, indexSize, GL_UNSIGNED_INT, 0);
-			break;
-		case (DRAW_LINES):
+		if (mode == DRAW_MODE::DRAW_LINES) {
 			glDrawElements(GL_LINES, indexSize, GL_UNSIGNED_INT, 0);
-			break;
-		case (DRAW_TRIANGLE_FAN):
-			glDrawElements(GL_TRIANGLE_FAN, indexSize, GL_UNSIGNED_INT, 0);
-			break;
-		default:
-			glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0);
-			break;
 		}
-	} else {
+		else if (mode == DRAW_MODE::DRAW_TRIANGLE_STRIP) {
+			glDrawElements(GL_TRIANGLE_STRIP, indexSize, GL_UNSIGNED_INT, 0);
+		}
+		else {
+			glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0);
+		}
+	}
+	else {
 		for (unsigned i = 0, offset = 0; i < materials.size(); ++i) {
 			Material& material = materials[i];
 			glUniform3fv(locationKa, 1, &material.kAmbient.r);
 			glUniform3fv(locationKd, 1, &material.kDiffuse.r);
 			glUniform3fv(locationKs, 1, &material.kSpecular.r);
 			glUniform1f(locationNs, material.kShininess);
-			switch (mode) {
-			case (DRAW_TRIANGLES):
-				glDrawElements(GL_TRIANGLES, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(unsigned)));
-				break;
-			case (DRAW_TRIANGLE_STRIP):
+
+			if (mode == DRAW_MODE::DRAW_TRIANGLE_STRIP) {
 				glDrawElements(GL_TRIANGLE_STRIP, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(unsigned)));
-				break;
-			case (DRAW_LINES):
-				glDrawElements(GL_LINES, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(unsigned)));
-				break;
-			case (DRAW_TRIANGLE_FAN):
-				glDrawElements(GL_TRIANGLE_FAN, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(unsigned)));
-				break;
-			default:
-				glDrawElements(GL_TRIANGLES, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(unsigned)));
-				break;
 			}
+			else if (mode == DRAW_MODE::DRAW_LINES) {
+				glDrawElements(GL_LINES, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(unsigned)));
+			}
+			else {
+				glDrawElements(GL_TRIANGLES, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(unsigned)));
+			}
+
 			offset += material.size;
 		}
 	}
@@ -91,76 +109,52 @@ void Mesh::Render() {
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
-	if (textureID > 0) 
+
+	if (textureID > 0) {
 		glDisableVertexAttribArray(3);
+	}
 }
 
-void Mesh::Render(unsigned offset, unsigned count) {
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-	if (textureID > 0) glEnableVertexAttribArray(3);
+
+/******************************************************************************/
+/*!
+\brief
+OpenGL render code
+*/
+/******************************************************************************/
+void Mesh::render(unsigned offset, unsigned count)
+{
+	glEnableVertexAttribArray(0); //1st attribute buffer : Vertices
+	glEnableVertexAttribArray(1); //2nd attribute buffer : Colors
+	glEnableVertexAttribArray(2); // 3rd attribute : normals
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(Position) + sizeof(Color)));
+	//glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)sizeof(Position));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(Position) + sizeof(Color)));
-	if (textureID > 0)
+
+	if (textureID > 0) {
+		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(Position) + sizeof(Color) + sizeof(Vector3)));
+	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-	if (materials.size() == 0) {
-		switch (mode) {
-		case (DRAW_TRIANGLES):
-			glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
-			break;
-		case (DRAW_TRIANGLE_STRIP):
-			glDrawElements(GL_TRIANGLE_STRIP, count, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
-			break;
-		case (DRAW_LINES):
-			glDrawElements(GL_LINES, count, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
-			break;
-		case (DRAW_TRIANGLE_FAN):
-			glDrawElements(GL_TRIANGLE_FAN, count, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
-			break;
-		default:
-			glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
-			break;
-		}
-	} else {
-		for (unsigned i = 0, offset = 0; i < materials.size(); ++i) {
-			Material& material = materials[i];
-			glUniform3fv(locationKa, 1, &material.kAmbient.r);
-			glUniform3fv(locationKd, 1, &material.kDiffuse.r);
-			glUniform3fv(locationKs, 1, &material.kSpecular.r);
-			glUniform1f(locationNs, material.kShininess);
-			switch (mode) {
-			case (DRAW_TRIANGLES):
-				glDrawElements(GL_TRIANGLES, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
-				break;
-			case (DRAW_TRIANGLE_STRIP):
-				glDrawElements(GL_TRIANGLE_STRIP, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
-				break;
-			case (DRAW_LINES):
-				glDrawElements(GL_LINES, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
-				break;
-			case (DRAW_TRIANGLE_FAN):
-				glDrawElements(GL_TRIANGLE_FAN, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
-				break;
-			default:
-				glDrawElements(GL_TRIANGLES, material.size, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
-				break;
-			}
-			offset += material.size;
-		}
-	}
+	if (mode == DRAW_MODE::DRAW_LINES)
+		glDrawElements(GL_LINES, count, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
+	else if (mode == DRAW_MODE::DRAW_TRIANGLE_STRIP)
+		glDrawElements(GL_TRIANGLE_STRIP, count, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
+	else
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, (void*)(offset * sizeof(GLuint)));
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
-	if (textureID > 0)
-		glDisableVertexAttribArray(3);
-}
 
+	if (textureID > 0) {
+		glDisableVertexAttribArray(3);
+	}
+}

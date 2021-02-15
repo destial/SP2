@@ -1,0 +1,131 @@
+﻿  Application.cpp
+D:\SP2_GROUP2\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+  Camera3.cpp
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(55,43): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(57,6): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(58,1): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(59,1): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(63,48): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(64,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(71,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(72,6): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(73,1): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(74,1): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(76,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(77,44): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(83,43): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(84,6): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(85,1): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(86,1): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(88,47): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(89,45): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(95,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(96,6): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(97,1): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(98,1): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(100,46): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(101,44): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(106,29): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(114,27): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(118,29): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(126,27): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(130,39): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(139,39): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  LoadOBJ.cpp
+  LoadTGA.cpp
+  main.cpp
+  Mesh.cpp
+  MeshBuilder.cpp
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(27,6): warning C4101: 'index': unreferenced local variable
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(153,7): warning C4101: 'index': unreferenced local variable
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(311,20): warning C4018: '<=': signed/unsigned mismatch
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(318,20): warning C4018: '<': signed/unsigned mismatch
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(346,45): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(346,17): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(341,6): warning C4101: 'index': unreferenced local variable
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(371,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(377,34): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(376,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(375,43): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(383,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(382,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(381,50): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\MeshBuilder.cpp(593,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+  SceneText.cpp
+D:\SP2_GROUP2\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(295,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(329,78): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(332,80): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(344,100): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(345,96): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(346,94): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(347,122): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(351,101): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(353,86): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(354,96): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(361,74): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(362,92): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(363,91): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(486,12): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(492,4): warning C4804: '-=': unsafe use of type 'bool' in operation
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(496,4): warning C4804: '-=': unsafe use of type 'bool' in operation
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(621,52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(621,19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(631,52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(631,19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(788,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(790,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(804,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(818,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(820,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(832,39): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(832,51): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(840,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(842,70): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(847,39): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(849,70): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(859,101): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(860,94): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(865,90): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(866,96): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(871,96): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(876,89): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(877,91): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(897,101): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(955,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(960,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(962,28): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(967,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(969,28): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(974,39): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(976,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(981,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(983,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(989,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(992,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(997,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(999,30): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1004,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1006,30): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1011,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1013,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1022,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1031,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1036,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1047,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1052,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1066,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1089,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1106,30): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1127,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1128,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\SP2_GROUP2\SP2\Application\Source\SceneText.cpp(1128,29): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  shader.cpp
+  Utility.cpp
+  Generating Code...
+D:\SP2_GROUP2\SP2\Application\Source\Camera3.cpp(205): warning C4715: 'Camera3::Collision': not all control paths return a value
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+Application.obj : error LNK2019: unresolved external symbol "public: __thiscall SceneHouseInside::SceneHouseInside(void)" (??0SceneHouseInside@@QAE@XZ) referenced in function "public: void __thiscall Application::Run(void)" (?Run@Application@@QAEXXZ)
+Camera3.obj : error LNK2019: unresolved external symbol "public: __thiscall Camera::Camera(void)" (??0Camera@@QAE@XZ) referenced in function "public: __thiscall Camera3::Camera3(void)" (??0Camera3@@QAE@XZ)
+Camera3.obj : error LNK2019: unresolved external symbol "public: __thiscall Camera::~Camera(void)" (??1Camera@@QAE@XZ) referenced in function __unwindfunclet$??0Camera3@@QAE@XZ$0
+D:\SP2_GROUP2\SP2\Debug\Application.exe : fatal error LNK1120: 3 unresolved externals

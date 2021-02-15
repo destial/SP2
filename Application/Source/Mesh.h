@@ -2,23 +2,29 @@
 #define MESH_H
 
 #include <string>
-#include <vector>
 #include "Material.h"
+#include <vector>
 
-class Mesh {
+/******************************************************************************/
+/*!
+		Class Mesh:
+\brief	To store VBO (vertex & color buffer) and IBO (index buffer)
+*/
+/******************************************************************************/
+class Mesh
+{
 public:
-	enum DRAW_MODE {
+	enum DRAW_MODE
+	{
 		DRAW_TRIANGLES, //default mode
 		DRAW_TRIANGLE_STRIP,
 		DRAW_LINES,
-		DRAW_TRIANGLE_FAN,
 		DRAW_MODE_LAST,
 	};
-	Mesh(const std::string &meshName);
+	Mesh(const std::string& meshName);
 	~Mesh();
 	void Render();
-	void Render(unsigned offset, unsigned count);
-
+	void render(unsigned offset, unsigned count);
 	static void SetMaterialLoc(unsigned kA, unsigned kD, unsigned kS, unsigned nS);
 	std::vector<Material> materials;
 	static unsigned locationKa;
@@ -27,9 +33,10 @@ public:
 	static unsigned locationNs;
 
 	const std::string name;
-	Material material;
 	DRAW_MODE mode;
+	Material material;
 	unsigned vertexBuffer;
+	unsigned colorBuffer;
 	unsigned indexBuffer;
 	unsigned indexSize;
 	unsigned textureID;

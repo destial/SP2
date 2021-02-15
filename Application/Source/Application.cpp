@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "SceneXL.h"
+#include "SceneShaq.h"
 #include "TemplateScene.h"
 
 GLFWwindow* m_window;

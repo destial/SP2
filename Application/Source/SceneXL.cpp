@@ -129,23 +129,29 @@ void SceneXL::Init()
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
-	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", WHITE, 1.f);
-	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
+	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front",
+		Color(1, 1, 1), 50.1f);
+	meshList[GEO_FRONT]->textureID = LoadTGA("Image//bluecloud_bk.tga");
 
-	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", WHITE, 1.f);
-	meshList[GEO_BACK]->textureID = LoadTGA("Image//back-space.tga");
+	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back",
+		Color(1, 1, 1), 50.1f);
+	meshList[GEO_BACK]->textureID = LoadTGA("Image//bluecloud_ft.tga");
 
-	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", WHITE, 1.f);
-	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right-space.tga");
+	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top",
+		Color(1, 1, 1), 50.1f);
+	meshList[GEO_TOP]->textureID = LoadTGA("Image//bluecloud_dn.tga");
 
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", WHITE, 1.f);
-	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left-space.tga");
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom",
+		Color(1, 1, 1), 50.1f);
+	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bluecloud_up.tga");
 
-	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", WHITE, 1.f);
-	meshList[GEO_TOP]->textureID = LoadTGA("Image//top-space.tga");
+	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left",
+		Color(1, 1, 1), 50.1f);
+	meshList[GEO_LEFT]->textureID = LoadTGA("Image//bluecloud_lf.tga");
 
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", WHITE, 1.f);
-	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right",
+		Color(1, 1, 1), 50.1f);
+	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//bluecloud_rt.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -318,49 +324,50 @@ void SceneXL::Update(double dt)
 }
 
 void SceneXL::RenderSkybox() {
-	float translate = 50;
-	float scaleVal = (translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y + translate, camera.position.z);
-	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Rotate(270, 0, 0, 1);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
-	RenderMesh(meshList[GEO_TOP], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y - translate, camera.position.z);
-	modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Rotate(90, 0, 0, 1);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
+	modelStack.Translate(0, -50, 0);
+	//modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z - translate);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
-	RenderMesh(meshList[GEO_FRONT], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z + translate);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
+	modelStack.Translate(0, 0, -50);
+	modelStack.Rotate(90, 1, 0, 0);
+	//modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x + translate, camera.position.y - 0.4, camera.position.z);
-	modelStack.Rotate(-90, 0, 1, 0);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
+	modelStack.Translate(0, 0, 50);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Rotate(90, 1, 0, 0);
+	//modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_FRONT], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-50, 0, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(90, 1, 0, 0);
+	//modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x - translate, camera.position.y - 0.4, camera.position.z);
+	modelStack.Translate(50, 0, 0);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
+	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Rotate(180, 0, 0, 1);
+	//modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_LEFT], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 50, 0);
+	modelStack.Rotate(180, 1, 0, 0);
+	modelStack.Rotate(-90, 0, 1, 0);
+	//modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
 }
 
@@ -411,10 +418,16 @@ void SceneXL::Render()
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
+
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
+	modelStack.Scale(4.5, 4.5, 4.5);
 	RenderSkybox();
+	modelStack.PopMatrix();
 
 
 }

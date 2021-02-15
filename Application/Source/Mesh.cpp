@@ -1,9 +1,5 @@
-
-
 #include "Mesh.h"
 #include "GL\glew.h"
-#include "Vertex.h"
-
 
 unsigned Mesh::locationKa;
 unsigned Mesh::locationKd;
@@ -27,8 +23,9 @@ Default constructor - generate VBO/IBO here
 /******************************************************************************/
 Mesh::Mesh(const std::string& meshName)
 	: name(meshName)
-	, mode(DRAW_TRIANGLES)
+	, mode(DRAW_MODE::DRAW_TRIANGLES)
 	, textureID(0)
+	, type(TYPE::IMAGE)
 {
 	//generate buffers
 	glGenBuffers(1, &vertexBuffer);
@@ -42,8 +39,7 @@ Mesh::Mesh(const std::string& meshName)
 Destructor - delete VBO/IBO here
 */
 /******************************************************************************/
-Mesh::~Mesh()
-{
+Mesh::~Mesh() {
 	if (textureID > 0)
 		glDeleteTextures(1, &textureID);
 
@@ -52,8 +48,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &indexBuffer);
 }
 
-void Mesh::Render()
-{
+void Mesh::Render() {
 	glEnableVertexAttribArray(0); //1st attribute buffer : Vertices
 	glEnableVertexAttribArray(1); //2nd attribute buffer : Colors
 	glEnableVertexAttribArray(2); // 3rd attribute : normals

@@ -83,7 +83,7 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	right.y = 0;
 	up = right.Cross(view).Normalized();
 	if (up.y < 0.f) {
-		target.y += 0.1f;
+		target.y += 1.f;
 		view = (target - position).Normalized();
 		right.y = 0;
 		up = right.Cross(view).Normalized();
@@ -98,60 +98,73 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	float boundary = bounds;
 
 	if (Application::IsKeyPressed('W')) {
+		Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
+		Vector3 oldPos = position;
+		Vector3 oldTar = target;
 		if (position.x <= boundary && position.x >= -boundary) {
-			position.x += view.x * SENSITIVITY;
-			target.x += view.x * SENSITIVITY;
+			position.x += face.x * SENSITIVITY;
+			target.x += face.x * SENSITIVITY;
 		}
 		if (position.z <= boundary && position.z >= -boundary) {
-			position.z += view.z * SENSITIVITY;
-			target.z += view.z * SENSITIVITY;
-		} else {
-			if (position.x < -boundary || position.x > boundary) {
-				position.x = (position.x < -boundary ? -boundary : boundary);
-			}
-			if (position.z < -boundary || position.z > boundary) {
-				position.z = (position.z < -boundary ? -boundary : boundary);
-			}
+			position.z += face.z * SENSITIVITY;
+			target.z += face.z * SENSITIVITY;
+		}
+		if (position.x <= -boundary || position.x >= boundary) {
+			position.x = oldPos.x;
+			target.x = oldTar.x;
+		}
+		if (position.z <= -boundary || position.z >= boundary) {
+			position.z = oldPos.z;
+			target.z = oldTar.z;
 		}
 	}
 
 	if (Application::IsKeyPressed('S')) {
-		if (position.x < boundary && position.x > -boundary) {
-			position.x -= view.x * SENSITIVITY;
-			target.x -= view.x * SENSITIVITY;
+		Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
+		Vector3 oldPos = position;
+		Vector3 oldTar = target;
+		if (position.x <= boundary && position.x >= -boundary) {
+			position.x -= face.x * SENSITIVITY;
+			target.x -= face.x * SENSITIVITY;
 		}
-		if (position.z < boundary && position.z > -boundary) {
-			position.z -= view.z * SENSITIVITY;
-			target.z -= view.z * SENSITIVITY;
-		} else {
-			if (position.x < -boundary || position.x > boundary) {
-				position.x = (position.x < -boundary ? -boundary : boundary);
-			}
-			if (position.z < -boundary || position.z > boundary) {
-				position.z = (position.z < -boundary ? -boundary : boundary);
-			}
+		if (position.z <= boundary && position.z >= -boundary) {
+			position.z -= face.z * SENSITIVITY;
+			target.z -= face.z * SENSITIVITY;
+		}
+		if (position.x <= -boundary || position.x >= boundary) {
+			position.x = oldPos.x;
+			target.x = oldTar.x;
+		}
+		if (position.z <= -boundary || position.z >= boundary) {
+			position.z = oldPos.z;
+			target.z = oldTar.z;
 		}
 	}
 
 	if (Application::IsKeyPressed('A')) {
-		if (position.x < boundary && position.x > -boundary) {
+		Vector3 oldPos = position;
+		Vector3 oldTar = target;
+		if (position.x <= boundary && position.x >= -boundary) {
 			position.x -= right.x * SENSITIVITY;
 			target.x -= right.x * SENSITIVITY;
 		}
-		if (position.z < boundary && position.z > -boundary) {
+		if (position.z <= boundary && position.z >= -boundary) {
 			position.z -= right.z * SENSITIVITY;
 			target.z -= right.z * SENSITIVITY;
-		} else {
-			if (position.x < -boundary || position.x > boundary) {
-				position.x = (position.x < -boundary ? -boundary : boundary);
-			}
-			if (position.z < -boundary || position.z > boundary) {
-				position.z = (position.z < -boundary ? -boundary : boundary);
-			}
+		}
+		if (position.x <= -boundary || position.x >= boundary) {
+			position.x = oldPos.x;
+			target.x = oldTar.x;
+		}
+		if (position.z <= -boundary || position.z >= boundary) {
+			position.z = oldPos.z;
+			target.z = oldTar.z;
 		}
 	}
 
 	if (Application::IsKeyPressed('D')) {
+		Vector3 oldPos = position;
+		Vector3 oldTar = target;
 		if (position.x < boundary && position.x > -boundary) {
 			position.x += right.x * SENSITIVITY;
 			target.x += right.x * SENSITIVITY;
@@ -159,14 +172,19 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 		if (position.z < boundary && position.z > -boundary) {
 			position.z += right.z * SENSITIVITY;
 			target.z += right.z * SENSITIVITY;
-		} else {
-			if (position.x < -boundary || position.x > boundary) {
-				position.x = (position.x < -boundary ? -boundary : boundary);
-			}
-			if (position.z < -boundary || position.z > boundary) {
-				position.z = (position.z < -boundary ? -boundary : boundary);
-			}
 		}
+		if (position.x <= -boundary || position.x >= boundary) {
+			position.x = oldPos.x;
+			target.x = oldTar.x;
+		}
+		if (position.z <= -boundary || position.z >= boundary) {
+			position.z = oldPos.z;
+			target.z = oldTar.z;
+		}
+	}
+
+	if (Application::IsKeyPressed('E')) {
+
 	}
 
 	if (Application::IsKeyPressed(' ')) {

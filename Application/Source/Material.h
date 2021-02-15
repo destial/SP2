@@ -37,6 +37,4 @@ struct Material
         kShininess = rhs.kShininess;
         size = rhs.size;
     }
-
-
 };

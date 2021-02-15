@@ -225,6 +225,8 @@ void toggleState() {
 		glfwSetCursorPosCallback(m_window, mouse_callback);
 		glfwSetScrollCallback(m_window, scroll_callback);
 		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		mouse.reset();
+		glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
 		break;
 	}
 }
@@ -253,15 +255,11 @@ void Application::Run()
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEWALTON;
 			}
-			mouse.reset();
-			glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
 			break;
 		case Application::SCENEWALTON:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEXL;
 			}
-			mouse.reset();
-			glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
 			break;
 		case Application::SCENERYAN:
 			break;
@@ -269,8 +267,6 @@ void Application::Run()
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::OVERWORLD;
 			}
-			mouse.reset();
-			glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
 			break;
 		case Application::SCENERANCE:
 			break;
@@ -278,8 +274,6 @@ void Application::Run()
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENESHAQ;
 			}
-			mouse.reset();
-			glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
 			break;
 		}
 

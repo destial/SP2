@@ -27,7 +27,6 @@ public:
 	bool justpress = false;
 	//My own stuff
 	float getRotation(void);
-private:
 	float jumpFrame;
 };
 

@@ -21,6 +21,15 @@ class OverworldScene : public Scene
 		GEO_BACK,
 		GEO_GROUND,
 		GEO_TEXT,
+
+		SKYSCRAPER1,
+		SKYSCRAPER2,
+
+		TRUCK1,
+		TRUCK2,
+		CAR1,
+		CAR2,
+		NUM_CAR,
 		NUM_GEOMETRY,
 	};
 
@@ -75,9 +84,13 @@ private:
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
+	void RenderVehicles();
+	void GetInCar();
+	bool isNear(Mesh* mesh);
 
 	bool rotate;
 	Mesh* meshList[NUM_GEOMETRY];
+	Mesh* currentCar;
 
 	Light light[2];
 

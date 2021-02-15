@@ -35,6 +35,12 @@ namespace Math
 		return (value < 0) ? -value : value;
 	}
 
+	inline double __declspec (naked) __fastcall sqrt(double n) {
+		_asm fld qword ptr[esp + 4]
+			_asm fsqrt
+		_asm ret 8
+	}
+
 /******************************************************************************/
 	/*!
 	\brief

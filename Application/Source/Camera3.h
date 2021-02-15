@@ -17,13 +17,14 @@ public:
 
 	Camera3();
 	~Camera3();
-	virtual void Init(const Vector3& pos, const Vector3& target, const Vector3& up);
+	virtual void Init(const Vector3& pos, const Vector3& target, const Vector3& up, const float& bounds);
 	virtual void Update(double dt);
 	virtual void Update(double &dt, Mouse& mouse);
 	virtual void Reset();
 	float yaw;
 	float pitch;
 	float orthographic_size;
+	float bounds;
 	bool canfly = false;
 	bool justpress = false;
 	//My own stuff

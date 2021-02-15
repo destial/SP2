@@ -284,15 +284,17 @@ bool LoadOBJMTL(const char* file_path, const char* mtl_path, std::vector<Positio
 		//	LoadMTL(mtl_path, materials_map);
 		//}
 		else if (strncmp("usemtl ", buf, 7) == 0) { //process usemtl
-			char mtl_name[256];
-			strcpy_s(mtl_name, buf + 7);
-			if (materials_map.find(mtl_name) != materials_map.end())
-			{
-				Material* mtl = materials_map.find(mtl_name)->second;
-				Material material = *mtl;
-				out_materials.push_back(material);
-			}
-		}
+            char mtl_name[256];
+            strcpy_s(mtl_name, buf + 7);
+            if (mtl_name[strlen(mtl_name) - 1] == '\r')
+                mtl_name[strlen(mtl_name) - 1] = '\0';
+            if (materials_map.find(mtl_name) != materials_map.end())
+            {
+                Material* mtl = materials_map.find(mtl_name)->second;
+                Material material = *mtl;
+                out_materials.push_back(material);
+            }
+        }
 		else if (strncmp("f ", buf, 2) == 0) { //process face
 			unsigned int vertexIndex[4], uvIndex[4], normalIndex[4];
 			int matches = sscanf_s((buf + 2), "%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n",

@@ -27,8 +27,25 @@ void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up,
 	this->up = defaultUp = up;
 }
 
+void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
+{
+	yaw = -90;
+	pitch = 0;
+	jumpFrame = 0;
+	this->bounds = 50.f;
+	this->position = defaultPosition = pos;
+	this->target = defaultTarget = target;
+	this->Decoy = defaultPosition = pos;
+	Vector3 view = (target - position).Normalized();
+	Vector3 right = view.Cross(up);
+	right.y = 0;
+	right.Normalize();
+	this->up = defaultUp = up;
+}
+
 void Camera3::Update(double dt) {
-	
+	Mouse mouse;
+	Update(dt, mouse);
 }
 
 void Camera3::Update(double& dt, Mouse& mouse) {
@@ -184,7 +201,7 @@ void Camera3::Reset()
 }
 
 float Camera3::getRotation(void) {
-	Vector3 line = (target - position);
+	Vector3 line = (this->target - position);
 	Vector3 dir = line.Normalized(); //Line from origin(NORMALISED)
 
 	line.y = 0;
@@ -196,31 +213,4 @@ float Camera3::getRotation(void) {
 	float degreeRad = acos(dotProd / LengthTotal);
 
 	return Math::RadianToDegree(degreeRad);
-}
-
-bool Camera3::Collision(float x1, float x2, float z1, float z2)
-{
-	if (Decoy.x > x1 and Decoy.x < x2 and Decoy.z > z1 and Decoy.z < z2)
-	{
-		Decoy.x = position.x;
-		Decoy.z = position.z;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-float Camera3::getCameraFinal(float pitch) {
-	float maxRotate = 70.f;
-	pitch = fabsf(pitch);
-	float rotation = getRotation();
-
-	if (maxRotate < (rotation + pitch)) {
-		float offset = (rotation + pitch) - maxRotate; //Diff between max degree and calculated result
-		pitch -= offset; //Offset the value
-	}
-
-	return Math::Max(0.f, pitch);
 }

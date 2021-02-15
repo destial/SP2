@@ -1,26 +1,24 @@
 #ifndef CAMERA_3_H
 #define CAMERA_3_H
-
-#include "Camera.h"
+#include "Vector3.h"
 #include "Application.h"
-
-class Camera3 : public Camera
+class Camera3
 {
 public:
-	//Vector3 position;
-	//Vector3 target;
-	//Vector3 up;
-
 	Vector3 defaultPosition;
 	Vector3 defaultTarget;
+	Vector3 Decoy;
 	Vector3 defaultUp;
+
+	Vector3 target, position, up;
 
 	Camera3();
 	~Camera3();
-	virtual void Init(const Vector3& pos, const Vector3& target, const Vector3& up, const float& bounds);
-	virtual void Update(double dt);
-	virtual void Update(double &dt, Mouse& mouse);
-	virtual void Reset();
+	void Init(const Vector3& pos, const Vector3& target, const Vector3& up);
+	void Init(const Vector3& pos, const Vector3& target, const Vector3& up, const float& bounds);
+	void Update(double dt);
+	void Update(double& dt, Mouse &mouse);
+	void Reset();
 	float yaw;
 	float pitch;
 	float orthographic_size;
@@ -29,9 +27,7 @@ public:
 	bool justpress = false;
 	//My own stuff
 	float getRotation(void);
-	bool Collision(float x1, float x2, float z1, float z2);
 private:
-	float getCameraFinal(float pitch); //get the camera's final rotation
 	float jumpFrame;
 };
 

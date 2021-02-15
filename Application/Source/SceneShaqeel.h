@@ -23,6 +23,9 @@ class SceneShaqeel : public Scene
 		GEO_BACK,
 		GEO_TEXT,
 		GEO_TRUCK,
+		GEO_BUS,
+		GEO_CAR1,
+		GEO_CAR2,
 		NUM_GEOMETRY,
 	};
 
@@ -79,9 +82,12 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
-	bool truckRespawn;
 
 	float translateTruckZ;
+	float translateBusZ;
+	float translateCar1Z;
+	float translateCar2Z;
+	float busZ;
 
 	Mesh* meshList[NUM_GEOMETRY];
 
@@ -97,6 +103,8 @@ public:
 
 	SceneShaqeel();
 	~SceneShaqeel();
+
+	/*float vehiclemove(double dt);*/
 
 	virtual void Init();
 	virtual void Update(double dt);

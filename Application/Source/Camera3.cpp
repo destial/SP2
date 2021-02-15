@@ -11,11 +11,12 @@ Camera3::~Camera3()
 {
 }
 
-void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
+void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up, const float &bounds)
 {
 	yaw = -90;
 	pitch = 0;
 	jumpFrame = 0;
+	this->bounds = bounds;
 	this->position = defaultPosition = pos;
 	this->target = defaultTarget = target;
 	this->Decoy = defaultPosition = pos;
@@ -77,10 +78,9 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	if (orthographic_size < 1)
 		orthographic_size = 1;
 
-	float boundary = 35.f;
+	float boundary = bounds;
 
 	if (Application::IsKeyPressed('W')) {
-		bool hit = false;
 		if (position.x <= boundary && position.x >= -boundary) {
 			position.x += view.x * SENSITIVITY;
 			target.x += view.x * SENSITIVITY;
@@ -88,69 +88,81 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 		if (position.z <= boundary && position.z >= -boundary) {
 			position.z += view.z * SENSITIVITY;
 			target.z += view.z * SENSITIVITY;
-		}
-		if (position.x < -boundary || position.x > boundary) {
-			position.x = (position.x < -boundary ? -boundary : boundary);
-		}
-		if (position.z < -boundary || position.z > boundary) {
-			position.z = (position.z < -boundary ? -boundary : boundary);
+		} else {
+			if (position.x < -boundary || position.x > boundary) {
+				position.x = (position.x < -boundary ? -boundary : boundary);
+			}
+			if (position.z < -boundary || position.z > boundary) {
+				position.z = (position.z < -boundary ? -boundary : boundary);
+			}
 		}
 	}
 
 	if (Application::IsKeyPressed('S')) {
-		if (position.x <= boundary && position.x >= -boundary) {
+		if (position.x < boundary && position.x > -boundary) {
 			position.x -= view.x * SENSITIVITY;
 			target.x -= view.x * SENSITIVITY;
 		}
-		if (position.z <= boundary && position.z >= -boundary) {
+		if (position.z < boundary && position.z > -boundary) {
 			position.z -= view.z * SENSITIVITY;
 			target.z -= view.z * SENSITIVITY;
-		}
-		if (position.x < -boundary || position.x > boundary) {
-			position.x = (position.x < -boundary ? -boundary : boundary);
-		}
-		if (position.z < -boundary || position.z > boundary) {
-			position.z = (position.z < -boundary ? -boundary : boundary);
+		} else {
+			if (position.x < -boundary || position.x > boundary) {
+				position.x = (position.x < -boundary ? -boundary : boundary);
+			}
+			if (position.z < -boundary || position.z > boundary) {
+				position.z = (position.z < -boundary ? -boundary : boundary);
+			}
 		}
 	}
 
 	if (Application::IsKeyPressed('A')) {
-		if (position.x <= boundary && position.x >= -boundary) {
+		if (position.x < boundary && position.x > -boundary) {
 			position.x -= right.x * SENSITIVITY;
 			target.x -= right.x * SENSITIVITY;
 		}
-		if (position.z <= boundary && position.z >= -boundary) {
+		if (position.z < boundary && position.z > -boundary) {
 			position.z -= right.z * SENSITIVITY;
 			target.z -= right.z * SENSITIVITY;
-		}
-		if (position.x < -boundary || position.x > boundary) {
-			position.x = (position.x < -boundary ? -boundary : boundary);
-		}
-		if (position.z < -boundary || position.z > boundary) {
-			position.z = (position.z < -boundary ? -boundary : boundary);
+		} else {
+			if (position.x < -boundary || position.x > boundary) {
+				position.x = (position.x < -boundary ? -boundary : boundary);
+			}
+			if (position.z < -boundary || position.z > boundary) {
+				position.z = (position.z < -boundary ? -boundary : boundary);
+			}
 		}
 	}
 
 	if (Application::IsKeyPressed('D')) {
-		if (position.x <= boundary && position.x >= -boundary) {
+		if (position.x < boundary && position.x > -boundary) {
 			position.x += right.x * SENSITIVITY;
 			target.x += right.x * SENSITIVITY;
 		}
-		if (position.z <= boundary && position.z >= -boundary) {
+		if (position.z < boundary && position.z > -boundary) {
 			position.z += right.z * SENSITIVITY;
 			target.z += right.z * SENSITIVITY;
-		}
-		if (position.x < -boundary || position.x > boundary) {
-			position.x = (position.x < -boundary ? -boundary : boundary);
-		}
-		if (position.z < -boundary || position.z > boundary) {
-			position.z = (position.z < -boundary ? -boundary : boundary);
+		} else {
+			if (position.x < -boundary || position.x > boundary) {
+				position.x = (position.x < -boundary ? -boundary : boundary);
+			}
+			if (position.z < -boundary || position.z > boundary) {
+				position.z = (position.z < -boundary ? -boundary : boundary);
+			}
 		}
 	}
 
 	if (Application::IsKeyPressed(' ')) {
-		if (jumpFrame == 0 && position.y <= 0.5f) {
-			jumpFrame++;
+		if (position.y <= boundary) {
+			position.y += 1 * SENSITIVITY;
+			target.y += 1 * SENSITIVITY;
+		}
+	}
+
+	if (Application::IsKeyPressed(VK_LSHIFT)) {
+		if (position.y >= -boundary) {
+			position.y -= 1 * SENSITIVITY;
+			target.y -= 1 * SENSITIVITY;
 		}
 	}
 	if (jumpFrame != 0 && jumpFrame < 10) {

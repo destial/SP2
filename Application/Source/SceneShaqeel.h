@@ -26,6 +26,7 @@ class SceneShaqeel : public Scene
 		GEO_BUS,
 		GEO_CAR1,
 		GEO_CAR2,
+		GEO_TUNNEL,
 		GEO_TREE,
 		GEO_BUSH,
 		GEO_BENCH,

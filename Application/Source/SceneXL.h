@@ -20,6 +20,7 @@ class SceneXL : public Scene
 		GEO_FRONT,
 		GEO_BACK,
 		GEO_TEXT,
+		GEO_FLOORFUTURE,
 		NUM_GEOMETRY,
 	};
 

@@ -16,7 +16,6 @@ void TemplateScene::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
-	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -158,7 +157,6 @@ void TemplateScene::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 }
 
-
 void TemplateScene::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
@@ -271,16 +269,16 @@ void TemplateScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color
 }
 
 void TemplateScene::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressed(0x31))
+	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 
-	else if (Application::IsKeyPressed(0x32))
+	else if (Application::IsKeyPressed('2'))
 		glDisable(GL_CULL_FACE);
 
-	else if (Application::IsKeyPressed(0x33))
+	else if (Application::IsKeyPressed('3'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
 
-	else if (Application::IsKeyPressed(0x34))
+	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
 	camera.Update(dt, mouse);
@@ -293,7 +291,7 @@ void TemplateScene::Update(double dt)
 }
 
 void TemplateScene::RenderSkybox() {
-	float translate = 40;
+	float translate = 50;
 	float scaleVal = (translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
 	modelStack.Translate(camera.position.x, camera.position.y + translate, camera.position.z);
@@ -393,6 +391,10 @@ void TemplateScene::Render()
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
+	modelStack.PushMatrix();
+	RenderMesh(meshList[GEO_AXES], false);
+	modelStack.PopMatrix();
+	//RenderSkybox();
 }
 
 void TemplateScene::Exit() {

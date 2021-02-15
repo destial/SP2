@@ -82,7 +82,7 @@ public:
 
 	virtual void Init();
 	virtual void Update(double dt);
-	virtual void Update(double dt, Mouse mouse) = 0;
+	virtual void Update(double dt, Mouse& mouse) = 0;
 	virtual void Render();
 	virtual void Exit();
 

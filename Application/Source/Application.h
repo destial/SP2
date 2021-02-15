@@ -6,17 +6,24 @@
 #include <string>
 
 struct Mouse {
-	bool up, down, left, right, leftclick, rightclick;
-	float x, y, scroll;
 	Mouse() {
 		reset();
 	}
 	void reset() {
-		x = y = up = down = left = right = leftclick = rightclick = scroll = 0;
+		x = 0;
+		y = 0;
+		scroll = 0;
+		left = 0;
+		right = 0;
+		up = 0;
+		down = 0;
+		leftclick = 0;
+		rightclick = 0;
 	}
-	~Mouse() {}
+	bool left, right, up, down, leftclick, rightclick;
+	int x, y;
+	float scroll;
 };
-
 class Application
 {
 public:
@@ -29,6 +36,7 @@ public:
 	{
 		SCENEHOUSEINSIDE,
 		SCENEOUTSIDE,
+		TOTALSCENES,
 	};
 	static bool IsKeyPressed(unsigned short key);
 	static bool IsMousePressed(unsigned short key);

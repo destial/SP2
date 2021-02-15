@@ -5,7 +5,6 @@
 Camera3::Camera3()
 {
 	orthographic_size = 45.0f;
-
 }
 
 Camera3::~Camera3()
@@ -24,7 +23,7 @@ void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 	Vector3 right = view.Cross(up);
 	right.y = 0;
 	right.Normalize();
-	this->up = defaultUp = right.Cross(view).Normalized();
+	this->up = defaultUp = up;
 }
 
 void Camera3::Update(double dt)
@@ -167,13 +166,11 @@ void Camera3::Update(double dt)
 	right = view.Cross(Vector3(0, 1, 0)).Normalized();
 	up = right.Cross(view).Normalized();
 	target += position;
-
 }
 
 void Camera3::Update(double& dt, Mouse& mouse) {
 	const float SENSITIVITY = 0.08f;
 	Vector3 view = (target - position).Normalized();
-
 	if (mouse.left) {
 		Mtx44 rotation;
 		rotation.SetToRotation((mouse.x * SENSITIVITY), up.x, up.y, up.z);
@@ -333,6 +330,7 @@ bool Camera3::Collision(float x1, float x2, float z1, float z2)
 	{
 		Decoy.x = position.x;
 		Decoy.z = position.z;
+		return true;
 	}
 	else
 	{

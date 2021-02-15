@@ -21,7 +21,8 @@ struct Mouse {
 		rightclick = 0;
 	}
 	bool left, right, up, down, leftclick, rightclick;
-	int x, y;
+	int x, y
+		;
 	float scroll;
 };
 class Application

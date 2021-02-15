@@ -33,6 +33,7 @@
     <ClCompile Include="Source\SceneHouseInside.cpp" />
     <ClCompile Include="Source\SceneShaq.cpp" />
     <ClCompile Include="Source\SceneText.cpp" />
+    <ClCompile Include="Source\SceneXL.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\TemplateScene.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="Source\SceneHouseInside.h" />
     <ClInclude Include="Source\SceneShaq.h" />
     <ClInclude Include="Source\SceneText.h" />
+    <ClInclude Include="Source\SceneXL.h" />
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\TemplateScene.h" />
     <ClInclude Include="Source\Utility.h" />

@@ -1,4 +1,4 @@
-#include "TemplateScene.h"
+#include "SceneXL.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -8,11 +8,11 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-TemplateScene::TemplateScene() {}
+SceneXL::SceneXL() {}
 
-TemplateScene::~TemplateScene() {}
+SceneXL::~SceneXL() {}
 
-void TemplateScene::Init()
+void SceneXL::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
@@ -32,7 +32,7 @@ void TemplateScene::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), bounds);
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0));
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -129,29 +129,29 @@ void TemplateScene::Init()
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
-	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
+	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", WHITE, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
-	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", WHITE, 1.f, 1.f);
+	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", WHITE, 1.f);
 	meshList[GEO_BACK]->textureID = LoadTGA("Image//back-space.tga");
 
-	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", WHITE, 1.f, 1.f);
+	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", WHITE, 1.f);
 	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right-space.tga");
 
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", WHITE, 1.f, 1.f);
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", WHITE, 1.f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left-space.tga");
 
-	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", WHITE, 1.f, 1.f);
+	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", WHITE, 1.f);
 	meshList[GEO_TOP]->textureID = LoadTGA("Image//top-space.tga");
 
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", WHITE, 1.f, 1.f);
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", WHITE, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 }
 
-void TemplateScene::RenderMesh(Mesh* mesh, bool enableLight)
+void SceneXL::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -193,7 +193,7 @@ void TemplateScene::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void TemplateScene::RenderText(Mesh* mesh, std::string text, Color color)
+void SceneXL::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -220,14 +220,14 @@ void TemplateScene::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void TemplateScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void SceneXL::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -248,7 +248,7 @@ void TemplateScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -262,7 +262,7 @@ void TemplateScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color
 	glEnable(GL_DEPTH_TEST);
 }
 
-void TemplateScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
+void SceneXL::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
@@ -295,7 +295,7 @@ void TemplateScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, floa
 	glEnable(GL_DEPTH_TEST);
 }
 
-void TemplateScene::Update(double dt, Mouse mouse) {
+void SceneXL::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 
@@ -311,13 +311,13 @@ void TemplateScene::Update(double dt, Mouse mouse) {
 	camera.Update(dt, mouse);
 }
 
-void TemplateScene::Update(double dt)
+void SceneXL::Update(double dt)
 {
 	Mouse mouse;
 	Update(dt, mouse);
 }
 
-void TemplateScene::RenderSkybox() {
+void SceneXL::RenderSkybox() {
 	float translate = 50;
 	float scaleVal = (translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
@@ -364,7 +364,7 @@ void TemplateScene::RenderSkybox() {
 	modelStack.PopMatrix();
 }
 
-void TemplateScene::Render()
+void SceneXL::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -417,7 +417,7 @@ void TemplateScene::Render()
 	RenderSkybox();
 }
 
-void TemplateScene::Exit() {
+void SceneXL::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}

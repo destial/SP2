@@ -48,10 +48,10 @@
     <ClCompile Include="Source\SceneXL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneShaq.cpp">
+    <ClCompile Include="Source\SceneXL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneXL.cpp">
+    <ClCompile Include="Source\SceneShaqeel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,10 +98,10 @@
     <ClInclude Include="Source\SceneXL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneShaq.h">
+    <ClInclude Include="Source\SceneXL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneXL.h">
+    <ClInclude Include="Source\SceneShaqeel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

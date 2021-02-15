@@ -1,5 +1,5 @@
-#ifndef SCENE_SHAQ_H
-#define SCENE_SHAQ_H
+#ifndef SCENE_SHAQEEL_H
+#define SCENE_SHAQEEL_H
 
 #include "Scene.h"
 #include "Mesh.h"
@@ -7,14 +7,12 @@
 #include "Light.h"
 #include "Camera3.h"
 
-class SceneShaq : public Scene
+class SceneShaqeel : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
 		GEO_AXES = 0,
 		GEO_QUAD,
-		GEO_QUAD1,
-		GEO_QUAD2,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -78,8 +76,6 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
-	bool pickUp;
-	bool payUp;
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];
@@ -92,14 +88,27 @@ private:
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
 public:
 
-	SceneShaq();
-	~SceneShaq();
+	SceneShaqeel();
+	~SceneShaqeel();
 
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void Update(double dt, Mouse mouse);
 	virtual void Render();
 	virtual void Exit();
+
+	Color RED = Color(1.f, 0.f, 0.f);
+	Color GREEN = Color(0.f, 1.f, 0.f);
+	Color BLUE = Color(0.f, 0.f, 1.f);
+	Color WHITE = Color(1.f, 1.f, 1.f);
+	Color YELLOW = Color(1.f, 1.f, 0.f);
+	Color PURPLE = Color(1.f, 0.f, 1.f);
+	Color CYAN = Color(0.f, 1.f, 1.f);
+	Color BROWN = Color(.6f, .1f, .2f);
+	Color BLACK = Color(0.f, 0.f, 0.f);
+	Color ORANGE = Color((195 / 255), (82 / 255), (20 / 255));
+	Color GRAY = Color(0.4f, 0.4f, 0.4f);
+
 	MS modelStack, viewStack, projectionStack;
 };
 

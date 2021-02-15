@@ -129,6 +129,15 @@ void SceneShaqeel::Init()
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
+
+	meshList[GEO_QUAD1] = MeshBuilder::GenerateQuad("quad1", Color(1, 1, 1), 1.f);
+	meshList[GEO_QUAD1]->textureID = LoadTGA("Image//RoadTopDown.tga");
+
+	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad2", Color(1.6, 0.82, 0.45), 1.f);
+
+	meshList[GEO_TRUCK] = MeshBuilder::GenerateOBJ("model1", "OBJ//NewTruck2.obj"); // Try 1 first
+	meshList[GEO_TRUCK]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
+
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
@@ -308,13 +317,19 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
+	translateTruckZ += (float)(5 * dt);
+
 	camera.Update(dt, mouse);
 }
 
 void SceneShaqeel::Update(double dt)
 {
 	Mouse mouse;
+
 	Update(dt, mouse);
+
+	/*translateTruckZ -= (float)(30 * dt);*/
+
 }
 
 void SceneShaqeel::RenderSkybox() {
@@ -414,7 +429,31 @@ void SceneShaqeel::Render()
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
+
+	//TRS
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -2, 0);
+	modelStack.Scale(10, 10, 20);
+	RenderMesh(meshList[GEO_QUAD1], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -2.02, 0);
+	modelStack.Scale(20, 20, 20);
+	RenderMesh(meshList[GEO_QUAD2], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-1.3, -0.8, translateTruckZ);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.022, 0.022, 0.022);
+	RenderMesh(meshList[GEO_TRUCK], true);
+	modelStack.PopMatrix();
+
+
 	RenderSkybox();
+
+
 }
 
 void SceneShaqeel::Exit() {

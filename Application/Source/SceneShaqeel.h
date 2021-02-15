@@ -13,6 +13,8 @@ class SceneShaqeel : public Scene
 	{
 		GEO_AXES = 0,
 		GEO_QUAD,
+		GEO_QUAD1,
+		GEO_QUAD2,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -20,6 +22,7 @@ class SceneShaqeel : public Scene
 		GEO_FRONT,
 		GEO_BACK,
 		GEO_TEXT,
+		GEO_TRUCK,
 		NUM_GEOMETRY,
 	};
 
@@ -76,6 +79,10 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	bool truckRespawn;
+
+	float translateTruckZ;
+
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];

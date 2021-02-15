@@ -27,6 +27,7 @@
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\SceneShaqeel.cpp" />
+    <ClCompile Include="Source\SceneW.cpp" />
     <ClCompile Include="Source\SceneXL.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\TemplateScene.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="Source\MeshBuilder.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneShaqeel.h" />
+    <ClInclude Include="Source\SceneW.h" />
     <ClInclude Include="Source\SceneXL.h" />
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\TemplateScene.h" />

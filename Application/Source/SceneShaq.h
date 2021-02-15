@@ -1,5 +1,5 @@
-#ifndef TEMPLATE_SCENE_H
-#define TEMPLATE_SCENE_H
+#ifndef SCENE_SHAQ_H
+#define SCENE_SHAQ_H
 
 #include "Scene.h"
 #include "Mesh.h"
@@ -7,12 +7,14 @@
 #include "Light.h"
 #include "Camera3.h"
 
-class TemplateScene : public Scene
+class SceneShaq : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
 		GEO_AXES = 0,
 		GEO_QUAD,
+		GEO_QUAD1,
+		GEO_QUAD2,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -76,6 +78,8 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	bool pickUp;
+	bool payUp;
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];
@@ -88,8 +92,8 @@ private:
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
 public:
 
-	TemplateScene();
-	~TemplateScene();
+	SceneShaq();
+	~SceneShaq();
 
 	virtual void Init();
 	virtual void Update(double dt);

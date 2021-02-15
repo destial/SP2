@@ -11,11 +11,28 @@ Camera3::~Camera3()
 {
 }
 
+void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up, const float &bounds)
+{
+	yaw = -90;
+	pitch = 0;
+	jumpFrame = 0;
+	this->bounds = bounds;
+	this->position = defaultPosition = pos;
+	this->target = defaultTarget = target;
+	this->Decoy = defaultPosition = pos;
+	Vector3 view = (target - position).Normalized();
+	Vector3 right = view.Cross(up);
+	right.y = 0;
+	right.Normalize();
+	this->up = defaultUp = up;
+}
+
 void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 {
 	yaw = -90;
 	pitch = 0;
 	jumpFrame = 0;
+	this->bounds = 50.f;
 	this->position = defaultPosition = pos;
 	this->target = defaultTarget = target;
 	this->Decoy = defaultPosition = pos;
@@ -27,7 +44,8 @@ void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 }
 
 void Camera3::Update(double dt) {
-	
+	Mouse mouse;
+	Update(dt, mouse);
 }
 
 void Camera3::Update(double& dt, Mouse& mouse) {
@@ -77,10 +95,9 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	if (orthographic_size < 1)
 		orthographic_size = 1;
 
-	float boundary = 35.f;
+	float boundary = bounds;
 
 	if (Application::IsKeyPressed('W')) {
-		bool hit = false;
 		if (position.x <= boundary && position.x >= -boundary) {
 			position.x += view.x * SENSITIVITY;
 			target.x += view.x * SENSITIVITY;
@@ -88,69 +105,81 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 		if (position.z <= boundary && position.z >= -boundary) {
 			position.z += view.z * SENSITIVITY;
 			target.z += view.z * SENSITIVITY;
-		}
-		if (position.x < -boundary || position.x > boundary) {
-			position.x = (position.x < -boundary ? -boundary : boundary);
-		}
-		if (position.z < -boundary || position.z > boundary) {
-			position.z = (position.z < -boundary ? -boundary : boundary);
+		} else {
+			if (position.x < -boundary || position.x > boundary) {
+				position.x = (position.x < -boundary ? -boundary : boundary);
+			}
+			if (position.z < -boundary || position.z > boundary) {
+				position.z = (position.z < -boundary ? -boundary : boundary);
+			}
 		}
 	}
 
 	if (Application::IsKeyPressed('S')) {
-		if (position.x <= boundary && position.x >= -boundary) {
+		if (position.x < boundary && position.x > -boundary) {
 			position.x -= view.x * SENSITIVITY;
 			target.x -= view.x * SENSITIVITY;
 		}
-		if (position.z <= boundary && position.z >= -boundary) {
+		if (position.z < boundary && position.z > -boundary) {
 			position.z -= view.z * SENSITIVITY;
 			target.z -= view.z * SENSITIVITY;
-		}
-		if (position.x < -boundary || position.x > boundary) {
-			position.x = (position.x < -boundary ? -boundary : boundary);
-		}
-		if (position.z < -boundary || position.z > boundary) {
-			position.z = (position.z < -boundary ? -boundary : boundary);
+		} else {
+			if (position.x < -boundary || position.x > boundary) {
+				position.x = (position.x < -boundary ? -boundary : boundary);
+			}
+			if (position.z < -boundary || position.z > boundary) {
+				position.z = (position.z < -boundary ? -boundary : boundary);
+			}
 		}
 	}
 
 	if (Application::IsKeyPressed('A')) {
-		if (position.x <= boundary && position.x >= -boundary) {
+		if (position.x < boundary && position.x > -boundary) {
 			position.x -= right.x * SENSITIVITY;
 			target.x -= right.x * SENSITIVITY;
 		}
-		if (position.z <= boundary && position.z >= -boundary) {
+		if (position.z < boundary && position.z > -boundary) {
 			position.z -= right.z * SENSITIVITY;
 			target.z -= right.z * SENSITIVITY;
-		}
-		if (position.x < -boundary || position.x > boundary) {
-			position.x = (position.x < -boundary ? -boundary : boundary);
-		}
-		if (position.z < -boundary || position.z > boundary) {
-			position.z = (position.z < -boundary ? -boundary : boundary);
+		} else {
+			if (position.x < -boundary || position.x > boundary) {
+				position.x = (position.x < -boundary ? -boundary : boundary);
+			}
+			if (position.z < -boundary || position.z > boundary) {
+				position.z = (position.z < -boundary ? -boundary : boundary);
+			}
 		}
 	}
 
 	if (Application::IsKeyPressed('D')) {
-		if (position.x <= boundary && position.x >= -boundary) {
+		if (position.x < boundary && position.x > -boundary) {
 			position.x += right.x * SENSITIVITY;
 			target.x += right.x * SENSITIVITY;
 		}
-		if (position.z <= boundary && position.z >= -boundary) {
+		if (position.z < boundary && position.z > -boundary) {
 			position.z += right.z * SENSITIVITY;
 			target.z += right.z * SENSITIVITY;
-		}
-		if (position.x < -boundary || position.x > boundary) {
-			position.x = (position.x < -boundary ? -boundary : boundary);
-		}
-		if (position.z < -boundary || position.z > boundary) {
-			position.z = (position.z < -boundary ? -boundary : boundary);
+		} else {
+			if (position.x < -boundary || position.x > boundary) {
+				position.x = (position.x < -boundary ? -boundary : boundary);
+			}
+			if (position.z < -boundary || position.z > boundary) {
+				position.z = (position.z < -boundary ? -boundary : boundary);
+			}
 		}
 	}
 
 	if (Application::IsKeyPressed(' ')) {
-		if (jumpFrame == 0 && position.y <= 0.5f) {
-			jumpFrame++;
+		if (position.y <= boundary) {
+			position.y += 1 * SENSITIVITY;
+			target.y += 1 * SENSITIVITY;
+		}
+	}
+
+	if (Application::IsKeyPressed(VK_LSHIFT)) {
+		if (position.y >= -boundary) {
+			position.y -= 1 * SENSITIVITY;
+			target.y -= 1 * SENSITIVITY;
 		}
 	}
 	if (jumpFrame != 0 && jumpFrame < 10) {
@@ -172,7 +201,7 @@ void Camera3::Reset()
 }
 
 float Camera3::getRotation(void) {
-	Vector3 line = (target - position);
+	Vector3 line = (this->target - position);
 	Vector3 dir = line.Normalized(); //Line from origin(NORMALISED)
 
 	line.y = 0;
@@ -184,31 +213,4 @@ float Camera3::getRotation(void) {
 	float degreeRad = acos(dotProd / LengthTotal);
 
 	return Math::RadianToDegree(degreeRad);
-}
-
-bool Camera3::Collision(float x1, float x2, float z1, float z2)
-{
-	if (Decoy.x > x1 and Decoy.x < x2 and Decoy.z > z1 and Decoy.z < z2)
-	{
-		Decoy.x = position.x;
-		Decoy.z = position.z;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-float Camera3::getCameraFinal(float pitch) {
-	float maxRotate = 70.f;
-	pitch = fabsf(pitch);
-	float rotation = getRotation();
-
-	if (maxRotate < (rotation + pitch)) {
-		float offset = (rotation + pitch) - maxRotate; //Diff between max degree and calculated result
-		pitch -= offset; //Offset the value
-	}
-
-	return Math::Max(0.f, pitch);
 }

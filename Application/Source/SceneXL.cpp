@@ -8,6 +8,7 @@
 #include "LoadTGA.h"
 #include <sstream>
 
+
 SceneXL::SceneXL() {}
 
 SceneXL::~SceneXL() {}
@@ -163,6 +164,16 @@ void SceneXL::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
+	//for (int i = 0; i < 10; i++) {
+	//	//i teach u what to put here in a bit
+	//	int x = 3;
+	//	int y = 3;
+	//	int z = 3;
+	//		temp = new MinigameEntity;
+	//	temp->pos = Vector3(x, y, z);
+	//	//i teach u how do the hitboxing thing ltr
+	//	targetList.push_back(temp); //got error for now later fixing
+	//}
 }
 
 void SceneXL::RenderMesh(Mesh* mesh, bool enableLight)

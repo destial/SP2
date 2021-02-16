@@ -149,6 +149,10 @@ void SceneW::Init()
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+
+	meshList[GEO_WALLTYPE1] = MeshBuilder::GenerateOBJMTL("WallType1", "OBJ//wall.obj", "OBJ//wall.mtl");
+	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Door", "OBJ//doorway.obj", "OBJ//doorway.mtl");
+	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
 }
 
 void SceneW::RenderMesh(Mesh* mesh, bool enableLight)
@@ -322,16 +326,12 @@ void SceneW::RenderSkybox() {
 	float scaleVal = 100;//(translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 100, 0);//camera.position.x, camera.position.y + translate, camera.position.z);
-	/*modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Rotate(270, 0, 0, 1);*/
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);//camera.position.x, camera.position.y - translate, camera.position.z);
-	/*modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Rotate(90, 0, 0, 1);*/
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
@@ -347,7 +347,6 @@ void SceneW::RenderSkybox() {
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 100);//camera.position.x, camera.position.y - 0.4, camera.position.z + translate);
 	modelStack.Rotate(90, 1, 0, 0);
-	//modelStack.Rotate(180, 0, 0, 1);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
@@ -424,6 +423,47 @@ void SceneW::Render()
 	modelStack.Translate(0, .1, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_QUAD], true);
+	modelStack.PopMatrix();
+	// left side of the room
+	modelStack.PushMatrix();
+	modelStack.Translate(-50, 0, -50);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(10,10,10);
+	RenderMesh(meshList[GEO_WALLDOOR], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-50, 0, -47);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_DOOR], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-50, 0, -40);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(90, 10, 10);
+	RenderMesh(meshList[GEO_WALLTYPE1], true);
+	modelStack.PopMatrix();
+	// right side of the room
+	modelStack.PushMatrix();
+	modelStack.Translate(50, 0, -50);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(100, 10, 10);
+	RenderMesh(meshList[GEO_WALLTYPE1], true);
+	modelStack.PopMatrix();
+	// front of the room
+	modelStack.PushMatrix();
+	modelStack.Translate(50, 0, -50);
+	modelStack.Scale(100, 10, 10);
+	RenderMesh(meshList[GEO_WALLTYPE1], true);
+	modelStack.PopMatrix();
+
+	// back of the room
+	modelStack.PushMatrix();
+	modelStack.Translate(50, 0, 50);
+	modelStack.Scale(100, 10, 10);
+	RenderMesh(meshList[GEO_WALLTYPE1], true);
 	modelStack.PopMatrix();
 }
 

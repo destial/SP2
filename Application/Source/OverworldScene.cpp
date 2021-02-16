@@ -147,6 +147,9 @@ void OverworldScene::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
+	meshList[SIDEBAR] = MeshBuilder::GenerateFaceQuad("sidebar", GRAY, 1.f, 1.f);
+	meshList[SIDEBAR]->textureID = LoadTGA("Image//button.tga");
+
 	meshList[GEO_GROUND] = MeshBuilder::GenerateGround("ground", GRAY, 1000.f, 18);
 	meshList[GEO_GROUND]->textureID = LoadTGA("Image//roadcross.tga");
 
@@ -299,13 +302,13 @@ void OverworldScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color colo
 	glEnable(GL_DEPTH_TEST);
 }
 
-void OverworldScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
+void OverworldScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -431,10 +434,14 @@ void OverworldScene::RenderBuildings() {
 			modelStack.Translate(meshList[building]->transform.translate.x, meshList[building]->transform.translate.y, meshList[building]->transform.translate.z);
 			modelStack.Rotate(meshList[building]->transform.rotate, 0, 1, 0);
 			modelStack.Scale(meshList[building]->transform.scale.x, meshList[building]->transform.scale.y, meshList[building]->transform.scale.z);
-			RenderMesh(meshList[SKYSCRAPER2], true);
+			RenderMesh(meshList[building], true);
 			modelStack.PopMatrix();
 		}
 	}
+}
+
+void OverworldScene::RenderTasks() {
+	RenderMeshOnScreen(meshList[SIDEBAR], 20, 40, 40);
 }
 
 void OverworldScene::GetInCar() {
@@ -586,6 +593,7 @@ void OverworldScene::Render()
 	RenderSkybox();
 	RenderBuildings();
 	RenderVehicles();
+	RenderTasks();
 }
 
 void OverworldScene::Exit() {

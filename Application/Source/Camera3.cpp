@@ -55,7 +55,9 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	prevTarget = target;
 	prevPosition = position;
 	prevUp = up;
-	const float SENSITIVITY = 0.2f;
+	float SENSITIVITY = 0.2f;
+
+	SENSITIVITY = inverted ? -SENSITIVITY : SENSITIVITY;
 	Vector3 view = (target - position).Normalized();
 	if (mouse.left) {
 		Mtx44 rotation;
@@ -440,6 +442,11 @@ float Camera3::getCarRotation(Vector3& origin) {
 		angle = 360 - angle;
 	}
 	return angle;
+}
+
+bool Camera3::invert() {
+	inverted = (inverted ? 0 : 1);
+	return inverted;
 }
 
 float Camera3::getRotation(Vector3& origin) {

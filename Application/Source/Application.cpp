@@ -17,6 +17,7 @@
 #include "SceneRyan.h"
 #include "OverworldScene.h"
 #include "SceneShaqler.h"
+#include "StartMenuScene.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 120; // FPS of this game
@@ -218,6 +219,14 @@ void Application::Init()
 
 void toggleState() {
 	switch (Application::sceneswitch) {
+	case Application::MENUSCENE:
+	case Application::WINSCENE:
+	case Application::LOSESCENE:
+	case Application::STARTSCENE:
+		glfwSetCursorPosCallback(m_window, NULL);
+		glfwSetScrollCallback(m_window, NULL);
+		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		break;
 	case Application::SCENESHAQ:
 	case Application::SCENEWALTON:
 	case Application::SCENERYAN:
@@ -285,6 +294,11 @@ void Application::Run()
 			}
 			break;
 		case Application::SCENERANCE:
+			break;
+		case Application::MENUSCENE:
+		case Application::WINSCENE:
+		case Application::LOSESCENE:
+		case Application::STARTSCENE:
 			break;
 		default:
 			if (Application::IsKeyPressedOnce(VK_F1)) {

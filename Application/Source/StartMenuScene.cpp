@@ -1,4 +1,4 @@
-#include "OverworldScene.h"
+#include "StartMenuScene.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -8,11 +8,11 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-OverworldScene::OverworldScene() {}
+StartMenuScene::StartMenuScene() {}
 
-OverworldScene::~OverworldScene() {}
+StartMenuScene::~StartMenuScene() {}
 
-void OverworldScene::Init()
+void StartMenuScene::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
@@ -32,8 +32,7 @@ void OverworldScene::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(20, 2, 20), Vector3(5, 2, 1), Vector3(0, 1, 0), (float)100);
-	currentCar = nullptr;
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -80,8 +79,8 @@ void OverworldScene::Init()
 
 	//Replace previous code
 	light[0].type = Light::LIGHT_SPOT;
-	light[0].position.Set(0, 50, 0);
-	light[0].color = WHITE;
+	light[0].position.Set(4, 20, -34);
+	light[0].color.Set(1, 1, 1);
 	light[0].power = 1;
 	light[0].kC = 1.f;
 	light[0].kL = 0.01f;
@@ -91,10 +90,10 @@ void OverworldScene::Init()
 	light[0].exponent = 3.f;
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
 
-	light[1].type = Light::LIGHT_DIRECTIONAL;
-	light[1].position.Set(0, 50, 0);
-	light[1].color = WHITE;
-	light[1].power = 0.5f;
+	light[1].type = Light::LIGHT_POINT;
+	light[1].position.Set(-53, 20, -31.6);
+	light[1].color.Set(1, 1, 1);
+	light[1].power = 1;
 	light[1].kC = 1.f;
 	light[1].kL = 0.01f;
 	light[1].kQ = 0.001f;
@@ -124,8 +123,12 @@ void OverworldScene::Init()
 	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], light[1].exponent);
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 
-	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 10, 10, 10);
+	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
+		Color(1, 1, 1), 50.1f);
+	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
@@ -146,53 +149,10 @@ void OverworldScene::Init()
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
-
-	meshList[GEO_GROUND] = MeshBuilder::GenerateGround("ground", GRAY, 1000.f, 18);
-	meshList[GEO_GROUND]->textureID = LoadTGA("Image//roadcross.tga");
-
-	meshList[TRUCK1] = MeshBuilder::GenerateOBJ("truck1", "OBJ//NewTruck2.obj");
-	meshList[TRUCK1]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
-	meshList[TRUCK1]->transform.Translate(10, 2.f, 65);
-	meshList[TRUCK1]->transform.Scale(0.04);
-	meshList[TRUCK1]->corner[Mesh::CORNER::C1] = meshList[TRUCK1]->transform.translate + Vector3(1, 0, -1);
-	meshList[TRUCK1]->corner[Mesh::CORNER::C2] = meshList[TRUCK1]->transform.translate + Vector3(-1, 0, 1);
-	meshList[TRUCK1]->corner[Mesh::CORNER::C3] = meshList[TRUCK1]->transform.translate + Vector3(1, 0, 1);
-	meshList[TRUCK1]->corner[Mesh::CORNER::C4] = meshList[TRUCK1]->transform.translate + Vector3(-1, 0, -1);
-
-	meshList[CAR1] = MeshBuilder::GenerateOBJ("car1", "OBJ//NewCar1.obj");
-	meshList[CAR1]->textureID = LoadTGA("Image//GreenVehicle.tga");
-	meshList[CAR1]->transform.Translate(-10, 1.5f, 65);
-	meshList[CAR1]->transform.Scale(0.1);
-	meshList[CAR1]->corner[Mesh::CORNER::C1] = meshList[CAR1]->transform.translate + Vector3(1, 0, -1);
-	meshList[CAR1]->corner[Mesh::CORNER::C2] = meshList[CAR1]->transform.translate + Vector3(1, 0, 1);
-	meshList[CAR1]->corner[Mesh::CORNER::C3] = meshList[CAR1]->transform.translate + Vector3(-1, 0, -1);
-	meshList[CAR1]->corner[Mesh::CORNER::C4] = meshList[CAR1]->transform.translate + Vector3(1, 0, 1);
-
-	meshList[BUS1] = MeshBuilder::GenerateOBJ("bus", "OBJ//bus.obj");
-	meshList[BUS1]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
-	meshList[BUS1]->transform.Translate(0, 3.6f, 55);
-	meshList[BUS1]->transform.Scale(0.4);
-	meshList[BUS1]->corner[Mesh::CORNER::C1] = meshList[BUS1]->transform.translate + Vector3(1, 0, -1);
-	meshList[BUS1]->corner[Mesh::CORNER::C2] = meshList[BUS1]->transform.translate + Vector3(1, 0, 1);
-	meshList[BUS1]->corner[Mesh::CORNER::C3] = meshList[BUS1]->transform.translate + Vector3(-1, 0, -1);
-	meshList[BUS1]->corner[Mesh::CORNER::C4] = meshList[BUS1]->transform.translate + Vector3(1, 0, 1);
-
-	meshList[CAR2] = MeshBuilder::GenerateOBJ("Car2", "OBJ//NewCar2.obj");
-	meshList[CAR2]->textureID = LoadTGA("Image//RedVehicle.tga");
-	meshList[CAR2]->transform.Translate(-20, 1.2f, 65);
-	meshList[CAR2]->transform.Scale(0.1);
-	meshList[CAR2]->corner[Mesh::CORNER::C1] = meshList[CAR2]->transform.translate + Vector3(1, 0, -1);
-	meshList[CAR2]->corner[Mesh::CORNER::C2] = meshList[CAR2]->transform.translate + Vector3(1, 0, 1);
-	meshList[CAR2]->corner[Mesh::CORNER::C3] = meshList[CAR2]->transform.translate + Vector3(-1, 0, -1);
-	meshList[CAR2]->corner[Mesh::CORNER::C4] = meshList[CAR2]->transform.translate + Vector3(1, 0, 1);
-
-	meshList[SKYSCRAPER2] = MeshBuilder::GenerateOBJ("skyscraper", "OBJ//skyscraper4.obj");
-	meshList[SKYSCRAPER2]->transform.Scale(5);
 }
 
-void OverworldScene::RenderMesh(Mesh* mesh, bool enableLight)
+void StartMenuScene::RenderMesh(Mesh* mesh, bool enableLight)
 {
-	if (!mesh) return;
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
 	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
@@ -233,7 +193,7 @@ void OverworldScene::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void OverworldScene::RenderText(Mesh* mesh, std::string text, Color color)
+void StartMenuScene::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -260,19 +220,21 @@ void OverworldScene::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void OverworldScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y) {
+void StartMenuScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+{
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
 	viewStack.LoadIdentity(); //No need camera for ortho mode
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.Translate(x, y, 0);
 	modelStack.Scale(size, size, size);
 	modelStack.Translate(x, y, 0);
 
@@ -283,9 +245,10 @@ void OverworldScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color colo
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
 	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
-	for (unsigned i = 0; i < text.length(); ++i) {
+	for (unsigned i = 0; i < text.length(); ++i)
+	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + (i * 0.7f), 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -299,7 +262,7 @@ void OverworldScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color colo
 	glEnable(GL_DEPTH_TEST);
 }
 
-void OverworldScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
+void StartMenuScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
@@ -332,7 +295,7 @@ void OverworldScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, flo
 	glEnable(GL_DEPTH_TEST);
 }
 
-void OverworldScene::Update(double dt, Mouse mouse) {
+void StartMenuScene::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 
@@ -345,21 +308,17 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
-	if (!currentCar) {
-		camera.Update(dt, mouse);
-		DetectCollision();
-	} else {
-		camera.UpdateCar(dt, mouse, (float)3.f);
-	}
+	camera.Update(dt, mouse);
 }
 
-void OverworldScene::Update(double dt) {
+void StartMenuScene::Update(double dt)
+{
 	Mouse mouse;
 	Update(dt, mouse);
 }
 
-void OverworldScene::RenderSkybox() {
-	float translate = 100;
+void StartMenuScene::RenderSkybox() {
+	float translate = 50;
 	float scaleVal = (translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
 	modelStack.Translate(camera.position.x, camera.position.y + translate, camera.position.z);
@@ -403,139 +362,9 @@ void OverworldScene::RenderSkybox() {
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_GROUND], true);
-	modelStack.PopMatrix();
 }
 
-void OverworldScene::RenderVehicles() {
-	for (unsigned car = TRUCK1; car < NUM_CAR; car++) {
-		if (meshList[car]) {
-			modelStack.PushMatrix();
-			modelStack.Translate(meshList[car]->transform.translate.x, meshList[car]->transform.translate.y, meshList[car]->transform.translate.z);
-			modelStack.Rotate(meshList[car]->transform.rotate, 0, 1, 0);
-			modelStack.Scale(meshList[car]->transform.scale.x, meshList[car]->transform.scale.y, meshList[car]->transform.scale.z);
-			RenderMesh(meshList[car], true);
-			modelStack.PopMatrix();
-		}
-	}
-
-	GetInCar();
-}
-
-void OverworldScene::RenderBuildings() {
-	for (unsigned building = SKYSCRAPER1; building < NUM_BUILDINGS; building++) {
-		if (meshList[building]) {
-			modelStack.PushMatrix();
-			modelStack.Translate(meshList[building]->transform.translate.x, meshList[building]->transform.translate.y, meshList[building]->transform.translate.z);
-			modelStack.Rotate(meshList[building]->transform.rotate, 0, 1, 0);
-			modelStack.Scale(meshList[building]->transform.scale.x, meshList[building]->transform.scale.y, meshList[building]->transform.scale.z);
-			RenderMesh(meshList[SKYSCRAPER2], true);
-			modelStack.PopMatrix();
-		}
-	}
-}
-
-void OverworldScene::GetInCar() {
-	if (!currentCar) {
-		for (unsigned car = TRUCK1; car < NUM_CAR; car++) {
-			if (meshList[car]) {
-				if (isNear(meshList[car], (float)3.f)) {
-					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", WHITE, 4, 3, 7);
-					if (Application::IsKeyPressedOnce('F')) {
-						currentCar = meshList[car];
-						camera.position.x = currentCar->transform.translate.x;
-						camera.position.z = currentCar->transform.translate.z;
-						switch (car) {
-						default:
-							carOrigin = Vector3(-1, 0, 0);
-							break;
-						}
-						camera.carTarget = camera.position + carOrigin;
-						camera.target = camera.position + carOrigin;
-						break;
-					}
-				}
-			}
-		}
-	}
-	if (currentCar) {
-		currentCar->prevTransform = currentCar->transform;
-		currentCar->transform.translate.x = camera.position.x;
-		currentCar->transform.translate.z = camera.position.z;
-		camera.position.y = currentCar->transform.translate.y + 5;
-		Vector3 origin = (currentCar->transform.translate + carOrigin).Normalized();
-		currentCar->transform.rotate = camera.getCarRotation(carOrigin);
-		if (Application::IsKeyPressedOnce('F')) {
-			Vector3 view = (camera.target - camera.position).Normalized();
-			Vector3 right = view.Cross(Vector3(0, 1, 0)).Normalized();
-			while (true) {
-				if (isNear(currentCar, 2)) {
-					camera.position.x += - (2 * right.x);
-					camera.position.z += - (2 * right.z);
-				} else {
-					break;
-				}
-			}
-			camera.position.y = camera.defaultPosition.y;
-			camera.target.y = camera.defaultPosition.y;
-			camera.orthographic_size = camera.prevFOV;
-			currentCar = nullptr;
-		}
-	}
-}
-
-void OverworldScene::DetectCollision() {
-	for (unsigned object = 1; object < NUM_GEOMETRY; object++) {
-		if (meshList[object] && meshList[object - 1]) {
-			if (isHit(meshList[object - 1], meshList[object], (meshList[object]->transform.scale.x > 1 ? 2.f : meshList[object]->transform.scale.x))) {
-				ObjectMoveBack(meshList[object - 1]);
-			}
-		}
-	}
-	if (!currentCar) {
-		for (unsigned object = 0; object < NUM_GEOMETRY; object++) {
-			if (meshList[object]) {
-				if (isNear(meshList[object], 2.f)) {
-					MoveBack();
-				}
-			}
-		}
-	}
-}
-
-void OverworldScene::MoveBack() {
-	camera.target = camera.prevTarget;
-	camera.position = camera.prevPosition;
-	camera.up = camera.prevUp;
-}
-
-void OverworldScene::ObjectMoveBack(Mesh* mesh) {
-	mesh->transform = mesh->prevTransform;
-}
-
-bool OverworldScene::isNear(Mesh* mesh, const float& distance) {
-	if (mesh->type == Mesh::TYPE::OBJECT) {
-		return (camera.position.x <= (mesh->transform.translate.x + distance) &&
-			camera.position.x >= (mesh->transform.translate.x - distance)) &&
-			(camera.position.z <= (mesh->transform.translate.z + distance) &&
-			camera.position.z >= (mesh->transform.translate.z - distance));
-	}
-	return false;
-}
-
-bool OverworldScene::isHit(Mesh* mesh1, Mesh* mesh2, const float& distance) {
-	if (mesh1->type == Mesh::TYPE::OBJECT && mesh2->type == Mesh::TYPE::OBJECT) {
-		return (mesh1->transform.translate.x <= (mesh2->transform.translate.x + distance) &&
-			mesh1->transform.translate.x >= (mesh2->transform.translate.x - distance)) &&
-			(mesh1->transform.translate.z <= (mesh2->transform.translate.z + distance) &&
-			mesh1->transform.translate.z >= (mesh2->transform.translate.z - distance));
-	}
-	return false;
-}
-
-void OverworldScene::Render()
+void StartMenuScene::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -582,13 +411,13 @@ void OverworldScene::Render()
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
-
+	modelStack.PushMatrix();
+	RenderMesh(meshList[GEO_AXES], false);
+	modelStack.PopMatrix();
 	RenderSkybox();
-	RenderBuildings();
-	RenderVehicles();
 }
 
-void OverworldScene::Exit() {
+void StartMenuScene::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}

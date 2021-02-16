@@ -95,6 +95,10 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 		up = right.Cross(view).Normalized();
 	}
 
+	if (mouse.scroll != 0) {
+		orthographic_size += mouse.scroll * SENSITIVITY * 5.f;
+	}
+
 	if (orthographic_size > 100)
 		orthographic_size = 100;
 	if (orthographic_size < 1)
@@ -261,6 +265,7 @@ void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
 	prevTarget = target;
 	prevPosition = position;
 	prevUp = up;
+	jumpFrame = 0;
 	const float SENSITIVITY = 0.08f;
 	Vector3 view = (target - position).Normalized();
 	if (mouse.left) {

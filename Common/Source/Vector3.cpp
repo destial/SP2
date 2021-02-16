@@ -337,8 +337,8 @@ Return a copy of this vector, normalized
 Vector3 Vector3::Normalized( void ) const throw( DivideByZero )
 {
 	float d = Length();
-	if(d <= Math::EPSILON && -d <= Math::EPSILON)
-	  throw DivideByZero();
+	if (d <= Math::EPSILON && -d <= Math::EPSILON)
+		return Vector3(x, y, z);
 	return Vector3(x / d, y / d, z / d);
 }
 
@@ -358,8 +358,8 @@ Normalize this vector and return a reference to it
 Vector3& Vector3::Normalize( void ) throw( DivideByZero )
 {
 	float d = Length();
-	if(d <= Math::EPSILON && -d <= Math::EPSILON)
-	  throw DivideByZero();
+	if (d <= Math::EPSILON && -d <= Math::EPSILON)
+		return *this;
 	x /= d;
 	y /= d;
 	z /= d;

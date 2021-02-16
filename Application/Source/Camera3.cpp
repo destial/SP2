@@ -58,6 +58,8 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	float SENSITIVITY = 0.2f;
 
 	SENSITIVITY = inverted ? -SENSITIVITY : SENSITIVITY;
+
+	inverted ? up.y = -up.y : up.y = up.y;
 	Vector3 view = (target - position).Normalized();
 	if (mouse.left) {
 		Mtx44 rotation;
@@ -88,8 +90,10 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	}
 
 	view = (target - position).Normalized();
+	right = view.Cross(up).Normalized();
 	right.y = 0;
 	up = right.Cross(view).Normalized();
+
 	if (up.y < 0.f) {
 		target.y += 1.f;
 		view = (target - position).Normalized();
@@ -127,13 +131,10 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 		target = position + view;
 	} else {
 		sprintRotation = 0;
-		Mtx44 rotation;
-		rotation.SetToRotation(sprintRotation, view.x, 0, view.z);
-		view = (rotation * view).Normalized();
-		target = position + view;
 	}
 
 	view = (target - position).Normalized();
+	right = view.Cross(up).Normalized();
 	right.y = 0;
 	up = right.Cross(view).Normalized();
 

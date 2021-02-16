@@ -69,9 +69,6 @@
     <ClCompile Include="Source\StartMenuScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ManagerMinigame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -135,9 +132,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\StartMenuScene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ManagerMinigame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\MinigameEntity.h">

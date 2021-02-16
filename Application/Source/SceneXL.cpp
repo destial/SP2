@@ -171,12 +171,16 @@ void SceneXL::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	for (int i = 0; i < 10; i++) {
+	srand((unsigned)time(0));
 
-		int x = 1.92;
-		int y = 10;
-		int z = -9;
-			temp = new MinigameEntity;
+	for (int i = 0; i < 10; i++) 
+	{
+		int x = (rand() % 5);
+
+		int y = (rand() % 5);
+
+		int z = (rand() % 5);
+		temp = new MinigameEntity;
 		temp->pos = Vector3(x, y, z);
 
 		targetList.push_back(temp); 
@@ -361,12 +365,14 @@ void SceneXL::DetectGnome()
 			if (meshList[GEO_GNOME])
 			{
 				delete meshList[GEO_GNOME];
+				meshList[GEO_GNOME] = nullptr;
+				camera.invert();
 			}
 		}
 	}
 	else  
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "Get GNOMED!", RED, 4, 0, 0);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Get GNOMED! ", RED, 4, 0, 0);
 	}
 }
 
@@ -396,6 +402,20 @@ void SceneXL::Update(double dt, Mouse mouse) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
 	camera.Update(dt, mouse);
+
+	srand((unsigned)time(0));
+	for (int i = 0; i < targetList.size(); i++)
+	{
+		if (targetList[i]->timemoved == 0 || targetList[i]->timemoved > 1)
+		{
+			targetList[i]->DirectionDummy = 1 + (rand() % 6);
+			if (targetList[i]->timemoved > 1)
+			{
+				targetList[i]->timemoved = 0;
+			}
+		}
+		targetList[i]->MoveDummy(dt);
+	}
 }
 
 void SceneXL::Update(double dt)
@@ -517,6 +537,15 @@ void SceneXL::Render()
 	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_FLOORFUTURE], false);
 	modelStack.PopMatrix(); //floor 
+
+	for (int i = 0; i < targetList.size(); i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(targetList[i]->pos.x, targetList[i]->pos.y, targetList[i]->pos.z);
+		RenderMesh(meshList[GEO_DUMMY], true);
+		modelStack.PopMatrix();
+	}
+
 
 	std::stringstream ssX;
 	std::stringstream ssY;

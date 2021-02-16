@@ -15,6 +15,7 @@ class SceneShaqeel : public Scene
 		GEO_QUAD,
 		GEO_QUAD1,
 		GEO_QUAD2,
+		GEO_CUBE,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -31,6 +32,7 @@ class SceneShaqeel : public Scene
 		GEO_BUSH,
 		GEO_BENCH,
 		GEO_MART,
+		GEO_DOOR,
 		GEO_CITY1,
 		GEO_CITY2,
 		GEO_CITY3,
@@ -90,11 +92,13 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	bool stopopenDoor;
 
 	float translateTruckZ;
 	float translateBusZ;
 	float translateCar1Z;
 	float translateCar2Z;
+	float rotatedoor;
 	float busZ;
 
 	Mesh* meshList[NUM_GEOMETRY];

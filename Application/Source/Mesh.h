@@ -58,8 +58,8 @@ public:
 	unsigned defaultID;
 	unsigned fakeID;
 	unsigned type;
-	Transform transform;
-	Transform prevTransform;
+	Transform transform, prevTransform;
+	Vector3 right, up, view;
 	Vector3 corner[TOTAL_CORNERS];
 };
 

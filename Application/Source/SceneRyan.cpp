@@ -1,4 +1,4 @@
-#include "SceneShaqeel.h"
+#include "SceneRyan.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -8,11 +8,11 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneShaqeel::SceneShaqeel() {}
+SceneRyan::SceneRyan() {}
 
-SceneShaqeel::~SceneShaqeel() {}
+SceneRyan::~SceneRyan() {}
 
-void SceneShaqeel::Init()
+void SceneRyan::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
@@ -32,7 +32,7 @@ void SceneShaqeel::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0),(float) 50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -124,74 +124,32 @@ void SceneShaqeel::Init()
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
-		Color(1, 1, 1), 50.1f);
-	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",Color(1, 1, 1), 50.1f);
+	meshList[GEO_QUAD]->textureID = LoadTGA("Image//jordanface.tga");
+	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front",Color(1, 1, 1), 50.1f);
+	meshList[GEO_FRONT]->textureID = LoadTGA("Image//OceanBack.tga");
 
-	meshList[GEO_QUAD1] = MeshBuilder::GenerateQuad("quad1", Color(1, 1, 1), 1.f);
-	meshList[GEO_QUAD1]->textureID = LoadTGA("Image//RoadTopDown.tga");
+	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back",Color(1, 1, 1), 50.1f);
+	meshList[GEO_BACK]->textureID = LoadTGA("Image//OceanFront.tga");
 
-	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad2", Color(1.6, 0.82, 0.45), 1.f);
+	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top",Color(1, 1, 1), 50.1f);
+	meshList[GEO_TOP]->textureID = LoadTGA("Image//OceanTop.tga");
 
-	meshList[GEO_TRUCK] = MeshBuilder::GenerateOBJ("truck", "OBJ//NewTruck2.obj"); // Try 1 first
-	meshList[GEO_TRUCK]->textureID = LoadTGA("Image//BlueVehicle.tga");
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom",Color(1, 1, 1), 50.1f);
+	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//OceanBottom.tga");
 
-	meshList[GEO_BUS] = MeshBuilder::GenerateOBJ("bus", "OBJ//NewBus.obj"); // Try 1 first
-	meshList[GEO_BUS]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
+	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left",Color(1, 1, 1), 50.1f);
+	meshList[GEO_LEFT]->textureID = LoadTGA("Image//OceanLeft.tga");
 
-	meshList[GEO_CAR1] = MeshBuilder::GenerateOBJ("Car1", "OBJ//NewCar1.obj"); // Try 1 first
-	meshList[GEO_CAR1]->textureID = LoadTGA("Image//GreenVehicle.tga");
-
-	meshList[GEO_CAR2] = MeshBuilder::GenerateOBJ("Car2", "OBJ//NewCar2.obj"); // Try 1 first
-	meshList[GEO_CAR2]->textureID = LoadTGA("Image//RedVehicle.tga");
-
-	meshList[GEO_BUSH] = MeshBuilder::GenerateOBJ("Bush", "OBJ//Bush_2.obj"); // Try 1 first
-	meshList[GEO_BUSH]->textureID = LoadTGA("Image//Tree_Texture2.tga");
-
-	meshList[GEO_TREE] = MeshBuilder::GenerateOBJ("Tree", "OBJ//Tree_4.obj"); // Try 1 first
-	meshList[GEO_TREE]->textureID = LoadTGA("Image//Tree_Texture2.tga");
-
-	meshList[GEO_BENCH] = MeshBuilder::GenerateOBJ("Bench", "OBJ//NewBench1.obj"); // Try 1 first
-	meshList[GEO_BENCH]->textureID = LoadTGA("Image//bench.tga");
-
-	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Bench", "OBJ//house_type01.obj"); // Try 1 first
-	meshList[GEO_MART]->textureID = LoadTGA("Image//house1.tga");
-
-	meshList[GEO_TUNNEL] = MeshBuilder::GenerateOBJ("Bench", "OBJ//Tunnel1.obj"); // Try 1 first
-	meshList[GEO_TUNNEL]->textureID = LoadTGA("Image//DarkGray.tga");
-
-	meshList[GEO_CITY1] = MeshBuilder::GenerateOBJ("skyscraper", "OBJ//skyscraper4.obj");
-
-	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
-	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
-
-	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", WHITE, 1.f, 1.f);
-	meshList[GEO_BACK]->textureID = LoadTGA("Image//back-space.tga");
-
-	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", WHITE, 1.f, 1.f);
-	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right-space.tga");
-
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", WHITE, 1.f, 1.f);
-	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left-space.tga");
-
-	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", WHITE, 1.f, 1.f);
-	meshList[GEO_TOP]->textureID = LoadTGA("Image//top-space.tga");
-
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", WHITE, 1.f, 1.f);
-	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right",Color(1, 1, 1), 50.1f);
+	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//OceanRight.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
-
-	translateTruckZ = 10;
-	busZ = 0;
-	translateCar1Z = -10;
-	translateCar2Z = 20;
 }
 
-void SceneShaqeel::RenderMesh(Mesh* mesh, bool enableLight)
+void SceneRyan::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -233,7 +191,7 @@ void SceneShaqeel::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void SceneShaqeel::RenderText(Mesh* mesh, std::string text, Color color)
+void SceneRyan::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -260,14 +218,14 @@ void SceneShaqeel::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneShaqeel::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -288,7 +246,7 @@ void SceneShaqeel::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -302,7 +260,7 @@ void SceneShaqeel::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneShaqeel::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
+void SceneRyan::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
@@ -335,7 +293,7 @@ void SceneShaqeel::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneShaqeel::Update(double dt, Mouse mouse) {
+void SceneRyan::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 
@@ -348,106 +306,64 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
-	static const float LSPEED = 40.f;
-	if (Application::IsKeyPressed('I'))
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('P'))
-		light[0].position.y += (float)(LSPEED * dt);
-
-	translateTruckZ += (float)(7 * dt);
-	translateBusZ -= (float)(7 * dt);
-	translateCar1Z += (float)(10 * dt);
-	translateCar2Z -= (float)(15 * dt);
-
-	if (translateTruckZ >= 40)
-	{
-		translateTruckZ = -40;
-	}
-
-	if (translateCar1Z >= 40)
-	{
-		translateCar1Z = -40;
-	}
-
-	if (translateBusZ <= -40)
-	{
-		translateBusZ = 40;
-	}
-
-	if (translateCar2Z <= -40)
-	{
-		translateCar2Z = 40;
-	}
-
 	camera.Update(dt, mouse);
 }
 
-void SceneShaqeel::Update(double dt)
+void SceneRyan::Update(double dt)
 {
 	Mouse mouse;
-
 	Update(dt, mouse);
-
-	/*translateTruckZ -= (float)(30 * dt);*/
-
 }
 
-void SceneShaqeel::RenderSkybox() {
-	float translate = 50;
-	float scaleVal = (translate * 2) + (translate * 0.01f);
+void SceneRyan::RenderSkybox() {
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y + translate, camera.position.z);
-	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Rotate(270, 0, 0, 1);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
-	RenderMesh(meshList[GEO_TOP], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y - translate, camera.position.z);
-	modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Rotate(90, 0, 0, 1);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
+	modelStack.Translate(0, -50, 0);
+	//modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z - translate);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
-	RenderMesh(meshList[GEO_FRONT], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z + translate);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
+	modelStack.Translate(0, 0, -50);
+	modelStack.Rotate(90, 1, 0, 0);
+	//modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x + translate, camera.position.y - 0.4, camera.position.z);
-	modelStack.Rotate(-90, 0, 1, 0);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
+	modelStack.Translate(0, 0, 50);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Rotate(90, 1, 0, 0);
+	//modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_FRONT], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-50, 0, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(90, 1, 0, 0);
+	//modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x - translate, camera.position.y - 0.4, camera.position.z);
+	modelStack.Translate(50, 0, 0);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(scaleVal, scaleVal, scaleVal);
+	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Rotate(180, 0, 0, 1);
+	//modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_LEFT], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 50, 0);
+	modelStack.Rotate(180, 1, 0, 0);
+	modelStack.Rotate(-90, 0, 1, 0);
+	//modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
 }
 
-void SceneShaqeel::Render()
+void SceneRyan::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -494,185 +410,26 @@ void SceneShaqeel::Render()
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
+
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
 
-	//TRS
-	// vehicles
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(0, -2, 0);
-		modelStack.Scale(10, 10, 40);
-		RenderMesh(meshList[GEO_QUAD1], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(0, -2.02, 0);
-		modelStack.Scale(30, 30, 40);
-		RenderMesh(meshList[GEO_QUAD2], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(-1.3, -0.8, translateTruckZ);
-		modelStack.Rotate(90, 0, 1, 0);
-		modelStack.Scale(0.022, 0.022, 0.022);
-		RenderMesh(meshList[GEO_TRUCK], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(5, -0.7, translateBusZ);
-		modelStack.Rotate(90, 0, 1, 0);
-		modelStack.Scale(0.038, 0.038, 0.038);
-		RenderMesh(meshList[GEO_BUS], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(-6, -0.6, translateCar1Z);
-		modelStack.Rotate(90, 0, 1, 0);
-		modelStack.Scale(0.095, 0.095, 0.095);
-		RenderMesh(meshList[GEO_CAR1], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(5.5, -0.7, translateCar2Z);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.09, 0.09, 0.09);
-		RenderMesh(meshList[GEO_CAR2], true);
-		modelStack.PopMatrix();
-	}
-
-	// tree
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(-20, -2.03, 20);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(-20, -2.03, -20);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(-27.5, -2.03, 28);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(-27.5, -2.03, -28);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(20, -2.03, 20);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(20, -2.03, -20);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(27.5, -2.03, 28);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(27.5, -2.03, -28);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
-	}
-
-	// bush
-	{
-		/*modelStack.PushMatrix();
-		modelStack.Translate(-18, -1.9, 18);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.06, 0.06, 0.06);
-		RenderMesh(meshList[GEO_BUSH], true);
-		modelStack.PopMatrix();*/
-	}
-
 	modelStack.PushMatrix();
-	modelStack.Translate(28, -1.95, 0);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(1, 1, 1);
-	RenderMesh(meshList[GEO_CITY1], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-18, -2, 23);
-	//modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-18, -2, -23);
-	//modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(18, -2, 23);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(18, -2, -23);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20.5, -2.02, 0);
-	modelStack.Rotate(270, 0, 1, 0);
 	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_MART], true);
+	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-2.8, -2, -50); // X 3.6
-	/*modelStack.Rotate(180, 0, 1, 0);*/
-	modelStack.Scale(0.77, 0.77, 0.77);
-	RenderMesh(meshList[GEO_TUNNEL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(2.8, -2, 50); // X 3.6
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(0.77, 0.77, 0.77);
-	RenderMesh(meshList[GEO_TUNNEL], true);
-	modelStack.PopMatrix();
-
+	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
+	modelStack.Scale(4.5, 4.5, 4.5);
 	RenderSkybox();
+	modelStack.PopMatrix();
 
 
 }
 
-void SceneShaqeel::Exit() {
+void SceneRyan::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}

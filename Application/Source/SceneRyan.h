@@ -1,5 +1,5 @@
-#ifndef OVERWORLD_SCENE_H
-#define OVERWORLD_SCENE_H
+#ifndef SCENE_RYAN_H
+#define SCENE_RYAN_H
 
 #include "Scene.h"
 #include "Mesh.h"
@@ -7,7 +7,7 @@
 #include "Light.h"
 #include "Camera3.h"
 
-class OverworldScene : public Scene
+class SceneRyan : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
@@ -19,17 +19,7 @@ class OverworldScene : public Scene
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
-		GEO_GROUND,
 		GEO_TEXT,
-
-		SKYSCRAPER1,
-		SKYSCRAPER2,
-
-		TRUCK1,
-		TRUCK2,
-		CAR1,
-		CAR2,
-		NUM_CAR,
 		NUM_GEOMETRY,
 	};
 
@@ -84,17 +74,9 @@ private:
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
-	void RenderVehicles();
-	void GetInCar();
-	void DetectCollision();
-	void MoveBack();
-	void ObjectMoveBack(Mesh* mesh);
-	bool isNear(Mesh* mesh, const float& distance = 1.f);
-	bool isHit(Mesh* mesh1, Mesh* mesh2, const float& distance = 1.f);
 
 	bool rotate;
 	Mesh* meshList[NUM_GEOMETRY];
-	Mesh* currentCar;
 
 	Light light[2];
 
@@ -106,8 +88,8 @@ private:
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
 public:
 
-	OverworldScene();
-	~OverworldScene();
+	SceneRyan();
+	~SceneRyan();
 
 	virtual void Init();
 	virtual void Update(double dt);

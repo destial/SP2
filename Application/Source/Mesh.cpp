@@ -31,6 +31,11 @@ Mesh::Mesh(const std::string& meshName)
 	glGenBuffers(1, &vertexBuffer);
 	//glGenBuffers(1, &colorBuffer);
 	glGenBuffers(1, &indexBuffer);
+	corner[C1] = Vector3(1, 0, 1);
+	corner[C2] = Vector3(-1, 0, 1);
+	corner[C3] = Vector3(1, 0, -1);
+	corner[C4] = Vector3(-1, 0, -1);
+	prevTransform = transform;
 }
 
 /******************************************************************************/

@@ -15,6 +15,8 @@ SceneXL::~SceneXL() {}
 
 void SceneXL::Init()
 {
+	talktognome = false;
+	GotGnome = false;
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
 	glEnable(GL_DEPTH_TEST);
@@ -338,9 +340,45 @@ bool SceneXL::isNear(Mesh* mesh, const float& distance)
 
 void SceneXL::DetectGnome()
 {
-	if (isNear(meshList[GEO_GNOME], (float)10.f))
+	if (meshList[GEO_GNOME] && !GotGnome)
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "Press F to talk.", ORANGE, 4, 3, 7);
+		if (isNear(meshList[GEO_GNOME], (float)10.f) && talktognome == false)
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to talk.", ORANGE, 4, 3, 6);
+
+			if (Application::IsKeyPressedOnce('F'))
+			{
+				camera.Init(Vector3(5, 3, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+				talktognome = true;
+			}
+		}
+		if (isNear(meshList[GEO_GNOME], (float)10.f) && talktognome == true)
+		{
+			GotGnome = true;
+		}
+		if (GotGnome)
+		{
+			if (meshList[GEO_GNOME])
+			{
+				delete meshList[GEO_GNOME];
+			}
+		}
+	}
+	else  
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], "Get GNOMED!", RED, 4, 0, 0);
+	}
+}
+
+void SceneXL::RenderGnome()
+{
+	if (meshList[GEO_GNOME] && !GotGnome)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(meshList[GEO_GNOME]->transform.translate.x, meshList[GEO_GNOME]->transform.translate.y, meshList[GEO_GNOME]->transform.translate.z);
+		modelStack.Scale(meshList[GEO_GNOME]->transform.scale.x, meshList[GEO_GNOME]->transform.scale.y, meshList[GEO_GNOME]->transform.scale.z);
+		RenderMesh(meshList[GEO_GNOME], true);
+		modelStack.PopMatrix(); //gnome
 	}
 }
 
@@ -356,8 +394,6 @@ void SceneXL::Update(double dt, Mouse mouse) {
 
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
-	DetectGnome();
 
 	camera.Update(dt, mouse);
 }
@@ -478,16 +514,9 @@ void SceneXL::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
 	//modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
+	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_FLOORFUTURE], false);
 	modelStack.PopMatrix(); //floor 
-
-	modelStack.PushMatrix();
-	modelStack.Translate(meshList[GEO_GNOME]->transform.translate.x, meshList[GEO_GNOME]->transform.translate.y, meshList[GEO_GNOME]->transform.translate.z);
-	//modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Scale(meshList[GEO_GNOME]->transform.scale.x, meshList[GEO_GNOME]->transform.scale.y, meshList[GEO_GNOME]->transform.scale.z);
-	RenderMesh(meshList[GEO_GNOME], true);
-	modelStack.PopMatrix(); //gnome
 
 	std::stringstream ssX;
 	std::stringstream ssY;
@@ -503,6 +532,10 @@ void SceneXL::Render()
 	modelStack.Scale(2, 2, 2);
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 4, 0, 10);
 	modelStack.PopMatrix();
+
+	DetectGnome();
+	RenderGnome();
+
 }
 
 void SceneXL::Exit() {

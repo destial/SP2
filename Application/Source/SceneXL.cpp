@@ -171,7 +171,7 @@ void SceneXL::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	for (int i = 0; i < 10; i++) {
+	/*for (int i = 0; i < 10; i++) {
 
 		int x = 1.92;
 		int y = 10;
@@ -180,7 +180,7 @@ void SceneXL::Init()
 		temp->pos = Vector3(x, y, z);
 
 		targetList.push_back(temp); 
-	}
+	}*/
 }
 
 void SceneXL::RenderMesh(Mesh* mesh, bool enableLight)
@@ -361,12 +361,14 @@ void SceneXL::DetectGnome()
 			if (meshList[GEO_GNOME])
 			{
 				delete meshList[GEO_GNOME];
+				meshList[GEO_GNOME] = nullptr;
+				camera.invert();
 			}
 		}
 	}
 	else  
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "Get GNOMED!", RED, 4, 0, 0);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Get GNOMED! ", RED, 4, 0, 0);
 	}
 }
 

@@ -10,6 +10,8 @@ public:
 	Vector3 Decoy;
 	Vector3 defaultUp;
 
+	Vector3 carView, carTarget;
+	Vector3 prevTarget, prevPosition, prevUp;
 	Vector3 target, position, up;
 
 	Camera3();
@@ -18,6 +20,7 @@ public:
 	void Init(const Vector3& pos, const Vector3& target, const Vector3& up, const float& bounds);
 	void Update(double dt);
 	void Update(double& dt, Mouse &mouse);
+	void UpdateCar(double& dt, Mouse& mouse, const float& SPEED);
 	void Reset();
 	float yaw;
 	float pitch;
@@ -27,6 +30,7 @@ public:
 	bool justpress = false;
 	//My own stuff
 	float getRotation(void);
+	float getCarRotation();
 	float jumpFrame;
 };
 

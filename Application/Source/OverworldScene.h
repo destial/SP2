@@ -86,7 +86,11 @@ private:
 	void RenderSkybox();
 	void RenderVehicles();
 	void GetInCar();
-	bool isNear(Mesh* mesh);
+	void DetectCollision();
+	void MoveBack();
+	void ObjectMoveBack(Mesh* mesh);
+	bool isNear(Mesh* mesh, const float& distance = 1.f);
+	bool isHit(Mesh* mesh1, Mesh* mesh2, const float& distance = 1.f);
 
 	bool rotate;
 	Mesh* meshList[NUM_GEOMETRY];

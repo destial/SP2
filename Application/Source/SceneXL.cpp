@@ -160,6 +160,8 @@ void SceneXL::Init()
 
 	meshList[GEO_GNOME] = MeshBuilder::GenerateOBJMTL("gnome",
 		"OBJ//gnomelol.obj", "OBJ//gnomelol.mtl");
+	meshList[GEO_GNOME]->transform.Translate(0, 0, 0);
+	meshList[GEO_GNOME]->transform.Scale(0.022);
 
 	meshList[GEO_DUMMY] = MeshBuilder::GenerateOBJMTL("dummy target",
 		"OBJ//dummy.obj", "OBJ//dummy.mtl");
@@ -323,6 +325,25 @@ void SceneXL::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, f
 	glEnable(GL_DEPTH_TEST);
 }
 
+bool SceneXL::isNear(Mesh* mesh, const float& distance)
+{
+	if (mesh->type == Mesh::TYPE::OBJECT) {
+		return (camera.position.x <= (mesh->transform.translate.x + distance) &&
+			camera.position.x >= (mesh->transform.translate.x - distance)) &&
+			(camera.position.z <= (mesh->transform.translate.z + distance) &&
+				camera.position.z >= (mesh->transform.translate.z - distance));
+	}
+	return false;
+}
+
+void SceneXL::DetectGnome()
+{
+	if (isNear(meshList[GEO_GNOME], (float)10.f))
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press F to talk.", ORANGE, 4, 3, 7);
+	}
+}
+
 void SceneXL::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -335,6 +356,8 @@ void SceneXL::Update(double dt, Mouse mouse) {
 
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
+
+	DetectGnome();
 
 	camera.Update(dt, mouse);
 }
@@ -460,9 +483,9 @@ void SceneXL::Render()
 	modelStack.PopMatrix(); //floor 
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
+	modelStack.Translate(meshList[GEO_GNOME]->transform.translate.x, meshList[GEO_GNOME]->transform.translate.y, meshList[GEO_GNOME]->transform.translate.z);
 	//modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Scale(0.022, 0.022, 0.022);
+	modelStack.Scale(meshList[GEO_GNOME]->transform.scale.x, meshList[GEO_GNOME]->transform.scale.y, meshList[GEO_GNOME]->transform.scale.z);
 	RenderMesh(meshList[GEO_GNOME], true);
 	modelStack.PopMatrix(); //gnome
 

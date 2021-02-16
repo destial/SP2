@@ -81,7 +81,7 @@ void SceneShaqler::Init()
 	light[0].type = Light::LIGHT_SPOT;
 	light[0].position.Set(4, 20, -34);
 	light[0].color.Set(1, 1, 1);
-	light[0].power = 1;
+	light[0].power = 3;
 	light[0].kC = 1.f;
 	light[0].kL = 0.01f;
 	light[0].kQ = 0.001f;
@@ -93,7 +93,7 @@ void SceneShaqler::Init()
 	light[1].type = Light::LIGHT_POINT;
 	light[1].position.Set(-53, 20, -31.6);
 	light[1].color.Set(1, 1, 1);
-	light[1].power = 1;
+	light[1].power = 3;
 	light[1].kC = 1.f;
 	light[1].kL = 0.01f;
 	light[1].kQ = 0.001f;
@@ -135,6 +135,13 @@ void SceneShaqler::Init()
 
 	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad2", Color(1, 1, 1), 1.f);
 	meshList[GEO_QUAD2]->textureID = LoadTGA("Image//BlackWallpaper1.tga");
+
+	meshList[GEO_QUAD3] = MeshBuilder::GenerateQuad("quad3", Color(1, 1, 1), 1.f);
+	meshList[GEO_QUAD3]->textureID = LoadTGA("Image//BlackWallpaper.tga");
+
+	meshList[GEO_DESKCORNER] = MeshBuilder::GenerateOBJMTL("DeskCounter", "OBJ//deskCorner.obj", "OBJ//deskCorner.mtl");
+
+	meshList[GEO_CHAIR] = MeshBuilder::GenerateOBJMTL("Chair", "OBJ//chair.obj", "OBJ//chair.mtl");
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
@@ -439,45 +446,75 @@ void SceneShaqler::Render()
 	RenderSkybox();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Scale(20, 20, 20);
+	modelStack.Translate(0, 0.022, 0);
+	modelStack.Scale(15, 15, 15);
 	RenderMesh(meshList[GEO_QUAD1], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(20, 20, 0);
+	modelStack.Translate(20, 15, 0);
 	modelStack.Rotate(90, 0, 0, 1);
 	//modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(20, 20, 20);
+	modelStack.Scale(15, 20, 20);
 	RenderMesh(meshList[GEO_QUAD2], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-20, 20, 0);
+	modelStack.Translate(-20, 15, 0);
 	modelStack.Rotate(90, 0, 0, 1);
 	//modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(20, 20, 20);
+	modelStack.Scale(15, 20, 20);
 	RenderMesh(meshList[GEO_QUAD2], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 20, 20);
+	modelStack.Translate(0, 15, 20);
 	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Scale(20, 20, 20);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(15, 20, 20);
 	RenderMesh(meshList[GEO_QUAD2], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 20, -20);
+	modelStack.Translate(0, 15, -20);
 	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Scale(20, 20, 20);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(15, 20, 20);
 	RenderMesh(meshList[GEO_QUAD2], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 40, 0);
+	modelStack.Translate(0, 0, 0);
 	modelStack.Scale(20, 20, 20);
-	RenderMesh(meshList[GEO_QUAD2], true);
+	RenderMesh(meshList[GEO_QUAD3], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(19.8, 0, -19.8);
+	modelStack.Scale(12, 8, 12);
+	RenderMesh(meshList[GEO_DESKCORNER], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(16, 0, -17.5);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(11, 9, 13);
+	RenderMesh(meshList[GEO_CHAIR], true);
+	modelStack.PopMatrix();
+
+	std::stringstream ssX;
+	std::stringstream ssY;
+	std::stringstream ssZ;
+	ssX.precision(3);
+	ssX << "X:" << camera.position.x;
+	ssX.precision(3);
+	ssX << "Y:" << camera.position.y;
+	ssZ.precision(3);
+	ssZ << "Z:" << camera.position.z;
+
+	modelStack.PushMatrix();
+	modelStack.Scale(2, 2, 2);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
 	modelStack.PopMatrix();
 }
 

@@ -23,6 +23,7 @@ class SceneShaqler : public Scene
 		GEO_STATUE,
 		GEO_BOOKSTACK,
 		GEO_CHAIR,
+		GEO_BOOKCASE,
 		GEO_MAN,
 		GEO_LEFT,
 		GEO_RIGHT,

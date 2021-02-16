@@ -158,6 +158,9 @@ void SceneShaqler::Init()
 	meshList[GEO_BOOKSTACK] = MeshBuilder::GenerateOBJ("truck", "OBJ//BookStack.obj"); // Try 1 first
 	meshList[GEO_BOOKSTACK]->textureID = LoadTGA("Image//BookStack.tga");
 
+	meshList[GEO_BOOKCASE] = MeshBuilder::GenerateOBJ("truck", "OBJ//BookCase.obj"); // Try 1 first
+	meshList[GEO_BOOKCASE]->textureID = LoadTGA("Image//brownColour.tga");
+
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
@@ -543,6 +546,24 @@ void SceneShaqler::Render()
 	modelStack.Rotate(270, 1, 0, 0);
 	modelStack.Scale(0.2, 0.2, 0.2);
 	RenderMesh(meshList[GEO_BOOKSTACK], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-17, 0, 17);
+	modelStack.Scale(0.15, 0.15, 0.2);
+	RenderMesh(meshList[GEO_BOOKCASE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-17, 0, -10);
+	modelStack.Scale(0.15, 0.15, 0.2);
+	RenderMesh(meshList[GEO_BOOKCASE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-17, 0, 3.5);
+	modelStack.Scale(0.15, 0.15, 0.2);
+	RenderMesh(meshList[GEO_BOOKCASE], true);
 	modelStack.PopMatrix();
 
 	std::stringstream ssX;

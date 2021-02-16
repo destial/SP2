@@ -404,7 +404,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('E'))
 	{
-		if (camera.position.x <= -11 && camera.position.x >= -15 && camera.position.y <= 4 && camera.position.y >= -4 && !stopopenDoor)
+		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.y <= 4 && camera.position.y >= -4 && !stopopenDoor)
 		{
 			rotatedoor -= (float)(20 * dt);
 		}

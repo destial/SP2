@@ -32,7 +32,7 @@ void SceneShaqler::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(5, 4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -139,9 +139,15 @@ void SceneShaqler::Init()
 	meshList[GEO_QUAD3] = MeshBuilder::GenerateQuad("quad3", Color(1, 1, 1), 1.f);
 	meshList[GEO_QUAD3]->textureID = LoadTGA("Image//BlackWallpaper.tga");
 
+	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", Color(1, 0, 0), 30, 30, 1);
+	meshList[GEO_SPHERE]->textureID = LoadTGA("Image//BlackWallpaper.tga");
+
 	meshList[GEO_DESKCORNER] = MeshBuilder::GenerateOBJMTL("DeskCounter", "OBJ//deskCorner.obj", "OBJ//deskCorner.mtl");
 
 	meshList[GEO_CHAIR] = MeshBuilder::GenerateOBJMTL("Chair", "OBJ//chair.obj", "OBJ//chair.mtl");
+
+	meshList[GEO_MAN] = MeshBuilder::GenerateOBJ("truck", "OBJ//Char1withoutArms.obj"); // Try 1 first
+	meshList[GEO_MAN]->textureID = LoadTGA("Image//CharTexture.tga");
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
@@ -500,6 +506,21 @@ void SceneShaqler::Render()
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(11, 9, 13);
 	RenderMesh(meshList[GEO_CHAIR], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	//modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.3, 0.3, 0.3);
+	RenderMesh(meshList[GEO_SPHERE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	//modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.15, 0.15, 0.15);
+	RenderMesh(meshList[GEO_MAN], true);
 	modelStack.PopMatrix();
 
 	std::stringstream ssX;

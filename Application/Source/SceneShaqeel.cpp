@@ -416,6 +416,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	}
 
 	camera.Update(dt, mouse);
+	/*Application::sceneswitch = Application::SCENESHAQ;*/
 }
 
 void SceneShaqeel::Update(double dt)
@@ -549,14 +550,14 @@ void SceneShaqeel::Render()
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
-		modelStack.Translate(5, -0.7, translateBusZ);
+		modelStack.Translate(5, -0.6, translateBusZ);
 		modelStack.Rotate(90, 0, 1, 0);
 		modelStack.Scale(0.038, 0.038, 0.038);
 		RenderMesh(meshList[GEO_BUS], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
-		modelStack.Translate(-6, -0.6, translateCar1Z);
+		modelStack.Translate(-6, -0.5, translateCar1Z);
 		modelStack.Rotate(90, 0, 1, 0);
 		modelStack.Scale(0.095, 0.095, 0.095);
 		RenderMesh(meshList[GEO_CAR1], true);

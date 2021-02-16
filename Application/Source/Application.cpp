@@ -16,6 +16,7 @@
 #include "SceneW.h"
 #include "SceneRyan.h"
 #include "OverworldScene.h"
+#include "SceneShaqler.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 120; // FPS of this game
@@ -222,6 +223,7 @@ void toggleState() {
 	case Application::SCENERYAN:
 	case Application::SCENEXL:
 	case Application::SCENERANCE:
+	case Application::SCENESHAQLER:
 	default:
 		glfwSetCursorPosCallback(m_window, mouse_callback);
 		glfwSetScrollCallback(m_window, scroll_callback);
@@ -240,6 +242,8 @@ void Application::Run()
 	scene[SCENERYAN] = new SceneRyan();
 	scene[SCENEXL] = new SceneXL();
 	scene[OVERWORLD] = new OverworldScene();
+	scene[SCENESHAQLER] = new SceneShaqler();
+	/*scene[SHAQLER]*/
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
 		if (scene[i])
 			scene[i]->Init();
@@ -254,6 +258,11 @@ void Application::Run()
 		toggleState();
 		switch (Application::sceneswitch) {
 		case Application::SCENESHAQ:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::SCENESHAQLER;
+			}
+			break;
+		case Application::SCENESHAQLER:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEWALTON;
 			}

@@ -40,6 +40,7 @@ public:
 		SCENEXL,
 		SCENERANCE,
 		OVERWORLD,
+		SCENESHAQLER,
 		TOTALSCENES,
 	};
 	static bool IsKeyPressed(unsigned short key);

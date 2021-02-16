@@ -2,6 +2,8 @@
 #include "Vector3.h"
 #include <vector>
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
 
 struct MinigameEntity
 {
@@ -12,8 +14,35 @@ struct MinigameEntity
 
 	std::string name;
 
-	bool isPoint;
 	bool isMoving = false;
-	bool isUp;
 	bool isCollided = false;
+	float timemoved = 0; //calculate how long the target move;
+	int DirectionDummy = 0;
+
+	void MoveDummy(double dt) 
+	{
+		switch
+			(DirectionDummy) 
+		{
+		case 1: //front
+			pos.x += 5 * dt;
+			break;
+		case 2: //back
+			pos.x -= 5 * dt;
+			break;
+		case 3: //left
+			pos.z -= 5 * dt;
+			break;
+		case 4: //right
+			pos.z += 5 * dt;
+			break;
+		case 5: //up
+			pos.y += 5 * dt;
+			break;
+		case 6: //down
+			pos.y -= 5 * dt;
+		}
+		
+	timemoved += dt;
+	}
 };

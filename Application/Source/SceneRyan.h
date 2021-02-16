@@ -78,6 +78,8 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	float rotatetail;
+	bool rotatecounter;
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];

@@ -147,8 +147,8 @@ void SceneW::Init()
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", WHITE, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//tron_dn.tga");
 
-	meshList[GEO_DOOROPEN] = MeshBuilder::GenerateQuad("Maze", WHITE, 1.f);
-	meshList[GEO_DOOROPEN]->textureID = LoadTGA("Image//maze_unsolved.tga");
+	/*meshList[GEO_DOOROPEN] = MeshBuilder::GenerateQuad("Maze", WHITE, 1.f);
+	meshList[GEO_DOOROPEN]->textureID = LoadTGA("Image//maze_unsolved.tga");*/
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -158,7 +158,7 @@ void SceneW::Init()
 	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
 	meshList[GEO_DESK] = MeshBuilder::GenerateOBJMTL("Desk", "OBJ//desk.obj", "OBJ//desk.mtl");
 	meshList[GEO_DESKCORNER] = MeshBuilder::GenerateOBJMTL("DeskCorner", "OBJ//deskCorner.obj", "OBJ//deskCorner.mtl");
-	meshList[GEO_WALLTYPE3] = MeshBuilder::GenerateCube("Walls", 1, 1, 1);
+	meshList[GEO_WALLTYPE3] = MeshBuilder::GenerateCube("Walls", 5, 5, 5);
 }
 
 void SceneW::RenderMesh(Mesh* mesh, bool enableLight)
@@ -495,7 +495,7 @@ void SceneW::Render()
 	modelStack.PopMatrix();
 
 	// maze
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	modelStack.Translate(-40, 6.5, -45);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(10,12.5,3);
@@ -533,7 +533,17 @@ void SceneW::Render()
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(10, 12.5, 3);
 	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	modelStack.PopMatrix();*/
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 2.5, 0);
+	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	modelStack.PushMatrix();
+	modelStack.Translate(-1.5, 3, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "Enemy #1", Color(0, 1, 1));
 	modelStack.PopMatrix();
+
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);

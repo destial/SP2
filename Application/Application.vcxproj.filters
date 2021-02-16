@@ -120,6 +120,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Vertex.h">
+	</ClInclude>
+    <ClInclude Include="MinigameEntity.h">
+	</ClInclude>
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

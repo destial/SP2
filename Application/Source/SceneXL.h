@@ -6,6 +6,8 @@
 #include "MatrixStack.h"
 #include "Light.h"
 #include "Camera3.h"
+#include <vector>
+#include "MinigameEntity.h"
 
 class SceneXL : public Scene
 {
@@ -98,6 +100,8 @@ public:
 	virtual void Update(double dt, Mouse mouse);
 	virtual void Render();
 	virtual void Exit();
+	std::vector<MinigameEntity*> targetList;
+	MinigameEntity temp;
 
 	Color RED = Color(1.f, 0.f, 0.f);
 	Color GREEN = Color(0.f, 1.f, 0.f);

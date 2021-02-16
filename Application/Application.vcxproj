@@ -36,6 +36,7 @@
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MinigameEntity.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\Light.h" />

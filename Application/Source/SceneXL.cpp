@@ -161,19 +161,22 @@ void SceneXL::Init()
 	meshList[GEO_GNOME] = MeshBuilder::GenerateOBJMTL("gnome",
 		"OBJ//gnomelol.obj", "OBJ//gnomelol.mtl");
 
+	meshList[GEO_DUMMY] = MeshBuilder::GenerateOBJMTL("dummy target",
+		"OBJ//dummy.obj", "OBJ//dummy.mtl");
+
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	//for (int i = 0; i < 10; i++) {
-	//	//i teach u what to put here in a bit
-	//	int x = 3;
-	//	int y = 3;
-	//	int z = 3;
-	//		temp = new MinigameEntity;
-	//	temp->pos = Vector3(x, y, z);
-	//	//i teach u how do the hitboxing thing ltr
-	//	targetList.push_back(temp); //got error for now later fixing
-	//}
+	for (int i = 0; i < 10; i++) {
+
+		int x = 1.92;
+		int y = 10;
+		int z = -9;
+			temp = new MinigameEntity;
+		temp->pos = Vector3(x, y, z);
+
+		targetList.push_back(temp); 
+	}
 }
 
 void SceneXL::RenderMesh(Mesh* mesh, bool enableLight)

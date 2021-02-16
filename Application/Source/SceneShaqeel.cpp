@@ -135,6 +135,12 @@ void SceneShaqeel::Init()
 
 	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad2", Color(1.6, 0.82, 0.45), 1.f);
 
+	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", 4, 4, 4);
+	meshList[GEO_CUBE]->material.kAmbient.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kDiffuse.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kSpecular.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kShininess = 1.f;
+
 	meshList[GEO_TRUCK] = MeshBuilder::GenerateOBJ("truck", "OBJ//NewTruck2.obj"); // Try 1 first
 	meshList[GEO_TRUCK]->textureID = LoadTGA("Image//BlueVehicle.tga");
 
@@ -159,17 +165,18 @@ void SceneShaqeel::Init()
 	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NewMart.obj"); // Try 1 first
 	meshList[GEO_MART]->textureID = LoadTGA("Image//house1.tga");
 
-	meshList[GEO_TUNNEL] = MeshBuilder::GenerateOBJ("Bench", "OBJ//Tunnel1.obj"); // Try 1 first
+	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJ("Door", "OBJ//MartDoor1.obj"); // Try 1 first
+	meshList[GEO_DOOR]->textureID = LoadTGA("Image//RedColour.tga");
+
+	//meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Mart", "OBJ//MartDoor1.obj", "OBJ//MartDoor1.mtl"); // Try 1 first
+
+	//meshList[GEO_DOOR]->material.kAmbient.Set(0.7f, 0.1f, 0.1f);
+ //   meshList[GEO_DOOR]->material.kDiffuse.Set(0.3f, 0.3f, 0.3f);
+ //   meshList[GEO_DOOR]->material.kSpecular.Set(0.6f, 0.6f, 0.6f);
+ //   meshList[GEO_DOOR]->material.kShininess = 0.5f;
+
+	meshList[GEO_TUNNEL] = MeshBuilder::GenerateOBJ("Tunnel", "OBJ//Tunnel1.obj"); // Try 1 first
 	meshList[GEO_TUNNEL]->textureID = LoadTGA("Image//DarkGray.tga");
-
-	/*meshList[GEO_CITY1] = MeshBuilder::GenerateOBJ("skyscraper1", "OBJ//skyscraper3.obj");*/
-	/*meshList[GEO_CITY1]->textureID = LoadTGA("Image//NewSkyscraper.tga");*/
-
-	/*meshList[GEO_CITY2] = MeshBuilder::GenerateOBJ("skyscraper2", "OBJ//NewScraper2.obj");
-	meshList[GEO_CITY2]->textureID = LoadTGA("Image//NewSkyscraper.tga");*/
-
-	/*meshList[GEO_CITY3] = MeshBuilder::GenerateOBJ("skyscraper3", "OBJ//NewScraper3.obj");
-	meshList[GEO_CITY3]->textureID = LoadTGA("Image//NewSkyscraper.tga");*/
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
@@ -196,6 +203,7 @@ void SceneShaqeel::Init()
 	busZ = 0;
 	translateCar1Z = -10;
 	translateCar2Z = 20;
+	rotatedoor = 90;
 }
 
 void SceneShaqeel::RenderMesh(Mesh* mesh, bool enableLight)
@@ -392,6 +400,19 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	if (translateCar2Z <= -40)
 	{
 		translateCar2Z = 40;
+	}
+
+	if (Application::IsKeyPressed('E'))
+	{
+		if (camera.position.x <= -12.5 && camera.position.x >= -15 && camera.position.y <= 3 && camera.position.y >= -2 && !stopopenDoor)
+		{
+			rotatedoor -= (float)(20 * dt);
+		}
+
+		if (rotatedoor <= -30)
+		{
+			stopopenDoor = true;
+		}
 	}
 
 	camera.Update(dt, mouse);
@@ -649,10 +670,18 @@ void SceneShaqeel::Render()
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
-		modelStack.Translate(-28, -2.02, -10);
+		modelStack.Translate(-28, -2, -10);
 		modelStack.Rotate(90, 0, 1, 0);
 		modelStack.Scale(0.6, 0.6, 0.6);
 		RenderMesh(meshList[GEO_MART], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(-15, -2, 1);
+		modelStack.Rotate(180, 0, 1, 0);
+		modelStack.Rotate(rotatedoor, 0, 1, 0);
+		modelStack.Scale(0.61, 0.61, 0.61);
+		RenderMesh(meshList[GEO_DOOR], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
@@ -675,8 +704,35 @@ void SceneShaqeel::Render()
 		modelStack.Scale(1, 1, 1);
 		RenderText(meshList[GEO_TEXT], " Shaq's Bookshop", WHITE);
 		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(-16.5, 0, -0.18); // X 3.6
+		/*modelStack.Rotate(180, 0, 1, 0);*/
+		modelStack.Scale(0.5, 1, 0.9);
+		RenderMesh(meshList[GEO_CUBE], true);
+		modelStack.PopMatrix();
 	}
 	
+	/*modelStack.PushMatrix();
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_SHARKTOP], true);
+	modelStack.PopMatrix();*/
+
+	std::stringstream ssX;
+	std::stringstream ssY;
+	std::stringstream ssZ;
+	ssX.precision(3);
+	ssX << "X:" << camera.position.x;
+	ssX.precision(3);
+	ssX << "Y:" << camera.position.y;
+	ssZ.precision(3);
+	ssZ << "Z:" << camera.position.z;
+
+	modelStack.PushMatrix();
+	modelStack.Scale(2, 2, 2);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
+	modelStack.PopMatrix();
+
 	RenderSkybox();
 
 

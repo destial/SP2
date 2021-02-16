@@ -156,13 +156,20 @@ void SceneShaqeel::Init()
 	meshList[GEO_BENCH] = MeshBuilder::GenerateOBJ("Bench", "OBJ//NewBench1.obj"); // Try 1 first
 	meshList[GEO_BENCH]->textureID = LoadTGA("Image//bench.tga");
 
-	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Bench", "OBJ//house_type01.obj"); // Try 1 first
+	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NewMart.obj"); // Try 1 first
 	meshList[GEO_MART]->textureID = LoadTGA("Image//house1.tga");
 
 	meshList[GEO_TUNNEL] = MeshBuilder::GenerateOBJ("Bench", "OBJ//Tunnel1.obj"); // Try 1 first
 	meshList[GEO_TUNNEL]->textureID = LoadTGA("Image//DarkGray.tga");
 
-	meshList[GEO_CITY1] = MeshBuilder::GenerateOBJ("skyscraper", "OBJ//skyscraper4.obj");
+	/*meshList[GEO_CITY1] = MeshBuilder::GenerateOBJ("skyscraper1", "OBJ//skyscraper3.obj");*/
+	/*meshList[GEO_CITY1]->textureID = LoadTGA("Image//NewSkyscraper.tga");*/
+
+	/*meshList[GEO_CITY2] = MeshBuilder::GenerateOBJ("skyscraper2", "OBJ//NewScraper2.obj");
+	meshList[GEO_CITY2]->textureID = LoadTGA("Image//NewSkyscraper.tga");*/
+
+	/*meshList[GEO_CITY3] = MeshBuilder::GenerateOBJ("skyscraper3", "OBJ//NewScraper3.obj");
+	meshList[GEO_CITY3]->textureID = LoadTGA("Image//NewSkyscraper.tga");*/
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
@@ -611,62 +618,65 @@ void SceneShaqeel::Render()
 		modelStack.PopMatrix();*/
 	}
 
-	modelStack.PushMatrix();
-	modelStack.Translate(28, -1.95, 0);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(1, 1, 1);
-	RenderMesh(meshList[GEO_CITY1], true);
-	modelStack.PopMatrix();
+	// city objects
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(-18, -2, 23);
+		//modelStack.Rotate(270, 0, 1, 0);
+		modelStack.Scale(0.5, 0.5, 0.5);
+		RenderMesh(meshList[GEO_BENCH], true);
+		modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(-18, -2, 23);
-	//modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
+		modelStack.PushMatrix();
+		modelStack.Translate(-18, -2, -23);
+		//modelStack.Rotate(270, 0, 1, 0);
+		modelStack.Scale(0.5, 0.5, 0.5);
+		RenderMesh(meshList[GEO_BENCH], true);
+		modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(-18, -2, -23);
-	//modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
+		modelStack.PushMatrix();
+		modelStack.Translate(18, -2, 23);
+		modelStack.Rotate(180, 0, 1, 0);
+		modelStack.Scale(0.5, 0.5, 0.5);
+		RenderMesh(meshList[GEO_BENCH], true);
+		modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(18, -2, 23);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
+		modelStack.PushMatrix();
+		modelStack.Translate(18, -2, -23);
+		modelStack.Rotate(180, 0, 1, 0);
+		modelStack.Scale(0.5, 0.5, 0.5);
+		RenderMesh(meshList[GEO_BENCH], true);
+		modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(18, -2, -23);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
+		modelStack.PushMatrix();
+		modelStack.Translate(-28, -2.02, -10);
+		modelStack.Rotate(90, 0, 1, 0);
+		modelStack.Scale(0.6, 0.6, 0.6);
+		RenderMesh(meshList[GEO_MART], true);
+		modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(-20.5, -2.02, 0);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_MART], true);
-	modelStack.PopMatrix();
+		modelStack.PushMatrix();
+		modelStack.Translate(-2.8, -2, -50); // X 3.6
+		/*modelStack.Rotate(180, 0, 1, 0);*/
+		modelStack.Scale(0.77, 0.77, 0.77);
+		RenderMesh(meshList[GEO_TUNNEL], true);
+		modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(-2.8, -2, -50); // X 3.6
-	/*modelStack.Rotate(180, 0, 1, 0);*/
-	modelStack.Scale(0.77, 0.77, 0.77);
-	RenderMesh(meshList[GEO_TUNNEL], true);
-	modelStack.PopMatrix();
+		modelStack.PushMatrix();
+		modelStack.Translate(2.8, -2, 50); // X 3.6
+		modelStack.Rotate(180, 0, 1, 0);
+		modelStack.Scale(0.77, 0.77, 0.77);
+		RenderMesh(meshList[GEO_TUNNEL], true);
+		modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(2.8, -2, 50); // X 3.6
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(0.77, 0.77, 0.77);
-	RenderMesh(meshList[GEO_TUNNEL], true);
-	modelStack.PopMatrix();
-
+		modelStack.PushMatrix();
+		modelStack.Translate(-23, 5, 8);
+		modelStack.Rotate(90, 0, 1, 0);
+		modelStack.Scale(1, 1, 1);
+		RenderText(meshList[GEO_TEXT], " Shaq's Bookshop", WHITE);
+		modelStack.PopMatrix();
+	}
+	
 	RenderSkybox();
 
 

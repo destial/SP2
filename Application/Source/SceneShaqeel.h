@@ -33,6 +33,7 @@ class SceneShaqeel : public Scene
 		GEO_MART,
 		GEO_CITY1,
 		GEO_CITY2,
+		GEO_CITY3,
 		NUM_GEOMETRY,
 	};
 

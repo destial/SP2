@@ -84,7 +84,8 @@ class OverworldScene : public Scene
 		STEAL_CAR,
 		ENTER_BUILDING,
 		SPRINT,
-
+		WALK,
+		LOOK,
 		NUM_TASKS
 	};
 private:
@@ -98,6 +99,7 @@ private:
 	void RenderVehicles();
 	void RenderBuildings();
 	void RenderTasks();
+	void CompleteTasks();
 	void GetInCar();
 	void DetectCollision();
 	void MoveBack();

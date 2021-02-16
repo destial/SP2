@@ -12,9 +12,9 @@ OverworldScene::OverworldScene() {}
 
 OverworldScene::~OverworldScene() {}
 
-void OverworldScene::Init()
-{
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
+void OverworldScene::Init() {
+	// Clear background color to blue
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -27,26 +27,30 @@ void OverworldScene::Init()
 	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
 	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
-	Mesh::SetMaterialLoc(m_parameters[U_MATERIAL_AMBIENT], m_parameters[U_MATERIAL_DIFFUSE], m_parameters[U_MATERIAL_SPECULAR], m_parameters[U_MATERIAL_SHININESS]);
+	Mesh::SetMaterialLoc(
+		m_parameters[U_MATERIAL_AMBIENT],
+		m_parameters[U_MATERIAL_DIFFUSE], 
+		m_parameters[U_MATERIAL_SPECULAR], 
+		m_parameters[U_MATERIAL_SHININESS]);
 
+	// Init camera position and current car control
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
 	camera.Init(Vector3(20, 2, 20), Vector3(5, 2, 1), Vector3(0, 1, 0), (float)100);
 	currentCar = nullptr;
 
-	//shaders
+	// Generate shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
 	// Get a handle for our "textColor" uniform
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
+
 	// Get a handle for our "colorTexture" uniform
-	m_parameters[U_COLOR_TEXTURE_ENABLED] =
-		glGetUniformLocation(m_programID, "colorTextureEnabled");
-	m_parameters[U_COLOR_TEXTURE] =
-		glGetUniformLocation(m_programID, "colorTexture");
+	m_parameters[U_COLOR_TEXTURE_ENABLED] = glGetUniformLocation(m_programID, "colorTextureEnabled");
+	m_parameters[U_COLOR_TEXTURE] = glGetUniformLocation(m_programID, "colorTexture");
 
 	m_parameters[U_LIGHT0_POSITION] = glGetUniformLocation(m_programID, "lights[0].position_cameraspace");
 	m_parameters[U_LIGHT0_COLOR] = glGetUniformLocation(m_programID, "lights[0].color");
@@ -75,11 +79,9 @@ void OverworldScene::Init()
 	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
 	glUseProgram(m_programID);
-	// Make sure you pass uniform parameters after glUseProgram()
-	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 
-	//Replace previous code
-	light[0].type = Light::LIGHT_SPOT;
+	// Init light
+	light[0].type = Light::LIGHT_DIRECTIONAL;
 	light[0].position.Set(0, 50, 0);
 	light[0].color = WHITE;
 	light[0].power = 1;
@@ -91,7 +93,7 @@ void OverworldScene::Init()
 	light[0].exponent = 3.f;
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
 
-	light[1].type = Light::LIGHT_DIRECTIONAL;
+	light[1].type = Light::LIGHT_SPOT;
 	light[1].position.Set(0, 50, 0);
 	light[1].color = WHITE;
 	light[1].power = 1.f;
@@ -122,10 +124,10 @@ void OverworldScene::Init()
 	glUniform1f(m_parameters[U_LIGHT1_COSCUTOFF], light[1].cosCutoff);
 	glUniform1f(m_parameters[U_LIGHT1_COSINNER], light[1].cosInner);
 	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], light[1].exponent);
+
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 
-	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 10, 10, 10);
-
+	// Generate necessary meshes and starting transformations
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
@@ -193,17 +195,15 @@ void OverworldScene::Init()
 	meshList[SKYSCRAPER2]->transform.Scale(5);
 }
 
-void OverworldScene::RenderMesh(Mesh* mesh, bool enableLight)
-{
+void OverworldScene::RenderMesh(Mesh* mesh, bool enableLight) {
 	if (!mesh) return;
-	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
+	Mtx44 MVP, modelView, modelView_inverse_transpose;
 	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 	modelView = viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MODELVIEW], 1, GL_FALSE, &modelView.a[0]);
-	if (enableLight)
-	{
+	if (enableLight) {
 		glUniform1i(m_parameters[U_LIGHTENABLED], 1);
 		modelView_inverse_transpose = modelView.GetInverse().GetTranspose();
 		glUniformMatrix4fv(m_parameters[U_MODELVIEW_INVERSE_TRANSPOSE], 1, GL_FALSE, &modelView_inverse_transpose.a[0]);
@@ -213,33 +213,27 @@ void OverworldScene::RenderMesh(Mesh* mesh, bool enableLight)
 		glUniform3fv(m_parameters[U_MATERIAL_DIFFUSE], 1, &mesh->material.kDiffuse.r);
 		glUniform3fv(m_parameters[U_MATERIAL_SPECULAR], 1, &mesh->material.kSpecular.r);
 		glUniform1f(m_parameters[U_MATERIAL_SHININESS], mesh->material.kShininess);
-	} else
-	{
+	} else {
 		glUniform1i(m_parameters[U_LIGHTENABLED], 0);
 	}
 
-	if (mesh->textureID > 0)
-	{
+	if (mesh->textureID > 0) {
 		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, mesh->textureID);
 		glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
-	} else
-	{
+	} else {
 		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 0);
 	}
 	mesh->Render(); //this line should only be called once
-	if (mesh->textureID > 0)
-	{
+	if (mesh->textureID > 0) {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 }
 
-void OverworldScene::RenderText(Mesh* mesh, std::string text, Color color)
-{
-	if (!mesh || mesh->textureID <= 0) //Proper error check
-		return;
+void OverworldScene::RenderText(Mesh* mesh, std::string text, Color color) {
+	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
 	glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
@@ -249,8 +243,7 @@ void OverworldScene::RenderText(Mesh* mesh, std::string text, Color color)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
 	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
-	for (unsigned i = 0; i < text.length(); ++i)
-	{
+	for (unsigned i = 0; i < text.length(); ++i) {
 		Mtx44 characterSpacing;
 		characterSpacing.SetToTranslation(i * 1.0f, 0, 0); //1.0f is the spacing of each character, you may change this value
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
@@ -264,8 +257,7 @@ void OverworldScene::RenderText(Mesh* mesh, std::string text, Color color)
 }
 
 void OverworldScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y) {
-	if (!mesh || mesh->textureID <= 0) //Proper error check
-		return;
+	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
@@ -303,8 +295,7 @@ void OverworldScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color colo
 }
 
 void OverworldScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
-	if (!mesh || mesh->textureID <= 0) //Proper error check
-		return;
+	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
@@ -336,24 +327,13 @@ void OverworldScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 }
 
 void OverworldScene::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-
-	else if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
 	if (!currentCar) {
 		camera.Update(dt, mouse);
 		DetectCollision();
 	} else {
 		camera.UpdateCar(dt, mouse, (float)3.f);
 	}
+	CompleteTasks();
 }
 
 void OverworldScene::Update(double dt) {
@@ -441,7 +421,66 @@ void OverworldScene::RenderBuildings() {
 }
 
 void OverworldScene::RenderTasks() {
-	RenderMeshOnScreen(meshList[SIDEBAR], 20, 50, 40);
+	RenderMeshOnScreen(meshList[SIDEBAR], 40, 80, 40);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Tasks", BLUE, 3, 21.8, 15.5f);
+	bool allComplete = true;
+	for (unsigned i = 0; i < NUM_TASKS; i++) {
+		Color completed = RED;
+		if (tasks[i]) {
+			completed = GREEN;
+		}
+		if (!tasks[i]) allComplete = false;
+		float x = 30.5f;
+		float y = 21.5f;
+		switch (i) {
+		case STEAL_CAR:
+			RenderTextOnScreen(meshList[GEO_TEXT], "Steal Vehicle", completed, 2, x, y - i);
+			break;
+		case ENTER_BUILDING:
+			RenderTextOnScreen(meshList[GEO_TEXT], "Enter Building", completed, 2, x, y - i);
+			break;
+		case SPRINT:
+			RenderTextOnScreen(meshList[GEO_TEXT], "LShift Sprint", completed, 2, x, y - i);
+			break;
+		case WALK:
+			RenderTextOnScreen(meshList[GEO_TEXT], "WASD Walking", completed, 2, x, y - i);
+			break;
+		case LOOK:
+			RenderTextOnScreen(meshList[GEO_TEXT], "Mouse Control", completed, 2, x, y - i);
+			break;
+		default:
+			break;
+		}
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", allComplete ? GREEN : WHITE, 1, 0, 0);
+}
+
+void OverworldScene::CompleteTasks() {
+	if (!tasks[WALK]) {
+		if (camera.position != camera.defaultPosition) {
+			tasks[WALK] = 1;
+		}
+	}
+	if (!tasks[SPRINT]) {
+		if (Application::IsKeyPressedOnce(VK_LSHIFT)) {
+			tasks[SPRINT] = 1;
+		}
+	}
+	if (!tasks[LOOK]) {
+		Vector3 defaultView = (camera.defaultTarget - camera.defaultPosition).Normalized();
+		Vector3 currentView = (camera.target - camera.position).Normalized();
+		if (defaultView != currentView) {
+			tasks[LOOK] = 1;
+		}
+	}
+	if (!tasks[STEAL_CAR]) {
+		if (currentCar) {
+			tasks[STEAL_CAR] = 1;
+		}
+	}
+	if (!tasks[ENTER_BUILDING]) {
+
+	}
 }
 
 void OverworldScene::GetInCar() {
@@ -449,7 +488,7 @@ void OverworldScene::GetInCar() {
 		for (unsigned car = TRUCK1; car < NUM_CAR; car++) {
 			if (meshList[car]) {
 				if (isNear(meshList[car], (float)3.f)) {
-					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", WHITE, 4, 3, 7);
+					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", WHITE, 4, 3, 4);
 					if (Application::IsKeyPressedOnce('F')) {
 						currentCar = meshList[car];
 						camera.position.x = currentCar->transform.translate.x;
@@ -496,7 +535,7 @@ void OverworldScene::GetInCar() {
 void OverworldScene::DetectCollision() {
 	for (unsigned object = 1; object < NUM_GEOMETRY; object++) {
 		if (meshList[object] && meshList[object - 1]) {
-			if (isHit(meshList[object - 1], meshList[object], (meshList[object]->transform.scale.x > 1 ? 2.f : meshList[object]->transform.scale.x))) {
+			if (isHit(meshList[object - 1], meshList[object], (meshList[object]->transform.scale.x > 1 ? 2.f : meshList[object]->transform.scale.x * 3))) {
 				ObjectMoveBack(meshList[object - 1]);
 			}
 		}
@@ -504,7 +543,7 @@ void OverworldScene::DetectCollision() {
 	if (!currentCar) {
 		for (unsigned object = 0; object < NUM_GEOMETRY; object++) {
 			if (meshList[object]) {
-				if (isNear(meshList[object], 2.f)) {
+				if (isNear(meshList[object], (meshList[object]->transform.scale.x > 1 ? 2.f : meshList[object]->transform.scale.x * 5))) {
 					MoveBack();
 				}
 			}
@@ -542,8 +581,7 @@ bool OverworldScene::isHit(Mesh* mesh1, Mesh* mesh2, const float& distance) {
 	return false;
 }
 
-void OverworldScene::Render()
-{
+void OverworldScene::Render() {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

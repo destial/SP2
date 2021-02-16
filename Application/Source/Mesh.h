@@ -59,6 +59,7 @@ public:
 	unsigned fakeID;
 	unsigned type;
 	Transform transform;
+	Transform prevTransform;
 	Vector3 corner[TOTAL_CORNERS];
 };
 

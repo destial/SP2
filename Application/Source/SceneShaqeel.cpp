@@ -404,7 +404,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('E'))
 	{
-		if (camera.position.x <= -12.5 && camera.position.x >= -15 && camera.position.y <= 3 && camera.position.y >= -2 && !stopopenDoor)
+		if (camera.position.x <= -11 && camera.position.x >= -15 && camera.position.y <= 4 && camera.position.y >= -4 && !stopopenDoor)
 		{
 			rotatedoor -= (float)(20 * dt);
 		}
@@ -712,6 +712,20 @@ void SceneShaqeel::Render()
 		modelStack.Scale(0.5, 1, 0.9);
 		RenderMesh(meshList[GEO_CUBE], true);
 		modelStack.PopMatrix();
+
+		//modelStack.PushMatrix();
+		//modelStack.Translate(-16.5, 0, -0.18); // X 3.6
+		//modelStack.Scale(0.5, 1, 0.9);
+		//RenderMesh(meshList[GEO_CUBE], true);
+		//modelStack.PopMatrix();
+
+		//modelStack.PushMatrix();
+		//modelStack.Translate(3, -2, 28); // X 3.6
+		//modelStack.Rotate(90, 0, 1, 0);
+		//modelStack.Scale(6, 7, 0.2);
+		//RenderMesh(meshList[GEO_QUAD1], true);
+		//modelStack.PopMatrix();
+
 	}
 	
 	/*modelStack.PushMatrix();

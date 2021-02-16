@@ -24,6 +24,7 @@ class SceneXL : public Scene
 		GEO_TEXT,
 		GEO_FLOORFUTURE,
 		GEO_GNOME,
+		GEO_DUMMY,
 		NUM_GEOMETRY,
 	};
 
@@ -101,7 +102,7 @@ public:
 	virtual void Render();
 	virtual void Exit();
 	std::vector<MinigameEntity*> targetList;
-	MinigameEntity temp;
+	MinigameEntity* temp;
 
 	Color RED = Color(1.f, 0.f, 0.f);
 	Color GREEN = Color(0.f, 1.f, 0.f);

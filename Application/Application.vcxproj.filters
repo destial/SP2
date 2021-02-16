@@ -63,6 +63,9 @@
     <ClCompile Include="Source\SceneRyan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ManagerMinigame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -123,6 +126,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MinigameEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ManagerMinigame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

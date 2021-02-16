@@ -147,6 +147,11 @@ void SceneRyan::Init()
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+
+	meshList[GEO_SHARKTOP] = MeshBuilder::GenerateOBJMTL("SharkTop","OBJ//SharkTop.obj", "OBJ//SharkTop.mtl");
+
+	meshList[GEO_SHARKBTM] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkBtm.obj", "OBJ//SharkBtm.mtl");
+
 }
 
 void SceneRyan::RenderMesh(Mesh* mesh, bool enableLight)
@@ -418,6 +423,15 @@ void SceneRyan::Render()
 	modelStack.PushMatrix();
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_QUAD], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	RenderMesh(meshList[GEO_SHARKTOP], true);
+	modelStack.PopMatrix();
+
+
+	modelStack.PushMatrix();
+	RenderMesh(meshList[GEO_SHARKBTM], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();

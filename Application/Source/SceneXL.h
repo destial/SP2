@@ -21,6 +21,7 @@ class SceneXL : public Scene
 		GEO_BACK,
 		GEO_TEXT,
 		GEO_FLOORFUTURE,
+		GEO_GNOME,
 		NUM_GEOMETRY,
 	};
 

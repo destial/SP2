@@ -63,6 +63,9 @@
     <ClCompile Include="Source\SceneRyan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ManagerMinigame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -98,9 +101,6 @@
     <ClInclude Include="Source\Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\TemplateScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -120,6 +120,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneRyan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vertex.h">
+	</ClInclude>
+    <ClInclude Include="MinigameEntity.h">
+	</ClInclude>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ManagerMinigame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

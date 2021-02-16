@@ -146,8 +146,17 @@ void SceneShaqler::Init()
 
 	meshList[GEO_CHAIR] = MeshBuilder::GenerateOBJMTL("Chair", "OBJ//chair.obj", "OBJ//chair.mtl");
 
+	meshList[GEO_COMPUTERSCREEN] = MeshBuilder::GenerateOBJMTL("Screen", "OBJ//computerScreen.obj", "OBJ//computerScreen.mtl");
+
+	meshList[GEO_KEYBOARD] = MeshBuilder::GenerateOBJMTL("Keyboard", "OBJ//computerKeyboard.obj", "OBJ//computerKeyboard.mtl");
+
+	meshList[GEO_STATUE] = MeshBuilder::GenerateOBJMTL("Statue", "OBJ//tom1.obj", "OBJ//tom.mtl");
+
 	meshList[GEO_MAN] = MeshBuilder::GenerateOBJ("truck", "OBJ//Char1withoutArms.obj"); // Try 1 first
 	meshList[GEO_MAN]->textureID = LoadTGA("Image//CharTexture.tga");
+
+	meshList[GEO_BOOKSTACK] = MeshBuilder::GenerateOBJ("truck", "OBJ//BookStack.obj"); // Try 1 first
+	meshList[GEO_BOOKSTACK]->textureID = LoadTGA("Image//BookStack.tga");
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
@@ -509,18 +518,31 @@ void SceneShaqler::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	//modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.3, 0.3, 0.3);
-	RenderMesh(meshList[GEO_SPHERE], true);
+	modelStack.Translate(10, 3, -14);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(9, 9, 9);
+	RenderMesh(meshList[GEO_COMPUTERSCREEN], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	//modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.15, 0.15, 0.15);
-	RenderMesh(meshList[GEO_MAN], true);
+	modelStack.Translate(11, 3.1, -14.5); //3.1
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(7, 7, 7);
+	RenderMesh(meshList[GEO_KEYBOARD], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(18, 0, 18);
+	modelStack.Rotate(220, 0, 1, 0);
+	modelStack.Scale(0.1, 0.1, 0.1);
+	RenderMesh(meshList[GEO_STATUE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 3.1, -10);
+	modelStack.Rotate(270, 1, 0, 0);
+	modelStack.Scale(0.2, 0.2, 0.2);
+	RenderMesh(meshList[GEO_BOOKSTACK], true);
 	modelStack.PopMatrix();
 
 	std::stringstream ssX;

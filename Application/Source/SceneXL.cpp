@@ -32,7 +32,7 @@ void SceneXL::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0),(float) 50);
+	camera.Init(Vector3(5, 10, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0),(float) 50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -156,6 +156,9 @@ void SceneXL::Init()
 	meshList[GEO_FLOORFUTURE] = MeshBuilder::GenerateQuad("floor",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_FLOORFUTURE]->textureID = LoadTGA("Image//floorfuture.tga");
+
+	meshList[GEO_GNOME] = MeshBuilder::GenerateOBJMTL("gnome",
+		"OBJ//gnomelol.obj", "OBJ//gnomelol.mtl");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -440,8 +443,29 @@ void SceneXL::Render()
 	//modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderMesh(meshList[GEO_FLOORFUTURE], false);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix(); //floor 
 
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	//modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Scale(0.022, 0.022, 0.022);
+	RenderMesh(meshList[GEO_GNOME], true);
+	modelStack.PopMatrix(); //gnome
+
+	std::stringstream ssX;
+	std::stringstream ssY;
+	std::stringstream ssZ;
+	ssX.precision(3);
+	ssX << "X:" << camera.position.x;
+	ssX.precision(3);
+	ssX << "Y:" << camera.position.y;
+	ssZ.precision(3);
+	ssZ << "Z:" << camera.position.z;
+
+	modelStack.PushMatrix();
+	modelStack.Scale(2, 2, 2);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 4, 0, 10);
+	modelStack.PopMatrix();
 }
 
 void SceneXL::Exit() {

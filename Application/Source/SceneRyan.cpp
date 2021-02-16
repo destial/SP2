@@ -152,6 +152,11 @@ void SceneRyan::Init()
 
 	meshList[GEO_SHARKBTM] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkBtm.obj", "OBJ//SharkBtm.mtl");
 
+
+	rotate = true;
+	rotatetail = 0;
+	rotatecounter = 0;
+
 }
 
 void SceneRyan::RenderMesh(Mesh* mesh, bool enableLight)
@@ -311,6 +316,23 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
+	if (rotate == true)
+	{
+		rotatetail += 0.1;
+		if (rotatetail > 8)
+		{
+			rotate = false;
+		}
+	}
+	else if (rotate == false)
+	{
+		rotatetail -= 0.1;
+		if (rotatetail < -8)
+		{
+			rotate = true;
+		}
+	}
+
 	camera.Update(dt, mouse);
 }
 
@@ -426,11 +448,13 @@ void SceneRyan::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
+	modelStack.Translate(0, -2.5, 4);
+	modelStack.Scale(1.1, 1.1, 1.1);
 	RenderMesh(meshList[GEO_SHARKTOP], true);
 	modelStack.PopMatrix();
 
-
 	modelStack.PushMatrix();
+	modelStack.Rotate(rotatetail, 0, 1, 0);
 	RenderMesh(meshList[GEO_SHARKBTM], true);
 	modelStack.PopMatrix();
 

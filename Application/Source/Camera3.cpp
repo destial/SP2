@@ -55,7 +55,9 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	prevTarget = target;
 	prevPosition = position;
 	prevUp = up;
-	const float SENSITIVITY = 0.2f;
+	float SENSITIVITY = 0.2f;
+
+	SENSITIVITY = inverted ? -SENSITIVITY : SENSITIVITY;
 	Vector3 view = (target - position).Normalized();
 	if (mouse.left) {
 		Mtx44 rotation;
@@ -93,6 +95,10 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 		view = (target - position).Normalized();
 		right.y = 0;
 		up = right.Cross(view).Normalized();
+	}
+
+	if (mouse.scroll != 0) {
+		orthographic_size += mouse.scroll * SENSITIVITY * 5.f;
 	}
 
 	if (orthographic_size > 100)
@@ -261,6 +267,7 @@ void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
 	prevTarget = target;
 	prevPosition = position;
 	prevUp = up;
+	jumpFrame = 0;
 	const float SENSITIVITY = 0.08f;
 	Vector3 view = (target - position).Normalized();
 	if (mouse.left) {
@@ -435,6 +442,11 @@ float Camera3::getCarRotation(Vector3& origin) {
 		angle = 360 - angle;
 	}
 	return angle;
+}
+
+bool Camera3::invert() {
+	inverted = (inverted ? 0 : 1);
+	return inverted;
 }
 
 float Camera3::getRotation(Vector3& origin) {

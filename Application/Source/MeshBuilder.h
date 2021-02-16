@@ -29,6 +29,7 @@ public:
 	static Mesh* GenerateOBJMTL(const std::string& meshName, const std::string& file_path, const std::string& mtl_path);
 	static Mesh* GenerateSkybox(const std::string& meshName, Color color, float lengthX, float lengthY);
 	static Mesh* GenerateGround(const std::string& meshName, Color color, float size, unsigned texturesuze);
+	static Mesh* GenerateFaceQuad(const std::string& meshName, Color color, float lengthX, float lengthY);
 };
 
 #endif

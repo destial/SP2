@@ -34,6 +34,10 @@ public:
 	void Exit();
 	enum SCENES
 	{
+		STARTSCENE,
+		MENUSCENE,
+		WINSCENE,
+		LOSESCENE,
 		SCENESHAQ,
 		SCENEWALTON,
 		SCENERYAN,

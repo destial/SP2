@@ -1,5 +1,5 @@
-#ifndef OVERWORLD_SCENE_H
-#define OVERWORLD_SCENE_H
+#ifndef TEMPLATE_SCENE_H
+#define TEMPLATE_SCENE_H
 
 #include "Scene.h"
 #include "Mesh.h"
@@ -7,7 +7,7 @@
 #include "Light.h"
 #include "Camera3.h"
 
-class OverworldScene : public Scene
+class StartMenuScene : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
@@ -19,22 +19,7 @@ class OverworldScene : public Scene
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
-		GEO_GROUND,
 		GEO_TEXT,
-
-		SIDEBAR,
-
-		SKYSCRAPER1,
-		SKYSCRAPER2,
-		NUM_BUILDINGS,
-
-		TRUCK1,
-		TRUCK2,
-		CAR1,
-		CAR2,
-		BUS1,
-		NUM_CAR,
-
 		NUM_GEOMETRY,
 	};
 
@@ -80,13 +65,7 @@ class OverworldScene : public Scene
 		U_TOTAL,
 	};
 
-	enum TASKS {
-		STEAL_CAR,
-		ENTER_BUILDING,
-		SPRINT,
 
-		NUM_TASKS
-	};
 private:
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
@@ -95,35 +74,22 @@ private:
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
-	void RenderVehicles();
-	void RenderBuildings();
-	void RenderTasks();
-	void GetInCar();
-	void DetectCollision();
-	void MoveBack();
-	void ObjectMoveBack(Mesh* mesh);
-	bool isNear(Mesh* mesh, const float& distance = 1.f);
-	bool isHit(Mesh* mesh1, Mesh* mesh2, const float& distance = 1.f);
 
 	bool rotate;
 	Mesh* meshList[NUM_GEOMETRY];
-	Mesh* currentCar;
-	Vector3 carOrigin;
 
 	Light light[2];
 
 	Camera3 camera;
 
-	bool tasks[NUM_TASKS];
-
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
+	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
 public:
 
-	OverworldScene();
-	~OverworldScene();
+	StartMenuScene();
+	~StartMenuScene();
 
 	virtual void Init();
 	virtual void Update(double dt);

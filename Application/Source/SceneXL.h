@@ -81,6 +81,8 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	bool talktognome;
+
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];
@@ -91,6 +93,10 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
+	void DetectGnome();
+	void RenderGnome();
+	bool isNear(Mesh* mesh, const float& distance);
+
 public:
 
 	SceneXL();
@@ -101,6 +107,10 @@ public:
 	virtual void Update(double dt, Mouse mouse);
 	virtual void Render();
 	virtual void Exit();
+
+	bool GotGnome;
+
+
 	std::vector<MinigameEntity*> targetList;
 	MinigameEntity* temp;
 

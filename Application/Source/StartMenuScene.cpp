@@ -1,4 +1,4 @@
-#include "SceneW.h"
+#include "StartMenuScene.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -8,11 +8,11 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneW::SceneW() {}
+StartMenuScene::StartMenuScene() {}
 
-SceneW::~SceneW() {}
+StartMenuScene::~StartMenuScene() {}
 
-void SceneW::Init()
+void StartMenuScene::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
@@ -32,7 +32,7 @@ void SceneW::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0));
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -126,42 +126,32 @@ void SceneW::Init()
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
-	/*meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 50.1f);
-	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");*/
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
+		Color(1, 1, 1), 50.1f);
+	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
+	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
+	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
-	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", WHITE, 1.f);
-	meshList[GEO_FRONT]->textureID = LoadTGA("Image//tron_ft.tga");
+	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", WHITE, 1.f, 1.f);
+	meshList[GEO_BACK]->textureID = LoadTGA("Image//back-space.tga");
 
-	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", WHITE, 1.f);
-	meshList[GEO_BACK]->textureID = LoadTGA("Image//tron_bk.tga");
+	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", WHITE, 1.f, 1.f);
+	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right-space.tga");
 
-	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", WHITE, 1.f);
-	meshList[GEO_LEFT]->textureID = LoadTGA("Image//tron_rt.tga");
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", WHITE, 1.f, 1.f);
+	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left-space.tga");
 
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", WHITE, 1.f);
-	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//tron_lf.tga");
+	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", WHITE, 1.f, 1.f);
+	meshList[GEO_TOP]->textureID = LoadTGA("Image//top-space.tga");
 
-	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", WHITE, 1.f);
-	meshList[GEO_TOP]->textureID = LoadTGA("Image//tron_up.tga");
-
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", WHITE, 1.f);
-	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//tron_dn.tga");
-
-	/*meshList[GEO_DOOROPEN] = MeshBuilder::GenerateQuad("Maze", WHITE, 1.f);
-	meshList[GEO_DOOROPEN]->textureID = LoadTGA("Image//maze_unsolved.tga");*/
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", WHITE, 1.f, 1.f);
+	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
-
-	meshList[GEO_WALLTYPE1] = MeshBuilder::GenerateOBJMTL("WallType1", "OBJ//wall.obj", "OBJ//wall.mtl");
-	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Door", "OBJ//doorway.obj", "OBJ//doorway.mtl");
-	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
-	meshList[GEO_DESK] = MeshBuilder::GenerateOBJMTL("Desk", "OBJ//desk.obj", "OBJ//desk.mtl");
-	meshList[GEO_DESKCORNER] = MeshBuilder::GenerateOBJMTL("DeskCorner", "OBJ//deskCorner.obj", "OBJ//deskCorner.mtl");
-	meshList[GEO_WALLTYPE3] = MeshBuilder::GenerateCube("Walls", 5, 5, 5);
 }
 
-void SceneW::RenderMesh(Mesh* mesh, bool enableLight)
+void StartMenuScene::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -203,7 +193,7 @@ void SceneW::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void SceneW::RenderText(Mesh* mesh, std::string text, Color color)
+void StartMenuScene::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -230,14 +220,14 @@ void SceneW::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneW::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void StartMenuScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -258,7 +248,7 @@ void SceneW::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -272,7 +262,7 @@ void SceneW::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneW::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
+void StartMenuScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
@@ -305,7 +295,7 @@ void SceneW::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, fl
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneW::Update(double dt, Mouse mouse) {
+void StartMenuScene::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 
@@ -318,77 +308,63 @@ void SceneW::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
-	static const float LSPEED = 40.f;
-	if (Application::IsKeyPressed('I'))
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('P'))
-		light[0].position.y += (float)(LSPEED * dt);
-
 	camera.Update(dt, mouse);
 }
 
-void SceneW::Update(double dt)
+void StartMenuScene::Update(double dt)
 {
 	Mouse mouse;
 	Update(dt, mouse);
 }
 
-void SceneW::RenderSkybox() {
+void StartMenuScene::RenderSkybox() {
 	float translate = 50;
-	float scaleVal = 100;//(translate * 2) + (translate * 0.01f);
+	float scaleVal = (translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 100, 0);//camera.position.x, camera.position.y + translate, camera.position.z);
+	modelStack.Translate(camera.position.x, camera.position.y + translate, camera.position.z);
+	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Rotate(270, 0, 0, 1);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);//camera.position.x, camera.position.y - translate, camera.position.z);
+	modelStack.Translate(camera.position.x, camera.position.y - translate, camera.position.z);
+	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Rotate(90, 0, 0, 1);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, -100);//camera.position.x, camera.position.y - 0.4, camera.position.z - translate);
-	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Rotate(180, 0, 0, 1);
+	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z - translate);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_FRONT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 100);//camera.position.x, camera.position.y - 0.4, camera.position.z + translate);
-	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z + translate);
+	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(100, 0, 0);//camera.position.x + translate, camera.position.y - 0.4, camera.position.z);
-	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Rotate(-90, 0, 0, 1);
+	modelStack.Translate(camera.position.x + translate, camera.position.y - 0.4, camera.position.z);
+	modelStack.Rotate(-90, 0, 1, 0);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-100,0,0);//camera.position.x - translate, camera.position.y - 0.4, camera.position.z);
-	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Rotate(-270, 0, 0, 1);
+	modelStack.Translate(camera.position.x - translate, camera.position.y - 0.4, camera.position.z);
+	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
 }
 
-void SceneW::Render()
+void StartMenuScene::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -439,121 +415,9 @@ void SceneW::Render()
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
 	RenderSkybox();
-	modelStack.PushMatrix();
-	modelStack.Translate(0, .1, 0);
-	modelStack.Scale(100, 100, 100);
-	RenderMesh(meshList[GEO_QUAD], true);
-	modelStack.PopMatrix();
-
-	/*modelStack.PushMatrix();
-	modelStack.Translate(0, .1, 0);
-	modelStack.Scale(100, 100, 100);
-	RenderMesh(meshList[GEO_QUAD], true);
-	modelStack.PopMatrix();*/
-
-	// left side of the room
-	modelStack.PushMatrix();
-	modelStack.Translate(-50, 0, -40);
-	modelStack.Rotate(-90, 0, 1, 0);
-	modelStack.Scale(10,10,10);
-	RenderMesh(meshList[GEO_WALLDOOR], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-51, 0, -47);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_DOOR], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-50, 0, 50);
-	modelStack.Rotate(-90, 0, 1, 0);
-	modelStack.Scale(90, 10, 10);
-	RenderMesh(meshList[GEO_WALLTYPE1], true);
-	modelStack.PopMatrix();
-	// right side of the room
-	modelStack.PushMatrix();
-	modelStack.Translate(50, 0, -50);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(100, 10, 10);
-	RenderMesh(meshList[GEO_WALLTYPE1], true);
-	modelStack.PopMatrix();
-	// front of the room
-	modelStack.PushMatrix();
-	modelStack.Translate(-50, 0, -50);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(100, 10, 10);
-	RenderMesh(meshList[GEO_WALLTYPE1], true);
-	modelStack.PopMatrix();
-
-	// back of the room
-	modelStack.PushMatrix();
-	modelStack.Translate(50, 0, 50);
-	modelStack.Scale(100, 10, 10);
-	RenderMesh(meshList[GEO_WALLTYPE1], true);
-	modelStack.PopMatrix();
-
-	// maze
-	/*modelStack.PushMatrix();
-	modelStack.Translate(-40, 6.5, -45);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10,12.5,3);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 6.5, -25);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10, 12.5, 3);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 6.5, -5);
-	modelStack.Scale(20, 12.5, 3);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 6.5, -8.5);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10, 12.5, 3);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-34.5, 6.5, -28.5);
-	modelStack.Scale(10, 12.5, 3);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 6.5, -32);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10, 12.5, 3);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
-	modelStack.PopMatrix();*/
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 2.5, 0);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
-	modelStack.PushMatrix();
-	modelStack.Translate(-1.5, 3, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderText(meshList[GEO_TEXT], "Enemy #1", Color(0, 1, 1));
-	modelStack.PopMatrix();
-
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", Color(0, 1, 1), 3, 0, 14);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", Color(0, 1, 1), 3, 0, 13);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", Color(0, 1, 1), 3, 12.5, 14);
-	modelStack.PopMatrix();
 }
 
-void SceneW::Exit() {
+void StartMenuScene::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}

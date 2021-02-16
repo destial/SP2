@@ -32,11 +32,13 @@ public:
 	bool canfly = false;
 	bool justpress = false;
 	bool sprintRotate = false;
+	bool inverted = false;
 	//My own stuff
 	float getRotation(void);
 	float getCarRotation();
 	float getRotation(Vector3& origin);
 	float getCarRotation(Vector3& carOrigin);
+	bool invert();
 	float jumpFrame;
 };
 

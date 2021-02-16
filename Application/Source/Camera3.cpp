@@ -50,10 +50,10 @@ void Camera3::Update(double dt) {
 }
 
 void Camera3::Update(double& dt, Mouse& mouse) {
-	const float SENSITIVITY = 0.08f;
 	prevTarget = target;
 	prevPosition = position;
 	prevUp = up;
+	const float SENSITIVITY = 0.2f;
 	Vector3 view = (target - position).Normalized();
 	if (mouse.left) {
 		Mtx44 rotation;

@@ -14,6 +14,7 @@
 #include "TemplateScene.h"
 #include "SceneShaqeel.h"
 #include "SceneW.h"
+#include "SceneRyan.h"
 #include "OverworldScene.h"
 
 GLFWwindow* m_window;
@@ -236,6 +237,7 @@ void Application::Run()
 	//Main Loop
 	scene[SCENESHAQ] = new SceneShaqeel();
 	scene[SCENEWALTON] = new SceneW();
+	scene[SCENERYAN] = new SceneRyan();
 	scene[SCENEXL] = new SceneXL();
 	scene[OVERWORLD] = new OverworldScene();
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
@@ -258,10 +260,15 @@ void Application::Run()
 			break;
 		case Application::SCENEWALTON:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::SCENEXL;
+				Application::sceneswitch = Application::SCENERYAN;
 			}
 			break;
 		case Application::SCENERYAN:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::SCENEXL;
+			}
+			mouse.reset();
+			glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
 			break;
 		case Application::SCENEXL:
 			if (Application::IsKeyPressedOnce(VK_F1)) {

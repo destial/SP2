@@ -1,5 +1,5 @@
-#ifndef SCENE_SHAQEEL_H
-#define SCENE_SHAQEEL_H
+#ifndef SCENE_RYAN_H
+#define SCENE_RYAN_H
 
 #include "Scene.h"
 #include "Mesh.h"
@@ -7,14 +7,12 @@
 #include "Light.h"
 #include "Camera3.h"
 
-class SceneShaqeel : public Scene
+class SceneRyan : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
 		GEO_AXES = 0,
 		GEO_QUAD,
-		GEO_QUAD1,
-		GEO_QUAD2,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -22,17 +20,6 @@ class SceneShaqeel : public Scene
 		GEO_FRONT,
 		GEO_BACK,
 		GEO_TEXT,
-		GEO_TRUCK,
-		GEO_BUS,
-		GEO_CAR1,
-		GEO_CAR2,
-		GEO_TUNNEL,
-		GEO_TREE,
-		GEO_BUSH,
-		GEO_BENCH,
-		GEO_MART,
-		GEO_CITY1,
-		GEO_CITY2,
 		NUM_GEOMETRY,
 	};
 
@@ -89,13 +76,6 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
-
-	float translateTruckZ;
-	float translateBusZ;
-	float translateCar1Z;
-	float translateCar2Z;
-	float busZ;
-
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];
@@ -108,10 +88,8 @@ private:
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
 public:
 
-	SceneShaqeel();
-	~SceneShaqeel();
-
-	/*float vehiclemove(double dt);*/
+	SceneRyan();
+	~SceneRyan();
 
 	virtual void Init();
 	virtual void Update(double dt);

@@ -213,6 +213,19 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	} else {
 		jumpFrame = 0;
 	}
+
+	if (position.y > defaultPosition.y) {
+		position.y -= (2.f * dt);
+		target.y -= (2.f * dt);
+		if (position.y < defaultPosition.y) {
+			float diff = defaultPosition.y - position.y;
+			position.y = defaultPosition.y;
+			target.y += diff;
+		}
+	}
+	if (position.y < defaultPosition.y) {
+		position.y = defaultPosition.y;
+	}
 }
 
 void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
@@ -269,6 +282,7 @@ void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
 	float boundary = bounds;
 	view = (carTarget - position).Normalized();
 	right = view.Cross(Vector3(0, 1, 0)).Normalized();
+	Vector3 oldCarPos = position;
 	if (Application::IsKeyPressed('W')) {
 		Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
 		Vector3 oldPos = position;
@@ -325,6 +339,7 @@ void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
 
 	view = (carTarget - position).Normalized();
 
+	if (position == oldCarPos) return;
 	if (Application::IsKeyPressed('A')) {
 		Mtx44 rotation;
 		rotation.SetToRotation((2 * SPEED * SENSITIVITY), up.x, up.y, up.z);

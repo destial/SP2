@@ -329,10 +329,10 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 
 	if (!currentCar) {
 		camera.Update(dt, mouse);
+		DetectCollision();
 	} else {
 		camera.UpdateCar(dt, mouse, (float)3.f);
 	}
-	DetectCollision();
 }
 
 void OverworldScene::Update(double dt) {
@@ -398,10 +398,10 @@ void OverworldScene::RenderSkybox() {
 void OverworldScene::RenderVehicles() {
 	for (unsigned car = TRUCK1; car < NUM_CAR; car++) {
 		if (meshList[car]) {
-			meshList[car]->corner[Mesh::CORNER::C1] += meshList[car]->transform.translate;
+			/*meshList[car]->corner[Mesh::CORNER::C1] += meshList[car]->transform.translate;
 			meshList[car]->corner[Mesh::CORNER::C2] += meshList[car]->transform.translate;
 			meshList[car]->corner[Mesh::CORNER::C3] += meshList[car]->transform.translate;
-			meshList[car]->corner[Mesh::CORNER::C4] += meshList[car]->transform.translate;
+			meshList[car]->corner[Mesh::CORNER::C4] += meshList[car]->transform.translate;*/
 			modelStack.PushMatrix();
 			modelStack.Translate(meshList[car]->transform.translate.x, meshList[car]->transform.translate.y, meshList[car]->transform.translate.z);
 			modelStack.Rotate(meshList[car]->transform.rotate, 0, 1, 0);
@@ -425,6 +425,7 @@ void OverworldScene::GetInCar() {
 						camera.position.x = currentCar->transform.translate.x;
 						camera.position.z = currentCar->transform.translate.z;
 						camera.target = camera.carTarget;
+						break;
 					}
 				}
 			}
@@ -435,18 +436,14 @@ void OverworldScene::GetInCar() {
 		currentCar->transform.translate.x = camera.position.x;
 		currentCar->transform.translate.z = camera.position.z;
 		camera.position.y = currentCar->transform.translate.y + 5;
-		Vector3 view = (camera.carTarget - camera.position).Normalized();
-		Vector3 right = view.Cross(Vector3(0, 1, 0)).Normalized();
-		right.y = 0;
-		Vector3 lookAt = Vector3(0, 1, 0).Cross(right).Normalized();
 		currentCar->transform.rotate = camera.getCarRotation();
 		if (Application::IsKeyPressedOnce('F')) {
-			camera.position.x -= right.x;
-			camera.position.z -= right.z;
-			camera.position.y = 2;
-			camera.target.x -= right.x;
-			camera.target.z -= right.z;
-			camera.target.y = 2;
+			Vector3 view = (camera.target - camera.position).Normalized();
+			Vector3 right = view.Cross(Vector3(0, 1, 0)).Normalized();
+			camera.position.x = currentCar->transform.translate.x - 2 * right.x;
+			camera.position.z = currentCar->transform.translate.z - 2 * right.z;
+			camera.position.y = camera.defaultPosition.y;
+			camera.target.y = camera.defaultPosition.y;
 			currentCar = nullptr;
 		}
 	}
@@ -456,14 +453,16 @@ void OverworldScene::DetectCollision() {
 	for (unsigned object = 1; object < NUM_GEOMETRY; object++) {
 		if (meshList[object] && meshList[object - 1]) {
 			if (isHit(meshList[object - 1], meshList[object], (meshList[object]->transform.scale.x > 1 ? 2.f : meshList[object]->transform.scale.x))) {
-				ObjectMoveBack(meshList[object - 1]);
+				//ObjectMoveBack(meshList[object - 1]);
 			}
 		}
 	}
-	for (unsigned object = 0; object < NUM_GEOMETRY; object++) {
-		if (meshList[object]) {
-			if (isNear(meshList[object], 2.f)) {
-				MoveBack();
+	if (!currentCar) {
+		for (unsigned object = 0; object < NUM_GEOMETRY; object++) {
+			if (meshList[object]) {
+				if (isNear(meshList[object], 2.f)) {
+					MoveBack();
+				}
 			}
 		}
 	}

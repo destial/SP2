@@ -136,16 +136,16 @@ void SceneShaqeel::Init()
 	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad2", Color(1.6, 0.82, 0.45), 1.f);
 
 	meshList[GEO_TRUCK] = MeshBuilder::GenerateOBJ("truck", "OBJ//NewTruck2.obj"); // Try 1 first
-	meshList[GEO_TRUCK]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
+	meshList[GEO_TRUCK]->textureID = LoadTGA("Image//BlueVehicle.tga");
 
 	meshList[GEO_BUS] = MeshBuilder::GenerateOBJ("bus", "OBJ//NewBus.obj"); // Try 1 first
 	meshList[GEO_BUS]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
 
 	meshList[GEO_CAR1] = MeshBuilder::GenerateOBJ("Car1", "OBJ//NewCar1.obj"); // Try 1 first
-	meshList[GEO_CAR1]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
+	meshList[GEO_CAR1]->textureID = LoadTGA("Image//GreenVehicle.tga");
 
 	meshList[GEO_CAR2] = MeshBuilder::GenerateOBJ("Car2", "OBJ//NewCar2.obj"); // Try 1 first
-	meshList[GEO_CAR2]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
+	meshList[GEO_CAR2]->textureID = LoadTGA("Image//RedVehicle.tga");
 
 	meshList[GEO_BUSH] = MeshBuilder::GenerateOBJ("Bush", "OBJ//Bush_2.obj"); // Try 1 first
 	meshList[GEO_BUSH]->textureID = LoadTGA("Image//Tree_Texture2.tga");
@@ -156,8 +156,11 @@ void SceneShaqeel::Init()
 	meshList[GEO_BENCH] = MeshBuilder::GenerateOBJ("Bench", "OBJ//NewBench1.obj"); // Try 1 first
 	meshList[GEO_BENCH]->textureID = LoadTGA("Image//bench.tga");
 
+	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Bench", "OBJ//house_type01.obj"); // Try 1 first
+	meshList[GEO_MART]->textureID = LoadTGA("Image//house1.tga");
+
 	meshList[GEO_TUNNEL] = MeshBuilder::GenerateOBJ("Bench", "OBJ//Tunnel1.obj"); // Try 1 first
-	//meshList[GEO_BENCH]->textureID = LoadTGA("Image//bench.tga");
+	meshList[GEO_TUNNEL]->textureID = LoadTGA("Image//DarkGray.tga");
 
 	meshList[GEO_CITY1] = MeshBuilder::GenerateOBJ("skyscraper", "OBJ//skyscraper4.obj");
 
@@ -641,6 +644,13 @@ void SceneShaqeel::Render()
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderMesh(meshList[GEO_BENCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20.5, -2.02, 0);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_MART], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();

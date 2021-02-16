@@ -30,6 +30,7 @@ class SceneShaqeel : public Scene
 		GEO_TREE,
 		GEO_BUSH,
 		GEO_BENCH,
+		GEO_MART,
 		GEO_CITY1,
 		GEO_CITY2,
 		NUM_GEOMETRY,

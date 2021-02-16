@@ -152,21 +152,39 @@ void OverworldScene::Init()
 
 	meshList[TRUCK1] = MeshBuilder::GenerateOBJ("truck1", "OBJ//NewTruck2.obj");
 	meshList[TRUCK1]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
-	meshList[TRUCK1]->transform.Translate(10, 1.1f, 0);
-	meshList[TRUCK1]->transform.Scale(0.022);
+	meshList[TRUCK1]->transform.Translate(10, 2.f, 65);
+	meshList[TRUCK1]->transform.Scale(0.04);
 	meshList[TRUCK1]->corner[Mesh::CORNER::C1] = meshList[TRUCK1]->transform.translate + Vector3(1, 0, -1);
 	meshList[TRUCK1]->corner[Mesh::CORNER::C2] = meshList[TRUCK1]->transform.translate + Vector3(-1, 0, 1);
 	meshList[TRUCK1]->corner[Mesh::CORNER::C3] = meshList[TRUCK1]->transform.translate + Vector3(1, 0, 1);
 	meshList[TRUCK1]->corner[Mesh::CORNER::C4] = meshList[TRUCK1]->transform.translate + Vector3(-1, 0, -1);
 
 	meshList[CAR1] = MeshBuilder::GenerateOBJ("car1", "OBJ//NewCar1.obj");
-	meshList[CAR1]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
-	meshList[CAR1]->transform.Translate(-10, 1.2f, 10);
+	meshList[CAR1]->textureID = LoadTGA("Image//GreenVehicle.tga");
+	meshList[CAR1]->transform.Translate(-10, 1.5f, 65);
 	meshList[CAR1]->transform.Scale(0.1);
 	meshList[CAR1]->corner[Mesh::CORNER::C1] = meshList[CAR1]->transform.translate + Vector3(1, 0, -1);
 	meshList[CAR1]->corner[Mesh::CORNER::C2] = meshList[CAR1]->transform.translate + Vector3(1, 0, 1);
 	meshList[CAR1]->corner[Mesh::CORNER::C3] = meshList[CAR1]->transform.translate + Vector3(-1, 0, -1);
 	meshList[CAR1]->corner[Mesh::CORNER::C4] = meshList[CAR1]->transform.translate + Vector3(1, 0, 1);
+
+	meshList[BUS1] = MeshBuilder::GenerateOBJ("bus", "OBJ//bus.obj");
+	meshList[BUS1]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
+	meshList[BUS1]->transform.Translate(0, 3.6f, 55);
+	meshList[BUS1]->transform.Scale(0.4);
+	meshList[BUS1]->corner[Mesh::CORNER::C1] = meshList[BUS1]->transform.translate + Vector3(1, 0, -1);
+	meshList[BUS1]->corner[Mesh::CORNER::C2] = meshList[BUS1]->transform.translate + Vector3(1, 0, 1);
+	meshList[BUS1]->corner[Mesh::CORNER::C3] = meshList[BUS1]->transform.translate + Vector3(-1, 0, -1);
+	meshList[BUS1]->corner[Mesh::CORNER::C4] = meshList[BUS1]->transform.translate + Vector3(1, 0, 1);
+
+	meshList[CAR2] = MeshBuilder::GenerateOBJ("Car2", "OBJ//NewCar2.obj");
+	meshList[CAR2]->textureID = LoadTGA("Image//RedVehicle.tga");
+	meshList[CAR2]->transform.Translate(-20, 1.2f, 65);
+	meshList[CAR2]->transform.Scale(0.1);
+	meshList[CAR2]->corner[Mesh::CORNER::C1] = meshList[CAR2]->transform.translate + Vector3(1, 0, -1);
+	meshList[CAR2]->corner[Mesh::CORNER::C2] = meshList[CAR2]->transform.translate + Vector3(1, 0, 1);
+	meshList[CAR2]->corner[Mesh::CORNER::C3] = meshList[CAR2]->transform.translate + Vector3(-1, 0, -1);
+	meshList[CAR2]->corner[Mesh::CORNER::C4] = meshList[CAR2]->transform.translate + Vector3(1, 0, 1);
 
 	meshList[SKYSCRAPER2] = MeshBuilder::GenerateOBJ("skyscraper", "OBJ//skyscraper4.obj");
 	meshList[SKYSCRAPER2]->transform.Scale(5);
@@ -389,19 +407,15 @@ void OverworldScene::RenderSkybox() {
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_GROUND], true);
 	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	RenderMesh(meshList[SKYSCRAPER2], true);
-	modelStack.PopMatrix();
 }
 
 void OverworldScene::RenderVehicles() {
 	for (unsigned car = TRUCK1; car < NUM_CAR; car++) {
 		if (meshList[car]) {
-			/*meshList[car]->corner[Mesh::CORNER::C1] += meshList[car]->transform.translate;
+			meshList[car]->corner[Mesh::CORNER::C1] += meshList[car]->transform.translate;
 			meshList[car]->corner[Mesh::CORNER::C2] += meshList[car]->transform.translate;
 			meshList[car]->corner[Mesh::CORNER::C3] += meshList[car]->transform.translate;
-			meshList[car]->corner[Mesh::CORNER::C4] += meshList[car]->transform.translate;*/
+			meshList[car]->corner[Mesh::CORNER::C4] += meshList[car]->transform.translate;
 			modelStack.PushMatrix();
 			modelStack.Translate(meshList[car]->transform.translate.x, meshList[car]->transform.translate.y, meshList[car]->transform.translate.z);
 			modelStack.Rotate(meshList[car]->transform.rotate, 0, 1, 0);
@@ -414,6 +428,19 @@ void OverworldScene::RenderVehicles() {
 	GetInCar();
 }
 
+void OverworldScene::RenderBuildings() {
+	for (unsigned building = SKYSCRAPER1; building < NUM_BUILDINGS; building++) {
+		if (meshList[building]) {
+			modelStack.PushMatrix();
+			modelStack.Translate(meshList[building]->transform.translate.x, meshList[building]->transform.translate.y, meshList[building]->transform.translate.z);
+			modelStack.Rotate(meshList[building]->transform.rotate, 0, 1, 0);
+			modelStack.Scale(meshList[building]->transform.scale.x, meshList[building]->transform.scale.y, meshList[building]->transform.scale.z);
+			RenderMesh(meshList[SKYSCRAPER2], true);
+			modelStack.PopMatrix();
+		}
+	}
+}
+
 void OverworldScene::GetInCar() {
 	if (!currentCar) {
 		for (unsigned car = TRUCK1; car < NUM_CAR; car++) {
@@ -424,7 +451,13 @@ void OverworldScene::GetInCar() {
 						currentCar = meshList[car];
 						camera.position.x = currentCar->transform.translate.x;
 						camera.position.z = currentCar->transform.translate.z;
-						camera.target = camera.carTarget;
+						switch (car) {
+						default:
+							carOrigin = Vector3(-1, 0, 0);
+							break;
+						}
+						camera.carTarget = camera.position + carOrigin;
+						camera.target = camera.position + carOrigin;
 						break;
 					}
 				}
@@ -436,14 +469,22 @@ void OverworldScene::GetInCar() {
 		currentCar->transform.translate.x = camera.position.x;
 		currentCar->transform.translate.z = camera.position.z;
 		camera.position.y = currentCar->transform.translate.y + 5;
-		currentCar->transform.rotate = camera.getCarRotation();
+		Vector3 origin = (currentCar->transform.translate + carOrigin).Normalized();
+		currentCar->transform.rotate = camera.getCarRotation(carOrigin);
 		if (Application::IsKeyPressedOnce('F')) {
 			Vector3 view = (camera.target - camera.position).Normalized();
 			Vector3 right = view.Cross(Vector3(0, 1, 0)).Normalized();
-			camera.position.x = currentCar->transform.translate.x - 2 * right.x;
-			camera.position.z = currentCar->transform.translate.z - 2 * right.z;
+			while (true) {
+				if (isNear(currentCar, 2)) {
+					camera.position.x += - (2 * right.x);
+					camera.position.z += - (2 * right.z);
+				} else {
+					break;
+				}
+			}
 			camera.position.y = camera.defaultPosition.y;
 			camera.target.y = camera.defaultPosition.y;
+			camera.orthographic_size = camera.prevFOV;
 			currentCar = nullptr;
 		}
 	}
@@ -550,6 +591,7 @@ void OverworldScene::Render()
 	modelStack.PopMatrix();
 
 	RenderSkybox();
+	RenderBuildings();
 	RenderVehicles();
 }
 

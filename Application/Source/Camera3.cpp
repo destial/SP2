@@ -4,7 +4,7 @@
 
 Camera3::Camera3()
 {
-	orthographic_size = 45.0f;
+	orthographic_size = defaultFOV = 45.0f;
 }
 
 Camera3::~Camera3()
@@ -20,6 +20,7 @@ void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up,
 	this->position = defaultPosition = pos;
 	this->target = defaultTarget = target;
 	this->Decoy = defaultPosition = pos;
+	sprintRotation = 0;
 	carTarget = target;
 	Vector3 view = (target - position).Normalized();
 	Vector3 right = view.Cross(up);
@@ -37,6 +38,7 @@ void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 	this->position = defaultPosition = pos;
 	this->target = defaultTarget = target;
 	this->Decoy = defaultPosition = pos;
+	sprintRotation = 0;
 	Vector3 view = (target - position).Normalized();
 	Vector3 right = view.Cross(up);
 	right.y = 0;
@@ -92,26 +94,54 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 		right.y = 0;
 		up = right.Cross(view).Normalized();
 	}
-	if (position != target)
-		orthographic_size += orthographic_size * mouse.scroll * SENSITIVITY;
-	if (orthographic_size > 100) 
+
+	if (orthographic_size > 100)
 		orthographic_size = 100;
 	if (orthographic_size < 1)
 		orthographic_size = 1;
+	prevFOV = orthographic_size;
 
 	float boundary = bounds;
+	float SPRINT = 1.f;
+	if (Application::IsKeyPressed(VK_LSHIFT)) {
+		if (sprintRotation < -10.f) {
+			sprintRotate = 1;
+		} else if (sprintRotation > 10.f) {
+			sprintRotate = 0;
+		}
+		if (sprintRotate) {
+			sprintRotation += 1.f;
+		} else {
+			sprintRotation -= 1.f;
+		}
+		SPRINT *= 2.f;
+		Mtx44 rotation;
+		rotation.SetToRotation(sprintRotation, view.x, 0, view.z);
+		view = (rotation * view).Normalized();
+		target = position + view;
+	} else {
+		sprintRotation = 0;
+		Mtx44 rotation;
+		rotation.SetToRotation(sprintRotation, view.x, 0, view.z);
+		view = (rotation * view).Normalized();
+		target = position + view;
+	}
+
+	view = (target - position).Normalized();
+	right.y = 0;
+	up = right.Cross(view).Normalized();
 
 	if (Application::IsKeyPressed('W')) {
 		Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
 		Vector3 oldPos = position;
 		Vector3 oldTar = target;
 		if (position.x <= boundary && position.x >= -boundary) {
-			position.x += face.x * SENSITIVITY;
-			target.x += face.x * SENSITIVITY;
+			position.x += face.x * SENSITIVITY * SPRINT;
+			target.x += face.x * SENSITIVITY * SPRINT;
 		}
 		if (position.z <= boundary && position.z >= -boundary) {
-			position.z += face.z * SENSITIVITY;
-			target.z += face.z * SENSITIVITY;
+			position.z += face.z * SENSITIVITY * SPRINT;
+			target.z += face.z * SENSITIVITY * SPRINT;
 		}
 		if (position.x <= -boundary || position.x >= boundary) {
 			position.x = oldPos.x;
@@ -193,39 +223,38 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 
 	if (Application::IsKeyPressed(' ')) {
 		if (position.y <= boundary) {
-			position.y += 1 * SENSITIVITY;
-			target.y += 1 * SENSITIVITY;
+			if (position.y == defaultPosition.y) {
+				jumpFrame++;
+			}
 		}
 	}
 
-	if (Application::IsKeyPressed(VK_LSHIFT)) {
-		if (position.y >= -boundary) {
-			position.y -= 1 * SENSITIVITY;
-			target.y -= 1 * SENSITIVITY;
-		}
-	}
-	if (jumpFrame != 0 && jumpFrame < 10) {
-		position.y += SENSITIVITY;
-		target.y += SENSITIVITY;
+	const float JUMP_SPEED = SENSITIVITY * 0.5f;
+
+	if (jumpFrame != 0 && jumpFrame < 25) {
+		position.y += JUMP_SPEED;
+		target.y += JUMP_SPEED;
 		jumpFrame++;
 	} else if (jumpFrame == 0) {
-		return;
+
 	} else {
 		jumpFrame = 0;
 	}
 
-	if (position.y > defaultPosition.y) {
-		position.y -= (2.f * dt);
-		target.y -= (2.f * dt);
-		if (position.y < defaultPosition.y) {
-			float diff = defaultPosition.y - position.y;
-			position.y = defaultPosition.y;
-			target.y += diff;
+	if (jumpFrame == 0) {
+		if (position.y > defaultPosition.y) {
+			position.y -= JUMP_SPEED;
+			target.y -= JUMP_SPEED;
+			if (position.y < defaultPosition.y) {
+				float diff = defaultPosition.y - position.y;
+				position.y = defaultPosition.y;
+				target.y += diff;
+			}
 		}
-	}
 	if (position.y < defaultPosition.y) {
 		position.y = defaultPosition.y;
 	}
+}
 }
 
 void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
@@ -272,12 +301,7 @@ void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
 		right.y = 0;
 		up = right.Cross(view).Normalized();
 	}
-	if (position != target)
-		orthographic_size += orthographic_size * mouse.scroll * SENSITIVITY;
-	if (orthographic_size > 100)
-		orthographic_size = 100;
-	if (orthographic_size < 1)
-		orthographic_size = 1;
+	orthographic_size = 100.f;
 
 	float boundary = bounds;
 	view = (carTarget - position).Normalized();
@@ -342,14 +366,14 @@ void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
 	if (position == oldCarPos) return;
 	if (Application::IsKeyPressed('A')) {
 		Mtx44 rotation;
-		rotation.SetToRotation((2 * SPEED * SENSITIVITY), up.x, up.y, up.z);
+		rotation.SetToRotation((5 * SPEED * SENSITIVITY), 0, 1, 0);
 		view = (rotation * view).Normalized();
 		carTarget = position + view;
 	}
 
 	if (Application::IsKeyPressed('D')) {
 		Mtx44 rotation;
-		rotation.SetToRotation((-2 * SPEED * SENSITIVITY), up.x, up.y, up.z);
+		rotation.SetToRotation((-5 * SPEED * SENSITIVITY), 0, 1, 0);
 		view = (rotation * view).Normalized();
 		carTarget = position + view;
 	}
@@ -360,6 +384,7 @@ void Camera3::Reset() {
 	target = defaultTarget;
 	up = defaultUp;
 	carTarget = target;
+	orthographic_size = defaultFOV;
 }
 
 float Camera3::getRotation(void) {
@@ -378,9 +403,43 @@ float Camera3::getRotation(void) {
 }
 
 float Camera3::getCarRotation() {
+
+	// Get the view vector of the car, set to 0 elevation
 	Vector3 lookAt = (carTarget - position).Normalized();
 	lookAt.y = 0;
+
+	// Use the default origin
 	Vector3 origin = Vector3(-1, 0, 0);
+	float uv = (origin.x * lookAt.x + origin.z * lookAt.z) / ((Math::sqrt(origin.x * origin.x + origin.z * origin.z)) * Math::sqrt(lookAt.x * lookAt.x + lookAt.z * lookAt.z));
+	float angle = Math::RadianToDegree(acos(uv));
+	if (lookAt.z <= 0 && lookAt.x <= 0) {
+		angle = 360 - angle;
+	} else if (lookAt.x >= 0 && lookAt.z <= 0) {
+		angle = 360 - angle;
+	}
+	return angle;
+}
+
+float Camera3::getCarRotation(Vector3& origin) {
+
+	// Get the view vector of the car, set to 0 elevation
+	Vector3 lookAt = (carTarget - position).Normalized();
+	lookAt.y = 0;
+
+	// 
+	float uv = (origin.x * lookAt.x + origin.z * lookAt.z) / ((Math::sqrt(origin.x * origin.x + origin.z * origin.z)) * Math::sqrt(lookAt.x * lookAt.x + lookAt.z * lookAt.z));
+	float angle = Math::RadianToDegree(acos(uv));
+	if (lookAt.z <= 0 && lookAt.x <= 0) {
+		angle = 360 - angle;
+	} else if (lookAt.x >= 0 && lookAt.z <= 0) {
+		angle = 360 - angle;
+	}
+	return angle;
+}
+
+float Camera3::getRotation(Vector3& origin) {
+	Vector3 lookAt = (target - position).Normalized();
+	lookAt.y = 0;
 	float uv = (origin.x * lookAt.x + origin.z * lookAt.z) / ((Math::sqrt(origin.x * origin.x + origin.z * origin.z)) * Math::sqrt(lookAt.x * lookAt.x + lookAt.z * lookAt.z));
 	float angle = Math::RadianToDegree(acos(uv));
 	if (lookAt.z <= 0 && lookAt.x <= 0) {

@@ -25,12 +25,18 @@ public:
 	float yaw;
 	float pitch;
 	float orthographic_size;
+	float defaultFOV;
+	float prevFOV;
 	float bounds;
+	float sprintRotation;
 	bool canfly = false;
 	bool justpress = false;
+	bool sprintRotate = false;
 	//My own stuff
 	float getRotation(void);
 	float getCarRotation();
+	float getRotation(Vector3& origin);
+	float getCarRotation(Vector3& carOrigin);
 	float jumpFrame;
 };
 

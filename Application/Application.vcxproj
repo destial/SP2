@@ -24,6 +24,7 @@
     <ClCompile Include="Source\LoadOBJ.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\ManagerMinigame.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\OverworldScene.cpp" />
@@ -37,11 +38,13 @@
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MinigameEntity.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\LoadOBJ.h" />
     <ClInclude Include="Source\LoadTGA.h" />
+    <ClInclude Include="Source\ManagerMinigame.h" />
     <ClInclude Include="Source\Material.h" />
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\MeshBuilder.h" />

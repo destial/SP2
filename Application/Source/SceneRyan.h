@@ -19,6 +19,8 @@ class SceneRyan : public Scene
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
+		GEO_SHARKTOP,
+		GEO_SHARKBTM,
 		GEO_TEXT,
 		NUM_GEOMETRY,
 	};

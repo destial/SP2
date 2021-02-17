@@ -149,6 +149,9 @@ void StartMenuScene::Init()
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+
+	meshList[BUTTON] = MeshBuilder::GenerateFaceQuad("startButton", WHITE, 1.f, 1.f);
+	meshList[BUTTON]->textureID = LoadTGA("Image//button.tga");
 }
 
 void StartMenuScene::RenderMesh(Mesh* mesh, bool enableLight)
@@ -227,7 +230,7 @@ void StartMenuScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color colo
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -262,9 +265,8 @@ void StartMenuScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color colo
 	glEnable(GL_DEPTH_TEST);
 }
 
-void StartMenuScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
-	if (!mesh || mesh->textureID <= 0) //Proper error check
-		return;
+void StartMenuScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
+	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
@@ -307,6 +309,52 @@ void StartMenuScene::Update(double dt, Mouse mouse) {
 
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
+
+	//Mouse Inputs
+	static bool bLButtonState = false;
+	if (!bLButtonState && Application::IsMousePressed(0))
+	{
+		bLButtonState = true;
+		std::cout << "LBUTTON DOWN" << std::endl;
+		//Converting Viewport space to UI space
+		double x, y;
+		Application::GetCursorPos(&x, &y);
+		unsigned w = Application::GetWindowWidth();
+		unsigned h = Application::GetWindowHeight();
+		float posX = x / w * Application::GetUIWidth(); //convert (0,800) to (0,80)
+		float posY = (1.f - y / h) * Application::GetUIHeight(); //convert (600,0) to (0,60)
+		std::cout << "posX:" << posX << " , posY:" << posY << std::endl;
+		if (posX > 32 && posX < 48 && posY > 31 && posY < 39)
+		{
+			std::cout << "Hit!" << std::endl;
+			//trigger user action or function
+		}
+		else if (posX > 32 && posX < 48 && posY > 21 && posY < 29)
+		{
+			std::cout << "Hit!" << std::endl;
+			//trigger user action or function
+		}
+		else
+		{
+			std::cout << "Miss!" << std::endl;
+		}
+	}
+	else if (bLButtonState && !Application::IsMousePressed(0))
+	{
+		bLButtonState = false;
+		std::cout << "LBUTTON UP" << std::endl;
+	}
+	static bool bRButtonState = false;
+	if (!bRButtonState && Application::IsMousePressed(1))
+	{
+		bRButtonState = true;
+		std::cout << "RBUTTON DOWN" << std::endl;
+	}
+	else if (bRButtonState && !Application::IsMousePressed(1))
+	{
+		bRButtonState = false;
+		std::cout << "RBUTTON UP" << std::endl;
+	}
 
 	camera.Update(dt, mouse);
 }
@@ -415,6 +463,11 @@ void StartMenuScene::Render()
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
 	RenderSkybox();
+	RenderMeshOnScreen(meshList[BUTTON], 15, 40, 35);
+	RenderMeshOnScreen(meshList[BUTTON], 15, 40, 25);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Start", BLUE, 3, 8.75, 8.5);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", BLUE, 3, 9, 6);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 1, 0, 0);
 }
 
 void StartMenuScene::Exit() {

@@ -126,9 +126,6 @@ void SceneW::Init()
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
-	/*meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 50.1f);
-	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");*/
-
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", WHITE, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//tron_ft.tga");
 
@@ -237,7 +234,7 @@ void SceneW::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -272,9 +269,8 @@ void SceneW::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneW::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
-	if (!mesh || mesh->textureID <= 0) //Proper error check
-		return;
+void SceneW::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
+	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
@@ -535,22 +531,20 @@ void SceneW::Render()
 	RenderMesh(meshList[GEO_WALLTYPE3], true);
 	modelStack.PopMatrix();*/
 
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	modelStack.Translate(0, 2.5, 0);
 	RenderMesh(meshList[GEO_WALLTYPE3], true);
 	modelStack.PushMatrix();
 	modelStack.Translate(-1.5, 3, 0);
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderText(meshList[GEO_TEXT], "Enemy #1", Color(0, 1, 1));
-	modelStack.PopMatrix();
+	modelStack.PopMatrix();*/
 
 
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", Color(0, 1, 1), 3, 0, 14);
+
+	/*RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", Color(0, 1, 1), 3, 0, 14);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", Color(0, 1, 1), 3, 0, 13);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", Color(0, 1, 1), 3, 12.5, 14);
-	modelStack.PopMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", Color(0, 1, 1), 3, 12.5, 14);*/
 }
 
 void SceneW::Exit() {

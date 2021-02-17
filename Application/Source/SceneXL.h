@@ -25,6 +25,7 @@ class SceneXL : public Scene
 		GEO_FLOORFUTURE,
 		GEO_GNOME,
 		GEO_DUMMY,
+		GEO_RANGE,
 		NUM_GEOMETRY,
 	};
 
@@ -109,6 +110,9 @@ public:
 	virtual void Exit();
 
 	bool GotGnome;
+
+	bool Rotate;
+	float RotateAngle; //rotating of my dummy target
 
 
 	std::vector<MinigameEntity*> targetList;

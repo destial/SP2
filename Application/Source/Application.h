@@ -62,6 +62,7 @@ public:
 	static unsigned ui_width;
 	static unsigned ui_height;
 	static unsigned sceneswitch;
+	static unsigned previousscene;
 	static std::set<unsigned short> activeKeys;
 
 private:

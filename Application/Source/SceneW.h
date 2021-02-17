@@ -22,12 +22,10 @@ class SceneW : public Scene
 		GEO_TEXT,
 		GEO_DOOR,
 		GEO_DOOROPEN,
-		GEO_WALLTYPE1,
-		GEO_WALLTYPE2,
-		GEO_WALLTYPE3,
+		GEO_WALL,
+		GEO_UI,
+		MWALL,
 		GEO_WALLDOOR,
-		GEO_DESK,
-		GEO_DESKCORNER,
 		NUM_GEOMETRY,
 	};
 
@@ -93,7 +91,7 @@ private:
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
+	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 public:
 
 	SceneW();

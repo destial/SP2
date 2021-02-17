@@ -7,10 +7,8 @@
 #include "Light.h"
 #include "Camera3.h"
 
-class OverworldScene : public Scene
-{
-	enum GEOMETRY_TYPE
-	{
+class OverworldScene : public Scene {
+	enum GEOMETRY_TYPE {
 		GEO_AXES = 0,
 		GEO_QUAD,
 		GEO_LEFT,
@@ -26,6 +24,7 @@ class OverworldScene : public Scene
 
 		SKYSCRAPER1,
 		SKYSCRAPER2,
+
 		NUM_BUILDINGS,
 
 		TRUCK1,
@@ -33,13 +32,13 @@ class OverworldScene : public Scene
 		CAR1,
 		CAR2,
 		BUS1,
+
 		NUM_CAR,
 
 		NUM_GEOMETRY,
 	};
 
-	enum UNIFORM_TYPE
-	{
+	enum UNIFORM_TYPE {
 		U_MVP = 0,
 		U_MODELVIEW,
 		U_MODELVIEW_INVERSE_TRANSPOSE,
@@ -86,6 +85,8 @@ class OverworldScene : public Scene
 		SPRINT,
 		WALK,
 		LOOK,
+		JUMP,
+
 		NUM_TASKS
 	};
 private:
@@ -104,16 +105,17 @@ private:
 	void DetectCollision();
 	void MoveBack();
 	void ObjectMoveBack(Mesh* mesh);
+	void Reset();
 	bool isNear(Mesh* mesh, const float& distance = 1.f);
 	bool isHit(Mesh* mesh1, Mesh* mesh2, const float& distance = 1.f);
+	bool isCoord(Mesh* mesh, int x, int z);
+	bool isCollide(Mesh* mesh1, Mesh* mesh2);
+	void addCoord(Mesh* mesh, int x, int z);
 
-	bool rotate;
 	Mesh* meshList[NUM_GEOMETRY];
 	Mesh* currentCar;
 	Vector3 carOrigin;
-
 	Light light[2];
-
 	Camera3 camera;
 
 	bool tasks[NUM_TASKS];
@@ -132,18 +134,6 @@ public:
 	virtual void Update(double dt, Mouse mouse);
 	virtual void Render();
 	virtual void Exit();
-
-	Color RED = Color(1.f, 0.f, 0.f);
-	Color GREEN = Color(0.f, 1.f, 0.f);
-	Color BLUE = Color(0.f, 0.f, 1.f);
-	Color WHITE = Color(1.f, 1.f, 1.f);
-	Color YELLOW = Color(1.f, 1.f, 0.f);
-	Color PURPLE = Color(1.f, 0.f, 1.f);
-	Color CYAN = Color(0.f, 1.f, 1.f);
-	Color BROWN = Color(.6f, .1f, .2f);
-	Color BLACK = Color(0.f, 0.f, 0.f);
-	Color ORANGE = Color((195 / 255), (82 / 255), (20 / 255));
-	Color GRAY = Color(0.4f, 0.4f, 0.4f);
 
 	MS modelStack, viewStack, projectionStack;
 };

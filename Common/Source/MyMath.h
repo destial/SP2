@@ -71,6 +71,11 @@ namespace Math
 	{
 		return value * 180.0f / PI;
 	}
+
+	inline float square(float value)
+	{
+		return value * value;
+	}
 /******************************************************************************/
 	/*!
 	\brief

@@ -27,6 +27,22 @@ struct Color {
 	}
 };
 
+namespace Colors {
+	const Color RED = Color(1.f, 0.f, 0.f);
+	const Color DARK_RED = Color(.8f, 0.f, 0.f);
+	const Color GREEN = Color(0.f, 1.f, 0.f);
+	const Color DARK_GREEN = Color(0.f, .8f, 0.f);
+	const Color BLUE = Color(0.f, 0.f, 1.f);
+	const Color WHITE = Color(1.f, 1.f, 1.f);
+	const Color YELLOW = Color(1.f, 1.f, 0.f);
+	const Color PURPLE = Color(1.f, 0.f, 1.f);
+	const Color CYAN = Color(0.f, 1.f, 1.f);
+	const Color BROWN = Color(.6f, .1f, .2f);
+	const Color BLACK = Color(0.f, 0.f, 0.f);
+	const Color ORANGE = Color((195 / 255), (82 / 255), (20 / 255));
+	const Color GRAY = Color(0.4f, 0.4f, 0.4f);
+}
+
 struct Transform {
 	float rotate;
 	Vector3 translate;

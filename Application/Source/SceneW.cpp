@@ -153,9 +153,11 @@ void SceneW::Init()
 	meshList[GEO_WALLTYPE1] = MeshBuilder::GenerateOBJMTL("WallType1", "OBJ//wall.obj", "OBJ//wall.mtl");
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Door", "OBJ//doorway.obj", "OBJ//doorway.mtl");
 	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
-	meshList[GEO_DESK] = MeshBuilder::GenerateOBJMTL("Desk", "OBJ//desk.obj", "OBJ//desk.mtl");
-	meshList[GEO_DESKCORNER] = MeshBuilder::GenerateOBJMTL("DeskCorner", "OBJ//deskCorner.obj", "OBJ//deskCorner.mtl");
-	meshList[GEO_WALLTYPE3] = MeshBuilder::GenerateCube("Walls", 5, 5, 5);
+	meshList[GEO_WALLTYPE3] = MeshBuilder::GenerateCube("MazeWall", 1, 1, 1);
+	/*meshList[GEO_WALLTYPE3]->material.kAmbient.Set(.03f, .03f, .03f);
+	meshList[GEO_WALLTYPE3]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+	meshList[GEO_WALLTYPE3]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+	meshList[GEO_WALLTYPE3]->material.kShininess = .3f;*/
 }
 
 void SceneW::RenderMesh(Mesh* mesh, bool enableLight)
@@ -491,46 +493,79 @@ void SceneW::Render()
 	modelStack.PopMatrix();
 
 	// maze
-	/*modelStack.PushMatrix();
-	modelStack.Translate(-40, 6.5, -45);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10,12.5,3);
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -50);
+	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_WALLTYPE3], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-40, 6.5, -25);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10, 12.5, 3);
+	modelStack.Translate(-40, 2.5, -45);
+	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_WALLTYPE3], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-40, 6.5, -5);
-	modelStack.Scale(20, 12.5, 3);
+	modelStack.Translate(-40, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_WALLTYPE3], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-30, 6.5, -8.5);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10, 12.5, 3);
+	modelStack.Translate(-40, 2.5, -35);
+	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_WALLTYPE3], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-34.5, 6.5, -28.5);
-	modelStack.Scale(10, 12.5, 3);
+	modelStack.Translate(-40, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_WALLTYPE3], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-30, 6.5, -32);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10, 12.5, 3);
+	modelStack.Translate(-40, 2.5, -25);
+	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_WALLTYPE3], true);
-	modelStack.PopMatrix();*/
+	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 0);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	modelStack.PopMatrix();
+
+	// enemy with tags
 	/*modelStack.PushMatrix();
 	modelStack.Translate(0, 2.5, 0);
 	RenderMesh(meshList[GEO_WALLTYPE3], true);
@@ -542,9 +577,9 @@ void SceneW::Render()
 
 
 
-	/*RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", Color(0, 1, 1), 3, 0, 14);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", Color(0, 1, 1), 3, 0, 14);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", Color(0, 1, 1), 3, 0, 13);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", Color(0, 1, 1), 3, 12.5, 14);*/
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", Color(0, 1, 1), 3, 12.5, 14);
 }
 
 void SceneW::Exit() {

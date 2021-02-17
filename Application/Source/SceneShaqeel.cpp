@@ -406,7 +406,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	{
 		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.y <= 4 && camera.position.y >= -4 && !stopopenDoor)
 		{
-			rotatedoor -= (float)(20 * dt);
+			rotatedoor -= (float)(40 * dt);
 		}
 
 		if (rotatedoor <= -30)

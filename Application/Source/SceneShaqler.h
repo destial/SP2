@@ -22,9 +22,10 @@ class SceneShaqler : public Scene
 		GEO_KEYBOARD,
 		GEO_STATUE,
 		GEO_BOOKSTACK,
+		GEO_BOOK,
 		GEO_CHAIR,
 		GEO_BOOKCASE,
-		GEO_MAN,
+		GEO_KURENAI,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -88,6 +89,11 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	bool heightlimit;
+
+	float translateY;
+	float rotateBook;
+
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];

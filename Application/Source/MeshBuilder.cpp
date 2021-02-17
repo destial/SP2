@@ -513,27 +513,26 @@ Mesh* MeshBuilder::GenerateRing(const std::string& meshName, Color color, float 
 Mesh* MeshBuilder::GenerateHemisphere(const std::string& meshName, Color color, unsigned numStack, unsigned numSlice, float radius)
 {
 	Vertex v;
-	Mesh* mesh = new Mesh(meshName);
 	std::vector<Vertex> vertex_buffer_data;
 	std::vector<unsigned> index_buffer_data;
 	float PI = 3.1411592654;
 
-	mesh->corner[Mesh::C1] = Vector3(2 * radius, 0, 2 * radius);
-	mesh->corner[Mesh::C2] = Vector3(-2 * radius, 0, -2 * radius);
-	mesh->corner[Mesh::C3] = Vector3(2 * radius, 0, -2 * radius);
-	mesh->corner[Mesh::C4] = Vector3(-2 * radius, 0, 2 * radius);
 	for (double phi = 0; phi < 180; phi += 10) {
 		for (double theta = 0; theta <= 360; theta += 10) {
 			v.pos.Set(radius * cos(phi * PI / 180) * cos(theta * PI / 180),
 				radius * sin(phi * PI / 180),
 				radius * cos(phi * PI / 180) * sin(theta * PI / 180));
-			v.color.Set(1.0f, 1.0f, 0.0f);
+			v.color = color;
+			Vector3 normal = Vector3(v.pos.x, v.pos.y, v.pos.z).Normalized();
+			v.normal = normal;
 			vertex_buffer_data.push_back(v);
 
 			v.pos.Set(radius * cos((phi + 10) * PI / 180) * cos(theta * PI / 180),
 				radius * sin((phi + 10) * PI / 180),
 				radius * cos((phi + 10) * PI / 180) * sin(theta * PI / 180));
-			v.color.Set(1.0f, 0.0f, 0.0f);
+			v.color = color;
+			normal = Vector3(v.pos.x, v.pos.y, v.pos.z).Normalized();
+			v.normal = normal;
 			vertex_buffer_data.push_back(v);
 		}
 	}
@@ -541,6 +540,9 @@ Mesh* MeshBuilder::GenerateHemisphere(const std::string& meshName, Color color, 
 	for (int i = 0; i < (10 * 36 * 2 * 2); ++i) {
 		index_buffer_data.push_back(i);
 	}
+
+
+	Mesh* mesh = new Mesh(meshName);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertex_buffer_data.size() * sizeof(Vertex), &vertex_buffer_data[0], GL_STATIC_DRAW);
@@ -550,7 +552,6 @@ Mesh* MeshBuilder::GenerateHemisphere(const std::string& meshName, Color color, 
 
 	mesh->mode = Mesh::DRAW_TRIANGLE_STRIP;
 	mesh->indexSize = index_buffer_data.size();
-	mesh->type = Mesh::TYPE::OBJECT;
 
 	return mesh;
 }

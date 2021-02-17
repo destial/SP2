@@ -252,6 +252,8 @@ void Application::Run()
 	scene[SCENEXL] = new SceneXL();
 	scene[OVERWORLD] = new OverworldScene();
 	scene[SCENESHAQLER] = new SceneShaqler();
+	scene[MENUSCENE] = new StartMenuScene();
+	
 	/*scene[SHAQLER]*/
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
 		if (scene[i])
@@ -290,12 +292,15 @@ void Application::Run()
 			break;
 		case Application::SCENEXL:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::OVERWORLD;
+				Application::sceneswitch = Application::MENUSCENE;
 			}
 			break;
 		case Application::SCENERANCE:
 			break;
 		case Application::MENUSCENE:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::OVERWORLD;
+			}
 		case Application::WINSCENE:
 		case Application::LOSESCENE:
 		case Application::STARTSCENE:

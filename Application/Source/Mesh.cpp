@@ -37,9 +37,7 @@ Mesh::Mesh(const std::string& meshName)
 	corner[C3] = Vector3(1, 0, -1);
 	corner[C4] = Vector3(-1, 0, -1);
 	prevTransform = transform;
-	up = Vector3(0, 1, 0);
-	right = Vector3(0, 0, 1);
-	view = up.Cross(right).Normalized();
+	target = Vector3(-1, 0, 0);
 }
 
 /******************************************************************************/

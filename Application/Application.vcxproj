@@ -21,12 +21,15 @@
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Camera3.cpp" />
+    <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
+    <ClCompile Include="Source\Quad.cpp" />
     <ClCompile Include="Source\OverworldScene.cpp" />
+    <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\SceneRyan.cpp" />
     <ClCompile Include="Source\SceneShaqeel.cpp" />
     <ClCompile Include="Source\SceneShaqler.cpp" />
@@ -40,6 +43,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Camera3.h" />
+    <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\LoadOBJ.h" />
     <ClInclude Include="Source\LoadTGA.h" />
@@ -47,8 +51,10 @@
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\MeshBuilder.h" />
     <ClInclude Include="Source\MinigameEntity.h" />
+    <ClInclude Include="Source\Quad.h" />
     <ClInclude Include="Source\OverworldScene.h" />
     <ClInclude Include="Source\Scene.h" />
+    <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\SceneRyan.h" />
     <ClInclude Include="Source\SceneShaqeel.h" />
     <ClInclude Include="Source\SceneShaqler.h" />

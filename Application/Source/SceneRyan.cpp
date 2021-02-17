@@ -32,7 +32,7 @@ void SceneRyan::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 5, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0),(float) 50);
+	camera.Init(Vector3(5, 10, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0),(float) 50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -162,8 +162,12 @@ void SceneRyan::Init()
 
 	rotate = true;
 	sharkattack = false;
+	Tempcounter = false;
 	rotatetail = 0;
 	sharkcircle = 0;
+	SharkX = 100;
+	SharkY = 0;
+	SharkZ = 0;
 
 }
 
@@ -356,17 +360,73 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 	}
 	if (sharkattack == true)
 	{
+		if (sharkdir >= -90)
+		{
+			sharkdir--;
+		}
+		else
+		{
+			if (SharkX == 100 && SharkZ == 0 && Tempcounter == false)
+			{
+				TempposX = camera.position.x;
+				TempposZ = camera.position.z;
+				Tempcounter = true;
+			}
+			if (SharkX < TempposX && SharkZ < TempposZ)
+			{
+				SharkX++;
+				SharkZ++;
+			}
+			else if (SharkX < TempposX && SharkZ > TempposZ)
+			{
+				SharkX++;
+				SharkZ--;
+			}
+			else if (SharkX > TempposX && SharkZ < TempposZ)
+			{
+				SharkX--;
+				SharkZ++;
+			}
+			else if (SharkX > TempposX && SharkZ > TempposZ)
+			{
+				SharkX--;
+				SharkZ--;
+			}
+			else if (SharkX == TempposX && SharkZ == TempposZ)
+			{
+				TempposX = 100;
+				TempposZ = 0;
+			}
+		}
+		if (temptime >=  5 * (60 * dt))
+		{
+			
+		}
 	}
 	else
 	{
-		sharkcircle += 0.5;
+		sharkcircle += 0.3;
+		temptime = dt;
+	}
+	
+	if (Application::IsKeyPressed('E'))
+	{
+		SharkX++;
+		SharkZ++;
+	}
+	if (Application::IsKeyPressed('Q'))
+	{
+		SharkX--;
+		SharkZ--;
 	}
 
 	if (Application::IsKeyPressed('F')) 
 	{
+		sharkattack = true;
 		Minigun();
-		Shootingspin++;
+		Shootingspin += 3;
 	}
+
 
 
 	camera.Update(dt, mouse);
@@ -485,14 +545,15 @@ void SceneRyan::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Rotate(-sharkcircle, 0, 1, 0);
-	modelStack.Translate(50, 0, 0);
+	modelStack.Translate(SharkX, SharkY, SharkZ);
+	modelStack.Rotate(sharkdir, 0, 1, 0);
 	modelStack.Scale(3, 3, 3);
 	RenderShark();
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -92.5, 20);
-	modelStack.Scale(100, 95, 100);
+	modelStack.Translate(0, -145, 0);
+	modelStack.Scale(200, 150, 200);
 	RenderMesh(meshList[GEO_BEACH], true);
 	modelStack.PopMatrix();
 

@@ -20,7 +20,7 @@
 #include "StartMenuScene.h"
 
 GLFWwindow* m_window;
-const unsigned char FPS = 240; // FPS of this game
+const unsigned char FPS = 120; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
 //Define an error callback
 static void error_callback(int error, const char* description)
@@ -42,6 +42,7 @@ unsigned Application::ui_width;
 unsigned Application::ui_height;
 unsigned Application::sceneswitch;
 unsigned Application::previousscene;
+bool Application::quit;
 std::set<unsigned short> Application::activeKeys;
 Scene* scene[Application::TOTALSCENES];
 Mouse mouse;
@@ -186,8 +187,9 @@ void Application::Init()
 	m_height = 600;
 	ui_height = 60;
 	ui_width = 80;
-	sceneswitch = OVERWORLD;
+	sceneswitch = STARTSCENE;
 	m_window = glfwCreateWindow(m_width, m_height, "SP2 - Group 2", NULL, NULL);
+	quit = false;
 	mouse.reset();
 	glfwSetWindowSizeCallback(m_window, resize_callback);
 	//m_window = glfwCreateWindow(800, 600, "Test Window", NULL, NULL);
@@ -253,7 +255,7 @@ void Application::Run()
 	scene[SCENEXL] = new SceneXL();
 	scene[OVERWORLD] = new OverworldScene();
 	scene[SCENESHAQLER] = new SceneShaqler();
-	scene[MENUSCENE] = new StartMenuScene();
+	scene[STARTSCENE] = new StartMenuScene();
 	
 	/*scene[SHAQLER]*/
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
@@ -262,10 +264,9 @@ void Application::Run()
 	}
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 
-	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
+	while (!glfwWindowShouldClose(m_window) && !Application::quit)
 	{
 		scene[Application::sceneswitch]->Update(m_timer.getElapsedTime(), mouse);
-		//Application::log(std::to_string(mouse.x));
 		scene[Application::sceneswitch]->Render();
 		toggleState();
 		switch (Application::sceneswitch) {
@@ -296,18 +297,18 @@ void Application::Run()
 		case Application::SCENEXL:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::previousscene = SCENEXL;
-				Application::sceneswitch = Application::MENUSCENE;
+				Application::sceneswitch = Application::STARTSCENE;
 			}
 			break;
 		case Application::SCENERANCE:
 			break;
-		case Application::MENUSCENE:
+		case Application::STARTSCENE:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::OVERWORLD;
 			}
 		case Application::WINSCENE:
 		case Application::LOSESCENE:
-		case Application::STARTSCENE:
+		case Application::MENUSCENE:
 			break;
 		default:
 			if (Application::IsKeyPressedOnce(VK_F1)) {

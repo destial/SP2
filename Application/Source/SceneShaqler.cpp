@@ -185,11 +185,19 @@ void SceneShaqler::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1.f, 1.f);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//Border2.tga");
+
 	bookX = -17;
 	bookY = 2.85;
 	bookZ = 1.6;
-	rotateBook = 270;
+	rotateBook = 270; // just commit
 	bookCollected = false;
+	TextX = 10; // just comment
+	TextY = 5; // almost done with scene 2
+	TextZ = -8000;
+	ScreenX = 8000;
+	ScreenY = 30;
 }
 
 void SceneShaqler::RenderMesh(Mesh* mesh, bool enableLight)
@@ -303,7 +311,7 @@ void SceneShaqler::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneShaqler::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
+void SceneShaqler::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
@@ -395,7 +403,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75)
 		{
 			bookCollected = false;
-			stopRotatebook = true;
+			Purchasebook = true;
 			/*bookX = 10.9;
 			bookY = 4;
 			bookZ = 11.5;*/
@@ -404,14 +412,26 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 
 	if (bookCollected == true)
 	{
-		Minigun();
+		Book();
 	}
 
-	if (stopRotatebook == true)
+	if (Purchasebook == true)
 	{
 		rotateBook = 270;
 		bookY = 3.1;
+		TextZ = -13.5;
 	}
+
+	if (Application::IsKeyPressed('T'))
+	{
+		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75)
+		{
+			ScreenX = 40;
+			TextX = 1000;
+		}
+	}
+
+	// later do purchasebook with ui
 
 	camera.Update(dt, mouse);
 	/*Application::sceneswitch = Application::SCENESHAQ;*/
@@ -652,6 +672,13 @@ void SceneShaqler::Render()
 	RenderMesh(meshList[GEO_KURENAI], true);
 	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(TextX, 5, TextZ);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.25, 0.25, 0.25);
+	RenderText(meshList[GEO_TEXT], " Press T to purchase", WHITE);
+	modelStack.PopMatrix();
+
 	std::stringstream ssX;
 	std::stringstream ssY;
 	std::stringstream ssZ;
@@ -664,11 +691,16 @@ void SceneShaqler::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 20, 0, 10);
 	modelStack.PopMatrix();
+
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 200, 0, 10);
+	RenderMeshOnScreen(meshList[GEO_UI], 55, ScreenX, 30); // 40 x
+
+
 }
 
-void SceneShaqler::Minigun()
+void SceneShaqler::Book()
 {
 	BookHold = meshList[GEO_BOOK];
 	BookHold->prevTransform = BookHold->transform;

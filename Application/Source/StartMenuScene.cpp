@@ -327,12 +327,12 @@ void StartMenuScene::Update(double dt, Mouse mouse) {
 		if (posX > 32 && posX < 48 && posY > 31 && posY < 39)
 		{
 			std::cout << "Hit!" << std::endl;
-			//trigger user action or function
+			Application::sceneswitch = Application::OVERWORLD;
 		}
 		else if (posX > 32 && posX < 48 && posY > 21 && posY < 29)
 		{
 			std::cout << "Hit!" << std::endl;
-			//trigger user action or function
+			Application::quit = 1;
 		}
 		else
 		{

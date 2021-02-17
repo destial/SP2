@@ -366,6 +366,17 @@ Vector3& Vector3::Normalize( void ) throw( DivideByZero )
 	return *this;
 }
 
+float Vector3::GetAngle(const Vector3& rhs) {
+	float uv = (rhs.x * x + rhs.z * z) / ((Math::sqrt(x * x + z * z)) * Math::sqrt(rhs.x * rhs.x + rhs.z * rhs.z));
+	float angle = Math::RadianToDegree(acos(uv));
+	if (rhs.z <= 0 && rhs.x <= 0) {
+		angle = 360 - angle;
+	} else if (rhs.x >= 0 && rhs.z <= 0) {
+		angle = 360 - angle;
+	}
+	return angle;
+}
+
 std::ostream& operator<< (std::ostream& os, Vector3& rhs)
 {
 	os << "[ " << rhs.x << ", " << rhs.y << ", " << rhs.z << " ]";

@@ -76,27 +76,35 @@ void OverworldScene::Init() {
 	// Generate necessary meshes and starting transformations
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
+	meshList[GEO_FRONT]->type = Mesh::TYPE::IMAGE;
 
 	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BACK]->textureID = LoadTGA("Image//back-space.tga");
+	meshList[GEO_BACK]->type = Mesh::TYPE::IMAGE;
 
 	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right-space.tga");
+	meshList[GEO_LEFT]->type = Mesh::TYPE::IMAGE;
 
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left-space.tga");
+	meshList[GEO_RIGHT]->type = Mesh::TYPE::IMAGE;
 
 	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_TOP]->textureID = LoadTGA("Image//top-space.tga");
+	meshList[GEO_TOP]->type = Mesh::TYPE::IMAGE;
 
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
+	meshList[GEO_BOTTOM]->type = Mesh::TYPE::IMAGE;
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+	meshList[GEO_TEXT]->type = Mesh::TYPE::IMAGE;
 
 	meshList[SIDEBAR] = MeshBuilder::GenerateFaceQuad("sidebar", Colors::GRAY, 1.f, 1.f);
 	meshList[SIDEBAR]->textureID = LoadTGA("Image//button.tga");
+	meshList[SIDEBAR]->type = Mesh::TYPE::IMAGE;
 
 	meshList[GEO_GROUND] = MeshBuilder::GenerateGround("ground", Colors::GRAY, 1000.f, 18);
 	meshList[GEO_GROUND]->textureID = LoadTGA("Image//roadcross.tga");
@@ -122,7 +130,10 @@ void OverworldScene::Init() {
 	meshList[SKYSCRAPER2]->transform.Scale(5);
 	meshList[SKYSCRAPER2]->type = Mesh::TYPE::OBJECT;
 
-	// Init camera position and current car control
+	meshList[CAMERA] = new Mesh("camera");
+	meshList[CAMERA]->type = Mesh::TYPE::CAMERA;
+
+	// Init scene manager
 	Reset();
 
 	// Init light
@@ -304,11 +315,17 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressedOnce('R')) {
 		Reset();
 	}
+
+	if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
+		Application::sceneswitch = Application::STARTSCENE;
+	}
+
 	if (!currentCar) {
 		camera.Update(dt, mouse);
 	} else {
 		camera.UpdateCar(dt, mouse, (float)6.f);
 	}
+
 	DetectCollision();
 	CompleteTasks();
 }
@@ -478,13 +495,13 @@ void OverworldScene::GetInCar() {
 						currentCar = meshList[car];
 						camera.position.x = currentCar->transform.translate.x;
 						camera.position.z = currentCar->transform.translate.z;
-						switch (car) {
-						default:
-							carOrigin = Vector3(-1, 0, 0);
-							break;
+						if (currentCar->target != carOrigin) {
+							camera.carTarget = currentCar->target;
+							camera.target = currentCar->target;
+						} else {
+							camera.carTarget = camera.position + carOrigin;
+							camera.target = camera.position + carOrigin;
 						}
-						camera.carTarget = camera.position + carOrigin;
-						camera.target = camera.position + carOrigin;
 						break;
 					}
 				}
@@ -496,8 +513,9 @@ void OverworldScene::GetInCar() {
 		currentCar->transform.translate.x = camera.position.x;
 		currentCar->transform.translate.z = camera.position.z;
 		camera.position.y = currentCar->transform.translate.y + 5;
-		Vector3 origin = (currentCar->transform.translate + carOrigin).Normalized();
+
 		currentCar->transform.rotate = camera.getCarRotation(carOrigin);
+		currentCar->target = camera.carTarget;
 		if (Application::IsKeyPressedOnce('F')) {
 			Vector3 view = (camera.target - camera.position).Normalized();
 			Vector3 right = view.Cross(Vector3(0, 1, 0)).Normalized();
@@ -518,55 +536,43 @@ void OverworldScene::GetInCar() {
 }
 
 void OverworldScene::DetectCollision() {
-
-	// For each object
-	for (unsigned object = 0; object < NUM_GEOMETRY; object++) {
-
-		// If object exists and is of type 'OBJECT'
-		if (meshList[object] && meshList[object]->type == Mesh::TYPE::OBJECT) {
-
-			// For each x and x coordinate
-			for (int x = -100; x < 100; x++) {
-				for (int z = -100; z < 100; z++) {
-
-					// If coordinate is a part of the object
-					if (isCoord(meshList[object], x, z)) {
-
-						// Add coord
-						addCoord(meshList[object], x, z);
-					}
-				}
+	sceneManager = new SceneManager(this, camera.bounds);
+	for (unsigned i = 0; i < NUM_GEOMETRY; i++) {
+		if (meshList[i] && meshList[i]->type == Mesh::TYPE::OBJECT) {
+			meshList[i]->prevTransform = meshList[i]->transform;
+			if (i == CAMERA) {
+				//Application::log("camera object");
+				Transform cameraTransform;
+				cameraTransform.translate = camera.position;
+				GameObject* cameraObject = new GameObject(meshList[CAMERA], cameraTransform);
+				cameraObject->id = CAMERA;
+				sceneManager->root->gameObjects.push_back(cameraObject);
+				sceneManager->root->count = sceneManager->root->count + 1;
+			} else {
+				GameObject* gameObject = new GameObject(meshList[i], meshList[i]->transform);
+				gameObject->id = i;
+				sceneManager->root->gameObjects.push_back(gameObject);
+				sceneManager->root->count = sceneManager->root->count + 1;
 			}
 		}
 	}
 
-	// For each object
-	for (unsigned object1 = 0; object1 < NUM_GEOMETRY; object1++) {
-
-		// For each object again
-		for (unsigned object2 = 0; object2 < NUM_GEOMETRY; object2++) {
-
-			// If both object exists and they are not each other
-			if (meshList[object1] && meshList[object2] && object1 != object2) {
-
-				// If the two objects collide
-				if (isCollide(meshList[object1], meshList[object2])) {
-					Application::log(meshList[object1]->name);
-					Application::log(meshList[object2]->name);
+	sceneManager->split(sceneManager->root);
+	Quad* quad = sceneManager->getQuad(CAMERA);
+	if (quad) {
+		for (auto gameObject : quad->gameObjects) {
+			if (!gameObject->camera) {
+				if (isNear(gameObject->mesh)) {
+					//ObjectMoveBack(gameObject->mesh);
 				}
 			}
 		}
 	}
-
-	// If player is currently not in a car
 	if (!currentCar) {
-
 		// For each object
 		for (unsigned object = 0; object < NUM_GEOMETRY; object++) {
-
 			// If object exists and is of type 'OBJECT'
 			if (meshList[object] && meshList[object]->type == Mesh::TYPE::OBJECT) {
-
 				// If object is near camera, move player back to previous position
 				if (isNear(meshList[object], (meshList[object]->transform.scale.x > 1 ? 2.f : meshList[object]->transform.scale.x * 5))) {
 					MoveBack();
@@ -574,13 +580,8 @@ void OverworldScene::DetectCollision() {
 			}
 		}
 	}
-
-	// Clear coordinates of each object
-	for (unsigned object = 0; object < NUM_GEOMETRY; object++) {
-		if (meshList[object]) {
-			meshList[object]->collisionCoords.clear();
-		}
-	}
+	delete sceneManager;
+	sceneManager = nullptr;
 }
 
 void OverworldScene::MoveBack() {
@@ -603,42 +604,14 @@ bool OverworldScene::isNear(Mesh* mesh, const float& distance) {
 	return false;
 }
 
-bool OverworldScene::isHit(Mesh* mesh1, Mesh* mesh2, const float& distance) {
-	if (mesh1->type == Mesh::TYPE::OBJECT && mesh2->type == Mesh::TYPE::OBJECT) {
+bool OverworldScene::isHit(GameObject* o1, GameObject* o2, const float& distance) {
+	if (o1->mesh->type == Mesh::TYPE::OBJECT && o2->mesh->type == Mesh::TYPE::OBJECT) {
 
 		// Get distance between two objects
-		float d = Math::Square(mesh1->transform.translate.x - mesh2->transform.translate.x) + Math::Square(mesh1->transform.translate.z - mesh2->transform.translate.z);
+		float d = Math::Square(o1->transform->translate.x - o2->transform->translate.x) + Math::Square(o1->transform->translate.z - o2->transform->translate.z);
 		return (d - (2 * distance)) <= 0;
 	}
 	return false;
-}
-
-bool OverworldScene::isCoord(Mesh* mesh, int x, int z) {
-	if (mesh->type == Mesh::TYPE::OBJECT) {
-
-		// Get distance between mesh and coordinate
-		float d = Math::Square(mesh->transform.translate.x - x) + Math::Square(mesh->transform.translate.z - z);
-		return (d - (2 * (mesh->transform.scale.x > 1 ? 3.f : mesh->transform.scale.x))) <= 0;
-	}
-	return false;
-}
-
-bool OverworldScene::isCollide(Mesh* mesh1, Mesh* mesh2) {
-	if (mesh1->type == Mesh::TYPE::OBJECT && mesh2->type == Mesh::TYPE::OBJECT) {
-		for (unsigned i = 0; i < mesh1->collisionCoords.size(); i++) {
-			for (unsigned j = 0; j < mesh2->collisionCoords.size(); j++) {
-				if (mesh1->collisionCoords[i] == mesh2->collisionCoords[j]) {
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
-
-void OverworldScene::addCoord(Mesh* mesh, int x, int z) {
-	Vector3 coord = Vector3(x, 0, z);
-	mesh->collisionCoords.push_back(coord);
 }
 
 void OverworldScene::Render() {
@@ -750,4 +723,6 @@ void OverworldScene::Reset() {
 	for (unsigned i = 0; i < NUM_TASKS; i++) {
 		tasks[i] = 0;
 	}
+
+	carOrigin = Vector3(-1, 0, 0);
 }

@@ -26,6 +26,7 @@ class SceneShaqler : public Scene
 		GEO_CHAIR,
 		GEO_BOOKCASE,
 		GEO_KURENAI,
+		GEO_UI,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -91,18 +92,23 @@ private:
 	bool rotate;
 	bool heightlimit;
 	bool bookCollected;
-	bool stopRotatebook;
+	bool Purchasebook;
 
 	float bookX;
 	float bookY;
 	float bookZ;
+	float TextX;
+	float TextY;
+	float TextZ;
+	float ScreenX;
+	float ScreenY;
 	float rotateBook;
 
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Mesh* BookHold;
 	Vector3 BookOrigin;
-	void Minigun();
+	void Book();
 
 	Light light[2];
 
@@ -111,7 +117,7 @@ private:
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
+	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 public:
 
 	SceneShaqler();

@@ -92,6 +92,9 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
+	void RenderMaze();
+	void RenderUI();
+	void RenderRoom();
 public:
 
 	SceneW();

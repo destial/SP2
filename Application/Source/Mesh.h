@@ -28,8 +28,7 @@ public:
 		OBJECT,
 		TEXT
 	};
-	enum CORNER
-	{
+	enum CORNER {
 		C1 = 0,
 		C2,
 		C3,
@@ -42,6 +41,7 @@ public:
 	void render(unsigned offset, unsigned count);
 	static void SetMaterialLoc(unsigned kA, unsigned kD, unsigned kS, unsigned nS);
 	std::vector<Material> materials;
+	std::vector<Vector3> collisionCoords;
 	static unsigned locationKa;
 	static unsigned locationKd;
 	static unsigned locationKs;

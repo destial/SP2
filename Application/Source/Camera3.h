@@ -29,6 +29,7 @@ public:
 	float prevFOV;
 	float bounds;
 	float sprintRotation;
+	float currentCarSpeed;
 	bool canfly = false;
 	bool justpress = false;
 	bool sprintRotate = false;

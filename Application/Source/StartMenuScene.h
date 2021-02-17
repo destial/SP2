@@ -1,5 +1,5 @@
-#ifndef TEMPLATE_SCENE_H
-#define TEMPLATE_SCENE_H
+#ifndef START_SCENE_H
+#define START_SCENE_H
 
 #include "Scene.h"
 #include "Mesh.h"

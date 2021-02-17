@@ -20,9 +20,8 @@
 #include "StartMenuScene.h"
 
 GLFWwindow* m_window;
-const unsigned char FPS = 120; // FPS of this game
+const unsigned char FPS = 240; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
-unsigned Application::sceneswitch;
 //Define an error callback
 static void error_callback(int error, const char* description)
 {
@@ -41,6 +40,8 @@ unsigned Application::m_width;
 unsigned Application::m_height;
 unsigned Application::ui_width;
 unsigned Application::ui_height;
+unsigned Application::sceneswitch;
+unsigned Application::previousscene;
 std::set<unsigned short> Application::activeKeys;
 Scene* scene[Application::TOTALSCENES];
 Mouse mouse;
@@ -269,28 +270,31 @@ void Application::Run()
 		case Application::SCENESHAQ:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENESHAQLER;
+				Application::previousscene = SCENESHAQ;
 			}
 			break;
 		case Application::SCENESHAQLER:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEWALTON;
+				Application::previousscene = SCENESHAQLER;
 			}
 			break;
 		case Application::SCENEWALTON:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENERYAN;
+				Application::previousscene = SCENEWALTON;
 			}
 			break;
 		case Application::SCENERYAN:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEXL;
+				Application::previousscene = SCENERYAN;
 			}
-			mouse.reset();
-			glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
 			break;
 		case Application::SCENEXL:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::OVERWORLD;
+				Application::previousscene = SCENEXL;
 			}
 			break;
 		case Application::SCENERANCE:
@@ -303,6 +307,7 @@ void Application::Run()
 		default:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENESHAQ;
+				Application::previousscene = OVERWORLD;
 			}
 			break;
 		}

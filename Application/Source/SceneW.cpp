@@ -439,18 +439,56 @@ void SceneW::Render()
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
+
 	RenderSkybox();
+	RenderRoom();
+	RenderMaze();
+
 	modelStack.PushMatrix();
 	modelStack.Translate(0, .1, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 
+	
+
+	
+	// enemy with tags
+	/*modelStack.PushMatrix();
+	modelStack.Translate(0, 2.5, 0);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PushMatrix();
+	modelStack.Translate(-1.5, 3, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "Enemy #1", Color(0, 1, 1));
+	modelStack.PopMatrix();*/
+	RenderUI();
+
+	
+}
+
+void SceneW::Exit() {
+	for (auto mesh : meshList) {
+		if (mesh) delete mesh;
+	}
+	glDeleteVertexArrays(1, &m_vertexArrayID);
+	glDeleteProgram(m_programID);
+}
+
+void SceneW::RenderUI() {
+	RenderMeshOnScreen(meshList[GEO_UI], 30, 15, 52.5);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 3, 0.25, 14);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 3, 0.25, 13);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 3, 0.25, 12);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+}
+
+void SceneW::RenderRoom() {
 	// left side of the room
 	modelStack.PushMatrix();
 	modelStack.Translate(-50, 0, -40);
 	modelStack.Rotate(-90, 0, 1, 0);
-	modelStack.Scale(10,10,10);
+	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_WALLDOOR], true);
 	modelStack.PopMatrix();
 
@@ -488,7 +526,9 @@ void SceneW::Render()
 	modelStack.Scale(100, 10, 10);
 	RenderMesh(meshList[GEO_WALL], true);
 	modelStack.PopMatrix();
+}
 
+void SceneW::RenderMaze() {
 	// maze
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -50);
@@ -904,28 +944,99 @@ void SceneW::Render()
 	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
-	// enemy with tags
-	/*modelStack.PushMatrix();
-	modelStack.Translate(0, 2.5, 0);
-	RenderMesh(meshList[MWALL], true);
 	modelStack.PushMatrix();
-	modelStack.Translate(-1.5, 3, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderText(meshList[GEO_TEXT], "Enemy #1", Color(0, 1, 1));
-	modelStack.PopMatrix();*/
+	modelStack.Translate(-5, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
 
-	RenderMeshOnScreen(meshList[GEO_UI], 30, 15, 52.5);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 3, 0.25, 14);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 3, 0.25, 13);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 3, 0.25, 12);
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
-}
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
 
-void SceneW::Exit() {
-	for (auto mesh : meshList) {
-		if (mesh) delete mesh;
-	}
-	glDeleteVertexArrays(1, &m_vertexArrayID);
-	glDeleteProgram(m_programID);
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-15, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-25, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, 35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-25, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
 }

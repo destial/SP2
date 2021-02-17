@@ -185,8 +185,11 @@ void SceneShaqler::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	translateY = 2.85;
+	bookX = -17;
+	bookY = 2.85;
+	bookZ = 1.6;
 	rotateBook = 270;
+	bookCollected = false;
 }
 
 void SceneShaqler::RenderMesh(Mesh* mesh, bool enableLight)
@@ -362,29 +365,52 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 
 	rotateBook += (float)(40 * dt);
 
-	if (translateY > 2.85 && heightlimit == false)
+	if (bookY > 2.85 && heightlimit == false)
 	{
-		translateY -= (float)(2 * dt);
+		bookY -= (float)(2 * dt);
 	}
-	else if (translateY >= -3.5 && translateY <= 3.5)
+	else if (bookY >= -3.5 && bookY <= 3.5)
 	{
 		heightlimit = true;
 	}
-	if (translateY >= -3.5 && translateY < 3.5 && heightlimit == true)
+	if (bookY >= -3.5 && bookY < 3.5 && heightlimit == true)
 	{
-		translateY += (float)(2 * dt);
+		bookY += (float)(2 * dt);
 	}
-	else if (translateY >= 3.5)
+	else if (bookY >= 3.5)
 	{
 		heightlimit = false;
 	}
 
 	if (Application::IsKeyPressed('E')) // -0.685 and 4.75 for z x// -12.5 -15
 	{
-		if (camera.position.x >= -15 && camera.position.x <= -12 && camera.position.z >= -0.685 && camera.position.x <= 4.75)
+		if (camera.position.x >= -15 && camera.position.x <= -12 && camera.position.z >= -0.685 && camera.position.z <= 4.75)
 		{
-			translateY = 8000;
+			bookCollected = true;
+			bookX = 10.9;
+			bookY = 6;
+			bookZ = -11.5;
 		}
+
+		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75)
+		{
+			bookCollected = false;
+			stopRotatebook = true;
+			/*bookX = 10.9;
+			bookY = 4;
+			bookZ = 11.5;*/
+		}
+	}
+
+	if (bookCollected == true)
+	{
+		Minigun();
+	}
+
+	if (stopRotatebook == true)
+	{
+		rotateBook = 270;
+		bookY = 3.1;
 	}
 
 	camera.Update(dt, mouse);
@@ -581,12 +607,25 @@ void SceneShaqler::Render()
 	RenderMesh(meshList[GEO_BOOKSTACK], true);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(-17, translateY, 1.6); // 2.85
-	modelStack.Rotate(rotateBook, 0, 1, 0);
-	modelStack.Scale(1, 1, 1);
-	RenderMesh(meshList[GEO_BOOK], true);
-	modelStack.PopMatrix();
+	if (bookCollected == false)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(bookX, bookY, bookZ); // 2.85
+		modelStack.Rotate(rotateBook, 0, 1, 0);
+		modelStack.Scale(1, 1, 1);
+		RenderMesh(meshList[GEO_BOOK], true);
+		modelStack.PopMatrix();
+	}
+
+	if (bookCollected == true)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(meshList[GEO_BOOK]->transform.translate.x, meshList[GEO_BOOK]->transform.translate.y, meshList[GEO_BOOK]->transform.translate.z);
+		modelStack.Rotate(meshList[GEO_BOOK]->transform.rotate, 0, 1, 0);
+		modelStack.Rotate(270, 0, 1, 0);
+		RenderMesh(meshList[GEO_BOOK], true);
+		modelStack.PopMatrix();
+	}
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-17, 0, 17);
@@ -627,6 +666,22 @@ void SceneShaqler::Render()
 	modelStack.Scale(2, 2, 2);
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
 	modelStack.PopMatrix();
+}
+
+void SceneShaqler::Minigun()
+{
+	BookHold = meshList[GEO_BOOK];
+	BookHold->prevTransform = BookHold->transform;
+	BookHold->transform.translate.x = camera.position.x;
+	BookHold->transform.translate.z = camera.position.z;
+	BookHold->transform.translate.y = camera.position.y - 1;
+	Vector3 origin = (BookHold->transform.translate + BookOrigin).Normalized();
+	BookHold->transform.rotate = camera.getRotation(BookOrigin);
+	switch (GEO_BOOK) {
+	default:
+		BookOrigin = Vector3(-1, 0, 0);
+		break;
+	}
 }
 
 void SceneShaqler::Exit() {

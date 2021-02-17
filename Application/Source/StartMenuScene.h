@@ -1,5 +1,5 @@
-#ifndef START_SCENE_H
-#define START_SCENE_H
+#ifndef START_MENU_SCENE_H
+#define START_MENU_SCENE_H
 
 #include "Scene.h"
 #include "Mesh.h"
@@ -20,6 +20,7 @@ class StartMenuScene : public Scene
 		GEO_FRONT,
 		GEO_BACK,
 		GEO_TEXT,
+		BUTTON,
 		NUM_GEOMETRY,
 	};
 
@@ -85,7 +86,7 @@ private:
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
+	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 public:
 
 	StartMenuScene();

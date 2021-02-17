@@ -152,6 +152,8 @@ void SceneRyan::Init()
 
 	meshList[GEO_SHARKBTM] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkBtm.obj", "OBJ//SharkBtm.mtl");
 
+	meshList[GEO_MINIGUN] = MeshBuilder::GenerateOBJMTL("Minigun", "OBJ//Minigun.obj", "OBJ//Minigun.mtl");
+
 	meshList[GEO_BEACH] = MeshBuilder::GenerateHemisphere("Beach", Color(1, 1, 1), 36, 36, 1);
 	meshList[GEO_BEACH]->material.kAmbient.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_BEACH]->material.kDiffuse.Set(0.900, 0.843, 0.000);
@@ -360,6 +362,13 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 		sharkcircle += 0.5;
 	}
 
+	if (Application::IsKeyPressed('F')) 
+	{
+		Minigun();
+		Shootingspin++;
+	}
+
+
 	camera.Update(dt, mouse);
 }
 
@@ -481,11 +490,19 @@ void SceneRyan::Render()
 	RenderShark();
 	modelStack.PopMatrix();
 
-
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -92.5, 20);
 	modelStack.Scale(100, 95, 100);
 	RenderMesh(meshList[GEO_BEACH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(meshList[GEO_MINIGUN]->transform.translate.x, meshList[GEO_MINIGUN]->transform.translate.y, meshList[GEO_MINIGUN]->transform.translate.z);
+	modelStack.Rotate(meshList[GEO_MINIGUN]->transform.rotate, 0, 1, 0);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Scale(0.07, 0.07, 0.07);
+	modelStack.Rotate(Shootingspin, 0, 1, 0);
+	RenderMesh(meshList[GEO_MINIGUN], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -508,6 +525,23 @@ void SceneRyan::RenderShark()
 	modelStack.Rotate(rotatetail, 0, 1, 0);
 	RenderMesh(meshList[GEO_SHARKBTM], true);
 	modelStack.PopMatrix();
+}
+
+//NOT MY STUFF
+void SceneRyan::Minigun()
+{
+	MinigunHold = meshList[GEO_MINIGUN];
+	MinigunHold->prevTransform = MinigunHold->transform;
+	MinigunHold->transform.translate.x = camera.position.x;
+	MinigunHold->transform.translate.z = camera.position.z;
+	MinigunHold->transform.translate.y = camera.position.y - 2;
+	Vector3 origin = (MinigunHold->transform.translate + GunOrigin).Normalized();
+	MinigunHold->transform.rotate = camera.getRotation(GunOrigin);
+	switch (GEO_MINIGUN) {
+	default:
+		GunOrigin = Vector3(-1, 0, 0);
+		break;
+	}
 }
 
 void SceneRyan::Exit() {

@@ -22,6 +22,7 @@ class SceneRyan : public Scene
 		GEO_SHARKTOP,
 		GEO_SHARKBTM,
 		GEO_BEACH,
+		GEO_MINIGUN,
 		GEO_TEXT,
 		NUM_GEOMETRY,
 	};
@@ -83,6 +84,14 @@ private:
 	float sharkcircle;
 	bool sharkattack;
 	Mesh* meshList[NUM_GEOMETRY];
+
+	//MINIGUN
+	float Shootingspin;
+	Mesh* MinigunHold;
+	Vector3 GunOrigin;
+	void Minigun();
+	//NOT FOR MY SCENE
+
 
 	Light light[2];
 

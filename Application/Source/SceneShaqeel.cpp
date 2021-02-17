@@ -165,6 +165,8 @@ void SceneShaqeel::Init()
 	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NewMart.obj"); // Try 1 first
 	meshList[GEO_MART]->textureID = LoadTGA("Image//house1.tga");
 
+	/*meshList[GEO_ROBOTBODY] = MeshBuilder::GenerateOBJMTL("robot", "OBJ//Robotwithoutlegs.obj", "OBJ//Robotwithoutlegs.mtl");*/
+
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJ("Door", "OBJ//MartDoor1.obj"); // Try 1 first
 	meshList[GEO_DOOR]->textureID = LoadTGA("Image//RedColour.tga");
 
@@ -406,8 +408,8 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	{
 		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.y <= 4 && camera.position.y >= -4 && !stopopenDoor)
 		{
-			rotatedoor -= (float)(40 * dt);
-		}
+			rotatedoor -= (float)(40 * dt); 
+		} //z0.953 and -1.45 x-15 -13
 
 		if (rotatedoor <= -30)
 		{
@@ -569,6 +571,14 @@ void SceneShaqeel::Render()
 		modelStack.Scale(0.09, 0.09, 0.09);
 		RenderMesh(meshList[GEO_CAR2], true);
 		modelStack.PopMatrix();
+
+		/*modelStack.PushMatrix();
+		modelStack.Translate(0, 0, 0);
+		modelStack.Rotate(270, 0, 1, 0);
+		modelStack.Scale(1, 1, 1);
+		RenderMesh(meshList[GEO_ROBOTBODY], true);
+		modelStack.PopMatrix();*/
+
 	}
 
 	// tree
@@ -713,25 +723,7 @@ void SceneShaqeel::Render()
 		RenderMesh(meshList[GEO_CUBE], true);
 		modelStack.PopMatrix();
 
-		//modelStack.PushMatrix();
-		//modelStack.Translate(-16.5, 0, -0.18); // X 3.6
-		//modelStack.Scale(0.5, 1, 0.9);
-		//RenderMesh(meshList[GEO_CUBE], true);
-		//modelStack.PopMatrix();
-
-		//modelStack.PushMatrix();
-		//modelStack.Translate(3, -2, 28); // X 3.6
-		//modelStack.Rotate(90, 0, 1, 0);
-		//modelStack.Scale(6, 7, 0.2);
-		//RenderMesh(meshList[GEO_QUAD1], true);
-		//modelStack.PopMatrix();
-
 	}
-	
-	/*modelStack.PushMatrix();
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_SHARKTOP], true);
-	modelStack.PopMatrix();*/
 
 	std::stringstream ssX;
 	std::stringstream ssY;

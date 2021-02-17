@@ -32,6 +32,7 @@ class SceneShaqeel : public Scene
 		GEO_BUSH,
 		GEO_BENCH,
 		GEO_MART,
+		GEO_ROBOTBODY,
 		GEO_DOOR,
 		GEO_CITY1,
 		GEO_CITY2,

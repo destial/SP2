@@ -91,18 +91,21 @@ private:
 	bool rotate;
 	bool heightlimit;
 	bool bookCollected;
-	bool stopRotatebook;
+	bool Purchasebook;
 
 	float bookX;
 	float bookY;
 	float bookZ;
+	float TextX;
+	float TextY;
+	float TextZ;
 	float rotateBook;
 
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Mesh* BookHold;
 	Vector3 BookOrigin;
-	void Minigun();
+	void Book();
 
 	Light light[2];
 

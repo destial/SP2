@@ -26,6 +26,7 @@ class SceneXL : public Scene
 		GEO_GNOME,
 		GEO_DUMMY,
 		GEO_RANGE,
+		GEO_ROBOT,
 		NUM_GEOMETRY,
 	};
 
@@ -83,6 +84,7 @@ private:
 
 	bool rotate;
 	bool talktognome;
+	bool talktorobot;
 
 	Mesh* meshList[NUM_GEOMETRY];
 
@@ -94,8 +96,14 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
+
 	void DetectGnome();
 	void RenderGnome();
+
+	void DetectRobot();
+	void RenderRobot();
+	void RenderMinigame();
+
 	bool isNear(Mesh* mesh, const float& distance);
 
 public:

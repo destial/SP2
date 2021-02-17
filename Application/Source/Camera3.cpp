@@ -13,7 +13,7 @@ Camera3::~Camera3()
 
 void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up, const float &bounds)
 {
-	yaw = -90;
+	yaw = -90; 
 	pitch = 0;
 	jumpFrame = 0;
 	this->bounds = bounds;

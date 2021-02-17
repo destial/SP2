@@ -463,7 +463,7 @@ void SceneXL::DetectRobot()
 		RenderTextOnScreen(meshList[GEO_TEXT], "Press F to start your simulation.", ORANGE, 4, 3, 6);
 		if (Application::IsKeyPressedOnce('F'))
 		{
-			camera.Init(Vector3(1.1, 10, -30.3), Vector3(-90, 1, 0), Vector3(0, 1, 0), (float)50);
+			camera.Init(Vector3(1.1, 10, -30.3), Vector3(1.1, 10, -30.4), Vector3(0, 1, 0), (float)50);
 			talktorobot = true;
 		}
 	}

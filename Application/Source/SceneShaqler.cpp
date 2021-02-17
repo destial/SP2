@@ -190,8 +190,8 @@ void SceneShaqler::Init()
 	bookZ = 1.6;
 	rotateBook = 270;
 	bookCollected = false;
-	TextX = 10;
-	TextY = 5;
+	TextX = 10; // just comment
+	TextY = 5; // almost done with scene 2
 	TextZ = -8000;
 }
 

@@ -32,7 +32,7 @@ void SceneRyan::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0),(float) 50);
+	camera.Init(Vector3(5, 5, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0),(float) 50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -125,8 +125,8 @@ void SceneRyan::Init()
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",Color(1, 1, 1), 50.1f);
-	meshList[GEO_QUAD]->textureID = LoadTGA("Image//jordanface.tga");
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",Color(1, 1, 1), 10.1f);
+	meshList[GEO_QUAD]->textureID = LoadTGA("Image//Ocean.tga");
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front",Color(1, 1, 1), 50.1f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//OceanBack.tga");
 
@@ -152,10 +152,16 @@ void SceneRyan::Init()
 
 	meshList[GEO_SHARKBTM] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkBtm.obj", "OBJ//SharkBtm.mtl");
 
+	meshList[GEO_BEACH] = MeshBuilder::GenerateHemisphere("Beach", Color(1, 1, 1), 36, 36, 1);
+	meshList[GEO_BEACH]->material.kAmbient.Set(0.3f, 0.3f, 0.3f);
+	meshList[GEO_BEACH]->material.kDiffuse.Set(0.900, 0.843, 0.000);
+	meshList[GEO_BEACH]->material.kSpecular.Set(0.6f, 0.6f, 0.6f);
+	meshList[GEO_BEACH]->material.kShininess = 0.6f;
 
 	rotate = true;
+	sharkattack = false;
 	rotatetail = 0;
-	rotatecounter = 0;
+	sharkcircle = 0;
 
 }
 
@@ -316,21 +322,42 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
+	static const float LSPEED = 40.f;
+	if (Application::IsKeyPressed('I'))
+		light[0].position.z -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('K'))
+		light[0].position.z += (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('J'))
+		light[0].position.x -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('L'))
+		light[0].position.x += (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('O'))
+		light[0].position.y -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('P'))
+		light[0].position.y += (float)(LSPEED * dt);
+
 	if (rotate == true)
 	{
-		rotatetail += 0.1;
-		if (rotatetail > 8)
+		rotatetail += 1;
+		if (rotatetail > 20)
 		{
 			rotate = false;
 		}
 	}
 	else if (rotate == false)
 	{
-		rotatetail -= 0.1;
-		if (rotatetail < -8)
+		rotatetail -= 1;
+		if (rotatetail < -20)
 		{
 			rotate = true;
 		}
+	}
+	if (sharkattack == true)
+	{
+	}
+	else
+	{
+		sharkcircle += 0.5;
 	}
 
 	camera.Update(dt, mouse);
@@ -448,14 +475,17 @@ void SceneRyan::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -2.5, 4);
-	modelStack.Scale(1.1, 1.1, 1.1);
-	RenderMesh(meshList[GEO_SHARKTOP], true);
+	modelStack.Rotate(-sharkcircle, 0, 1, 0);
+	modelStack.Translate(50, 0, 0);
+	modelStack.Scale(3, 3, 3);
+	RenderShark();
 	modelStack.PopMatrix();
 
+
 	modelStack.PushMatrix();
-	modelStack.Rotate(rotatetail, 0, 1, 0);
-	RenderMesh(meshList[GEO_SHARKBTM], true);
+	modelStack.Translate(0, -92.5, 20);
+	modelStack.Scale(100, 95, 100);
+	RenderMesh(meshList[GEO_BEACH], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -465,6 +495,19 @@ void SceneRyan::Render()
 	modelStack.PopMatrix();
 
 
+}
+void SceneRyan::RenderShark()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -2.5, 4);
+	modelStack.Scale(1.1, 1.1, 1.1);
+	RenderMesh(meshList[GEO_SHARKTOP], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(rotatetail, 0, 1, 0);
+	RenderMesh(meshList[GEO_SHARKBTM], true);
+	modelStack.PopMatrix();
 }
 
 void SceneRyan::Exit() {

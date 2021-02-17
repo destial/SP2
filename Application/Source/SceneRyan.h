@@ -21,6 +21,7 @@ class SceneRyan : public Scene
 		GEO_BACK,
 		GEO_SHARKTOP,
 		GEO_SHARKBTM,
+		GEO_BEACH,
 		GEO_TEXT,
 		NUM_GEOMETRY,
 	};
@@ -79,7 +80,8 @@ private:
 
 	bool rotate;
 	float rotatetail;
-	bool rotatecounter;
+	float sharkcircle;
+	bool sharkattack;
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];
@@ -100,7 +102,7 @@ public:
 	virtual void Update(double dt, Mouse mouse);
 	virtual void Render();
 	virtual void Exit();
-
+	void RenderShark();
 	Color RED = Color(1.f, 0.f, 0.f);
 	Color GREEN = Color(0.f, 1.f, 0.f);
 	Color BLUE = Color(0.f, 0.f, 1.f);

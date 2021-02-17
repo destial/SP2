@@ -150,14 +150,17 @@ void SceneW::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	meshList[GEO_WALLTYPE1] = MeshBuilder::GenerateOBJMTL("WallType1", "OBJ//wall.obj", "OBJ//wall.mtl");
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
+
+	meshList[GEO_WALL] = MeshBuilder::GenerateOBJMTL("WallType1", "OBJ//wall.obj", "OBJ//wall.mtl");
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Door", "OBJ//doorway.obj", "OBJ//doorway.mtl");
 	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
-	meshList[GEO_WALLTYPE3] = MeshBuilder::GenerateCube("MazeWall", 1, 1, 1);
-	/*meshList[GEO_WALLTYPE3]->material.kAmbient.Set(.03f, .03f, .03f);
-	meshList[GEO_WALLTYPE3]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_WALLTYPE3]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_WALLTYPE3]->material.kShininess = .3f;*/
+	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall", 1, 1, 1);
+	/*meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
+	meshList[MWALL]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+	meshList[MWALL]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+	meshList[MWALL]->material.kShininess = .3f;*/
 }
 
 void SceneW::RenderMesh(Mesh* mesh, bool enableLight)
@@ -443,12 +446,6 @@ void SceneW::Render()
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 
-	/*modelStack.PushMatrix();
-	modelStack.Translate(0, .1, 0);
-	modelStack.Scale(100, 100, 100);
-	RenderMesh(meshList[GEO_QUAD], true);
-	modelStack.PopMatrix();*/
-
 	// left side of the room
 	modelStack.PushMatrix();
 	modelStack.Translate(-50, 0, -40);
@@ -468,107 +465,149 @@ void SceneW::Render()
 	modelStack.Translate(-50, 0, 50);
 	modelStack.Rotate(-90, 0, 1, 0);
 	modelStack.Scale(90, 10, 10);
-	RenderMesh(meshList[GEO_WALLTYPE1], true);
+	RenderMesh(meshList[GEO_WALL], true);
 	modelStack.PopMatrix();
 	// right side of the room
 	modelStack.PushMatrix();
 	modelStack.Translate(50, 0, -50);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(100, 10, 10);
-	RenderMesh(meshList[GEO_WALLTYPE1], true);
+	RenderMesh(meshList[GEO_WALL], true);
 	modelStack.PopMatrix();
 	// front of the room
 	modelStack.PushMatrix();
 	modelStack.Translate(-50, 0, -50);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(100, 10, 10);
-	RenderMesh(meshList[GEO_WALLTYPE1], true);
+	RenderMesh(meshList[GEO_WALL], true);
 	modelStack.PopMatrix();
 
 	// back of the room
 	modelStack.PushMatrix();
 	modelStack.Translate(50, 0, 50);
 	modelStack.Scale(100, 10, 10);
-	RenderMesh(meshList[GEO_WALLTYPE1], true);
+	RenderMesh(meshList[GEO_WALL], true);
 	modelStack.PopMatrix();
 
 	// maze
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -50);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -45);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -40);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -35);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -30);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -25);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -20);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -15);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -10);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -5);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, 0);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, 5);
 	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 45);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
 
 	// enemy with tags
 	/*modelStack.PushMatrix();
 	modelStack.Translate(0, 2.5, 0);
-	RenderMesh(meshList[GEO_WALLTYPE3], true);
+	RenderMesh(meshList[MWALL], true);
 	modelStack.PushMatrix();
 	modelStack.Translate(-1.5, 3, 0);
 	modelStack.Scale(0.5, 0.5, 0.5);
@@ -576,10 +615,11 @@ void SceneW::Render()
 	modelStack.PopMatrix();*/
 
 
-
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", Color(0, 1, 1), 3, 0, 14);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", Color(0, 1, 1), 3, 0, 13);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", Color(0, 1, 1), 3, 12.5, 14);
+	RenderMeshOnScreen(meshList[GEO_UI], 30, 15, 52.5);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 3, 0.25, 14);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 3, 0.25, 13);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 3, 0.25, 12);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 
 void SceneW::Exit() {

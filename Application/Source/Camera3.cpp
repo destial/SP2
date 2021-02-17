@@ -21,6 +21,7 @@ void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up,
 	this->target = defaultTarget = target;
 	this->Decoy = defaultPosition = pos;
 	sprintRotation = 0;
+	currentCarSpeed = 0;
 	carTarget = target;
 	Vector3 view = (target - position).Normalized();
 	Vector3 right = view.Cross(up);
@@ -39,6 +40,7 @@ void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 	this->target = defaultTarget = target;
 	this->Decoy = defaultPosition = pos;
 	sprintRotation = 0;
+	currentCarSpeed = 0;
 	Vector3 view = (target - position).Normalized();
 	Vector3 right = view.Cross(up);
 	right.y = 0;
@@ -110,10 +112,10 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	if (orthographic_size < 1)
 		orthographic_size = 1;
 	prevFOV = orthographic_size;
-
+	currentCarSpeed = 0;
 	float boundary = bounds;
 	float SPRINT = 1.f;
-	if (Application::IsKeyPressed(VK_LSHIFT)) {
+	if (Application::IsKeyPressed(VK_LSHIFT) && Application::IsKeyPressed('W')) {
 		if (sprintRotation < -10.f) {
 			sprintRotate = 1;
 		} else if (sprintRotation > 10.f) {
@@ -258,10 +260,10 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 				target.y += diff;
 			}
 		}
-	if (position.y < defaultPosition.y) {
-		position.y = defaultPosition.y;
+		if (position.y < defaultPosition.y) {
+			position.y = defaultPosition.y;
+		}
 	}
-}
 }
 
 void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
@@ -315,73 +317,83 @@ void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
 	view = (carTarget - position).Normalized();
 	right = view.Cross(Vector3(0, 1, 0)).Normalized();
 	Vector3 oldCarPos = position;
+
 	if (Application::IsKeyPressed('W')) {
-		Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
-		Vector3 oldPos = position;
-		Vector3 oldTar = target;
-		Vector3 oldCar = carTarget;
-		if (position.x <= boundary && position.x >= -boundary) {
-			position.x += face.x * SENSITIVITY * SPEED;
-			target.x += face.x * SENSITIVITY * SPEED;
-			carTarget.x += face.x * SENSITIVITY * SPEED;
+		if (currentCarSpeed != SPEED) {
+			currentCarSpeed += 0.05f;
 		}
-		if (position.z <= boundary && position.z >= -boundary) {
-			position.z += face.z * SENSITIVITY * SPEED;
-			target.z += face.z * SENSITIVITY * SPEED;
-			carTarget.z += face.z * SENSITIVITY * SPEED;
-		}
-		if (position.x <= -boundary || position.x >= boundary) {
-			position.x = oldPos.x;
-			target.x = oldTar.x;
-			carTarget.x = oldCar.x;
-		}
-		if (position.z <= -boundary || position.z >= boundary) {
-			position.z = oldPos.z;
-			target.z = oldTar.z;
-			carTarget.z = oldCar.z;
+		if (currentCarSpeed > SPEED) {
+			currentCarSpeed = SPEED;
 		}
 	}
-
 	if (Application::IsKeyPressed('S')) {
-		Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
-		Vector3 oldPos = position;
-		Vector3 oldTar = target;
-		Vector3 oldCar = carTarget;
-		if (position.x <= boundary && position.x >= -boundary) {
-			position.x -= face.x * SENSITIVITY * SPEED;
-			target.x -= face.x * SENSITIVITY * SPEED;
-			carTarget.x -= face.x * SENSITIVITY * SPEED;
+		if (currentCarSpeed != -(SPEED / 2)) {
+			currentCarSpeed -= 0.05f;
 		}
-		if (position.z <= boundary && position.z >= -boundary) {
-			position.z -= face.z * SENSITIVITY * SPEED;
-			target.z -= face.z * SENSITIVITY * SPEED;
-			carTarget.z -= face.z * SENSITIVITY * SPEED;
+		if (currentCarSpeed < -(SPEED / 2)) {
+			currentCarSpeed = -(SPEED / 2);
 		}
-		if (position.x <= -boundary || position.x >= boundary) {
-			position.x = oldPos.x;
-			target.x = oldTar.x;
-			carTarget.x = oldCar.x;
+	}
+	if (!Application::IsKeyPressed('W') && !Application::IsKeyPressed('S')) {
+		bool forward = true;
+		if (currentCarSpeed < 0) {
+			forward = false;
 		}
-		if (position.z <= -boundary || position.z >= boundary) {
-			position.z = oldPos.z;
-			target.z = oldTar.z;
-			carTarget.z = oldCar.z;
+		if (forward) {
+			if (currentCarSpeed != 0) {
+				currentCarSpeed -= 0.015f;
+			}
+			if (currentCarSpeed < 0) {
+				currentCarSpeed = 0;
+			}
+		} else {
+			if (currentCarSpeed != 0) {
+				currentCarSpeed += 0.015f;
+			}
+			if (currentCarSpeed > 0) {
+				currentCarSpeed = 0;
+			}
 		}
+	}
+	Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
+	Vector3 oldPos = position;
+	Vector3 oldTar = target;
+	Vector3 oldCar = carTarget;
+	if (position.x <= boundary && position.x >= -boundary) {
+		position.x += face.x * SENSITIVITY * currentCarSpeed;
+		target.x += face.x * SENSITIVITY * currentCarSpeed;
+		carTarget.x += face.x * SENSITIVITY * currentCarSpeed;
+	}
+	if (position.z <= boundary && position.z >= -boundary) {
+		position.z += face.z * SENSITIVITY * currentCarSpeed;
+		target.z += face.z * SENSITIVITY * currentCarSpeed;
+		carTarget.z += face.z * SENSITIVITY * currentCarSpeed;
+	}
+	if (position.x <= -boundary || position.x >= boundary) {
+		position.x = oldPos.x;
+		target.x = oldTar.x;
+		carTarget.x = oldCar.x;
+	}
+	if (position.z <= -boundary || position.z >= boundary) {
+		position.z = oldPos.z;
+		target.z = oldTar.z;
+		carTarget.z = oldCar.z;
 	}
 
 	view = (carTarget - position).Normalized();
 
 	if (position == oldCarPos) return;
+
 	if (Application::IsKeyPressed('A')) {
 		Mtx44 rotation;
-		rotation.SetToRotation((5 * SPEED * SENSITIVITY), 0, 1, 0);
+		rotation.SetToRotation((2*SPEED * SENSITIVITY), 0, 1, 0);
 		view = (rotation * view).Normalized();
 		carTarget = position + view;
 	}
 
 	if (Application::IsKeyPressed('D')) {
 		Mtx44 rotation;
-		rotation.SetToRotation((-5 * SPEED * SENSITIVITY), 0, 1, 0);
+		rotation.SetToRotation((-2*SPEED * SENSITIVITY), 0, 1, 0);
 		view = (rotation * view).Normalized();
 		carTarget = position + view;
 	}

@@ -168,6 +168,9 @@ void SceneXL::Init()
 	meshList[GEO_DUMMY] = MeshBuilder::GenerateOBJMTL("dummy target",
 		"OBJ//dummy.obj", "OBJ//dummy.mtl");
 
+	meshList[GEO_RANGE] = MeshBuilder::GenerateOBJMTL("shooting range",
+		"OBJ//shootingGallery.obj", "OBJ//ShootingGallery.mtl");
+
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
@@ -366,7 +369,7 @@ void SceneXL::DetectGnome()
 			{
 				delete meshList[GEO_GNOME];
 				meshList[GEO_GNOME] = nullptr;
-				camera.invert();
+				//camera.invert();
 			}
 		}
 	}
@@ -389,6 +392,9 @@ void SceneXL::RenderGnome()
 }
 
 void SceneXL::Update(double dt, Mouse mouse) {
+
+	RotateAngle += (float)(200 * dt);
+
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 
@@ -415,6 +421,13 @@ void SceneXL::Update(double dt, Mouse mouse) {
 			}
 		}
 		targetList[i]->MoveDummy(dt);
+	}
+
+	if (Rotate == true)
+	{
+		RotateAngle += (float)(100 * dt);
+		if (RotateAngle > 360)
+			rotate -= 360;
 	}
 }
 
@@ -522,13 +535,15 @@ void SceneXL::Render()
 
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix(); //axis
 
 	modelStack.PushMatrix();
 	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
 	modelStack.Scale(4.5, 4.5, 4.5);
 	RenderSkybox();
 	modelStack.PopMatrix(); //skybox
+
+
 
 
 	modelStack.PushMatrix();
@@ -538,13 +553,21 @@ void SceneXL::Render()
 	RenderMesh(meshList[GEO_FLOORFUTURE], false);
 	modelStack.PopMatrix(); //floor 
 
+	modelStack.PushMatrix();
+	modelStack.Translate(-1.07, 1, -50);
+	//modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_RANGE], true);
+	modelStack.PopMatrix(); //shooting range
+
 	for (int i = 0; i < targetList.size(); i++)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(targetList[i]->pos.x, targetList[i]->pos.y, targetList[i]->pos.z);
+		modelStack.Translate(1.2 + targetList[i]->pos.x, 5, -69 + targetList[i]->pos.z);
+		modelStack.Rotate(RotateAngle, 0, 1, 0);
 		RenderMesh(meshList[GEO_DUMMY], true);
 		modelStack.PopMatrix();
-	}
+	} //10 target dummies for the minigame/target shooting
 
 
 	std::stringstream ssX;

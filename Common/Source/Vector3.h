@@ -22,8 +22,7 @@ Struct to define a 3D vector
 \brief	Defines a 3D vector and its methods
 */
 /******************************************************************************/
-struct Vector3
-{
+struct Vector3 {
 	float x, y, z;
 	bool IsEqual(float a, float b) const;
 
@@ -68,6 +67,8 @@ struct Vector3
 	friend std::ostream& operator<<( std::ostream& os, Vector3& rhs); //print to ostream
 
 	friend Vector3 operator*( float scalar, const Vector3& rhs ); //what is this for?
+
+	float GetAngle(const Vector3& rhs);
 };
 
 #endif //VECTOR3_H

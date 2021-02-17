@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
+#include "SceneManager.h"
 #include "Light.h"
 #include "Camera3.h"
 
@@ -35,7 +36,17 @@ class OverworldScene : public Scene {
 
 		NUM_CAR,
 
+		CAMERA,
+
 		NUM_GEOMETRY,
+	};
+
+	enum OBJECTS {
+		WALL1,
+		WALL2,
+		WALL3,
+
+		NUM_OBJECTS,
 	};
 
 	enum UNIFORM_TYPE {
@@ -107,16 +118,14 @@ private:
 	void ObjectMoveBack(Mesh* mesh);
 	void Reset();
 	bool isNear(Mesh* mesh, const float& distance = 1.f);
-	bool isHit(Mesh* mesh1, Mesh* mesh2, const float& distance = 1.f);
-	bool isCoord(Mesh* mesh, int x, int z);
-	bool isCollide(Mesh* mesh1, Mesh* mesh2);
-	void addCoord(Mesh* mesh, int x, int z);
+	bool isHit(GameObject* o1, GameObject* o2, const float& distance = 1.f);
 
 	Mesh* meshList[NUM_GEOMETRY];
 	Mesh* currentCar;
 	Vector3 carOrigin;
 	Light light[2];
 	Camera3 camera;
+	SceneManager* sceneManager;
 
 	bool tasks[NUM_TASKS];
 

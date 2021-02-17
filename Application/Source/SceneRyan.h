@@ -83,6 +83,16 @@ private:
 	float rotatetail;
 	float sharkcircle;
 	bool sharkattack;
+	double temptime;
+
+	float SharkX;
+	float SharkY;
+	float SharkZ;
+	float sharkdir;
+	float TempposX;
+	float TempposZ;
+	bool Tempcounter;
+
 	Mesh* meshList[NUM_GEOMETRY];
 
 	//MINIGUN

@@ -3,8 +3,7 @@
 
 #include "Application.h"
 
-class Scene
-{
+class Scene {
 public:
 	Scene() {}
 	~Scene() {}

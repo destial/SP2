@@ -26,7 +26,8 @@ public:
 	enum TYPE {
 		IMAGE,
 		OBJECT,
-		TEXT
+		TEXT,
+		CAMERA
 	};
 	enum CORNER {
 		C1 = 0,
@@ -41,7 +42,6 @@ public:
 	void render(unsigned offset, unsigned count);
 	static void SetMaterialLoc(unsigned kA, unsigned kD, unsigned kS, unsigned nS);
 	std::vector<Material> materials;
-	std::vector<Vector3> collisionCoords;
 	static unsigned locationKa;
 	static unsigned locationKd;
 	static unsigned locationKs;
@@ -59,8 +59,8 @@ public:
 	unsigned fakeID;
 	unsigned type;
 	Transform transform, prevTransform;
-	Vector3 right, up, view;
 	Vector3 corner[TOTAL_CORNERS];
+	Vector3 target;
 };
 
 #endif

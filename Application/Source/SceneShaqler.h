@@ -27,6 +27,7 @@ class SceneShaqler : public Scene
 		GEO_BOOKCASE,
 		GEO_KURENAI,
 		GEO_UI,
+		GEO_TRASHCAN,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -93,6 +94,7 @@ private:
 	bool heightlimit;
 	bool bookCollected;
 	bool Purchasebook;
+	bool Bookhasbeenbaught;
 
 	float bookX;
 	float bookY;
@@ -103,6 +105,12 @@ private:
 	float ScreenX;
 	float ScreenY;
 	float rotateBook;
+	float ScreenTextX1;
+	float ScreenTextX2;
+	float ScreenTextY1;
+	float ScreenTextY2;
+	float ScreenTextZ1;
+	float ScreenTextZ2;
 
 	Mesh* meshList[NUM_GEOMETRY];
 

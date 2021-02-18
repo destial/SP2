@@ -162,6 +162,9 @@ void SceneShaqeel::Init()
 	meshList[GEO_BENCH] = MeshBuilder::GenerateOBJ("Bench", "OBJ//NewBench1.obj"); // Try 1 first
 	meshList[GEO_BENCH]->textureID = LoadTGA("Image//bench.tga");
 
+	meshList[GEO_STREETLIGHT] = MeshBuilder::GenerateOBJ("Bench", "OBJ//StreetLight.obj"); // Try 1 first
+	meshList[GEO_STREETLIGHT]->textureID = LoadTGA("Image//StreetLight.tga");
+
 	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NewMart.obj"); // Try 1 first
 	meshList[GEO_MART]->textureID = LoadTGA("Image//house1.tga");
 
@@ -572,12 +575,7 @@ void SceneShaqeel::Render()
 		RenderMesh(meshList[GEO_CAR2], true);
 		modelStack.PopMatrix();
 
-		/*modelStack.PushMatrix();
-		modelStack.Translate(0, 0, 0);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(1, 1, 1);
-		RenderMesh(meshList[GEO_ROBOTBODY], true);
-		modelStack.PopMatrix();*/
+		
 
 	}
 
@@ -723,6 +721,17 @@ void SceneShaqeel::Render()
 		RenderMesh(meshList[GEO_CUBE], true);
 		modelStack.PopMatrix();
 
+		modelStack.PushMatrix();
+		modelStack.Translate(-11.7, -2, -13.2); 
+		modelStack.Scale(1, 1, 1);
+		RenderMesh(meshList[GEO_STREETLIGHT], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(11.7, -2, 13.2);
+		modelStack.Scale(1, 1, 1);
+		RenderMesh(meshList[GEO_STREETLIGHT], true);
+		modelStack.PopMatrix();
 	}
 
 	std::stringstream ssX;

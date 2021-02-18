@@ -158,6 +158,9 @@ void SceneShaqler::Init()
 	meshList[GEO_BOOKSTACK] = MeshBuilder::GenerateOBJ("Bookstack", "OBJ//BookStack.obj"); // Try 1 first
 	meshList[GEO_BOOKSTACK]->textureID = LoadTGA("Image//BookStack.tga");
 
+	//meshList[GEO_TRASHCAN] = MeshBuilder::GenerateOBJ("Bookstack", "OBJ//woodenTrashcan.obj"); // Try 1 first
+	//meshList[GEO_TRASHCAN]->textureID = LoadTGA("Image//brownColour.tga");
+
 	meshList[GEO_BOOK] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
 	meshList[GEO_BOOK]->textureID = LoadTGA("Image//1984book.tga");
 
@@ -185,7 +188,7 @@ void SceneShaqler::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1.2, 0.8);
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1.5, 0.8);
 	meshList[GEO_UI]->textureID = LoadTGA("Image//UIBorder3.2.tga");
 
 	bookX = -17;
@@ -198,6 +201,14 @@ void SceneShaqler::Init()
 	TextZ = -8000;
 	ScreenX = 8000;
 	ScreenY = 30;
+
+	ScreenTextX1 = 1000;
+	ScreenTextX2 = 1000;
+	ScreenTextY1 = 3.5;
+	ScreenTextY2 = 1.2;
+	ScreenTextZ1;
+	ScreenTextZ2;
+	Bookhasbeenbaught = false;
 }
 
 void SceneShaqler::RenderMesh(Mesh* mesh, bool enableLight)
@@ -429,6 +440,16 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 			ScreenX = 40;
 			TextX = 1000;
 			bookX = 1000;
+			ScreenTextX1 = 4.5;
+			ScreenTextX2 = 4.5;
+			Bookhasbeenbaught = true;
+		}
+
+		if (Bookhasbeenbaught == true)
+		{
+			ScreenTextY1 = 1000;
+			ScreenTextY2 = 1000;
+		 
 		}
 	}
 
@@ -666,6 +687,12 @@ void SceneShaqler::Render()
 	RenderMesh(meshList[GEO_BOOKCASE], true);
 	modelStack.PopMatrix();
 
+	/*modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_TRASHCAN], true);
+	modelStack.PopMatrix();*/
+
 	modelStack.PushMatrix();
 	modelStack.Translate(14.2, 0, -15.8);
 	modelStack.Rotate(270, 0, 1, 0);
@@ -696,8 +723,9 @@ void SceneShaqler::Render()
 	modelStack.PopMatrix();
 
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 200, 0, 500);
-	RenderMeshOnScreen(meshList[GEO_UI], 55, ScreenX, 30); // 40 x
-	/*RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", BLACK, 20, 0, 20);*/
+	RenderMeshOnScreen(meshList[GEO_UI], 55, ScreenX, -5); // 40 x
+	RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", BLACK, 23, ScreenTextX1, 3.5);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Press T to Purchase", BLACK, 23, ScreenTextX2, 1.2);
 	/*RenderTextOnScreen(meshList[GEO_TEXT], ".", BLACK, 30, 0, 10);*/
 
 }

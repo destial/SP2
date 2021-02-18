@@ -431,7 +431,9 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		Application::sceneswitch = Application::SCENESHAQLER;
 	}
 
-
+	if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
+		Application::sceneswitch = Application::STARTSCENE;
+	}
 
 	camera.Update(dt, mouse);
 	/*Application::sceneswitch = Application::SCENESHAQ;*/

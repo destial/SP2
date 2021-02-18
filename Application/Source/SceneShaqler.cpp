@@ -211,13 +211,8 @@ void SceneShaqler::Init()
 	TextZ = -8000;
 	ScreenX = 8000;
 	ScreenY = 30;
+	textworldsceenY = 1000;
 
-	ScreenTextX1 = 1000;
-	ScreenTextX2 = 1000;
-	ScreenTextY1 = 3.5; // 6.5 1.13 x 
-	ScreenTextY2 = 1.2;
-	ScreenTextZ1;
-	ScreenTextZ2;
 	Bookhasbeenbaught = false;
 
 	x = 1;
@@ -443,6 +438,11 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		}
 	}
 
+	if (stopOpendoor == true)
+	{
+		textworldsceenY = 8.3;
+	}
+
 	if (bookCollected == true)
 	{
 		Book();
@@ -457,30 +457,70 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('T'))
 	{
-		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75 && Purchasebook == true)
+		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75 )
 		{
-			ScreenX = 40;
+			/*ScreenX = 40;
 			TextX = 1000;
-			bookX = 1000;
-			ScreenTextX1 = 4.5;
-			ScreenTextX2 = 4.5;
-			Bookhasbeenbaught = true;
-		}
+			bookX = 1000;*/
+			isBuying = true;
+			
+			if (isBuying == true)
+			{
+				ScreenX = 40;
+			    TextX = 1000; // world text 
+			    //bookX = 1000; // book
+			}
 
-		if (Bookhasbeenbaught == true)
-		{
-			ScreenTextY1 = 1000;
-			ScreenTextY2 = 1000;
-		 
+
+
 		}
 	}
+
+	if (Application::IsKeyPressed('Y'))
+	{
+		bookX = 1000;
+		isBuying = false;
+		Bookhasbeenbaught = true;
+
+	}
+
+	if (Application::IsKeyPressed('N'))
+	{
+		isBuying = false;
+		/*bookCollected = false;
+		Purchasebook = false;*/
+	}
+
+	/*if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75)
+	{
+		switch (UIPhase)
+		{
+		case 0:
+			if (Application::IsKeyPressed('Y'))
+			{
+				Bookhasbeenbaught = true;
+			}
+			break;
+		case 1:
+			if (Application::IsKeyPressed('N'))
+			{
+				Bookhasbeenbaught = false;
+				isBuying = false;
+			}
+			break;
+		}
+	}*/
 
 	if (Application::IsKeyPressedOnce('F') && camera.position.x >= 1.13 && camera.position.x <= 6.6 
 		&& camera.position.z >= 15 && camera.position.z <= 20 && stopOpendoor == true) {
 		Application::sceneswitch = Application::SCENESHAQ;
 	}
 
-	// later do purchasebook with ui
+
+
+	if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
+		Application::sceneswitch = Application::STARTSCENE;
+	}
 
 	camera.Update(dt, mouse);
 	/*Application::sceneswitch = Application::SCENESHAQ;*/
@@ -714,12 +754,6 @@ void SceneShaqler::Render()
 	RenderMesh(meshList[GEO_BOOKCASE], true);
 	modelStack.PopMatrix();
 
-	/*modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_TRASHCAN], true);
-	modelStack.PopMatrix();*/
-
 	modelStack.PushMatrix();
 	modelStack.Translate(14.2, 0, -15.8);
 	modelStack.Rotate(270, 0, 1, 0);
@@ -732,6 +766,13 @@ void SceneShaqler::Render()
 	modelStack.Rotate(270, 0, 1, 0);
 	modelStack.Scale(0.25, 0.25, 0.25);
 	RenderText(meshList[GEO_TEXT], " Press T to purchase", WHITE);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5.85, textworldsceenY, 19.5);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.3, 0.3, 0.3);
+	RenderText(meshList[GEO_TEXT], " Press F to leave", WHITE);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -762,12 +803,16 @@ void SceneShaqler::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 20, 0, 10);
 	modelStack.PopMatrix();
 
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 200, 0, 500); //.
-	RenderMeshOnScreen(meshList[GEO_UI], 55, ScreenX, -5); // 40 x
-	RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", BLACK, 23, ScreenTextX1, 3.5);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Left Click to Purchase", BLACK, 23, ScreenTextX2, 1.2); //X 1.5 AND Z 19.5
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 200, 0, 500); 
 
-	/*RenderTextOnScreen(meshList[GEO_TEXT], ".", BLACK, 30, 0, 10);*/
+	if (isBuying == true) 
+	{
+		RenderMeshOnScreen(meshList[GEO_UI], 55, 40, -5); // 40 screenx
+		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", BLACK, 23, 4.5, 3.5);
+		/*RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 23, 4.5, textworldsceenY);*/
+	    RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", BLACK, 23, 4.5, 1.2); //X 1.5 AND Z 19.5
+	}
+	
 
 }
 

@@ -98,6 +98,7 @@ private:
 	bool Purchasebook;
 	bool Bookhasbeenbaught;
 	bool stopOpendoor;
+	bool isBuying;
 
 	float bookX;
 	float bookY;
@@ -115,8 +116,11 @@ private:
 	float ScreenTextY2;
 	float ScreenTextZ1;
 	float ScreenTextZ2;
+	float textworldsceenY;
 
 	float x;
+
+	int UIPhase;
 
 	Mesh* meshList[NUM_GEOMETRY];
 

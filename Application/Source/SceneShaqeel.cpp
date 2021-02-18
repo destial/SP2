@@ -209,6 +209,7 @@ void SceneShaqeel::Init()
 	translateCar1Z = -10;
 	translateCar2Z = 20;
 	rotatedoor = 90;
+	translateWordY = 1000;
 }
 
 void SceneShaqeel::RenderMesh(Mesh* mesh, bool enableLight)
@@ -409,7 +410,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('E'))
 	{
-		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.y <= 4 && camera.position.y >= -4 && !stopopenDoor)
+		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.z <= 1.5 && camera.position.z >= -1.5 && !stopopenDoor)
 		{
 			rotatedoor -= (float)(40 * dt); 
 		} //z0.953 and -1.45 x-15 -13
@@ -419,6 +420,18 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 			stopopenDoor = true;
 		}
 	}
+
+	if (stopopenDoor == true)
+	{
+		translateWordY = 2.5;
+	}
+
+	if (Application::IsKeyPressedOnce('F') && camera.position.x <= -10 && camera.position.x >= -15 && 
+		camera.position.z <= 1.5 && camera.position.z >= -1.5 && stopopenDoor == true) {
+		Application::sceneswitch = Application::SCENESHAQLER;
+	}
+
+
 
 	camera.Update(dt, mouse);
 	/*Application::sceneswitch = Application::SCENESHAQ;*/
@@ -707,11 +720,18 @@ void SceneShaqeel::Render()
 		RenderMesh(meshList[GEO_TUNNEL], true);
 		modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
+		/*modelStack.PushMatrix();
 		modelStack.Translate(-23, 5, 8);
 		modelStack.Rotate(90, 0, 1, 0);
 		modelStack.Scale(1, 1, 1);
 		RenderText(meshList[GEO_TEXT], " Shaq's Bookshop", WHITE);
+		modelStack.PopMatrix();*/
+
+		modelStack.PushMatrix();
+		modelStack.Translate(-14.8, translateWordY, 0.9);
+		modelStack.Rotate(90, 0, 1, 0);
+		modelStack.Scale(0.15, 0.15, 0.15);
+		RenderText(meshList[GEO_TEXT], " Press F to Enter", WHITE);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();

@@ -139,6 +139,12 @@ void SceneShaqler::Init()
 	meshList[GEO_QUAD3] = MeshBuilder::GenerateQuad("quad3", Color(1, 1, 1), 1.f);
 	meshList[GEO_QUAD3]->textureID = LoadTGA("Image//BlackWallpaper.tga");
 
+	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", 4, 4, 4);
+	meshList[GEO_CUBE]->material.kAmbient.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kDiffuse.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kSpecular.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kShininess = 1.f;
+
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", Color(1, 0, 0), 30, 30, 1);
 	meshList[GEO_SPHERE]->textureID = LoadTGA("Image//BlackWallpaper.tga");
 
@@ -163,6 +169,9 @@ void SceneShaqler::Init()
 
 	meshList[GEO_BOOK] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
 	meshList[GEO_BOOK]->textureID = LoadTGA("Image//1984book.tga");
+
+	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJ("Book", "OBJ//MartDoor1.obj"); // Try 1 first
+	meshList[GEO_DOOR]->textureID = LoadTGA("Image//RedColour.tga");
 
 	meshList[GEO_BOOKCASE] = MeshBuilder::GenerateOBJ("Bookcase", "OBJ//BookCase.obj"); // Try 1 first
 	meshList[GEO_BOOKCASE]->textureID = LoadTGA("Image//brownColour.tga");
@@ -195,6 +204,7 @@ void SceneShaqler::Init()
 	bookY = 2.85;
 	bookZ = 1.6;
 	rotateBook = 270; // just commit
+	rotateDoor = 180;
 	bookCollected = false;
 	TextX = 10; // just comment
 	TextY = 5; // almost done with scene 2
@@ -204,7 +214,7 @@ void SceneShaqler::Init()
 
 	ScreenTextX1 = 1000;
 	ScreenTextX2 = 1000;
-	ScreenTextY1 = 3.5;
+	ScreenTextY1 = 3.5; // 6.5 1.13 x 
 	ScreenTextY2 = 1.2;
 	ScreenTextZ1;
 	ScreenTextZ2;
@@ -421,6 +431,16 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 			bookY = 4;
 			bookZ = 11.5;*/
 		}
+
+		if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 15 && camera.position.z <= 20 && !stopOpendoor)
+		{
+			rotateDoor += (float)(30 * dt);
+		}
+
+		if (rotateDoor >= 300)
+		{
+			stopOpendoor = true;
+		}
 	}
 
 	if (bookCollected == true)
@@ -453,6 +473,11 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 			ScreenTextY2 = 1000;
 		 
 		}
+	}
+
+	if (Application::IsKeyPressedOnce('F') && camera.position.x >= 1.13 && camera.position.x <= 6.6 
+		&& camera.position.z >= 15 && camera.position.z <= 20 && stopOpendoor == true) {
+		Application::sceneswitch = Application::SCENESHAQ;
 	}
 
 	// later do purchasebook with ui
@@ -709,6 +734,19 @@ void SceneShaqler::Render()
 	RenderText(meshList[GEO_TEXT], " Press T to purchase", WHITE);
 	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(1.5, 0, 19.5);
+	modelStack.Rotate(rotateDoor, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_DOOR], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(3.4, 0, 21.9);
+	modelStack.Scale(1, 4, 1);
+	RenderMesh(meshList[GEO_CUBE], true);
+	modelStack.PopMatrix();
+
 	std::stringstream ssX;
 	std::stringstream ssY;
 	std::stringstream ssZ;
@@ -724,11 +762,10 @@ void SceneShaqler::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 20, 0, 10);
 	modelStack.PopMatrix();
 
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 200, 0, 500);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 200, 0, 500); //.
 	RenderMeshOnScreen(meshList[GEO_UI], 55, ScreenX, -5); // 40 x
 	RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", BLACK, 23, ScreenTextX1, 3.5);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Press T to Purchase", BLACK, 23, ScreenTextX2, 1.2);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Press T to Purchase", BLACK, 23, ScreenTextX2, 1.2);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Left Click to Purchase", BLACK, 23, ScreenTextX2, 1.2); //X 1.5 AND Z 19.5
 
 	/*RenderTextOnScreen(meshList[GEO_TEXT], ".", BLACK, 30, 0, 10);*/
 

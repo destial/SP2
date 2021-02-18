@@ -96,8 +96,10 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	bool doorhasopened;
 	bool stopopenDoor;
 
+	float translateWordY;
 	float translateTruckZ;
 	float translateBusZ;
 	float translateCar1Z;

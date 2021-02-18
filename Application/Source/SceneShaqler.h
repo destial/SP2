@@ -24,10 +24,12 @@ class SceneShaqler : public Scene
 		GEO_BOOKSTACK,
 		GEO_BOOK,
 		GEO_CHAIR,
+		GEO_CUBE,
 		GEO_BOOKCASE,
 		GEO_KURENAI,
 		GEO_UI,
 		GEO_TRASHCAN,
+		GEO_DOOR,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -95,6 +97,7 @@ private:
 	bool bookCollected;
 	bool Purchasebook;
 	bool Bookhasbeenbaught;
+	bool stopOpendoor;
 
 	float bookX;
 	float bookY;
@@ -105,6 +108,7 @@ private:
 	float ScreenX;
 	float ScreenY;
 	float rotateBook;
+	float rotateDoor;
 	float ScreenTextX1;
 	float ScreenTextX2;
 	float ScreenTextY1;

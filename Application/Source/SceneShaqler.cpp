@@ -209,6 +209,8 @@ void SceneShaqler::Init()
 	ScreenTextZ1;
 	ScreenTextZ2;
 	Bookhasbeenbaught = false;
+
+	x = 1;
 }
 
 void SceneShaqler::RenderMesh(Mesh* mesh, bool enableLight)
@@ -726,6 +728,8 @@ void SceneShaqler::Render()
 	RenderMeshOnScreen(meshList[GEO_UI], 55, ScreenX, -5); // 40 x
 	RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", BLACK, 23, ScreenTextX1, 3.5);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Press T to Purchase", BLACK, 23, ScreenTextX2, 1.2);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Press T to Purchase", BLACK, 23, ScreenTextX2, 1.2);
+
 	/*RenderTextOnScreen(meshList[GEO_TEXT], ".", BLACK, 30, 0, 10);*/
 
 }

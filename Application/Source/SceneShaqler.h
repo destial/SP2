@@ -112,6 +112,8 @@ private:
 	float ScreenTextZ1;
 	float ScreenTextZ2;
 
+	float x;
+
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Mesh* BookHold;

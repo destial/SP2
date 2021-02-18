@@ -185,7 +185,7 @@ void SceneShaqler::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1.f, 1.f);
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1.2, 0.8);
 	meshList[GEO_UI]->textureID = LoadTGA("Image//UIBorder3.2.tga");
 
 	bookX = -17;
@@ -695,9 +695,10 @@ void SceneShaqler::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 20, 0, 10);
 	modelStack.PopMatrix();
 
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 200, 0, 10);
-	RenderMeshOnScreen(meshList[GEO_UI], 55, ScreenX, 10); // 40 x
-
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 200, 0, 500);
+	RenderMeshOnScreen(meshList[GEO_UI], 55, ScreenX, 30); // 40 x
+	/*RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", BLACK, 20, 0, 20);*/
+	/*RenderTextOnScreen(meshList[GEO_TEXT], ".", BLACK, 30, 0, 10);*/
 
 }
 

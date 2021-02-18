@@ -16,6 +16,7 @@ SceneXL::~SceneXL() {}
 void SceneXL::Init()
 {
 	talktognome = false;
+	talktorobot = false;
 	GotGnome = false;
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
@@ -170,6 +171,11 @@ void SceneXL::Init()
 
 	meshList[GEO_RANGE] = MeshBuilder::GenerateOBJMTL("shooting range",
 		"OBJ//shootingGallery.obj", "OBJ//ShootingGallery.mtl");
+
+	meshList[GEO_ROBOT] = MeshBuilder::GenerateOBJ("robot",
+		"OBJ//robo.obj");
+	meshList[GEO_ROBOT]->textureID = LoadTGA("Image//robo_normal.tga");
+	meshList[GEO_ROBOT]->transform.Translate(-19.3, 0, -37.6);
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -391,6 +397,19 @@ void SceneXL::RenderGnome()
 	}
 }
 
+void SceneXL::RenderMinigame()
+{
+	for (int i = 0; i < targetList.size(); i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(1.2 + targetList[i]->pos.x, 5, -69 + targetList[i]->pos.z);
+		modelStack.Rotate(RotateAngle, 0, 1, 0);
+		modelStack.Scale(1.5,1.5,1.5);
+		RenderMesh(meshList[GEO_DUMMY], true);
+		modelStack.PopMatrix();
+	} //10 target dummies for the minigame/target shooting
+}
+
 void SceneXL::Update(double dt, Mouse mouse) {
 
 	RotateAngle += (float)(200 * dt);
@@ -435,6 +454,23 @@ void SceneXL::Update(double dt)
 {
 	Mouse mouse;
 	Update(dt, mouse);
+}
+
+void SceneXL::DetectRobot()
+{
+	if (isNear(meshList[GEO_ROBOT], (float)5.f) && talktorobot == false)
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press F to start your simulation.", ORANGE, 4, 3, 6);
+		if (Application::IsKeyPressedOnce('F'))
+		{
+			camera.Init(Vector3(1.1, 10, -30.3), Vector3(1.1, 10, -30.4), Vector3(0, 1, 0), (float)50);
+			talktorobot = true;
+		}
+	}
+	if (talktorobot == true)
+	{
+		RenderMinigame();
+	}
 }
 
 void SceneXL::RenderSkybox() {
@@ -543,9 +579,6 @@ void SceneXL::Render()
 	RenderSkybox();
 	modelStack.PopMatrix(); //skybox
 
-
-
-
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
 	//modelStack.Rotate(-90, 1, 0, 0);
@@ -560,15 +593,9 @@ void SceneXL::Render()
 	RenderMesh(meshList[GEO_RANGE], true);
 	modelStack.PopMatrix(); //shooting range
 
-	for (int i = 0; i < targetList.size(); i++)
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(1.2 + targetList[i]->pos.x, 5, -69 + targetList[i]->pos.z);
-		modelStack.Rotate(RotateAngle, 0, 1, 0);
-		RenderMesh(meshList[GEO_DUMMY], true);
-		modelStack.PopMatrix();
-	} //10 target dummies for the minigame/target shooting
 
+	DetectRobot();
+	RenderRobot();
 
 	std::stringstream ssX;
 	std::stringstream ssY;
@@ -588,6 +615,16 @@ void SceneXL::Render()
 	DetectGnome();
 	RenderGnome();
 
+}
+
+void SceneXL::RenderRobot()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(meshList[GEO_ROBOT]->transform.translate.x, meshList[GEO_ROBOT]->transform.translate.y, meshList[GEO_ROBOT]->transform.translate.z);
+	//modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Scale(14, 14, 14);
+	RenderMesh(meshList[GEO_ROBOT], true);
+	modelStack.PopMatrix(); // robot
 }
 
 void SceneXL::Exit() {

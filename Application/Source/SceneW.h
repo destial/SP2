@@ -25,6 +25,8 @@ class SceneW : public Scene
 		GEO_WALL,
 		GEO_UI,
 		MWALL,
+		BOX,
+		BOXOPEN,
 		GEO_WALLDOOR,
 		NUM_GEOMETRY,
 	};
@@ -95,6 +97,7 @@ private:
 	void RenderMaze();
 	void RenderUI();
 	void RenderRoom();
+	void RenderBoxes();
 public:
 
 	SceneW();

@@ -144,9 +144,6 @@ void SceneW::Init()
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", WHITE, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//tron_dn.tga");
 
-	/*meshList[GEO_DOOROPEN] = MeshBuilder::GenerateQuad("Maze", WHITE, 1.f);
-	meshList[GEO_DOOROPEN]->textureID = LoadTGA("Image//maze_unsolved.tga");*/
-
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
@@ -156,6 +153,7 @@ void SceneW::Init()
 	meshList[GEO_WALL] = MeshBuilder::GenerateOBJMTL("WallType1", "OBJ//wall.obj", "OBJ//wall.mtl");
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Door", "OBJ//doorway.obj", "OBJ//doorway.mtl");
 	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
+	meshList[BOX] = MeshBuilder::GenerateOBJMTL("Box", "OBJ//cardboardBoxClosed.obj", "OBJ//cardboardBoxClosed.mtl");
 	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall", 1, 1, 1);
 	/*meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
 	meshList[MWALL]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
@@ -436,14 +434,15 @@ void SceneW::Render()
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix();*/
 
 	RenderSkybox();
 	RenderRoom();
+	RenderBoxes();
 	RenderMaze();
-
+	
 	modelStack.PushMatrix();
 	modelStack.Translate(0, .1, 0);
 	modelStack.Scale(100, 100, 100);
@@ -492,6 +491,7 @@ void SceneW::RenderRoom() {
 	RenderMesh(meshList[GEO_WALLDOOR], true);
 	modelStack.PopMatrix();
 
+	// Door
 	modelStack.PushMatrix();
 	modelStack.Translate(-51, 0, -47);
 	modelStack.Rotate(90, 0, 1, 0);
@@ -525,6 +525,53 @@ void SceneW::RenderRoom() {
 	modelStack.Translate(50, 0, 50);
 	modelStack.Scale(100, 10, 10);
 	RenderMesh(meshList[GEO_WALL], true);
+	modelStack.PopMatrix();
+
+	// Exit Door
+	modelStack.PushMatrix();
+	modelStack.Translate(26.5, 0, 48);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_DOOR], true);
+	modelStack.PopMatrix();
+}
+
+void SceneW::RenderBoxes() {
+	// Box 1
+	modelStack.PushMatrix();
+	modelStack.Translate(-47.5, 0, 45);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();
+	// Box 2
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 0, 16);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();
+
+	// Box 3
+	modelStack.PushMatrix();
+	modelStack.Translate(-24, 0, 34);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();
+
+	// Box 4
+	modelStack.PushMatrix();
+	modelStack.Translate(33.5, 0, -35);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();
+
+	// Box 5
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 0, -5);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[BOX], true);
 	modelStack.PopMatrix();
 }
 

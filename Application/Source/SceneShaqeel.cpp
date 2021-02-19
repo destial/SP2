@@ -32,7 +32,7 @@ void SceneShaqeel::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50); // 3.87 1
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -405,7 +405,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		light[0].position.y += (float)(LSPEED * dt);
 
 	// vehicle movement
-	translateTruckZ += (float)(7 * dt);
+	translateTruckZ += (float)(7 * dt); // 3.87 15.7
 	translateBusZ -= (float)(7 * dt);
 	translateCar1Z += (float)(10 * dt);
 	translateCar2Z -= (float)(15 * dt);

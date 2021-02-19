@@ -81,7 +81,8 @@ private:
 
 	bool rotate;
 	float rotatetail;
-	float sharkcircle;
+	int sharkcircle;
+	float sharkcircleangle;
 	bool sharkattack;
 	double temptime;
 
@@ -91,9 +92,13 @@ private:
 	float sharkdir;
 	float TempposX;
 	float TempposZ;
-	bool Tempcounter;
+	int Tempcounter;
 
 	Mesh* meshList[NUM_GEOMETRY];
+
+
+	//trying chasing code
+	Vector3 Temptarget;
 
 	//MINIGUN
 	float Shootingspin;

@@ -25,4 +25,6 @@ public:
 	void setBotL(Quad* quad);
 	void setBotR(Quad* quad);
 	bool hasGameObject(int id);
+	void push(GameObject* gameObject);
 };
+

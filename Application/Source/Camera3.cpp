@@ -453,3 +453,37 @@ float Camera3::getRotation(Vector3& origin) {
 	}
 	return angle;
 }
+
+float Camera3::getSharkRotation(Vector3& origin) {
+	Vector3 lookAt = (position - SharkPos).Normalized();
+	lookAt.y = 0;
+	float uv = (origin.x * lookAt.x + origin.z * lookAt.z) / ((Math::sqrt(origin.x * origin.x + origin.z * origin.z)) * Math::sqrt(lookAt.x * lookAt.x + lookAt.z * lookAt.z));
+	float angle = Math::RadianToDegree(acos(uv));
+	if (lookAt.z <= 0 && lookAt.x <= 0) {
+		angle = 360 - angle;
+	}
+	else if (lookAt.x >= 0 && lookAt.z <= 0) {
+		angle = 360 - angle;
+	}
+	return angle;
+}
+
+
+void Camera3::SharkChaseinit()
+{
+	SharkView = (SharkPos - position).Normalized();//change pos and target for bullet
+	SharkRight = SharkView.Cross(up).Normalized();
+	SharkRight.y = 0;
+	SharkFace = Vector3(0, 1, 0).Cross(SharkRight).Normalized();
+
+}
+
+void Camera3::SharkChaseMove()
+{
+	
+	SharkPos.x -= SharkFace.x;
+	SharkTarget.x -= SharkFace.x;
+	SharkPos.z -= SharkFace.z;
+	SharkTarget.z -= SharkFace.z;
+}
+

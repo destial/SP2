@@ -16,6 +16,7 @@ class SceneShaqeel : public Scene
 		GEO_QUAD1,
 		GEO_QUAD2,
 		GEO_CUBE,
+		GEO_SPHERE,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -35,7 +36,11 @@ class SceneShaqeel : public Scene
 		GEO_BUSH,
 		GEO_BENCH,
 		GEO_MART,
-		GEO_ROBOTBODY,
+		GEO_ROBOBODY,
+		GEO_ROBOLEFTARM,
+		GEO_ROBORIGHTARM,
+		GEO_ROBOLEFTLEG,
+		GEO_ROBORIGHTLEG,
 		GEO_DOOR,
 		GEO_CITY1,
 		GEO_CITY2,
@@ -98,6 +103,9 @@ private:
 	bool rotate;
 	bool doorhasopened;
 	bool stopopenDoor;
+	bool leftleglimit;
+	bool leftleglimit2;
+	bool rightleglimit;
 
 	float translateWordY;
 	float translateTruckZ;
@@ -106,6 +114,11 @@ private:
 	float translateCar2Z;
 	float rotatedoor;
 	float busZ;
+	float rotateleftleg;
+	float rotaterightleg;
+	float translateSphereZ;
+	float translateSphereZ2;
+
 
 	Mesh* meshList[NUM_GEOMETRY];
 

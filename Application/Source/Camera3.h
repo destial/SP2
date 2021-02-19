@@ -14,6 +14,25 @@ public:
 	Vector3 prevTarget, prevPosition, prevUp;
 	Vector3 target, position, up;
 
+	//trying out shark cam code
+	Vector3 SharkView,SharkTarget;
+	Vector3 SharkRight;
+	Vector3 SharkFace;
+	Vector3 SharkPos;
+	void SharkChaseinit();
+	float getSharkRotation(Vector3& origin);
+	void SharkChaseMove();
+	// stuff here is shark stuff^
+	//bullet
+	/*Vector3 BulletView, BulletTarget;
+	Vector3 BulletRight;
+	Vector3 BulletFace;
+	Vector3 BulletPos;
+	void SharkChaseinit();
+	float getSharkRotation(Vector3& origin);
+	void SharkChaseMove();*/
+
+
 	Camera3();
 	~Camera3();
 	void Init(const Vector3& pos, const Vector3& target, const Vector3& up);

@@ -32,7 +32,7 @@ void SceneShaqeel::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50); // 3.87 1
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -141,6 +141,12 @@ void SceneShaqeel::Init()
 	meshList[GEO_CUBE]->material.kSpecular.Set(0.5f, 1.f, 0.5f);
 	meshList[GEO_CUBE]->material.kShininess = 1.f;
 
+	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", BLUE, 30, 30, 0.5);
+	meshList[GEO_SPHERE]->material.kAmbient.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_SPHERE]->material.kDiffuse.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_SPHERE]->material.kSpecular.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_SPHERE]->material.kShininess = 1.f;
+
 	meshList[GEO_TRUCK] = MeshBuilder::GenerateOBJ("truck", "OBJ//NewTruck2.obj"); // Try 1 first
 	meshList[GEO_TRUCK]->textureID = LoadTGA("Image//BlueVehicle.tga");
 
@@ -168,17 +174,25 @@ void SceneShaqeel::Init()
 	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NewMart.obj"); // Try 1 first
 	meshList[GEO_MART]->textureID = LoadTGA("Image//house1.tga");
 
-	/*meshList[GEO_ROBOTBODY] = MeshBuilder::GenerateOBJMTL("robot", "OBJ//Robotwithoutlegs.obj", "OBJ//Robotwithoutlegs.mtl");*/
+	meshList[GEO_ROBOBODY] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Robowithoutarmsandlegs.obj"); // Try 1 first
+	meshList[GEO_ROBOBODY]->textureID = LoadTGA("Image//robo_normal.tga");
+
+	meshList[GEO_ROBOLEFTLEG] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roboleftleg.obj"); // Try 1 first
+	meshList[GEO_ROBOLEFTLEG]->textureID = LoadTGA("Image//robo_normal.tga");
+
+	meshList[GEO_ROBORIGHTLEG] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightleg.obj"); // Try 1 first
+	meshList[GEO_ROBORIGHTLEG]->textureID = LoadTGA("Image//robo_normal.tga");
+
+	meshList[GEO_ROBOLEFTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roboleftarm.obj"); // Try 1 first
+	meshList[GEO_ROBOLEFTARM]->textureID = LoadTGA("Image//robo_normal.tga");
+
+	meshList[GEO_ROBORIGHTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightarm.obj"); // Try 1 first
+	meshList[GEO_ROBORIGHTARM]->textureID = LoadTGA("Image//robo_normal.tga");
+
+	meshList[GEO_CITY1] = MeshBuilder::GenerateOBJ("Mart", "OBJ//skyscraper4.obj"); // Try 1 first
 
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJ("Door", "OBJ//MartDoor1.obj"); // Try 1 first
 	meshList[GEO_DOOR]->textureID = LoadTGA("Image//RedColour.tga");
-
-	//meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Mart", "OBJ//MartDoor1.obj", "OBJ//MartDoor1.mtl"); // Try 1 first
-
-	//meshList[GEO_DOOR]->material.kAmbient.Set(0.7f, 0.1f, 0.1f);
- //   meshList[GEO_DOOR]->material.kDiffuse.Set(0.3f, 0.3f, 0.3f);
- //   meshList[GEO_DOOR]->material.kSpecular.Set(0.6f, 0.6f, 0.6f);
- //   meshList[GEO_DOOR]->material.kShininess = 0.5f;
 
 	meshList[GEO_TUNNEL] = MeshBuilder::GenerateOBJ("Tunnel", "OBJ//Tunnel1.obj"); // Try 1 first
 	meshList[GEO_TUNNEL]->textureID = LoadTGA("Image//DarkGray.tga");
@@ -210,6 +224,13 @@ void SceneShaqeel::Init()
 	translateCar2Z = 20;
 	rotatedoor = 90;
 	translateWordY = 1000;
+	rotateleftleg = 0;
+	rotaterightleg = 0;
+	leftleglimit = false;
+	leftleglimit2 = false;
+	rightleglimit = false;
+	translateSphereZ = -19.6;
+	translateSphereZ2 = 19.6;
 }
 
 void SceneShaqeel::RenderMesh(Mesh* mesh, bool enableLight)
@@ -383,10 +404,13 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('P'))
 		light[0].position.y += (float)(LSPEED * dt);
 
-	translateTruckZ += (float)(7 * dt);
+	// vehicle movement
+	translateTruckZ += (float)(7 * dt); // 3.87 15.7
 	translateBusZ -= (float)(7 * dt);
 	translateCar1Z += (float)(10 * dt);
 	translateCar2Z -= (float)(15 * dt);
+	translateSphereZ += (float)(2.5 * dt);
+	translateSphereZ2 -= (float)(2.75 * dt);
 
 	if (translateTruckZ >= 40)
 	{
@@ -408,12 +432,22 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		translateCar2Z = 40;
 	}
 
+	if (translateSphereZ >= 25)
+	{
+		translateSphereZ = -25;
+	}
+
+	if (translateSphereZ2 <= -30)
+	{
+		translateSphereZ2 = 20;
+	}
+
 	if (Application::IsKeyPressed('E'))
 	{
 		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.z <= 1.5 && camera.position.z >= -1.5 && !stopopenDoor)
 		{
 			rotatedoor -= (float)(40 * dt); 
-		} //z0.953 and -1.45 x-15 -13
+		} 
 
 		if (rotatedoor <= -30)
 		{
@@ -435,8 +469,41 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		Application::sceneswitch = Application::STARTSCENE;
 	}
 
+	// robot movement
+
+	//if (rotateleftleg >= -30 && rotateleftleg <= 30 && leftleglimit == false/* && leftleglimit2 == false*/)
+	//{
+	//	rotateleftleg += (float)(15 * dt);
+	//}
+
+	//if (rotateleftleg >= 30)
+	//{
+	//	leftleglimit = true;
+	//}
+
+	//if (leftleglimit == true)
+	//{
+	//	rotateleftleg -= (float)(15 * dt);
+	//}
+
+	if (leftleglimit == true)
+	{
+		rotateleftleg += 1;
+		if (rotateleftleg > 30)
+		{
+			leftleglimit = false;
+		}
+	}
+	else if (leftleglimit == false)
+	{
+		rotateleftleg -= 1;
+		if (rotateleftleg < -30)
+		{
+			leftleglimit = true;
+		}
+	}
+
 	camera.Update(dt, mouse);
-	/*Application::sceneswitch = Application::SCENESHAQ;*/
 }
 
 void SceneShaqeel::Update(double dt)
@@ -722,12 +789,26 @@ void SceneShaqeel::Render()
 		RenderMesh(meshList[GEO_TUNNEL], true);
 		modelStack.PopMatrix();
 
-		/*modelStack.PushMatrix();
-		modelStack.Translate(-23, 5, 8);
-		modelStack.Rotate(90, 0, 1, 0);
+		modelStack.PushMatrix();
+		modelStack.Translate(22.1, -2, 0);
+		modelStack.Rotate(270, 0, 1, 0);
 		modelStack.Scale(1, 1, 1);
-		RenderText(meshList[GEO_TEXT], " Shaq's Bookshop", WHITE);
-		modelStack.PopMatrix();*/
+		RenderMesh(meshList[GEO_CITY1], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(27, -2, 9);
+		modelStack.Rotate(270, 0, 1, 0);
+		modelStack.Scale(1.3, 1.3, 1.3);
+		RenderMesh(meshList[GEO_CITY1], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(27, -2, -9);
+		modelStack.Rotate(270, 0, 1, 0);
+		modelStack.Scale(1.3, 1.3, 1.3);
+		RenderMesh(meshList[GEO_CITY1], true);
+		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(-14.8, translateWordY, 0.9);
@@ -753,6 +834,98 @@ void SceneShaqeel::Render()
 		modelStack.Translate(11.7, -2, 13.2);
 		modelStack.Scale(1, 1, 1);
 		RenderMesh(meshList[GEO_STREETLIGHT], true);
+		modelStack.PopMatrix();
+	}
+
+	{
+    }
+
+	// robo
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(-13.2, 0, translateSphereZ);
+		modelStack.Scale(0.25, 0.25, 0.25);
+		RenderMesh(meshList[GEO_SPHERE], true);
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 0, 0);
+		modelStack.Rotate(rotateleftleg, 1, 0, 0);
+		modelStack.Scale(3.5, 3.5, 3.5);
+		RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 0, 0);
+		modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+		modelStack.Scale(3.5, 3.5, 3.5);
+		RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(-2.25, 4.5, 0);
+		modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+		modelStack.Scale(3.5, 3.5, 3.5);
+		RenderMesh(meshList[GEO_ROBOLEFTARM], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(2.25, 4.5, 0);
+		modelStack.Rotate(rotateleftleg, 1, 0, 0);
+		modelStack.Scale(3.5, 3.5, 3.5);
+		RenderMesh(meshList[GEO_ROBORIGHTARM], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, -8.5, 0);
+		modelStack.Scale(3.5, 3.5, 3.5);
+		RenderMesh(meshList[GEO_ROBOBODY], true);
+		modelStack.PopMatrix();
+
+		modelStack.PopMatrix();
+
+		// 2nd robot
+
+
+		modelStack.PushMatrix();
+		modelStack.Translate(13.2, 0, translateSphereZ2);
+		modelStack.Rotate(180, 0, 1, 0);
+		modelStack.Scale(0.25, 0.25, 0.25);
+		RenderMesh(meshList[GEO_SPHERE], true);
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 0, 0);
+		modelStack.Rotate(rotateleftleg, 1, 0, 0);
+		modelStack.Scale(3.5, 3.5, 3.5);
+		RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 0, 0);
+		modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+		modelStack.Scale(3.5, 3.5, 3.5);
+		RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(-2.25, 4.5, 0);
+		modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+		modelStack.Scale(3.5, 3.5, 3.5);
+		RenderMesh(meshList[GEO_ROBOLEFTARM], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(2.25, 4.5, 0);
+		modelStack.Rotate(rotateleftleg, 1, 0, 0);
+		modelStack.Scale(3.5, 3.5, 3.5);
+		RenderMesh(meshList[GEO_ROBORIGHTARM], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, -8.5, 0);
+		modelStack.Scale(3.5, 3.5, 3.5);
+		RenderMesh(meshList[GEO_ROBOBODY], true);
+		modelStack.PopMatrix();
+
 		modelStack.PopMatrix();
 	}
 

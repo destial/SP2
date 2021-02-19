@@ -32,7 +32,7 @@ void SceneShaqler::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(3.87, 4, 15.7), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -197,8 +197,8 @@ void SceneShaqler::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1.5, 0.8);
-	meshList[GEO_UI]->textureID = LoadTGA("Image//UIBorder3.2.tga");
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1, 0.8);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//Blackyellowbordertga");
 
 	bookX = -17;
 	bookY = 2.85;
@@ -427,7 +427,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 			bookZ = 11.5;*/
 		}
 
-		if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 15 && camera.position.z <= 20 && !stopOpendoor)
+		if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 14 && camera.position.z <= 20 && !stopOpendoor)
 		{
 			rotateDoor += (float)(30 * dt);
 		}
@@ -512,7 +512,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 	}*/
 
 	if (Application::IsKeyPressedOnce('F') && camera.position.x >= 1.13 && camera.position.x <= 6.6 
-		&& camera.position.z >= 15 && camera.position.z <= 20 && stopOpendoor == true) {
+		&& camera.position.z >= 14 && camera.position.z <= 20 && stopOpendoor == true) {
 		Application::sceneswitch = Application::SCENESHAQ;
 	}
 
@@ -651,7 +651,7 @@ void SceneShaqler::Render()
 	//modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(15, 20, 20);
 	RenderMesh(meshList[GEO_QUAD2], true);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix(); // x -18.2 z 15.5
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 15, 20);
@@ -808,9 +808,9 @@ void SceneShaqler::Render()
 	if (isBuying == true) 
 	{
 		RenderMeshOnScreen(meshList[GEO_UI], 55, 40, -5); // 40 screenx
-		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", BLACK, 23, 4.5, 3.5);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 23, 4.5, 3.5);
 		/*RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 23, 4.5, textworldsceenY);*/
-	    RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", BLACK, 23, 4.5, 1.2); //X 1.5 AND Z 19.5
+	    RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 23, 4.5, 1.2); //X 1.5 AND Z 19.5
 	}
 	
 

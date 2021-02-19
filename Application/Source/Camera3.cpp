@@ -2,49 +2,27 @@
 #include "Application.h"
 #include "Mtx44.h"
 
-Camera3::Camera3()
-{
+Camera3::Camera3() {
 	orthographic_size = defaultFOV = 45.0f;
 }
 
-Camera3::~Camera3()
-{
-}
+Camera3::~Camera3() {}
 
-void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up, const float &bounds)
-{
-	yaw = -90; 
-	pitch = 0;
-	jumpFrame = 0;
+void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up, const float &bounds) {
+	yaw = -90;
+	pitch = jumpFrame = sprintRotation = currentCarSpeed = 0;
 	this->bounds = bounds;
-	this->position = defaultPosition = pos;
-	this->target = defaultTarget = target;
-	this->Decoy = defaultPosition = pos;
-	sprintRotation = 0;
-	currentCarSpeed = 0;
-	carTarget = target;
-	Vector3 view = (target - position).Normalized();
-	Vector3 right = view.Cross(up);
-	right.y = 0;
-	right.Normalize();
+	this->position = defaultPosition = Decoy = pos;
+	this->target = defaultTarget = carTarget = target;
 	this->up = defaultUp = up;
 }
 
-void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
-{
+void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up) {
 	yaw = -90;
-	pitch = 0;
-	jumpFrame = 0;
+	pitch = jumpFrame = sprintRotation = currentCarSpeed = 0;
 	this->bounds = 50.f;
-	this->position = defaultPosition = pos;
-	this->target = defaultTarget = target;
-	this->Decoy = defaultPosition = pos;
-	sprintRotation = 0;
-	currentCarSpeed = 0;
-	Vector3 view = (target - position).Normalized();
-	Vector3 right = view.Cross(up);
-	right.y = 0;
-	right.Normalize();
+	this->position = defaultPosition = Decoy = pos;
+	this->target = defaultTarget = carTarget = target;
 	this->up = defaultUp = up;
 }
 
@@ -59,9 +37,8 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	prevUp = up;
 	float SENSITIVITY = 0.2f;
 
-	SENSITIVITY = inverted ? -SENSITIVITY : SENSITIVITY;
+	SENSITIVITY = (inverted ? -SENSITIVITY : SENSITIVITY);
 
-	inverted ? up.y = -up.y : up.y = up.y;
 	Vector3 view = (target - position).Normalized();
 	if (mouse.left) {
 		Mtx44 rotation;
@@ -111,10 +88,12 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 		orthographic_size = 100;
 	if (orthographic_size < 1)
 		orthographic_size = 1;
+
 	prevFOV = orthographic_size;
 	currentCarSpeed = 0;
-	float boundary = bounds;
+
 	float SPRINT = 1.f;
+
 	if (Application::IsKeyPressed(VK_LSHIFT) && Application::IsKeyPressed('W')) {
 		if (sprintRotation < -10.f) {
 			sprintRotate = 1;
@@ -144,19 +123,19 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 		Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
 		Vector3 oldPos = position;
 		Vector3 oldTar = target;
-		if (position.x <= boundary && position.x >= -boundary) {
+		if (position.x <= bounds && position.x >= -bounds) {
 			position.x += face.x * SENSITIVITY * SPRINT;
 			target.x += face.x * SENSITIVITY * SPRINT;
 		}
-		if (position.z <= boundary && position.z >= -boundary) {
+		if (position.z <= bounds && position.z >= -bounds) {
 			position.z += face.z * SENSITIVITY * SPRINT;
 			target.z += face.z * SENSITIVITY * SPRINT;
 		}
-		if (position.x <= -boundary || position.x >= boundary) {
+		if (position.x <= -bounds || position.x >= bounds) {
 			position.x = oldPos.x;
 			target.x = oldTar.x;
 		}
-		if (position.z <= -boundary || position.z >= boundary) {
+		if (position.z <= -bounds || position.z >= bounds) {
 			position.z = oldPos.z;
 			target.z = oldTar.z;
 		}
@@ -166,19 +145,19 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 		Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
 		Vector3 oldPos = position;
 		Vector3 oldTar = target;
-		if (position.x <= boundary && position.x >= -boundary) {
+		if (position.x <= bounds && position.x >= -bounds) {
 			position.x -= face.x * SENSITIVITY;
 			target.x -= face.x * SENSITIVITY;
 		}
-		if (position.z <= boundary && position.z >= -boundary) {
+		if (position.z <= bounds && position.z >= -bounds) {
 			position.z -= face.z * SENSITIVITY;
 			target.z -= face.z * SENSITIVITY;
 		}
-		if (position.x <= -boundary || position.x >= boundary) {
+		if (position.x <= -bounds || position.x >= bounds) {
 			position.x = oldPos.x;
 			target.x = oldTar.x;
 		}
-		if (position.z <= -boundary || position.z >= boundary) {
+		if (position.z <= -bounds || position.z >= bounds) {
 			position.z = oldPos.z;
 			target.z = oldTar.z;
 		}
@@ -187,19 +166,19 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	if (Application::IsKeyPressed('A')) {
 		Vector3 oldPos = position;
 		Vector3 oldTar = target;
-		if (position.x <= boundary && position.x >= -boundary) {
+		if (position.x <= bounds && position.x >= -bounds) {
 			position.x -= right.x * SENSITIVITY;
 			target.x -= right.x * SENSITIVITY;
 		}
-		if (position.z <= boundary && position.z >= -boundary) {
+		if (position.z <= bounds && position.z >= -bounds) {
 			position.z -= right.z * SENSITIVITY;
 			target.z -= right.z * SENSITIVITY;
 		}
-		if (position.x <= -boundary || position.x >= boundary) {
+		if (position.x <= -bounds || position.x >= bounds) {
 			position.x = oldPos.x;
 			target.x = oldTar.x;
 		}
-		if (position.z <= -boundary || position.z >= boundary) {
+		if (position.z <= -bounds || position.z >= bounds) {
 			position.z = oldPos.z;
 			target.z = oldTar.z;
 		}
@@ -208,19 +187,19 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	if (Application::IsKeyPressed('D')) {
 		Vector3 oldPos = position;
 		Vector3 oldTar = target;
-		if (position.x < boundary && position.x > -boundary) {
+		if (position.x < bounds && position.x > -bounds) {
 			position.x += right.x * SENSITIVITY;
 			target.x += right.x * SENSITIVITY;
 		}
-		if (position.z < boundary && position.z > -boundary) {
+		if (position.z < bounds && position.z > -bounds) {
 			position.z += right.z * SENSITIVITY;
 			target.z += right.z * SENSITIVITY;
 		}
-		if (position.x <= -boundary || position.x >= boundary) {
+		if (position.x <= -bounds || position.x >= bounds) {
 			position.x = oldPos.x;
 			target.x = oldTar.x;
 		}
-		if (position.z <= -boundary || position.z >= boundary) {
+		if (position.z <= -bounds || position.z >= bounds) {
 			position.z = oldPos.z;
 			target.z = oldTar.z;
 		}
@@ -231,7 +210,7 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	}
 
 	if (Application::IsKeyPressed(' ')) {
-		if (position.y <= boundary) {
+		if (position.y <= bounds) {
 			if (position.y == defaultPosition.y) {
 				jumpFrame++;
 			}

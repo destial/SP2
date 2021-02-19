@@ -22,20 +22,6 @@
 GLFWwindow* m_window;
 const unsigned char FPS = 120; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
-//Define an error callback
-static void error_callback(int error, const char* description)
-{
-	fputs(description, stderr);
-	_fgetchar();
-}
-
-//Define the key input callback
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-}
-
 unsigned Application::m_width;
 unsigned Application::m_height;
 unsigned Application::ui_width;
@@ -47,57 +33,27 @@ std::set<unsigned short> Application::activeKeys;
 Scene* scene[Application::TOTALSCENES];
 Mouse mouse;
 
-bool Application::IsKeyPressed(unsigned short key)
-{
-	return ((GetAsyncKeyState(key) & 0x8001) != 0);
+Application::Application() {}
+
+Application::~Application() {}
+
+//Define an error callback
+static void error_callback(int error, const char* description) {
+	fputs(description, stderr);
+	_fgetchar();
 }
 
-bool Application::IsMousePressed(unsigned short key) //0 - Left, 1 - Right, 2 - Middle
-{
-	return glfwGetMouseButton(m_window, key) != 0;
+//Define the key input callback
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-void Application::GetCursorPos(double* xpos, double* ypos)
-{
-	glfwGetCursorPos(m_window, xpos, ypos);
+static void scroll_callback(GLFWwindow* window, double nan, double offSet) {
+	mouse.scroll = offSet;
 }
 
-unsigned Application::GetWindowWidth()
-{
-	return m_width;
-}
-
-unsigned Application::GetWindowHeight()
-{
-	return m_height;
-}
-
-unsigned Application::GetUIHeight() {
-	return ui_height;
-}
-
-unsigned Application::GetUIWidth() {
-	return ui_width;
-}
-
-Application::Application()
-{
-}
-
-Application::~Application()
-{
-}
-
-void resize_callback(GLFWwindow* window, int w, int h)
-{
-	Application::m_width = w;
-	Application::m_height = h;
-	Application::ui_width = w / 10;
-	Application::ui_height = h / 10;
-	glViewport(0, 0, w, h);
-}
-
-void mouse_callback(GLFWwindow* window, double x, double y) {
+static void mouse_callback(GLFWwindow* window, double x, double y) {
 	if (x < Application::m_width / 2) {
 		mouse.left = true;
 		mouse.right = false;
@@ -118,8 +74,40 @@ void mouse_callback(GLFWwindow* window, double x, double y) {
 	}
 }
 
-static void scroll_callback(GLFWwindow* window, double nan, double offSet) {
-	mouse.scroll = offSet;
+static void resize_callback(GLFWwindow* window, int w, int h) {
+	Application::m_width = w;
+	Application::m_height = h;
+	Application::ui_width = w / 10;
+	Application::ui_height = h / 10;
+	glViewport(0, 0, w, h);
+}
+
+bool Application::IsKeyPressed(unsigned short key) {
+	return ((GetAsyncKeyState(key) & 0x8001) != 0);
+}
+
+bool Application::IsMousePressed(unsigned short key) {
+	return glfwGetMouseButton(m_window, key) != 0;
+}
+
+void Application::GetCursorPos(double* xpos, double* ypos) {
+	glfwGetCursorPos(m_window, xpos, ypos);
+}
+
+unsigned Application::GetWindowWidth() {
+	return m_width;
+}
+
+unsigned Application::GetWindowHeight() {
+	return m_height;
+}
+
+unsigned Application::GetUIHeight() {
+	return ui_height;
+}
+
+unsigned Application::GetUIWidth() {
+	return ui_width;
 }
 
 bool Application::IsMousePressedOnce(unsigned short key) {
@@ -162,25 +150,22 @@ void Application::log(std::string string) {
 	std::cout << string << std::endl;
 }
 
-void Application::Init()
-{
+void Application::Init() {
 
 	//Set the error callback
 	glfwSetErrorCallback(error_callback);
 
 	//Initialize GLFW
 	if (!glfwInit())
-	{
 		exit(EXIT_FAILURE);
-	}
 
 	//Set the GLFW window creation hints - these are optional
 	glfwWindowHint(GLFW_SAMPLES, 4); //Request 4x antialiasing
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); //Request a specific OpenGL version
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); //Request a specific OpenGL version
+
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL 
-
 
 	//Create a window and create its OpenGL context
 	m_width = 800;
@@ -192,11 +177,9 @@ void Application::Init()
 	quit = false;
 	mouse.reset();
 	glfwSetWindowSizeCallback(m_window, resize_callback);
-	//m_window = glfwCreateWindow(800, 600, "Test Window", NULL, NULL);
 
 	//If the window couldn't be created
-	if (!m_window)
-	{
+	if (!m_window) {
 		fprintf(stderr, "Failed to open GLFW window.\n");
 		glfwTerminate();
 		exit(EXIT_FAILURE);
@@ -206,17 +189,16 @@ void Application::Init()
 	glfwMakeContextCurrent(m_window);
 
 	//Sets the key callback
-	//glfwSetKeyCallback(m_window, key_callback);
+	glfwSetKeyCallback(m_window, key_callback);
 
 	glewExperimental = true; // Needed for core profile
+
 	//Initialize GLEW
 	GLenum err = glewInit();
 
 	//If GLEW hasn't initialized
-	if (err != GLEW_OK)
-	{
+	if (err != GLEW_OK) {
 		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-		//return -1;
 	}
 }
 
@@ -226,6 +208,8 @@ void toggleState() {
 	case Application::WINSCENE:
 	case Application::LOSESCENE:
 	case Application::STARTSCENE:
+
+		// Use mouse positioning to click on UI menu
 		glfwSetCursorPosCallback(m_window, NULL);
 		glfwSetScrollCallback(m_window, NULL);
 		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -237,18 +221,20 @@ void toggleState() {
 	case Application::SCENERANCE:
 	case Application::SCENESHAQLER:
 	default:
+
+		// Use mouse movement for playing and looking
 		glfwSetCursorPosCallback(m_window, mouse_callback);
 		glfwSetScrollCallback(m_window, scroll_callback);
 		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		mouse.reset();
-		glfwSetCursorPos(m_window, Application::m_width / 2, Application::m_height / 2);
+		glfwSetCursorPos(m_window, Application::GetWindowWidth() / 2, Application::GetWindowHeight() / 2);
 		break;
 	}
 }
 
-void Application::Run()
-{
-	//Main Loop
+void Application::Run() {
+
+	// Initialize and create scenes
 	scene[SCENESHAQ] = new SceneShaqeel();
 	scene[SCENEWALTON] = new SceneW();
 	scene[SCENERYAN] = new SceneRyan();
@@ -256,29 +242,33 @@ void Application::Run()
 	scene[OVERWORLD] = new OverworldScene();
 	scene[SCENESHAQLER] = new SceneShaqler();
 	scene[STARTSCENE] = new StartMenuScene();
-	
+
 	/*scene[SHAQLER]*/
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
 		if (scene[i])
 			scene[i]->Init();
 	}
-	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 
+	// Start timer to calculate how long it takes to render this frame
+	m_timer.startTimer();
+
+	// Main Loop
 	while (!glfwWindowShouldClose(m_window) && !Application::quit) {
+
+		// Update and render selected scene
 		if (scene[Application::sceneswitch]) {
 			scene[Application::sceneswitch]->Update(m_timer.getElapsedTime(), mouse);
 			scene[Application::sceneswitch]->Render();
 		} else {
-
+			Application::sceneswitch = STARTSCENE;
+			continue;
 		}
+
+		// Toggle mouse states depending on scene
 		toggleState();
+
+		// Switch scenes
 		switch (Application::sceneswitch) {
-		/*case Application::SCENESHAQ:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::SCENESHAQLER;
-				Application::previousscene = SCENESHAQ;
-			}
-			break;*/
 		case Application::SCENESHAQ:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEWALTON;
@@ -323,23 +313,31 @@ void Application::Run()
 
 		//Swap buffers
 		glfwSwapBuffers(m_window);
+
 		//Get and organize events, like keyboard and mouse input, window resizing, etc...
 		glfwPollEvents();
-		m_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.   
 
-	} //Check if the ESC key had been pressed or if the window had been closed
+		// Frame rate limiter. Limits each frame to a specified time in ms.   
+		m_timer.waitUntil(frameTime);  
+
+	} 
+
+	//If the window had been closed or quit from the main menu
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
 		if (scene[i]) {
+
+			//Clean up scenes
 			scene[i]->Exit();
 			delete scene[i];
 		}
 	}
 }
 
-void Application::Exit()
-{
+void Application::Exit() {
+
 	//Close OpenGL window and terminate GLFW
 	glfwDestroyWindow(m_window);
+
 	//Finalize and clean up GLFW
 	glfwTerminate();
 }

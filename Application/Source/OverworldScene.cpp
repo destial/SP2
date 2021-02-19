@@ -114,6 +114,10 @@ void OverworldScene::Init() {
 	meshList[TRUCK1]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
 	meshList[TRUCK1]->type = Mesh::TYPE::OBJECT;
 
+	meshList[TRUCK2] = MeshBuilder::GenerateOBJ("truck2", "OBJ//carrytruck.obj");
+	meshList[TRUCK2]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
+	meshList[TRUCK2]->type = Mesh::TYPE::OBJECT;
+
 	meshList[CAR1] = MeshBuilder::GenerateOBJ("car1", "OBJ//NewCar1.obj");
 	meshList[CAR1]->textureID = LoadTGA("Image//GreenVehicle.tga");
 	meshList[CAR1]->type = Mesh::TYPE::OBJECT;
@@ -125,10 +129,6 @@ void OverworldScene::Init() {
 	meshList[CAR2] = MeshBuilder::GenerateOBJ("Car2", "OBJ//NewCar2.obj");
 	meshList[CAR2]->textureID = LoadTGA("Image//RedVehicle.tga");
 	meshList[CAR2]->type = Mesh::TYPE::OBJECT;
-
-	/*meshList[SKYSCRAPER1] = MeshBuilder::GenerateOBJ("building", "OBJ//worldtradecenter.obj");
-	meshList[SKYSCRAPER1]->transform.Translate(-10, 0, -10);
-	meshList[SKYSCRAPER1]->type = Mesh::TYPE::OBJECT;*/
 
 	meshList[SKYSCRAPER2] = MeshBuilder::GenerateOBJ("skyscraper", "OBJ//skyscraper4.obj");
 	meshList[SKYSCRAPER2]->transform.Scale(5);
@@ -545,7 +545,6 @@ void OverworldScene::DetectCollision() {
 		if (meshList[i] && meshList[i]->type == Mesh::TYPE::OBJECT) {
 			meshList[i]->prevTransform = meshList[i]->transform;
 			if (i == CAMERA) {
-				//Application::log("camera object");
 				Transform cameraTransform;
 				cameraTransform.translate = camera.position;
 				GameObject* cameraObject = new GameObject(meshList[CAMERA], cameraTransform);
@@ -622,37 +621,6 @@ void OverworldScene::Render() {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	if (light[0].type == Light::LIGHT_DIRECTIONAL) {
-		Vector3 lightDir(light[0].position.x, light[0].position.y, light[0].position.z);
-		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
-
-		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_cameraspace.x);
-	} else if (light[0].type == Light::LIGHT_SPOT) {
-		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
-		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
-
-		Vector3 spotDirection_cameraspace = viewStack.Top() * light[0].spotDirection;
-		glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	} else {
-		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
-		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
-	}
-
-	if (light[1].type == Light::LIGHT_DIRECTIONAL) {
-		Vector3 lightDir(light[1].position.x, light[1].position.y, light[1].position.z);
-		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
-	} else if (light[1].type == Light::LIGHT_SPOT) {
-		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
-
-		Vector3 spotDirection_cameraspace = viewStack.Top() * light[1].spotDirection;
-		glUniform3fv(m_parameters[U_LIGHT1_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	} else {
-		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
-	}
-
 	viewStack.LoadIdentity();
 	viewStack.LookAt(
 		camera.position.x, camera.position.y, camera.position.z,
@@ -662,7 +630,7 @@ void OverworldScene::Render() {
 	modelStack.LoadIdentity();
 
 	Mtx44 view;
-	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
+	view.SetToPerspective(camera.orthographic_size, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
 
 	RenderSkybox();
@@ -681,16 +649,16 @@ void OverworldScene::Exit() {
 
 void OverworldScene::Reset() {
 	Mtx44 projection;
-	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
+	projection.SetToPerspective(45.f, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
 	camera.Init(Vector3(20, 3, 20), Vector3(5, 3, 1), Vector3(0, 1, 0), (float)100);
 	currentCar = nullptr;
 
-	light[1].type = Light::LIGHT_SPOT;
-	light[1].position.Set(0, 50, 0);
-
 	light[0].type = Light::LIGHT_DIRECTIONAL;
-	light[0].position.Set(0, 50, 0);
+	light[0].position.Set(0, 100, 0);
+
+	light[1].type = Light::LIGHT_DIRECTIONAL;
+	light[1].position.Set(0, 100, 0);
 
 	meshList[CAR2]->transform.Translate(-22, 1.8f, 65);
 	meshList[CAR2]->transform.RotateDegree(0);
@@ -700,9 +668,9 @@ void OverworldScene::Reset() {
 	meshList[CAR2]->corner[Mesh::CORNER::C3] = meshList[CAR2]->transform.translate + Vector3(-1, 0, -1);
 	meshList[CAR2]->corner[Mesh::CORNER::C4] = meshList[CAR2]->transform.translate + Vector3(1, 0, 1);
 
-	meshList[BUS1]->transform.Translate(0, 3.6f, 55);
+	meshList[BUS1]->transform.Translate(0, 4.5f, 55);
 	meshList[BUS1]->transform.RotateDegree(0);
-	meshList[BUS1]->transform.Scale(0.4);
+	meshList[BUS1]->transform.Scale(0.5);
 	meshList[BUS1]->corner[Mesh::CORNER::C1] = meshList[BUS1]->transform.translate + Vector3(1, 0, -1);
 	meshList[BUS1]->corner[Mesh::CORNER::C2] = meshList[BUS1]->transform.translate + Vector3(1, 0, 1);
 	meshList[BUS1]->corner[Mesh::CORNER::C3] = meshList[BUS1]->transform.translate + Vector3(-1, 0, -1);
@@ -715,6 +683,10 @@ void OverworldScene::Reset() {
 	meshList[CAR1]->corner[Mesh::CORNER::C2] = meshList[CAR1]->transform.translate + Vector3(1, 0, 1);
 	meshList[CAR1]->corner[Mesh::CORNER::C3] = meshList[CAR1]->transform.translate + Vector3(-1, 0, -1);
 	meshList[CAR1]->corner[Mesh::CORNER::C4] = meshList[CAR1]->transform.translate + Vector3(1, 0, 1);
+
+	meshList[TRUCK2]->transform.Translate(-40, 5.3f, 65);
+	meshList[TRUCK2]->transform.RotateDegree(0);
+	meshList[TRUCK2]->transform.Scale(0.13);
 
 	meshList[TRUCK1]->transform.Translate(10, 5.1f, 63);
 	meshList[TRUCK1]->transform.RotateDegree(0);

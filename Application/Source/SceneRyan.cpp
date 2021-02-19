@@ -75,11 +75,10 @@ void SceneRyan::Init()
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
 	glUseProgram(m_programID);
 	// Make sure you pass uniform parameters after glUseProgram()
-	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 
 	//Replace previous code
-	light[0].type = Light::LIGHT_SPOT;
-	light[0].position.Set(4, 20, -34);
+	light[0].type = Light::LIGHT_POINT;
+	light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
 	light[0].power = 1;
 	light[0].kC = 1.f;
@@ -91,7 +90,7 @@ void SceneRyan::Init()
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
 
 	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(-53, 20, -31.6);
+	light[1].position.Set(0, 60, 0);
 	light[1].color.Set(1, 1, 1);
 	light[1].power = 1;
 	light[1].kC = 1.f;
@@ -164,7 +163,7 @@ void SceneRyan::Init()
 	sharkattack = false;
 	Tempcounter = 0;
 	rotatetail = 0;
-	sharkcircle = 0;
+	sharkcircle = 1;
 	camera.SharkPos.x = 100;
 	camera.SharkPos.y = 0;
 	camera.SharkPos.z = 0;
@@ -358,6 +357,10 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 			rotate = true;
 		}
 	}
+	if ((sharkcircle % 720) == 0 && sharkattack == false)
+	{
+		sharkattack = true;
+	}
 	if (sharkattack == true && (sharkcircle % 720) == 0)
 	{
 		if (Tempcounter == 0)
@@ -394,7 +397,7 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 			sharkdir = 0;
 			sharkattack = false;
 			Tempcounter = 0;
-			sharkcircle = 0;
+			sharkcircle = 1;
 			rotateshark = 0;
 			camera.SharkPos.y = 0;
 		}
@@ -409,7 +412,7 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('F')) 
 	{
-		sharkattack = true;
+
 		Minigun();
 		Shootingspin += 3;
 	}

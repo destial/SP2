@@ -124,6 +124,10 @@ bool Quad::hasGameObject(int id) {
 	return false;
 }
 
+void Quad::push(GameObject* gameObject) {
+	gameObjects.push_back(gameObject);
+}
+
 void Quad::deleteAll() {
 	for (unsigned i = 0; i < gameObjects.size(); ++i) {
 		if (gameObjects[i]) delete gameObjects[i];

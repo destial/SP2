@@ -257,7 +257,10 @@ void Application::Run() {
 
 		// Update and render selected scene
 		if (scene[Application::sceneswitch]) {
+			int previousScene = Application::sceneswitch;
 			scene[Application::sceneswitch]->Update(m_timer.getElapsedTime(), mouse);
+			if (previousScene != Application::sceneswitch) 
+				continue;
 			scene[Application::sceneswitch]->Render();
 		} else {
 			Application::sceneswitch = STARTSCENE;

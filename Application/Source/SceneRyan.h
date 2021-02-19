@@ -79,6 +79,8 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
 
+	float rotateshark;
+
 	bool rotate;
 	float rotatetail;
 	int sharkcircle;
@@ -86,12 +88,7 @@ private:
 	bool sharkattack;
 	double temptime;
 
-	float SharkX;
-	float SharkY;
-	float SharkZ;
 	float sharkdir;
-	float TempposX;
-	float TempposZ;
 	int Tempcounter;
 
 	Mesh* meshList[NUM_GEOMETRY];

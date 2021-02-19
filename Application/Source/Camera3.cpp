@@ -245,6 +245,198 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 	}
 }
 
+void Camera3::UpdateFlying(double& dt, Mouse& mouse) {
+	prevTarget = target;
+	prevPosition = position;
+	prevUp = up;
+	float SENSITIVITY = 0.2f;
+
+	SENSITIVITY = inverted ? -SENSITIVITY : SENSITIVITY;
+
+	inverted ? up.y = -up.y : up.y = up.y;
+	Vector3 view = (target - position).Normalized();
+	if (mouse.left) {
+		Mtx44 rotation;
+		rotation.SetToRotation((mouse.x * SENSITIVITY), up.x, up.y, up.z);
+		view = (rotation * view).Normalized();
+		target = position + view;
+	} else if (mouse.right) {
+		Mtx44 rotation;
+		rotation.SetToRotation((-mouse.x * SENSITIVITY), up.x, up.y, up.z);
+		view = (rotation * view).Normalized();
+		target = position + view;
+	}
+
+	view = (target - position).Normalized();
+	Vector3 right = view.Cross(up).Normalized();
+	right.y = 0;
+
+	if (mouse.down) {
+		Mtx44 rotation;
+		rotation.SetToRotation((-mouse.y * SENSITIVITY), right.x, right.y, right.z);
+		view = (rotation * view).Normalized();
+		target = position + view;
+	} else if (mouse.up) {
+		Mtx44 rotation;
+		rotation.SetToRotation((mouse.y * SENSITIVITY), right.x, right.y, right.z);
+		view = (rotation * view).Normalized();
+		target = position + view;
+	}
+
+	view = (target - position).Normalized();
+	right = view.Cross(up).Normalized();
+	right.y = 0;
+	up = right.Cross(view).Normalized();
+
+	if (up.y < 0.f) {
+		target.y += 1.f;
+		view = (target - position).Normalized();
+		right.y = 0;
+		up = right.Cross(view).Normalized();
+	}
+
+	if (mouse.scroll != 0) {
+		orthographic_size += mouse.scroll * SENSITIVITY * 5.f;
+	}
+
+	if (orthographic_size > 100)
+		orthographic_size = 100;
+	if (orthographic_size < 1)
+		orthographic_size = 1;
+	prevFOV = orthographic_size;
+	currentCarSpeed = 0;
+	float boundary = bounds;
+	float SPRINT = 1.f;
+	if (Application::IsKeyPressed(VK_LSHIFT) && Application::IsKeyPressed('W')) {
+		if (sprintRotation < -10.f) {
+			sprintRotate = 1;
+		} else if (sprintRotation > 10.f) {
+			sprintRotate = 0;
+		}
+		if (sprintRotate) {
+			sprintRotation += 1.f;
+		} else {
+			sprintRotation -= 1.f;
+		}
+		SPRINT *= 2.f;
+		Mtx44 rotation;
+		rotation.SetToRotation(sprintRotation, view.x, 0, view.z);
+		view = (rotation * view).Normalized();
+		target = position + view;
+	} else {
+		sprintRotation = 0;
+	}
+
+	view = (target - position).Normalized();
+	right = view.Cross(up).Normalized();
+	right.y = 0;
+	up = right.Cross(view).Normalized();
+
+	if (Application::IsKeyPressed('W')) {
+		Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
+		Vector3 oldPos = position;
+		Vector3 oldTar = target;
+		if (position.x <= boundary && position.x >= -boundary) {
+			position.x += face.x * SENSITIVITY * SPRINT;
+			target.x += face.x * SENSITIVITY * SPRINT;
+		}
+		if (position.z <= boundary && position.z >= -boundary) {
+			position.z += face.z * SENSITIVITY * SPRINT;
+			target.z += face.z * SENSITIVITY * SPRINT;
+		}
+		if (position.x <= -boundary || position.x >= boundary) {
+			position.x = oldPos.x;
+			target.x = oldTar.x;
+		}
+		if (position.z <= -boundary || position.z >= boundary) {
+			position.z = oldPos.z;
+			target.z = oldTar.z;
+		}
+	}
+
+	if (Application::IsKeyPressed('S')) {
+		Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
+		Vector3 oldPos = position;
+		Vector3 oldTar = target;
+		if (position.x <= boundary && position.x >= -boundary) {
+			position.x -= face.x * SENSITIVITY;
+			target.x -= face.x * SENSITIVITY;
+		}
+		if (position.z <= boundary && position.z >= -boundary) {
+			position.z -= face.z * SENSITIVITY;
+			target.z -= face.z * SENSITIVITY;
+		}
+		if (position.x <= -boundary || position.x >= boundary) {
+			position.x = oldPos.x;
+			target.x = oldTar.x;
+		}
+		if (position.z <= -boundary || position.z >= boundary) {
+			position.z = oldPos.z;
+			target.z = oldTar.z;
+		}
+	}
+
+	if (Application::IsKeyPressed('A')) {
+		Vector3 oldPos = position;
+		Vector3 oldTar = target;
+		if (position.x <= boundary && position.x >= -boundary) {
+			position.x -= right.x * SENSITIVITY;
+			target.x -= right.x * SENSITIVITY;
+		}
+		if (position.z <= boundary && position.z >= -boundary) {
+			position.z -= right.z * SENSITIVITY;
+			target.z -= right.z * SENSITIVITY;
+		}
+		if (position.x <= -boundary || position.x >= boundary) {
+			position.x = oldPos.x;
+			target.x = oldTar.x;
+		}
+		if (position.z <= -boundary || position.z >= boundary) {
+			position.z = oldPos.z;
+			target.z = oldTar.z;
+		}
+	}
+
+	if (Application::IsKeyPressed('D')) {
+		Vector3 oldPos = position;
+		Vector3 oldTar = target;
+		if (position.x < boundary && position.x > -boundary) {
+			position.x += right.x * SENSITIVITY;
+			target.x += right.x * SENSITIVITY;
+		}
+		if (position.z < boundary && position.z > -boundary) {
+			position.z += right.z * SENSITIVITY;
+			target.z += right.z * SENSITIVITY;
+		}
+		if (position.x <= -boundary || position.x >= boundary) {
+			position.x = oldPos.x;
+			target.x = oldTar.x;
+		}
+		if (position.z <= -boundary || position.z >= boundary) {
+			position.z = oldPos.z;
+			target.z = oldTar.z;
+		}
+	}
+
+	if (Application::IsKeyPressed('E')) {
+
+	}
+
+	if (Application::IsKeyPressed(' ')) {
+		if (position.y <= boundary) {
+			position.y += up.y;
+		}
+	}
+
+	if (Application::IsKeyPressed(VK_LCONTROL)) {
+		if (position.y >= -boundary) {
+			position.y -= up.y;
+		}
+	}
+}
+
+
+
 void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
 	prevTarget = target;
 	prevPosition = position;

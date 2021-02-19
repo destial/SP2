@@ -79,21 +79,23 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
 
+	float rotateshark;
+
 	bool rotate;
 	float rotatetail;
-	float sharkcircle;
+	int sharkcircle;
+	float sharkcircleangle;
 	bool sharkattack;
 	double temptime;
 
-	float SharkX;
-	float SharkY;
-	float SharkZ;
 	float sharkdir;
-	float TempposX;
-	float TempposZ;
-	bool Tempcounter;
+	int Tempcounter;
 
 	Mesh* meshList[NUM_GEOMETRY];
+
+
+	//trying chasing code
+	Vector3 Temptarget;
 
 	//MINIGUN
 	float Shootingspin;

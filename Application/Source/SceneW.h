@@ -6,6 +6,7 @@
 #include "MatrixStack.h"
 #include "Light.h"
 #include "Camera3.h"
+#include "SceneManager.h"
 
 class SceneW : public Scene
 {
@@ -25,7 +26,10 @@ class SceneW : public Scene
 		GEO_WALL,
 		GEO_UI,
 		MWALL,
+		BOX,
+		BOXOPEN,
 		GEO_WALLDOOR,
+		CAMERA,
 		NUM_GEOMETRY,
 	};
 
@@ -83,18 +87,26 @@ private:
 
 	bool rotate;
 	Mesh* meshList[NUM_GEOMETRY];
+	SceneManager* sceneManager;
 
 	Light light[2];
 
 	Camera3 camera;
+	Vector3 oldCameraPos;
+	Vector3 oldCameraTarget;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 	void RenderMaze();
+	void CreateMaze();
 	void RenderUI();
 	void RenderRoom();
+	void moveBack();
+	void DetectCollision();
+	bool isNear(GameObject* object);
+	void RenderBoxes();
 public:
 
 	SceneW();

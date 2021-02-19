@@ -32,7 +32,7 @@ void SceneW::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0));
+	camera.Init(Vector3(-46,2.5,-48), Vector3(1, 0.5, 1), Vector3(0, 1, 0));
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -144,9 +144,6 @@ void SceneW::Init()
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", WHITE, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//tron_dn.tga");
 
-	/*meshList[GEO_DOOROPEN] = MeshBuilder::GenerateQuad("Maze", WHITE, 1.f);
-	meshList[GEO_DOOROPEN]->textureID = LoadTGA("Image//maze_unsolved.tga");*/
-
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
@@ -156,7 +153,11 @@ void SceneW::Init()
 	meshList[GEO_WALL] = MeshBuilder::GenerateOBJMTL("WallType1", "OBJ//wall.obj", "OBJ//wall.mtl");
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Door", "OBJ//doorway.obj", "OBJ//doorway.mtl");
 	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
+	meshList[BOX] = MeshBuilder::GenerateOBJMTL("Box", "OBJ//cardboardBoxClosed.obj", "OBJ//cardboardBoxClosed.mtl");
 	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall", 1, 1, 1);
+
+	meshList[CAMERA] = new Mesh("camera");
+	meshList[CAMERA]->type = Mesh::CAMERA;
 	/*meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
 	meshList[MWALL]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[MWALL]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
@@ -333,7 +334,33 @@ void SceneW::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('P'))
 		light[0].position.y += (float)(LSPEED * dt);
 
+	oldCameraPos = camera.position;
+	oldCameraTarget = camera.target;
 	camera.Update(dt, mouse);
+	DetectCollision();
+}
+
+void SceneW::DetectCollision() {
+	sceneManager = new SceneManager(this, camera.bounds);
+	CreateMaze();
+	for (auto object : sceneManager->root->gameObjects) {
+		if (isNear(object)) {
+			moveBack();
+			Application::log("hit");
+			break;
+		}
+	}
+}
+
+bool SceneW::isNear(GameObject* object) {
+	// Get distance between object and camera
+	float d = Math::Square(object->transform->translate.x - camera.position.x) + Math::Square(object->transform->translate.z - camera.position.z);
+	return (d - 2.5*object->transform->scale.x <= 0);
+}
+
+void SceneW::moveBack() {
+	camera.position = oldCameraPos;
+	camera.target = oldCameraTarget;
 }
 
 void SceneW::Update(double dt)
@@ -436,14 +463,15 @@ void SceneW::Render()
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix();*/
 
 	RenderSkybox();
 	RenderRoom();
+	RenderBoxes();
 	RenderMaze();
-
+	
 	modelStack.PushMatrix();
 	modelStack.Translate(0, .1, 0);
 	modelStack.Scale(100, 100, 100);
@@ -464,7 +492,8 @@ void SceneW::Render()
 	modelStack.PopMatrix();*/
 	RenderUI();
 
-	
+	delete sceneManager;
+	sceneManager = nullptr;
 }
 
 void SceneW::Exit() {
@@ -476,10 +505,10 @@ void SceneW::Exit() {
 }
 
 void SceneW::RenderUI() {
-	RenderMeshOnScreen(meshList[GEO_UI], 30, 15, 52.5);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 3, 0.25, 14);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 3, 0.25, 13);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 3, 0.25, 12);
+	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 
@@ -492,6 +521,7 @@ void SceneW::RenderRoom() {
 	RenderMesh(meshList[GEO_WALLDOOR], true);
 	modelStack.PopMatrix();
 
+	// Door
 	modelStack.PushMatrix();
 	modelStack.Translate(-51, 0, -47);
 	modelStack.Rotate(90, 0, 1, 0);
@@ -526,985 +556,1037 @@ void SceneW::RenderRoom() {
 	modelStack.Scale(100, 10, 10);
 	RenderMesh(meshList[GEO_WALL], true);
 	modelStack.PopMatrix();
+
+	// Exit Door
+	modelStack.PushMatrix();
+	modelStack.Translate(26.5, 0, 48);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_DOOR], true);
+	modelStack.PopMatrix();
+}
+
+void SceneW::RenderBoxes() {
+	// Box 1
+	modelStack.PushMatrix();
+	modelStack.Translate(-47.5, 0, 45);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();
+	// Box 2
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 0, 16);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();
+
+	// Box 3
+	modelStack.PushMatrix();
+	modelStack.Translate(-24, 0, 34);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();
+
+	// Box 4
+	modelStack.PushMatrix();
+	modelStack.Translate(33.5, 0, -35);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();
+
+	// Box 5
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 0, -5);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();
 }
 
 void SceneW::RenderMaze() {
-	// maze
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, -50);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, -45);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, -35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, -25);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, -15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, -10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, -5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, 0);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, 5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, 10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, 20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, 25);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, 35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, 45);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-40, 2.5, 50);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-35, 2.5, 20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, 20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-25, 2.5, 20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20, 2.5, 20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-15, 2.5, 20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-15, 2.5, 15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-15, 2.5, 10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20, 2.5, 10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-25, 2.5, 10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, 10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, 5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, 0);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, -5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, -10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, -15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, -25);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, -35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-25, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-15, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-10, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, -50);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, -45);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, -35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(10, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-10, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-15, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20, 2.5, -25);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20, 2.5, -15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20, 2.5, -10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20, 2.5, -5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-15, 2.5, -5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-10, 2.5, -5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, -5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, 0);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, 5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, 10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, 15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, 20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, 25);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-10, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-15, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-25, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, 35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-30, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-25, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-20, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-10, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, 35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(10, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(20, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(20, 2.5, 45);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(20, 2.5, 50);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(20, 2.5, 35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(20, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(10, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, 25);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, 20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, 15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, 10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, 5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, 0);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, -5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, -10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 2.5, -15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, -15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-10, 2.5, -15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-10, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-5, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(10, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(20, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(25, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(25, 2.5, -25);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(25, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(25, 2.5, -35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(25, 2.5, -35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(25, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(35, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, -40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, -35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, -30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, -25);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, -20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, -15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, -10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, -5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, 0);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, 5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, 10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, 15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, 20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, 25);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, 35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(40, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, 45);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, 50);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, 40);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, 35);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, 30);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, 25);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, 20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, 15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, 10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, 5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, 0);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, -5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(30, 2.5, -10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(25, 2.5, -10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(20, 2.5, -10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, -10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, -5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, 0);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, 5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(20, 2.5, 5);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(25, 2.5, 15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, 10);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, 15);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(15, 2.5, 20);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[MWALL], true);
-	modelStack.PopMatrix();
+	for (auto object : sceneManager->root->gameObjects) {
+		if (object->mesh == meshList[MWALL]) {
+			modelStack.PushMatrix();
+			modelStack.Translate(object->transform->translate.x, object->transform->translate.y, object->transform->translate.z);
+			modelStack.Scale(object->transform->scale.x, object->transform->scale.y, object->transform->scale.z);
+			RenderMesh(object->mesh, true);
+			modelStack.PopMatrix();
+		}
+	}
+}
+
+void SceneW::CreateMaze() {
+	GameObject* object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, -50);
+	object->transform->Scale(5, 5, 5);
+	object->id = 1;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, -45);;
+	object->transform->Scale(5, 5, 5);
+	object->id = 2;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 3;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, -35);
+	object->transform->Scale(5, 5, 5);
+	object->id = 4;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 5;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, -25);
+	object->transform->Scale(5, 5, 5);
+	object->id = 6;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 7;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, -15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 8;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, -10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 9;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, -5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 10;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, 0);
+	object->transform->Scale(5, 5, 5);
+	object->id = 11;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, 5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 12;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, 10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 13;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, 20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 14;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, 25);
+	object->transform->Scale(5, 5, 5);
+	object->id = 15;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 16;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, 35);
+	object->transform->Scale(5, 5, 5);
+	object->id = 17;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 18;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, 45);
+	object->transform->Scale(5, 5, 5);
+	object->id = 19;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, 50);
+	object->transform->Scale(5, 5, 5);
+	object->id = 20;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-35, 2.5, 20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 21;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, 20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 22;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-25, 2.5, 20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 23;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-20, 2.5, 20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 24;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-15, 2.5, 20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 25;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-15, 2.5, 15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 26;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-15, 2.5, 10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 27;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-20, 2.5, 10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 28;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-25, 2.5, 10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 29;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, 10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 30;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, 5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 31;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, 0);
+	object->transform->Scale(5, 5, 5);
+	object->id = 32;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, -5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 33;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, -10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 34;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, -15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 35;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 36;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, -25);
+	object->transform->Scale(5, 5, 5);
+	object->id = 37;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 38;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, -35);
+	object->transform->Scale(5, 5, 5);
+	object->id = 39;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 40;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-25, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 41;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-20, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 42;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-15, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 43;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-10, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 44;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 45;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(0, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 46;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, -50);
+	object->transform->Scale(5, 5, 5);
+	object->id = 47;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, -45);
+	object->transform->Scale(5, 5, 5);
+	object->id = 48;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 49;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, -35);
+	object->transform->Scale(5, 5, 5);
+	object->id = 50;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 51;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(10, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 52;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 53;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(0, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 54;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 55;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-10, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 56;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-15, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 57;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-20, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 58;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-20, 2.5, -25);
+	object->transform->Scale(5, 5, 5);
+	object->id = 59;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-20, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 60;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-20, 2.5, -15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 61;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-20, 2.5, -10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 62;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-20, 2.5, -5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 63;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-15, 2.5, -5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 64;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-10, 2.5, -5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 65;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, -5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 66;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, 0);
+	object->transform->Scale(5, 5, 5);
+	object->id = 67;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, 5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 68;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, 10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 69;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, 15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 70;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, 20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 71;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, 25);
+	object->transform->Scale(5, 5, 5);
+	object->id = 72;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 73;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-10, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 74;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-15, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 75;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-20, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 76;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-25, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 77;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 78;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, 35);
+	object->transform->Scale(5, 5, 5);
+	object->id = 79;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-30, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 80;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-25, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 81;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-20, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 82;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-10, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 83;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 84;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, 35);
+	object->transform->Scale(5, 5, 5);
+	object->id = 85;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(0, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 86;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 87;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(10, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 88;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(20, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 89;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(20, 2.5, 45);
+	object->transform->Scale(5, 5, 5);
+	object->id = 90;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(20, 2.5, 50);
+	object->transform->Scale(5, 5, 5);
+	object->id = 91;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(20, 2.5, 35);
+	object->transform->Scale(5, 5, 5);
+	object->id = 92;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(20, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 93;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 94;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(10, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 95;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 96;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, 25);
+	object->transform->Scale(5, 5, 5);
+	object->id = 97;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, 20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 98;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, 15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 99;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, 10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 100;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, 5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 101;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, 0);
+	object->transform->Scale(5, 5, 5);
+	object->id = 102;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, -5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 103;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, -10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 104;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(0, 2.5, -15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 105;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, -15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 106;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-10, 2.5, -15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 107;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-10, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 108;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-5, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 109;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(0, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 110;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(5, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 111;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(10, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 112;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 113;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(20, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 114;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(25, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 115;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(25, 2.5, -25);
+	object->transform->Scale(5, 5, 5);
+	object->id = 116;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(25, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 117;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(25, 2.5, -35);
+	object->transform->Scale(5, 5, 5);
+	object->id = 118;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(25, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 119;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 120;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(35, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 121;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, -40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 122;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, -35);
+	object->transform->Scale(5, 5, 5);
+	object->id = 123;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, -30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 124;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, -25);
+	object->transform->Scale(5, 5, 5);
+	object->id = 125;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, -20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 126;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, -15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 127;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, -10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 128;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, -5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 129;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, 0);
+	object->transform->Scale(5, 5, 5);
+	object->id = 130;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, 5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 131;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, 10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 132;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, 15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 133;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, 20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 134;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, 25);
+	object->transform->Scale(5, 5, 5);
+	object->id = 135;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 136;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, 35);
+	object->transform->Scale(5, 5, 5);
+	object->id = 137;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(40, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 138;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, 45);
+	object->transform->Scale(5, 5, 5);
+	object->id = 139;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, 50);
+	object->transform->Scale(5, 5, 5);
+	object->id = 140;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, 40);
+	object->transform->Scale(5, 5, 5);
+	object->id = 141;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, 35);
+	object->transform->Scale(5, 5, 5);
+	object->id = 142;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, 30);
+	object->transform->Scale(5, 5, 5);
+	object->id = 143;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, 25);
+	object->transform->Scale(5, 5, 5);
+	object->id = 144;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, 20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 145;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, 15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 146;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, 10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 147;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, 5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 148;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, 0);
+	object->transform->Scale(5, 5, 5);
+	object->id = 149;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, -5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 150;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(30, 2.5, -10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 151;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(25, 2.5, -10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 152;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(20, 2.5, -10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 153;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, -10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 154;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, -5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 155;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, 0);
+	object->transform->Scale(5, 5, 5);
+	object->id = 156;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, 5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 157;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(20, 2.5, 5);
+	object->transform->Scale(5, 5, 5);
+	object->id = 158;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(25, 2.5, 15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 159;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, 10);
+	object->transform->Scale(5, 5, 5);
+	object->id = 160;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, 15);
+	object->transform->Scale(5, 5, 5);
+	object->id = 161;
+	sceneManager->push(object);
+
+	object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(15, 2.5, 20);
+	object->transform->Scale(5, 5, 5);
+	object->id = 162;
+	sceneManager->push(object);
 }

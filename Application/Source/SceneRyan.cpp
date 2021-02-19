@@ -162,12 +162,12 @@ void SceneRyan::Init()
 
 	rotate = true;
 	sharkattack = false;
-	Tempcounter = false;
+	Tempcounter = 0;
 	rotatetail = 0;
 	sharkcircle = 0;
-	SharkX = 100;
-	SharkY = 0;
-	SharkZ = 0;
+	camera.SharkPos.x = 100;
+	camera.SharkPos.y = 0;
+	camera.SharkPos.z = 0;
 
 }
 
@@ -247,7 +247,7 @@ void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -268,7 +268,7 @@ void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -358,67 +358,54 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 			rotate = true;
 		}
 	}
-	if (sharkattack == true)
+	if (sharkattack == true && (sharkcircle % 720) == 0)
 	{
-		if (sharkdir >= -90)
+		if (Tempcounter == 0)
 		{
-			sharkdir--;
+			camera.SharkChaseinit();
+			Vector3 origin = Vector3(-1, 0, 0);
+			sharkdir = camera.getSharkRotation(origin) - 90;
+			Tempcounter = 1;
+		}
+		
+		std::cout << camera.SharkPos.x << std::endl;
+		if (camera.SharkPos.x > 30)
+		{
+			rotateshark -= 0.5;
+			camera.SharkPos.y += 0.1;
+			camera.SharkChaseMove();
+		}
+		else if (camera.SharkPos.x > 30)
+		{
+			rotateshark += 0.5;
+			camera.SharkPos.y -= 0.1;
+			camera.SharkChaseMove();
+		}
+		else if (camera.SharkPos.x > -100)
+		{
+			rotateshark += 0.5;
+			camera.SharkPos.y -= 0.1;
+			camera.SharkChaseMove();
 		}
 		else
 		{
-			if (SharkX == 100 && SharkZ == 0 && Tempcounter == false)
-			{
-				TempposX = camera.position.x;
-				TempposZ = camera.position.z;
-				Tempcounter = true;
-			}
-			if (SharkX < TempposX && SharkZ < TempposZ)
-			{
-				SharkX++;
-				SharkZ++;
-			}
-			else if (SharkX < TempposX && SharkZ > TempposZ)
-			{
-				SharkX++;
-				SharkZ--;
-			}
-			else if (SharkX > TempposX && SharkZ < TempposZ)
-			{
-				SharkX--;
-				SharkZ++;
-			}
-			else if (SharkX > TempposX && SharkZ > TempposZ)
-			{
-				SharkX--;
-				SharkZ--;
-			}
-			else if (SharkX == TempposX && SharkZ == TempposZ)
-			{
-				TempposX = 100;
-				TempposZ = 0;
-			}
-		}
-		if (temptime >=  5 * (60 * dt))
-		{
-			
+			camera.SharkPos.x = 100;
+			camera.SharkPos.z = 0;
+			sharkdir = 0;
+			sharkattack = false;
+			Tempcounter = 0;
+			sharkcircle = 0;
+			rotateshark = 0;
+			camera.SharkPos.y = 0;
 		}
 	}
 	else
 	{
-		sharkcircle += 0.3;
+		sharkcircle += 1;
+		sharkcircleangle += 0.5;
 		temptime = dt;
 	}
 	
-	if (Application::IsKeyPressed('E'))
-	{
-		SharkX++;
-		SharkZ++;
-	}
-	if (Application::IsKeyPressed('Q'))
-	{
-		SharkX--;
-		SharkZ--;
-	}
 
 	if (Application::IsKeyPressed('F')) 
 	{
@@ -544,13 +531,14 @@ void SceneRyan::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Rotate(-sharkcircle, 0, 1, 0);
-	modelStack.Translate(SharkX, SharkY, SharkZ);
+	modelStack.Rotate(-sharkcircleangle, 0, 1, 0);
+	modelStack.Translate(camera.SharkPos.x, camera.SharkPos.y, camera.SharkPos.z);
 	modelStack.Rotate(sharkdir, 0, 1, 0);
+	modelStack.Rotate(rotateshark, 1, 0, 0);
 	modelStack.Scale(3, 3, 3);
 	RenderShark();
 	modelStack.PopMatrix();
-
+	
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -145, 0);
 	modelStack.Scale(200, 150, 200);
@@ -566,10 +554,29 @@ void SceneRyan::Render()
 	RenderMesh(meshList[GEO_MINIGUN], true);
 	modelStack.PopMatrix();
 
+
+
 	modelStack.PushMatrix();
 	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
 	modelStack.Scale(4.5, 4.5, 4.5);
 	RenderSkybox();
+	modelStack.PopMatrix();
+
+	std::stringstream ssX;
+	std::stringstream ssY;
+	std::stringstream ssZ;
+
+	ssX.precision(3);
+	ssX << "X:" << camera.position.x;
+	ssX.precision(3);
+	ssX << "Y:" << camera.position.y;
+	ssZ.precision(3);
+	ssZ << "Z:" << camera.position.z;
+
+
+	modelStack.PushMatrix();
+	modelStack.Scale(2, 2, 2);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
 	modelStack.PopMatrix();
 
 

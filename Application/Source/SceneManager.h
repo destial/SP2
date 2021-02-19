@@ -11,4 +11,5 @@ public:
 	void split(Quad* parent);
 	void deleteAll(Quad* parent);
 	Quad* getQuad(int gameObjectID);
+	void push(GameObject* gameObject);
 };

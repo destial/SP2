@@ -46,6 +46,7 @@ public:
 	void Init(const Vector3& pos, const Vector3& target, const Vector3& up, const float& bounds);
 	void Update(double dt);
 	void Update(double& dt, Mouse& mouse);
+	void UpdateFlying(double& dt, Mouse& mouse);
 	void UpdateCar(double& dt, Mouse& mouse, const float& SPEED);
 	void Reset();
 

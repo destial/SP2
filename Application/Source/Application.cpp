@@ -264,10 +264,13 @@ void Application::Run()
 	}
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 
-	while (!glfwWindowShouldClose(m_window) && !Application::quit)
-	{
-		scene[Application::sceneswitch]->Update(m_timer.getElapsedTime(), mouse);
-		scene[Application::sceneswitch]->Render();
+	while (!glfwWindowShouldClose(m_window) && !Application::quit) {
+		if (scene[Application::sceneswitch]) {
+			scene[Application::sceneswitch]->Update(m_timer.getElapsedTime(), mouse);
+			scene[Application::sceneswitch]->Render();
+		} else {
+
+		}
 		toggleState();
 		switch (Application::sceneswitch) {
 		/*case Application::SCENESHAQ:

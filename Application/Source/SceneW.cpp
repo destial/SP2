@@ -157,6 +157,9 @@ void SceneW::Init()
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Door", "OBJ//doorway.obj", "OBJ//doorway.mtl");
 	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
 	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall", 1, 1, 1);
+
+	meshList[CAMERA] = new Mesh("camera");
+	meshList[CAMERA]->type = Mesh::CAMERA;
 	/*meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
 	meshList[MWALL]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[MWALL]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
@@ -333,7 +336,45 @@ void SceneW::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('P'))
 		light[0].position.y += (float)(LSPEED * dt);
 
+	oldCameraPos = camera.position;
+	oldCameraTarget = camera.target;
 	camera.Update(dt, mouse);
+	DetectCollision();
+}
+
+void SceneW::DetectCollision() {
+	sceneManager = new SceneManager(this, camera.bounds);
+	GameObject* cameraObject = new GameObject(meshList[CAMERA]);
+	cameraObject->id = CAMERA;
+	cameraObject->camera = 1;
+	sceneManager->root->gameObjects.push_back(cameraObject);
+	CreateMaze();
+	sceneManager->split(sceneManager->root);
+	for (auto objects : sceneManager->root->gameObjects) {
+		if (!objects->camera) {
+			if (isNear(objects)) {
+				moveBack();
+				Application::log("hit");
+			}
+		}
+	}
+	delete sceneManager;
+	sceneManager = nullptr;
+}
+
+bool SceneW::isNear(GameObject* object) {
+	if (object->mesh->type == Mesh::TYPE::OBJECT) {
+
+		// Get distance between object and camera
+		float d = Math::Square(object->transform->translate.x - camera.position.x) + Math::Square(object->transform->translate.z - camera.position.z);
+		return (d - 1.5*object->transform->scale.x <= 0);
+	}
+	return false;
+}
+
+void SceneW::moveBack() {
+	camera.position = oldCameraPos;
+	camera.target = oldCameraTarget;
 }
 
 void SceneW::Update(double dt)
@@ -1507,4 +1548,12 @@ void SceneW::RenderMaze() {
 	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[MWALL], true);
 	modelStack.PopMatrix();
+}
+
+void SceneW::CreateMaze() {
+	GameObject* object = new GameObject(meshList[MWALL]);
+	object->transform->Translate(-40, 2.5, -50);
+	object->transform->Scale(5, 5, 5);
+	object->id = 1;
+	sceneManager->root->gameObjects.push_back(object);
 }

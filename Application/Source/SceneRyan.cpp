@@ -398,12 +398,6 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 			rotateshark = 0;
 			camera.SharkPos.y = 0;
 		}
-
-		
-		if (temptime >=  5 * (60 * dt))
-		{
-			
-		}
 	}
 	else
 	{

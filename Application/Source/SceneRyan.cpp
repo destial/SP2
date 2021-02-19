@@ -369,8 +369,22 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 		}
 		
 		std::cout << camera.SharkPos.x << std::endl;
-		if (camera.SharkPos.x > -100 && camera.SharkPos.z > -100)
+		if (camera.SharkPos.x > 30)
 		{
+			rotateshark -= 0.5;
+			camera.SharkPos.y += 0.1;
+			camera.SharkChaseMove();
+		}
+		else if (camera.SharkPos.x > 30)
+		{
+			rotateshark += 0.5;
+			camera.SharkPos.y -= 0.1;
+			camera.SharkChaseMove();
+		}
+		else if (camera.SharkPos.x > -100)
+		{
+			rotateshark += 0.5;
+			camera.SharkPos.y -= 0.1;
 			camera.SharkChaseMove();
 		}
 		else
@@ -381,6 +395,8 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 			sharkattack = false;
 			Tempcounter = 0;
 			sharkcircle = 0;
+			rotateshark = 0;
+			camera.SharkPos.y = 0;
 		}
 
 		
@@ -524,6 +540,7 @@ void SceneRyan::Render()
 	modelStack.Rotate(-sharkcircleangle, 0, 1, 0);
 	modelStack.Translate(camera.SharkPos.x, camera.SharkPos.y, camera.SharkPos.z);
 	modelStack.Rotate(sharkdir, 0, 1, 0);
+	modelStack.Rotate(rotateshark, 1, 0, 0);
 	modelStack.Scale(3, 3, 3);
 	RenderShark();
 	modelStack.PopMatrix();

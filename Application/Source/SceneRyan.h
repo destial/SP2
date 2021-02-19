@@ -79,6 +79,8 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
 
+	float rotateshark;
+
 	bool rotate;
 	float rotatetail;
 	int sharkcircle;

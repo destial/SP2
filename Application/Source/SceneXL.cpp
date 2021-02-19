@@ -13,6 +13,39 @@ SceneXL::SceneXL() {}
 
 SceneXL::~SceneXL() {}
 
+void SceneXL::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y)
+{
+	if (!mesh || mesh->textureID <= 0) return;
+
+	glDisable(GL_DEPTH_TEST);
+	Mtx44 ortho;
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
+	projectionStack.PushMatrix();
+	projectionStack.LoadMatrix(ortho);
+	viewStack.PushMatrix();
+	viewStack.LoadIdentity(); //No need camera for ortho mode
+	modelStack.PushMatrix();
+	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.Translate(x, y, 0);
+	modelStack.Scale(size, size, size);
+
+	glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
+	glUniform1i(m_parameters[U_LIGHTENABLED], 0);
+	glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
+	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+	mesh->Render();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
+	projectionStack.PopMatrix();
+	viewStack.PopMatrix();
+	modelStack.PopMatrix();
+	glEnable(GL_DEPTH_TEST);
+}
+
 void SceneXL::Init()
 {
 	talktognome = false;
@@ -133,6 +166,11 @@ void SceneXL::Init()
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
+
+	meshList[GEO_ROBOTT] = MeshBuilder::GenerateQuad("quad",
+		Color(1, 1, 1), 10.1f);
+	meshList[GEO_ROBOTT]->textureID = LoadTGA("Image//house1.tga");
+
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//bluecloud_bk.tga");
@@ -174,8 +212,16 @@ void SceneXL::Init()
 
 	meshList[GEO_ROBOT] = MeshBuilder::GenerateOBJ("robot",
 		"OBJ//robo.obj");
-	meshList[GEO_ROBOT]->textureID = LoadTGA("Image//robo_normal.tga");
-	meshList[GEO_ROBOT]->transform.Translate(-19.3, 0, -37.6);
+	meshList[GEO_ROBOT]->textureID = LoadTGA("Image//robo_normal.tga"); //robo_normal
+	meshList[GEO_ROBOT]->transform.Translate(-19.3, 0, -43.6); //robot
+
+	meshList[GEO_BOOTH] = MeshBuilder::GenerateOBJMTL("ticket booth",
+		"OBJ//ticketboothlmao.obj", "OBJ//ticketboothlmao.mtl");
+
+
+
+	meshList[GEO_BORDERTEXT] = MeshBuilder::GenerateFaceQuad("border for text", WHITE, 1.f, 1.f);
+	meshList[GEO_BORDERTEXT]->textureID = LoadTGA("Image//bordertext.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -307,38 +353,6 @@ void SceneXL::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, floa
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneXL::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
-	if (!mesh || mesh->textureID <= 0) //Proper error check
-		return;
-
-	glDisable(GL_DEPTH_TEST);
-	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
-	projectionStack.PushMatrix();
-	projectionStack.LoadMatrix(ortho);
-	viewStack.PushMatrix();
-	viewStack.LoadIdentity(); //No need camera for ortho mode
-	modelStack.PushMatrix();
-	modelStack.LoadIdentity(); //Reset modelStack
-	modelStack.Translate(x, y, 0);
-	modelStack.Scale(size, size, size);
-
-	glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
-	glUniform1i(m_parameters[U_LIGHTENABLED], 0);
-	glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
-	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
-	Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
-	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
-	mesh->Render();
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
-	projectionStack.PopMatrix();
-	viewStack.PopMatrix();
-	modelStack.PopMatrix();
-	glEnable(GL_DEPTH_TEST);
-}
 
 bool SceneXL::isNear(Mesh* mesh, const float& distance)
 {
@@ -402,7 +416,7 @@ void SceneXL::RenderMinigame()
 	for (int i = 0; i < targetList.size(); i++)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(1.2 + targetList[i]->pos.x, 5, -69 + targetList[i]->pos.z);
+		modelStack.Translate(1.55 + targetList[i]->pos.x, 5, -79 + targetList[i]->pos.z);
 		modelStack.Rotate(RotateAngle, 0, 1, 0);
 		modelStack.Scale(1.5,1.5,1.5);
 		RenderMesh(meshList[GEO_DUMMY], true);
@@ -460,6 +474,7 @@ void SceneXL::DetectRobot()
 {
 	if (isNear(meshList[GEO_ROBOT], (float)5.f) && talktorobot == false)
 	{
+		RenderMeshOnScreen(meshList[GEO_BORDERTEXT], 75, 45, 40);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Press F to start", Color(0.541, 0.169, 0.886), 4, 1.8, 6.2);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Your simulation.", Color(0.541, 0.169, 0.886), 4, 1.8, 4.2);
 		if (Application::IsKeyPressedOnce('F'))
@@ -594,6 +609,11 @@ void SceneXL::Render()
 	RenderMesh(meshList[GEO_RANGE], true);
 	modelStack.PopMatrix(); //shooting range
 
+	modelStack.PushMatrix();
+	modelStack.Translate(10,0,0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_BOOTH], true);
+	modelStack.PopMatrix(); //ticket booth
 
 	DetectRobot();
 	RenderRobot();
@@ -610,19 +630,17 @@ void SceneXL::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 4, 0, 10);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 4, 0, 10);
 	modelStack.PopMatrix();
 
 	DetectGnome();
 	RenderGnome();
-
 }
 
 void SceneXL::RenderRobot()
 {
 	modelStack.PushMatrix();
 	modelStack.Translate(meshList[GEO_ROBOT]->transform.translate.x, meshList[GEO_ROBOT]->transform.translate.y, meshList[GEO_ROBOT]->transform.translate.z);
-	//modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(14, 14, 14);
 	RenderMesh(meshList[GEO_ROBOT], true);
 	modelStack.PopMatrix(); // robot

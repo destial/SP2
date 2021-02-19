@@ -477,10 +477,20 @@ void SceneW::Render()
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-49.5, 5, -30);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "Find the exit", RED);
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-49.5, 3, -25);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "and collect all the treasures", RED);
+	modelStack.PopMatrix();
 
-	
-
-	
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0.1, 0, 0);
 	// enemy with tags
 	/*modelStack.PushMatrix();
 	modelStack.Translate(0, 2.5, 0);
@@ -490,6 +500,7 @@ void SceneW::Render()
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderText(meshList[GEO_TEXT], "Enemy #1", Color(0, 1, 1));
 	modelStack.PopMatrix();*/
+	
 	RenderUI();
 
 	delete sceneManager;
@@ -509,7 +520,6 @@ void SceneW::RenderUI() {
 	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17);
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 
 void SceneW::RenderRoom() {

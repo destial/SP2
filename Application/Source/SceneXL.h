@@ -27,6 +27,9 @@ class SceneXL : public Scene
 		GEO_DUMMY,
 		GEO_RANGE,
 		GEO_ROBOT,
+		GEO_ROBOTT,
+		GEO_BOOTH,
+		GEO_BORDERTEXT,
 		NUM_GEOMETRY,
 	};
 
@@ -95,13 +98,15 @@ private:
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
+	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
+
 
 	void DetectGnome();
 	void RenderGnome();
 
 	void DetectRobot();
 	void RenderRobot();
+
 	void RenderMinigame();
 
 	bool isNear(Mesh* mesh, const float& distance);

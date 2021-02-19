@@ -26,6 +26,8 @@ class SceneW : public Scene
 		GEO_WALL,
 		GEO_UI,
 		MWALL,
+		BOX,
+		BOXOPEN,
 		GEO_WALLDOOR,
 		CAMERA,
 		NUM_GEOMETRY,
@@ -104,6 +106,7 @@ private:
 	void moveBack();
 	void DetectCollision();
 	bool isNear(GameObject* object);
+	void RenderBoxes();
 public:
 
 	SceneW();

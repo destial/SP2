@@ -505,10 +505,10 @@ void SceneW::Exit() {
 }
 
 void SceneW::RenderUI() {
-	RenderMeshOnScreen(meshList[GEO_UI], 30, 15, 52.5);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 3, 0.25, 14);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 3, 0.25, 13);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 3, 0.25, 12);
+	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 

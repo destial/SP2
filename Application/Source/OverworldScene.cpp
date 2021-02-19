@@ -126,6 +126,10 @@ void OverworldScene::Init() {
 	meshList[CAR2]->textureID = LoadTGA("Image//RedVehicle.tga");
 	meshList[CAR2]->type = Mesh::TYPE::OBJECT;
 
+	/*meshList[SKYSCRAPER1] = MeshBuilder::GenerateOBJ("building", "OBJ//worldtradecenter.obj");
+	meshList[SKYSCRAPER1]->transform.Translate(-10, 0, -10);
+	meshList[SKYSCRAPER1]->type = Mesh::TYPE::OBJECT;*/
+
 	meshList[SKYSCRAPER2] = MeshBuilder::GenerateOBJ("skyscraper", "OBJ//skyscraper4.obj");
 	meshList[SKYSCRAPER2]->transform.Scale(5);
 	meshList[SKYSCRAPER2]->type = Mesh::TYPE::OBJECT;

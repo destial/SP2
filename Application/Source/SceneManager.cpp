@@ -64,3 +64,7 @@ Quad* SceneManager::getQuad(int gameObjectID) {
 	}
 	return nullptr;
 }
+
+void SceneManager::push(GameObject* gameObject) {
+	root->push(gameObject);
+}

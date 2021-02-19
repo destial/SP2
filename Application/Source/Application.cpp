@@ -270,12 +270,6 @@ void Application::Run()
 		scene[Application::sceneswitch]->Render();
 		toggleState();
 		switch (Application::sceneswitch) {
-		/*case Application::SCENESHAQ:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::SCENESHAQLER;
-				Application::previousscene = SCENESHAQ;
-			}
-			break;*/
 		case Application::SCENESHAQ:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEWALTON;

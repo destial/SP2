@@ -17,6 +17,7 @@ class SceneShaqler : public Scene
 		GEO_QUAD2,
 		GEO_QUAD3,
 		GEO_SPHERE,
+		GEO_TREASURECHEST,
 		GEO_DESKCORNER,
 		GEO_COMPUTERSCREEN,
 		GEO_KEYBOARD,
@@ -146,6 +147,9 @@ public:
 	virtual void Update(double dt, Mouse mouse);
 	virtual void Render();
 	virtual void Exit();
+
+	
+
 
 	Color RED = Color(1.f, 0.f, 0.f);
 	Color GREEN = Color(0.f, 1.f, 0.f);

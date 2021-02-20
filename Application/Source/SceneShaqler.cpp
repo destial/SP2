@@ -164,9 +164,6 @@ void SceneShaqler::Init()
 	meshList[GEO_BOOKSTACK] = MeshBuilder::GenerateOBJ("Bookstack", "OBJ//BookStack.obj"); // Try 1 first
 	meshList[GEO_BOOKSTACK]->textureID = LoadTGA("Image//BookStack.tga");
 
-	//meshList[GEO_TRASHCAN] = MeshBuilder::GenerateOBJ("Bookstack", "OBJ//woodenTrashcan.obj"); // Try 1 first
-	//meshList[GEO_TRASHCAN]->textureID = LoadTGA("Image//brownColour.tga");
-
 	meshList[GEO_BOOK] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
 	meshList[GEO_BOOK]->textureID = LoadTGA("Image//1984book.tga");
 
@@ -198,7 +195,7 @@ void SceneShaqler::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
 	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1, 0.8);
-	meshList[GEO_UI]->textureID = LoadTGA("Image//Blackyellowbordertga");
+	meshList[GEO_UI]->textureID = LoadTGA("Image//blueblacktextbox");
 
 	bookX = -17;
 	bookY = 2.85;
@@ -487,8 +484,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('N'))
 	{
 		isBuying = false;
-		/*bookCollected = false;
-		Purchasebook = false;*/
+		Bookhasbeenbaught = false;
 	}
 
 	/*if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75)
@@ -803,13 +799,12 @@ void SceneShaqler::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 20, 0, 10);
 	modelStack.PopMatrix();
 
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 200, 0, 500); 
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", BLACK, 200, 0, 500); 
 
-	if (isBuying == true) 
+	if (isBuying == true && Bookhasbeenbaught == false) 
 	{
 		RenderMeshOnScreen(meshList[GEO_UI], 55, 40, -5); // 40 screenx
 		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 23, 4.5, 3.5);
-		/*RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 23, 4.5, textworldsceenY);*/
 	    RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 23, 4.5, 1.2); //X 1.5 AND Z 19.5
 	}
 	

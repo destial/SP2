@@ -28,6 +28,8 @@ class SceneW : public Scene
 		MWALL,
 		BOX,
 		BOXOPEN,
+		CHESTTOP,
+		CHESTBOTTOM,
 		GEO_WALLDOOR,
 		CAMERA,
 		NUM_GEOMETRY,
@@ -86,6 +88,14 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	bool Chestlimit;
+
+	float rotateChest;
+	float rotateChest2;
+	float rotateChest3;
+	float rotateChest4;
+	float rotateChest5;
+
 	Mesh* meshList[NUM_GEOMETRY];
 	SceneManager* sceneManager;
 

@@ -588,9 +588,11 @@ void OverworldScene::DetectCollision() {
 }
 
 void OverworldScene::MoveBack() {
-	camera.target = camera.prevTarget;
+	Vector3 view = (camera.target - camera.position).Normalized();
+	float y = camera.position.y;
 	camera.position = camera.prevPosition;
-	camera.up = camera.prevUp;
+	camera.position.y = y;
+	camera.target = camera.position + view;
 }
 
 void OverworldScene::ObjectMoveBack(Mesh* mesh) {

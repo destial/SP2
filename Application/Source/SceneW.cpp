@@ -335,7 +335,6 @@ void SceneW::Update(double dt, Mouse mouse) {
 		light[0].position.y += (float)(LSPEED * dt);
 
 	oldCameraPos = camera.position;
-	oldCameraTarget = camera.target;
 	camera.Update(dt, mouse);
 	DetectCollision();
 }
@@ -346,7 +345,6 @@ void SceneW::DetectCollision() {
 	for (auto object : sceneManager->root->gameObjects) {
 		if (isNear(object)) {
 			moveBack();
-			Application::log("hit");
 			break;
 		}
 	}
@@ -359,8 +357,11 @@ bool SceneW::isNear(GameObject* object) {
 }
 
 void SceneW::moveBack() {
+	Vector3 view = (camera.target - camera.position).Normalized();
+	float y = camera.position.y;
 	camera.position = oldCameraPos;
-	camera.target = oldCameraTarget;
+	camera.position.y = y;
+	camera.target = camera.position + view;
 }
 
 void SceneW::Update(double dt)

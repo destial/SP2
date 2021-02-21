@@ -143,6 +143,13 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
+	void RenderQuad();
+	void Rendervehicles();
+	void Rendertrees();
+	void Rendercityobjects();
+	void RenderNPC();
+	void RenderMytext();
+
 	Color RED = Color(1.f, 0.f, 0.f);
 	Color GREEN = Color(0.f, 1.f, 0.f);
 	Color BLUE = Color(0.f, 0.f, 1.f);

@@ -32,7 +32,7 @@ void SceneW::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(-46,2.5,-48), Vector3(1, 0.5, 1), Vector3(0, 1, 0));
+	camera.Init(Vector3(-46,3.5,-48), Vector3(1, 0.5, 1), Vector3(0, 1, 0));
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -156,12 +156,22 @@ void SceneW::Init()
 	meshList[BOX] = MeshBuilder::GenerateOBJMTL("Box", "OBJ//cardboardBoxClosed.obj", "OBJ//cardboardBoxClosed.mtl");
 	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall", 1, 1, 1);
 
+	meshList[CHESTTOP] = MeshBuilder::GenerateOBJ("Chest Top", "OBJ//chestTopPart.obj"); // Try 1 first
+	meshList[CHESTTOP]->textureID = LoadTGA("Image//ChestTexture.tga");
+
+	meshList[CHESTBOTTOM] = MeshBuilder::GenerateOBJ("Chest Top", "OBJ//chestBottomPart.obj"); // Try 1 first
+	meshList[CHESTBOTTOM]->textureID = LoadTGA("Image//ChestTexture.tga");
+
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::CAMERA;
 	/*meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
 	meshList[MWALL]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[MWALL]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[MWALL]->material.kShininess = .3f;*/
+
+	rotateChest = 0;
+	Chestlimit = false;
+
 }
 
 void SceneW::RenderMesh(Mesh* mesh, bool enableLight)
@@ -334,6 +344,34 @@ void SceneW::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('P'))
 		light[0].position.y += (float)(LSPEED * dt);
 
+	if (Application::IsKeyPressed('E'))
+	{
+		if (camera.position.x <= -43 && camera.position.x >= -49 && camera.position.z <= 50 && camera.position.z >= 40)
+		{
+			Chestlimit = false;
+		}
+
+		if (Chestlimit == false)
+		{
+			rotateChest -= (float)(40 * dt);
+		}
+
+		if (rotateChest <= -70)
+		{
+			Chestlimit = true;
+		}
+	}
+
+	/*if (Chestlimit == false)
+	{
+		rotateChest -= (float)(40 * dt);
+	}
+
+	if (rotateChest <=-70)
+	{
+		rotateChest = true;
+	}*/
+
 	oldCameraPos = camera.position;
 	oldCameraTarget = camera.target;
 	camera.Update(dt, mouse);
@@ -350,6 +388,8 @@ void SceneW::DetectCollision() {
 			break;
 		}
 	}
+	delete sceneManager;
+	sceneManager = nullptr;
 }
 
 bool SceneW::isNear(GameObject* object) {
@@ -477,20 +517,8 @@ void SceneW::Render()
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
-	modelStack.PushMatrix();
-	modelStack.Translate(-49.5, 5, -30);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderText(meshList[GEO_TEXT], "Find the exit", RED);
-	modelStack.PopMatrix();
-	modelStack.PushMatrix();
-	modelStack.Translate(-49.5, 3, -25);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderText(meshList[GEO_TEXT], "and collect all the treasures", RED);
-	modelStack.PopMatrix();
 
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0.1, 0, 0);
+	
 	// enemy with tags
 	/*modelStack.PushMatrix();
 	modelStack.Translate(0, 2.5, 0);
@@ -500,11 +528,9 @@ void SceneW::Render()
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderText(meshList[GEO_TEXT], "Enemy #1", Color(0, 1, 1));
 	modelStack.PopMatrix();*/
-	
 	RenderUI();
 
-	delete sceneManager;
-	sceneManager = nullptr;
+	
 }
 
 void SceneW::Exit() {
@@ -516,10 +542,26 @@ void SceneW::Exit() {
 }
 
 void SceneW::RenderUI() {
-	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17);
+	RenderMeshOnScreen(meshList[GEO_UI], 30, 15, 52.5);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 3, 0.25, 14);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 3, 0.25, 13);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 3, 0.25, 12);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+
+	/*std::stringstream ssX;
+	std::stringstream ssY;
+	std::stringstream ssZ;
+	ssX.precision(3);
+	ssX << "X:" << camera.position.x;
+	ssX.precision(3);
+	ssX << "Y:" << camera.position.y;
+	ssZ.precision(3);
+	ssZ << "Z:" << camera.position.z;
+
+	modelStack.PushMatrix();
+	modelStack.Scale(2, 2, 2);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 20, 0, 10);
+	modelStack.PopMatrix();*/
 }
 
 void SceneW::RenderRoom() {
@@ -573,58 +615,1088 @@ void SceneW::RenderRoom() {
 	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();
+
 }
 
 void SceneW::RenderBoxes() {
-	// Box 1
+	
 	modelStack.PushMatrix();
-	modelStack.Translate(-47.5, 0, 45);
+	modelStack.Translate(-46.5, 2, 45);
 	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[BOX], true);
+	modelStack.Rotate(rotateChest, 1, 0, 0);
+	modelStack.Scale(1.5, 1.5, 1.5);
+	RenderMesh(meshList[CHESTTOP], true);
 	modelStack.PopMatrix();
-	// Box 2
+
 	modelStack.PushMatrix();
+	modelStack.Translate(-46.5, 0, 45);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(1.5, 1.5, 1.5);
+	RenderMesh(meshList[CHESTBOTTOM], true);
+	modelStack.PopMatrix();
+
+	// Box 2
+	/*modelStack.PushMatrix();
 	modelStack.Translate(-20, 0, 16);
 	modelStack.Rotate(-90, 0, 1, 0);
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();*/
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 1.4, 15);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Rotate(-70, 1, 0, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[CHESTTOP], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 0, 15);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
 
 	// Box 3
+	//modelStack.PushMatrix();
+	//modelStack.Translate(-24, 0, 34);
+	////modelStack.Rotate(90, 0, 1, 0);
+	//modelStack.Scale(10, 10, 10);
+	//RenderMesh(meshList[BOX], true);
+	//modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-24, 1.4, 34);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(-70, 1, 0, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[CHESTTOP], true);
+	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Translate(-24, 0, 34);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[BOX], true);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
 
 	// Box 4
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	modelStack.Translate(33.5, 0, -35);
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();*/
+
+	modelStack.PushMatrix();
+	modelStack.Translate(33.5, 1.4, -35);
+	modelStack.Rotate(-70, 1, 0, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[CHESTTOP], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(33.5, 0, -35);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
 
 	// Box 5
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	modelStack.Translate(20, 0, -5);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[BOX], true);
+	modelStack.PopMatrix();*/
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 1.4, -5);
+	modelStack.Rotate(-70, 1, 0, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[CHESTTOP], true);
 	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 0, -5);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[CHESTBOTTOM], true);
+	modelStack.PopMatrix();
+
 }
 
 void SceneW::RenderMaze() {
-	for (auto object : sceneManager->root->gameObjects) {
-		if (object->mesh == meshList[MWALL]) {
-			modelStack.PushMatrix();
-			modelStack.Translate(object->transform->translate.x, object->transform->translate.y, object->transform->translate.z);
-			modelStack.Scale(object->transform->scale.x, object->transform->scale.y, object->transform->scale.z);
-			RenderMesh(object->mesh, true);
-			modelStack.PopMatrix();
-		}
-	}
+	// maze
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -50);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -45);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, -5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 0);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 45);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 2.5, 50);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-35, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-25, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-15, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-15, 2.5, 15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-15, 2.5, 10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, 10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-25, 2.5, 10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, 10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, 5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, 0);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, -5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, -10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, -15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, -25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, -35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-25, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-15, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, -50);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, -45);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, -35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(10, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-15, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, -25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, -15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, -10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, -5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-15, 2.5, -5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 2.5, -5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, -5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 0);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-15, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-25, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, 35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-25, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, 35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(10, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 2.5, 45);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 2.5, 50);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 2.5, 35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(10, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, 25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, 15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, 10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, 5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, 0);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, -5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, -10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 2.5, -15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, -15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 2.5, -15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(10, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(25, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(25, 2.5, -25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(25, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(25, 2.5, -35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(25, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(35, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, -40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, -35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, -30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, -25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, -20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, -15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, -10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, -5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, 0);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, 5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, 10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, 15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, 25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, 35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(40, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, 45);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, 50);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, 40);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, 35);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, 30);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, 25);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, 15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, 10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, 5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, 0);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, -5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(30, 2.5, -10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(25, 2.5, -10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 2.5, -10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, -10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, -5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, 0);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, 5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 2.5, 5);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(25, 2.5, 15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, 10);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, 15);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 2.5, 20);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[MWALL], true);
+	modelStack.PopMatrix();
 }
 
 void SceneW::CreateMaze() {

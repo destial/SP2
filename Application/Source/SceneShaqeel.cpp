@@ -32,7 +32,7 @@ void SceneShaqeel::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50); // 3.87 1
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -91,7 +91,7 @@ void SceneShaqeel::Init()
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
 
 	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(-53, 20, -31.6);
+	light[1].position.Set(-53, 0, 11.8);
 	light[1].color.Set(1, 1, 1);
 	light[1].power = 1;
 	light[1].kC = 1.f;
@@ -613,321 +613,237 @@ void SceneShaqeel::Render()
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
+	
+	RenderQuad();
+	Rendervehicles();
+	Rendertrees();
+	Rendercityobjects();
+	RenderMytext();
+	RenderNPC();
+	RenderSkybox();
+}
 
-	//TRS
-	// vehicles
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(0, -2, 0);
-		modelStack.Scale(10, 10, 40);
-		RenderMesh(meshList[GEO_QUAD1], true);
-		modelStack.PopMatrix();
+void SceneShaqeel::RenderQuad()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -2, 0);
+	modelStack.Scale(10, 10, 40);
+	RenderMesh(meshList[GEO_QUAD1], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(0, -2.02, 0);
-		modelStack.Scale(30, 30, 40);
-		RenderMesh(meshList[GEO_QUAD2], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -2.02, 0);
+	modelStack.Scale(30, 30, 40);
+	RenderMesh(meshList[GEO_QUAD2], true);
+	modelStack.PopMatrix();
+}
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-1.3, -0.8, translateTruckZ);
-		modelStack.Rotate(90, 0, 1, 0);
-		modelStack.Scale(0.022, 0.022, 0.022);
-		RenderMesh(meshList[GEO_TRUCK], true);
-		modelStack.PopMatrix();
+void SceneShaqeel::Rendervehicles()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(-1.3, -0.8, translateTruckZ);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.022, 0.022, 0.022);
+	RenderMesh(meshList[GEO_TRUCK], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(5, -0.6, translateBusZ);
-		modelStack.Rotate(90, 0, 1, 0);
-		modelStack.Scale(0.038, 0.038, 0.038);
-		RenderMesh(meshList[GEO_BUS], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(5, -0.6, translateBusZ);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.038, 0.038, 0.038);
+	RenderMesh(meshList[GEO_BUS], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-6, -0.5, translateCar1Z);
-		modelStack.Rotate(90, 0, 1, 0);
-		modelStack.Scale(0.095, 0.095, 0.095);
-		RenderMesh(meshList[GEO_CAR1], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-6, -0.5, translateCar1Z);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.095, 0.095, 0.095);
+	RenderMesh(meshList[GEO_CAR1], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(5.5, -0.7, translateCar2Z);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.09, 0.09, 0.09);
-		RenderMesh(meshList[GEO_CAR2], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(5.5, -0.7, translateCar2Z);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.09, 0.09, 0.09);
+	RenderMesh(meshList[GEO_CAR2], true);
+	modelStack.PopMatrix();
+}
 
-		
+void SceneShaqeel::Rendertrees()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, -2.03, 20);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.5, 0.25, 0.25);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
 
-	}
+	modelStack.PushMatrix();
+	modelStack.Translate(-20, -2.03, -20);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.5, 0.25, 0.25);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
 
-	// tree
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(-20, -2.03, 20);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-27.5, -2.03, 28);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.5, 0.25, 0.25);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-20, -2.03, -20);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-27.5, -2.03, -28);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.5, 0.25, 0.25);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-27.5, -2.03, 28);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(20, -2.03, 20);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.5, 0.25, 0.25);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-27.5, -2.03, -28);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(20, -2.03, -20);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.5, 0.25, 0.25);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(20, -2.03, 20);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(27.5, -2.03, 28);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.5, 0.25, 0.25);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(20, -2.03, -20);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(27.5, -2.03, -28);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.5, 0.25, 0.25);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(27.5, -2.03, 28);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
+    modelStack.PushMatrix();
+	modelStack.Translate(-18, -1.9, 18);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.06, 0.06, 0.06);
+	RenderMesh(meshList[GEO_BUSH], true);
+	modelStack.PopMatrix();
+}
 
-		modelStack.PushMatrix();
-		modelStack.Translate(27.5, -2.03, -28);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.25, 0.25);
-		RenderMesh(meshList[GEO_TREE], true);
-		modelStack.PopMatrix();
-	}
+void SceneShaqeel::Rendercityobjects()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(-18, -2, 23);
+	//modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_BENCH], true);
+	modelStack.PopMatrix();
 
-	// bush
-	{
-		/*modelStack.PushMatrix();
-		modelStack.Translate(-18, -1.9, 18);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.06, 0.06, 0.06);
-		RenderMesh(meshList[GEO_BUSH], true);
-		modelStack.PopMatrix();*/
-	}
+	modelStack.PushMatrix();
+	modelStack.Translate(-18, -2, -23);
+	//modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_BENCH], true);
+	modelStack.PopMatrix();
 
-	// city objects
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(-18, -2, 23);
-		//modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.5, 0.5);
-		RenderMesh(meshList[GEO_BENCH], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(18, -2, 23);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_BENCH], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-18, -2, -23);
-		//modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(0.5, 0.5, 0.5);
-		RenderMesh(meshList[GEO_BENCH], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(18, -2, -23);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_BENCH], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(18, -2, 23);
-		modelStack.Rotate(180, 0, 1, 0);
-		modelStack.Scale(0.5, 0.5, 0.5);
-		RenderMesh(meshList[GEO_BENCH], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-28, -2, -10);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.6, 0.6, 0.6);
+	RenderMesh(meshList[GEO_MART], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(18, -2, -23);
-		modelStack.Rotate(180, 0, 1, 0);
-		modelStack.Scale(0.5, 0.5, 0.5);
-		RenderMesh(meshList[GEO_BENCH], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-15, -2, 1);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Rotate(rotatedoor, 0, 1, 0);
+	modelStack.Scale(0.61, 0.61, 0.61);
+	RenderMesh(meshList[GEO_DOOR], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-28, -2, -10);
-		modelStack.Rotate(90, 0, 1, 0);
-		modelStack.Scale(0.6, 0.6, 0.6);
-		RenderMesh(meshList[GEO_MART], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-2.8, -2, -50); // X 3.6
+	/*modelStack.Rotate(180, 0, 1, 0);*/
+	modelStack.Scale(0.77, 0.77, 0.77);
+	RenderMesh(meshList[GEO_TUNNEL], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-15, -2, 1);
-		modelStack.Rotate(180, 0, 1, 0);
-		modelStack.Rotate(rotatedoor, 0, 1, 0);
-		modelStack.Scale(0.61, 0.61, 0.61);
-		RenderMesh(meshList[GEO_DOOR], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(2.8, -2, 50); // X 3.6
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.77, 0.77, 0.77);
+	RenderMesh(meshList[GEO_TUNNEL], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-2.8, -2, -50); // X 3.6
-		/*modelStack.Rotate(180, 0, 1, 0);*/
-		modelStack.Scale(0.77, 0.77, 0.77);
-		RenderMesh(meshList[GEO_TUNNEL], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(22.1, -2, 0);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_CITY1], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(2.8, -2, 50); // X 3.6
-		modelStack.Rotate(180, 0, 1, 0);
-		modelStack.Scale(0.77, 0.77, 0.77);
-		RenderMesh(meshList[GEO_TUNNEL], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(27, -2, 9);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(1.3, 1.3, 1.3);
+	RenderMesh(meshList[GEO_CITY1], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(22.1, -2, 0);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(1, 1, 1);
-		RenderMesh(meshList[GEO_CITY1], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(27, -2, -9);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(1.3, 1.3, 1.3);
+	RenderMesh(meshList[GEO_CITY1], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(27, -2, 9);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(1.3, 1.3, 1.3);
-		RenderMesh(meshList[GEO_CITY1], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 0, -0.18); // X 3.6
+	/*modelStack.Rotate(180, 0, 1, 0);*/
+	modelStack.Scale(0.5, 1, 0.9);
+	RenderMesh(meshList[GEO_CUBE], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(27, -2, -9);
-		modelStack.Rotate(270, 0, 1, 0);
-		modelStack.Scale(1.3, 1.3, 1.3);
-		RenderMesh(meshList[GEO_CITY1], true);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-11.7, -2, -13.2);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_STREETLIGHT], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-14.8, translateWordY, 0.9);
-		modelStack.Rotate(90, 0, 1, 0);
-		modelStack.Scale(0.15, 0.15, 0.15);
-		RenderText(meshList[GEO_TEXT], " Press F to Enter", WHITE);
-		modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(11.7, -2, 13.2);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_STREETLIGHT], true);
+	modelStack.PopMatrix();
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-16.5, 0, -0.18); // X 3.6
-		/*modelStack.Rotate(180, 0, 1, 0);*/
-		modelStack.Scale(0.5, 1, 0.9);
-		RenderMesh(meshList[GEO_CUBE], true);
-		modelStack.PopMatrix();
+}
 
-		modelStack.PushMatrix();
-		modelStack.Translate(-11.7, -2, -13.2); 
-		modelStack.Scale(1, 1, 1);
-		RenderMesh(meshList[GEO_STREETLIGHT], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(11.7, -2, 13.2);
-		modelStack.Scale(1, 1, 1);
-		RenderMesh(meshList[GEO_STREETLIGHT], true);
-		modelStack.PopMatrix();
-	}
-
-	{
-    }
-
-	// robo
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(-13.2, 0, translateSphereZ);
-		modelStack.Scale(0.25, 0.25, 0.25);
-		RenderMesh(meshList[GEO_SPHERE], true);
-
-		modelStack.PushMatrix();
-		modelStack.Translate(0, 0, 0);
-		modelStack.Rotate(rotateleftleg, 1, 0, 0);
-		modelStack.Scale(3.5, 3.5, 3.5);
-		RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(0, 0, 0);
-		modelStack.Rotate(-rotateleftleg, 1, 0, 0);
-		modelStack.Scale(3.5, 3.5, 3.5);
-		RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(-2.25, 4.5, 0);
-		modelStack.Rotate(-rotateleftleg, 1, 0, 0);
-		modelStack.Scale(3.5, 3.5, 3.5);
-		RenderMesh(meshList[GEO_ROBOLEFTARM], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(2.25, 4.5, 0);
-		modelStack.Rotate(rotateleftleg, 1, 0, 0);
-		modelStack.Scale(3.5, 3.5, 3.5);
-		RenderMesh(meshList[GEO_ROBORIGHTARM], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(0, -8.5, 0);
-		modelStack.Scale(3.5, 3.5, 3.5);
-		RenderMesh(meshList[GEO_ROBOBODY], true);
-		modelStack.PopMatrix();
-
-		modelStack.PopMatrix();
-
-		// 2nd robot
-
-
-		modelStack.PushMatrix();
-		modelStack.Translate(13.2, 0, translateSphereZ2);
-		modelStack.Rotate(180, 0, 1, 0);
-		modelStack.Scale(0.25, 0.25, 0.25);
-		RenderMesh(meshList[GEO_SPHERE], true);
-
-		modelStack.PushMatrix();
-		modelStack.Translate(0, 0, 0);
-		modelStack.Rotate(rotateleftleg, 1, 0, 0);
-		modelStack.Scale(3.5, 3.5, 3.5);
-		RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(0, 0, 0);
-		modelStack.Rotate(-rotateleftleg, 1, 0, 0);
-		modelStack.Scale(3.5, 3.5, 3.5);
-		RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(-2.25, 4.5, 0);
-		modelStack.Rotate(-rotateleftleg, 1, 0, 0);
-		modelStack.Scale(3.5, 3.5, 3.5);
-		RenderMesh(meshList[GEO_ROBOLEFTARM], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(2.25, 4.5, 0);
-		modelStack.Rotate(rotateleftleg, 1, 0, 0);
-		modelStack.Scale(3.5, 3.5, 3.5);
-		RenderMesh(meshList[GEO_ROBORIGHTARM], true);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(0, -8.5, 0);
-		modelStack.Scale(3.5, 3.5, 3.5);
-		RenderMesh(meshList[GEO_ROBOBODY], true);
-		modelStack.PopMatrix();
-
-		modelStack.PopMatrix();
-	}
+void SceneShaqeel::RenderMytext()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(-14.8, translateWordY, 0.9);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.15, 0.15, 0.15);
+	RenderText(meshList[GEO_TEXT], " Press F to Enter", WHITE);
+	modelStack.PopMatrix();
 
 	std::stringstream ssX;
 	std::stringstream ssY;
@@ -944,9 +860,96 @@ void SceneShaqeel::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
 	modelStack.PopMatrix();
 
-	RenderSkybox();
+
+}
+
+void SceneShaqeel::RenderNPC()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(-13.2, 0, translateSphereZ);
+	modelStack.Scale(0.25, 0.25, 0.25);
+	RenderMesh(meshList[GEO_SPHERE], true);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-2.25, 4.5, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(2.25, 4.5, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -8.5, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOBODY], true);
+	modelStack.PopMatrix();
+
+	modelStack.PopMatrix();
+
+	// 2nd robot
 
 
+	modelStack.PushMatrix();
+	modelStack.Translate(13.2, 0, translateSphereZ2);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.25, 0.25, 0.25);
+	RenderMesh(meshList[GEO_SPHERE], true);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-2.25, 4.5, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(2.25, 4.5, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -8.5, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOBODY], true);
+	modelStack.PopMatrix();
+
+	modelStack.PopMatrix();
 }
 
 void SceneShaqeel::Exit() {

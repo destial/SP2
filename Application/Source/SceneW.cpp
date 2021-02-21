@@ -346,7 +346,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('E'))
 	{
-		if (camera.position.x <= -43 && camera.position.x >= -49 && camera.position.z <= 50 && camera.position.z >= 40)
+		if (/*camera.position.x <= -43 && camera.position.x >= -50 && */camera.position.z <= 48 && camera.position.z >= 42)
 		{
 			Chestlimit = false;
 		}
@@ -354,6 +354,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		if (Chestlimit == false)
 		{
 			rotateChest -= (float)(40 * dt);
+
 		}
 
 		if (rotateChest <= -70)
@@ -362,15 +363,6 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	/*if (Chestlimit == false)
-	{
-		rotateChest -= (float)(40 * dt);
-	}
-
-	if (rotateChest <=-70)
-	{
-		rotateChest = true;
-	}*/
 
 	oldCameraPos = camera.position;
 	oldCameraTarget = camera.target;
@@ -542,26 +534,13 @@ void SceneW::Exit() {
 }
 
 void SceneW::RenderUI() {
+
+
 	RenderMeshOnScreen(meshList[GEO_UI], 30, 15, 52.5);
 	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 3, 0.25, 14);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 3, 0.25, 13);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 3, 0.25, 12);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
-
-	/*std::stringstream ssX;
-	std::stringstream ssY;
-	std::stringstream ssZ;
-	ssX.precision(3);
-	ssX << "X:" << camera.position.x;
-	ssX.precision(3);
-	ssX << "Y:" << camera.position.y;
-	ssZ.precision(3);
-	ssZ << "Z:" << camera.position.z;
-
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 20, 0, 10);
-	modelStack.PopMatrix();*/
 }
 
 void SceneW::RenderRoom() {
@@ -667,7 +646,7 @@ void SceneW::RenderBoxes() {
 	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-24, 1.4, 34);
+	modelStack.Translate(-24, 1.4, 35);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Rotate(-70, 1, 0, 0);
 	modelStack.Scale(1, 1, 1);
@@ -675,7 +654,7 @@ void SceneW::RenderBoxes() {
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-24, 0, 34);
+	modelStack.Translate(-24, 0, 35);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(1, 1, 1);
 	RenderMesh(meshList[CHESTBOTTOM], true);
@@ -725,6 +704,7 @@ void SceneW::RenderBoxes() {
 }
 
 void SceneW::RenderMaze() {
+
 	// maze
 	modelStack.PushMatrix();
 	modelStack.Translate(-40, 2.5, -50);

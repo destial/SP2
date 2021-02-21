@@ -371,7 +371,7 @@ void SceneXL::DetectGnome()
 	{
 		if (isNear(meshList[GEO_GNOME], (float)10.f) && talktognome == false)
 		{
-			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to talk.", ORANGE, 4, 3, 6);
+			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to talk.", Color(1,1,1), 4, 3, 6);
 
 			if (Application::IsKeyPressedOnce('F'))
 			{
@@ -474,7 +474,7 @@ void SceneXL::DetectRobot()
 {
 	if (isNear(meshList[GEO_ROBOT], (float)5.f) && talktorobot == false)
 	{
-		RenderMeshOnScreen(meshList[GEO_BORDERTEXT], 75, 45, 40);
+		//RenderMeshOnScreen(meshList[GEO_BORDERTEXT], 75, 45, 40);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Press F to start", Color(0.541, 0.169, 0.886), 4, 1.8, 6.2);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Your simulation.", Color(0.541, 0.169, 0.886), 4, 1.8, 4.2);
 		if (Application::IsKeyPressedOnce('F'))

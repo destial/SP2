@@ -172,6 +172,7 @@ void SceneRyan::Init()
 	camera.SharkPos.y = 0;
 	camera.SharkPos.z = 0;
 
+	Application::log("Scene Ryan initialized");
 }
 
 void SceneRyan::RenderMesh(Mesh* mesh, bool enableLight)

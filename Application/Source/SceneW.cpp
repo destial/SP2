@@ -12,13 +12,16 @@ SceneW::SceneW() {}
 
 SceneW::~SceneW() {}
 
-void SceneW::Init()
-{
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
+void SceneW::Init() {
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	// Generate shaders
+	glGenVertexArrays(1, &m_vertexArrayID);
+	glBindVertexArray(m_vertexArrayID);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
 	m_parameters[U_MODELVIEW] = glGetUniformLocation(m_programID, "MV");
@@ -27,25 +30,13 @@ void SceneW::Init()
 	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
 	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
-	Mesh::SetMaterialLoc(m_parameters[U_MATERIAL_AMBIENT], m_parameters[U_MATERIAL_DIFFUSE], m_parameters[U_MATERIAL_SPECULAR], m_parameters[U_MATERIAL_SHININESS]);
-
-	Mtx44 projection;
-	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
-	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(-46,3.5,-48), Vector3(1, 0.5, 1), Vector3(0, 1, 0));
-
-	//shaders
-	glGenVertexArrays(1, &m_vertexArrayID);
-	glBindVertexArray(m_vertexArrayID);
-
 	// Get a handle for our "textColor" uniform
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
+
 	// Get a handle for our "colorTexture" uniform
-	m_parameters[U_COLOR_TEXTURE_ENABLED] =
-		glGetUniformLocation(m_programID, "colorTextureEnabled");
-	m_parameters[U_COLOR_TEXTURE] =
-		glGetUniformLocation(m_programID, "colorTexture");
+	m_parameters[U_COLOR_TEXTURE_ENABLED] = glGetUniformLocation(m_programID, "colorTextureEnabled");
+	m_parameters[U_COLOR_TEXTURE] = glGetUniformLocation(m_programID, "colorTexture");
 
 	m_parameters[U_LIGHT0_POSITION] = glGetUniformLocation(m_programID, "lights[0].position_cameraspace");
 	m_parameters[U_LIGHT0_COLOR] = glGetUniformLocation(m_programID, "lights[0].color");
@@ -59,6 +50,7 @@ void SceneW::Init()
 	m_parameters[U_LIGHT0_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[0].cosCutoff");
 	m_parameters[U_LIGHT0_COSINNER] = glGetUniformLocation(m_programID, "lights[0].cosInner");
 	m_parameters[U_LIGHT0_EXPONENT] = glGetUniformLocation(m_programID, "lights[0].exponent");
+
 	m_parameters[U_LIGHT1_POSITION] = glGetUniformLocation(m_programID, "lights[1].position_cameraspace");
 	m_parameters[U_LIGHT1_COLOR] = glGetUniformLocation(m_programID, "lights[1].color");
 	m_parameters[U_LIGHT1_POWER] = glGetUniformLocation(m_programID, "lights[1].power");
@@ -66,16 +58,23 @@ void SceneW::Init()
 	m_parameters[U_LIGHT1_KL] = glGetUniformLocation(m_programID, "lights[1].kL");
 	m_parameters[U_LIGHT1_KQ] = glGetUniformLocation(m_programID, "lights[1].kQ");
 	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
-
 	m_parameters[U_LIGHT1_TYPE] = glGetUniformLocation(m_programID, "lights[1].type");
 	m_parameters[U_LIGHT1_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[1].spotDirection");
 	m_parameters[U_LIGHT1_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[1].cosCutoff");
 	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
 	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
-	glUseProgram(m_programID);
-	// Make sure you pass uniform parameters after glUseProgram()
-	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
+
+	Mesh::SetMaterialLoc(
+		m_parameters[U_MATERIAL_AMBIENT],
+		m_parameters[U_MATERIAL_DIFFUSE],
+		m_parameters[U_MATERIAL_SPECULAR],
+		m_parameters[U_MATERIAL_SHININESS]);
+
+	Mtx44 projection;
+	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
+	projectionStack.LoadMatrix(projection);
+	camera.Init(Vector3(-46,3.5,-48), Vector3(1, 0.5, 1), Vector3(0, 1, 0), 50.f);
 
 	//Replace previous code
 	light[0].type = Light::LIGHT_SPOT;
@@ -101,6 +100,8 @@ void SceneW::Init()
 	light[1].cosInner = cos(Math::DegreeToRadian(30));
 	light[1].exponent = 3.f;
 	light[1].spotDirection.Set(0.f, 1.f, 0.f);
+
+	glUseProgram(m_programID);
 
 	glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &light[0].color.r);
@@ -154,8 +155,11 @@ void SceneW::Init()
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Door", "OBJ//doorway.obj", "OBJ//doorway.mtl");
 	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
 	meshList[BOX] = MeshBuilder::GenerateOBJMTL("Box", "OBJ//cardboardBoxClosed.obj", "OBJ//cardboardBoxClosed.mtl");
-	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall", 1, 1, 1);
-
+	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall",YELLOW, 1, 1, 1);
+	meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
+	meshList[MWALL]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+	meshList[MWALL]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+	meshList[MWALL]->material.kShininess = .3f;
 	meshList[CHESTTOP] = MeshBuilder::GenerateOBJ("Chest Top", "OBJ//chestTopPart.obj"); // Try 1 first
 	meshList[CHESTTOP]->textureID = LoadTGA("Image//ChestTexture.tga");
 
@@ -164,16 +168,13 @@ void SceneW::Init()
 
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::CAMERA;
-	/*meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
-	meshList[MWALL]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[MWALL]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[MWALL]->material.kShininess = .3f;*/
 
 	rotateChest = 0;
 	rotateChest2 = 0;
 	rotateChest3 = 0;
 	rotateChest4 = 0;
 	rotateChest5 = 0;
+	countChest = 0;
 
 	Chestlimit = false;
 	Chestlimit2 = false;
@@ -181,6 +182,15 @@ void SceneW::Init()
 	Chestlimit4 = false;
 	Chestlimit5 = false;
 
+	sceneManager = new SceneManager(this, camera.bounds);
+	CreateMaze();
+	GameObject* cameraObject = new GameObject(meshList[CAMERA]);
+	cameraObject->transform->translate = camera.position;
+	cameraObject->camera = 1;
+	sceneManager->push(cameraObject);
+	cameraObject->id = sceneManager->totalObjects;
+
+	Application::log("Scene Walton initialized");
 }
 
 void SceneW::RenderMesh(Mesh* mesh, bool enableLight)
@@ -365,6 +375,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = true;
 				Chestlimit5 = true;
+				countChest = 1;
 			}
 		}
 
@@ -378,6 +389,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = false;
 				Chestlimit4 = true;
 				Chestlimit5 = true;
+				countChest = 2;
 			}
 		}
 
@@ -391,6 +403,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = false;
 				Chestlimit5 = true;
+				countChest = 3;
 			}
 
 		}
@@ -405,6 +418,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = true;
 				Chestlimit5 = false;
+				countChest = 4;
 			}
 
 		}
@@ -419,32 +433,36 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = true;
 				Chestlimit5 = true;
+				countChest = 5;
 			}
 
 		}
 	}
 
-
 	oldCameraPos = camera.position;
 	oldCameraTarget = camera.target;
 	camera.Update(dt, mouse);
-	sceneManager = new SceneManager(this, camera.bounds);
-	CreateMaze();
-	//DetectCollision();
+	
+	//sceneManager->split(sceneManager->root);
+
+	DetectCollision();
+
+	sceneManager->deleteAllQuad(sceneManager->root);
+	sceneManager->root = new Quad(camera.bounds);
+	for (auto o : sceneManager->allObjects) {
+		sceneManager->root->push(o);
+	}
 }
 
 void SceneW::DetectCollision() {
-	GameObject* cameraObject = new GameObject(nullptr);
-	*cameraObject->transform = camera.position;
-	sceneManager->push(cameraObject);
-	cameraObject->id = sceneManager->totalObjects;
-
-	sceneManager->split(sceneManager->root);
-
 	Quad* quad = sceneManager->getQuad(sceneManager->totalObjects);
 	if (quad) {
 		for (auto object : quad->gameObjects) {
-			//
+			if (!object->camera) {
+				if (isNear(object)) {
+					moveBack(object);
+				}
+			}
 		}
 	}
 }
@@ -608,15 +626,13 @@ void SceneW::Render()
 	modelStack.PopMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3);
 	RenderUI();
-
-	delete sceneManager;
-	sceneManager = nullptr;
 }
 
 void SceneW::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}
+	delete sceneManager;
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 }
@@ -625,17 +641,10 @@ void SceneW::RenderUI() {
 
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
-	/*if (w != 800 && h != 600)
-	{
-		RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 93.75);
-		RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 32.5);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 31.5);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 30.5);
-	}*/
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);//34.2
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);//32.4
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);//30.6
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);
 }
 
 void SceneW::RenderRoom() {
@@ -649,7 +658,7 @@ void SceneW::RenderRoom() {
 
 	// Door
 	modelStack.PushMatrix();
-	modelStack.Translate(-51, 0, -47);
+	modelStack.Translate(-51, 0, -47.5);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_DOOR], true);

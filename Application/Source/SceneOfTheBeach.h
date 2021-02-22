@@ -22,6 +22,8 @@ class SceneOfTheBeach : public Scene
 		GEO_FRONT,
 		GEO_BACK,
 		GEO_TEXT,
+		GEO_DRIZZLE,
+		GEO_UI,
 		NUM_GEOMETRY,
 	};
 
@@ -78,6 +80,7 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	bool OpenTextBox;
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];
@@ -88,6 +91,11 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
+
+	void RenderQuad();
+	void RenderNPC();
+	void RenderUI();
+
 public:
 
 	SceneOfTheBeach();

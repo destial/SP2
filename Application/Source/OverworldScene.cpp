@@ -72,6 +72,7 @@ void OverworldScene::Init() {
 		m_parameters[U_MATERIAL_SPECULAR], 
 		m_parameters[U_MATERIAL_SHININESS]);
 
+	// Init scene manager
 	// Generate necessary meshes and starting transformations
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
@@ -143,7 +144,6 @@ void OverworldScene::Init() {
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::TYPE::CAMERA;
 
-	// Init scene manager
 	Reset();
 
 	// Init light
@@ -190,6 +190,8 @@ void OverworldScene::Init() {
 	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], light[1].exponent);
 
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
+
+	Application::log("Overworld Scene initialized");
 }
 
 void OverworldScene::RenderMesh(Mesh* mesh, bool enableLight) {
@@ -341,10 +343,10 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	if (!currentCarObject) {
 		camera.Update(dt, mouse);
 	} else {
-		camera.UpdateCar(dt, mouse, (float)6.f);
-		Application::log("right after playerx: " + std::to_string(camera.position.x));
+		camera.UpdateCar(dt, mouse, 6.f);
 	}
-	sceneManager->split(sceneManager->root);
+
+	//sceneManager->split(sceneManager->root);
 
 	DetectCollision();
 	GetInCar();
@@ -353,9 +355,8 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	sceneManager->deleteAllQuad(sceneManager->root);
 	sceneManager->root = new Quad(camera.bounds);
 	for (auto o : sceneManager->allObjects) {
-		sceneManager->root->gameObjects.push_back(o);
+		sceneManager->root->push(o);
 	}
-	sceneManager->root->count = sceneManager->allObjects.size();
 }
 
 void OverworldScene::Update(double dt) {
@@ -567,37 +568,30 @@ void OverworldScene::CompleteTasks() {
 
 void OverworldScene::GetInCar() {
 	if (!currentCarObject) {
-		Quad* quad = sceneManager->getQuad(sceneManager->totalObjects);
-		if (quad) {
-			for (auto object : quad->gameObjects) {
-				if (isNearObject(object, 3.f)) {
-					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", Colors::WHITE, 4, 3, 4);
-					if (Application::IsKeyPressedOnce('F')) {
-						currentCarObject = object;
-						camera.position.x = object->transform->translate.x;
-						camera.position.z = object->transform->translate.z;
-						tasks[STEAL_CAR] = 1;
-						if (object->target != carOrigin) {
-							camera.carTarget = object->target;
-							camera.target = object->target;
-						} else {
-							camera.carTarget = camera.position + carOrigin;
-							camera.target = camera.position + carOrigin;
-						}
-						break;
+		for (auto object : sceneManager->allObjects) {
+			if (!object->camera && isNearObject(object, 3.f)) {
+				RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", Colors::WHITE, 4, 3, 4);
+				if (Application::IsKeyPressedOnce('F')) {
+					currentCarObject = object;
+					camera.position.x = object->transform->translate.x;
+					camera.position.z = object->transform->translate.z;
+					tasks[STEAL_CAR] = 1;
+					if (object->target != carOrigin) {
+						camera.carTarget = object->target;
+						camera.target = object->target;
+					} else {
+						camera.carTarget = camera.position + carOrigin;
+						camera.target = camera.position + carOrigin;
 					}
+					break;
 				}
 			}
-		} else {
-			Application::log("no quad");
 		}
 	}
 
 	if (currentCarObject) {
 		float carY = currentCarObject->transform->translate.y;
 		currentCarObject->transform->Translate(camera.position.x, carY, camera.position.z);
-		Application::log("carx: " + std::to_string(currentCarObject->transform->translate.x));
-		Application::log("playerx: " + std::to_string(camera.position.x));
 		camera.position.y = carY + 5;
 
 		currentCarObject->transform->RotateDegree(camera.getCarRotation(carOrigin));
@@ -623,9 +617,8 @@ void OverworldScene::GetInCar() {
 }
 
 void OverworldScene::DetectCollision() {
-	Quad* quad = sceneManager->getQuad(sceneManager->totalObjects);
-	if (quad) {
-		for (auto o : quad->gameObjects) {
+	if (!currentCarObject) {
+		for (auto o : sceneManager->allObjects) {
 			if (isNearObject(o, 2)) {
 				MoveBack();
 			}
@@ -634,13 +627,13 @@ void OverworldScene::DetectCollision() {
 }
 
 void OverworldScene::CreateCityObjects() {
-	for (int i = -4; i < 4; i+=2) {
-		for (int j = -4; j < 4; j+=2) {
+	for (int i = -4; i <= 4; i+=2) {
+		for (int j = -4; j <= 4; j+=2) {
 			if (i == 0 || j == 0) {
 				continue;
 			}
 			GameObject* object = new GameObject(meshList[STREETLIGHT]);
-			object->transform->Translate(i * 10, 0.5f, j * 10);
+			object->transform->Translate(i * 18, 0.5f, j * 18);
 			sceneManager->push(object);
 			object->id = sceneManager->totalObjects;
 		}
@@ -810,10 +803,10 @@ void OverworldScene::Reset() {
 	CreateCityObjects();
 
 	GameObject *cameraObject = new GameObject(meshList[CAMERA]);
-	*cameraObject->transform = camera.position;
+	cameraObject->transform->translate = camera.position;
 	sceneManager->push(cameraObject);
 	cameraObject->id = sceneManager->totalObjects;
-	Application::log(std::to_string(sceneManager->totalObjects));
+	cameraObject->camera = 1;
 
 	for (unsigned i = 0; i < NUM_TASKS; i++) {
 		tasks[i] = 0;

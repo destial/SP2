@@ -12,21 +12,24 @@ SceneManager::~SceneManager() {
 }
 
 void SceneManager::split(Quad* parent) {
+	if (!parent) return;
+
 	if (parent->count > 5) {
 		Quad* upL = new Quad(parent, Quad::ENUM_QUADTYPE::E_UPL);
 		parent->setUpL(upL);
-		split(upL);
 
 		Quad* upR = new Quad(parent, Quad::ENUM_QUADTYPE::E_UPR);
 		parent->setUpR(upR);
-		split(upR);
 
 		Quad* botL = new Quad(parent, Quad::ENUM_QUADTYPE::E_BOTL);
 		parent->setBotL(botL);
-		split(botL);
 
 		Quad* botR = new Quad(parent, Quad::ENUM_QUADTYPE::E_BOTR);
 		parent->setBotR(botR);
+
+		split(upL);
+		split(upR);
+		split(botL);
 		split(botR);
 	}
 }
@@ -69,7 +72,6 @@ Quad* SceneManager::getQuad(int gameObjectID) {
 
 void SceneManager::push(GameObject* gameObject) {
 	root->push(gameObject);
-	++root->count;
 	allObjects.push_back(gameObject);
 	totalObjects = (allObjects.size() > root->gameObjects.size() ? allObjects.size() : root->gameObjects.size());
 }

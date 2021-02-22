@@ -94,7 +94,7 @@ private:
 	bool Chestlimit4;
 	bool Chestlimit5;
 
-	int rotateB;
+	int countChest;
 
 	float rotateChest;
 	float rotateChest2;
@@ -131,6 +131,7 @@ public:
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void Update(double dt, Mouse mouse);
+	virtual void InitGL();
 	virtual void Render();
 	virtual void Exit();
 

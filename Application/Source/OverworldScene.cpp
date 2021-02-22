@@ -19,59 +19,9 @@ void OverworldScene::Init() {
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	InitGL();
 
-	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
-	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
-	m_parameters[U_MODELVIEW] = glGetUniformLocation(m_programID, "MV");
-	m_parameters[U_MODELVIEW_INVERSE_TRANSPOSE] = glGetUniformLocation(m_programID, "MV_inverse_transpose");
-	m_parameters[U_MATERIAL_AMBIENT] = glGetUniformLocation(m_programID, "material.kAmbient");
-	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
-	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
-	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
-	// Get a handle for our "textColor" uniform
-	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
-	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
-
-	// Get a handle for our "colorTexture" uniform
-	m_parameters[U_COLOR_TEXTURE_ENABLED] = glGetUniformLocation(m_programID, "colorTextureEnabled");
-	m_parameters[U_COLOR_TEXTURE] = glGetUniformLocation(m_programID, "colorTexture");
-
-	m_parameters[U_LIGHT0_POSITION] = glGetUniformLocation(m_programID, "lights[0].position_cameraspace");
-	m_parameters[U_LIGHT0_COLOR] = glGetUniformLocation(m_programID, "lights[0].color");
-	m_parameters[U_LIGHT0_POWER] = glGetUniformLocation(m_programID, "lights[0].power");
-	m_parameters[U_LIGHT0_KC] = glGetUniformLocation(m_programID, "lights[0].kC");
-	m_parameters[U_LIGHT0_KL] = glGetUniformLocation(m_programID, "lights[0].kL");
-	m_parameters[U_LIGHT0_KQ] = glGetUniformLocation(m_programID, "lights[0].kQ");
-	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
-	m_parameters[U_LIGHT0_TYPE] = glGetUniformLocation(m_programID, "lights[0].type");
-	m_parameters[U_LIGHT0_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[0].spotDirection");
-	m_parameters[U_LIGHT0_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[0].cosCutoff");
-	m_parameters[U_LIGHT0_COSINNER] = glGetUniformLocation(m_programID, "lights[0].cosInner");
-	m_parameters[U_LIGHT0_EXPONENT] = glGetUniformLocation(m_programID, "lights[0].exponent");
-
-	m_parameters[U_LIGHT1_POSITION] = glGetUniformLocation(m_programID, "lights[1].position_cameraspace");
-	m_parameters[U_LIGHT1_COLOR] = glGetUniformLocation(m_programID, "lights[1].color");
-	m_parameters[U_LIGHT1_POWER] = glGetUniformLocation(m_programID, "lights[1].power");
-	m_parameters[U_LIGHT1_KC] = glGetUniformLocation(m_programID, "lights[1].kC");
-	m_parameters[U_LIGHT1_KL] = glGetUniformLocation(m_programID, "lights[1].kL");
-	m_parameters[U_LIGHT1_KQ] = glGetUniformLocation(m_programID, "lights[1].kQ");
-	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
-	m_parameters[U_LIGHT1_TYPE] = glGetUniformLocation(m_programID, "lights[1].type");
-	m_parameters[U_LIGHT1_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[1].spotDirection");
-	m_parameters[U_LIGHT1_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[1].cosCutoff");
-	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
-	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
-	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
-
-	Mesh::SetMaterialLoc(
-		m_parameters[U_MATERIAL_AMBIENT],
-		m_parameters[U_MATERIAL_DIFFUSE], 
-		m_parameters[U_MATERIAL_SPECULAR], 
-		m_parameters[U_MATERIAL_SHININESS]);
-
+	// Init scene manager
 	// Generate necessary meshes and starting transformations
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
@@ -143,53 +93,9 @@ void OverworldScene::Init() {
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::TYPE::CAMERA;
 
-	// Init scene manager
 	Reset();
 
-	// Init light
-	light[0].color = Colors::WHITE;
-	light[0].power = 0.7;
-	light[0].kC = 1.f;
-	light[0].kL = 0.01f;
-	light[0].kQ = 0.001f;
-	light[0].cosCutoff = cos(Math::DegreeToRadian(45));
-	light[0].cosInner = cos(Math::DegreeToRadian(30));
-	light[0].exponent = 3.f;
-	light[0].spotDirection.Set(0.f, 1.f, 0.f);
-
-	light[1].color = Colors::WHITE;
-	light[1].power = 1.f;
-	light[1].kC = 1.f;
-	light[1].kL = 0.01f;
-	light[1].kQ = 0.001f;
-	light[1].cosCutoff = cos(Math::DegreeToRadian(45));
-	light[1].cosInner = cos(Math::DegreeToRadian(30));
-	light[1].exponent = 3.f;
-	light[1].spotDirection.Set(0.f, 1.f, 0.f);
-
-	glUseProgram(m_programID);
-
-	glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &light[0].color.r);
-	glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
-	glUniform1f(m_parameters[U_LIGHT0_KC], light[0].kC);
-	glUniform1f(m_parameters[U_LIGHT0_KL], light[0].kL);
-	glUniform1f(m_parameters[U_LIGHT0_KQ], light[0].kQ);
-	glUniform1f(m_parameters[U_LIGHT0_COSCUTOFF], light[0].cosCutoff);
-	glUniform1f(m_parameters[U_LIGHT0_COSINNER], light[0].cosInner);
-	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], light[0].exponent);
-
-	glUniform1i(m_parameters[U_LIGHT1_TYPE], light[1].type);
-	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &light[1].color.r);
-	glUniform1f(m_parameters[U_LIGHT1_POWER], light[1].power);
-	glUniform1f(m_parameters[U_LIGHT1_KC], light[1].kC);
-	glUniform1f(m_parameters[U_LIGHT1_KL], light[1].kL);
-	glUniform1f(m_parameters[U_LIGHT1_KQ], light[1].kQ);
-	glUniform1f(m_parameters[U_LIGHT1_COSCUTOFF], light[1].cosCutoff);
-	glUniform1f(m_parameters[U_LIGHT1_COSINNER], light[1].cosInner);
-	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], light[1].exponent);
-
-	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
+	Application::log("Overworld Scene initialized");
 }
 
 void OverworldScene::RenderMesh(Mesh* mesh, bool enableLight) {
@@ -341,10 +247,10 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	if (!currentCarObject) {
 		camera.Update(dt, mouse);
 	} else {
-		camera.UpdateCar(dt, mouse, (float)6.f);
-		Application::log("right after playerx: " + std::to_string(camera.position.x));
+		camera.UpdateCar(dt, mouse, 6.f);
 	}
-	sceneManager->split(sceneManager->root);
+
+	//sceneManager->split(sceneManager->root);
 
 	DetectCollision();
 	GetInCar();
@@ -353,9 +259,111 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	sceneManager->deleteAllQuad(sceneManager->root);
 	sceneManager->root = new Quad(camera.bounds);
 	for (auto o : sceneManager->allObjects) {
-		sceneManager->root->gameObjects.push_back(o);
+		sceneManager->root->push(o);
 	}
-	sceneManager->root->count = sceneManager->allObjects.size();
+}
+
+void OverworldScene::InitGL()
+{
+
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
+	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
+	m_parameters[U_MODELVIEW] = glGetUniformLocation(m_programID, "MV");
+	m_parameters[U_MODELVIEW_INVERSE_TRANSPOSE] = glGetUniformLocation(m_programID, "MV_inverse_transpose");
+	m_parameters[U_MATERIAL_AMBIENT] = glGetUniformLocation(m_programID, "material.kAmbient");
+	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
+	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
+	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
+	// Get a handle for our "textColor" uniform
+	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
+	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
+	// Get a handle for our "colorTexture" uniform
+	m_parameters[U_COLOR_TEXTURE_ENABLED] = glGetUniformLocation(m_programID, "colorTextureEnabled");
+	m_parameters[U_COLOR_TEXTURE] = glGetUniformLocation(m_programID, "colorTexture");
+
+	m_parameters[U_LIGHT0_POSITION] = glGetUniformLocation(m_programID, "lights[0].position_cameraspace");
+	m_parameters[U_LIGHT0_COLOR] = glGetUniformLocation(m_programID, "lights[0].color");
+	m_parameters[U_LIGHT0_POWER] = glGetUniformLocation(m_programID, "lights[0].power");
+	m_parameters[U_LIGHT0_KC] = glGetUniformLocation(m_programID, "lights[0].kC");
+	m_parameters[U_LIGHT0_KL] = glGetUniformLocation(m_programID, "lights[0].kL");
+	m_parameters[U_LIGHT0_KQ] = glGetUniformLocation(m_programID, "lights[0].kQ");
+	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
+
+	m_parameters[U_LIGHT0_TYPE] = glGetUniformLocation(m_programID, "lights[0].type");
+	m_parameters[U_LIGHT0_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[0].spotDirection");
+	m_parameters[U_LIGHT0_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[0].cosCutoff");
+	m_parameters[U_LIGHT0_COSINNER] = glGetUniformLocation(m_programID, "lights[0].cosInner");
+	m_parameters[U_LIGHT0_EXPONENT] = glGetUniformLocation(m_programID, "lights[0].exponent");
+
+	m_parameters[U_LIGHT1_POSITION] = glGetUniformLocation(m_programID, "lights[1].position_cameraspace");
+	m_parameters[U_LIGHT1_COLOR] = glGetUniformLocation(m_programID, "lights[1].color");
+	m_parameters[U_LIGHT1_POWER] = glGetUniformLocation(m_programID, "lights[1].power");
+	m_parameters[U_LIGHT1_KC] = glGetUniformLocation(m_programID, "lights[1].kC");
+	m_parameters[U_LIGHT1_KL] = glGetUniformLocation(m_programID, "lights[1].kL");
+	m_parameters[U_LIGHT1_KQ] = glGetUniformLocation(m_programID, "lights[1].kQ");
+	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
+
+	m_parameters[U_LIGHT1_TYPE] = glGetUniformLocation(m_programID, "lights[1].type");
+	m_parameters[U_LIGHT1_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[1].spotDirection");
+	m_parameters[U_LIGHT1_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[1].cosCutoff");
+	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
+	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
+	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
+
+
+
+	// Make sure you pass uniform parameters after glUseProgram()
+
+	//Replace previous code
+	//light[0].type = Light::LIGHT_POINT;
+	//light[0].position.Set(0, 0, 0);
+	light[0].color.Set(1, 1, 1);
+	light[0].power = 1;
+	light[0].kC = 1.f;
+	light[0].kL = 0.01f;
+	light[0].kQ = 0.001f;
+	light[0].cosCutoff = cos(Math::DegreeToRadian(45));
+	light[0].cosInner = cos(Math::DegreeToRadian(30));
+	light[0].exponent = 3.f;
+	light[0].spotDirection.Set(0.f, 1.f, 0.f);
+
+	//light[1].type = Light::LIGHT_POINT;
+	//light[1].position.Set(0, 0, 0);
+	light[1].color.Set(1, 1, 1);
+	light[1].power = 1;
+	light[1].kC = 1.f;
+	light[1].kL = 0.01f;
+	light[1].kQ = 0.001f;
+	light[1].cosCutoff = cos(Math::DegreeToRadian(45));
+	light[1].cosInner = cos(Math::DegreeToRadian(30));
+	light[1].exponent = 3.f;
+	light[1].spotDirection.Set(0.f, 1.f, 0.f);
+	glUseProgram(m_programID);
+	Mesh::SetMaterialLoc(m_parameters[U_MATERIAL_AMBIENT], m_parameters[U_MATERIAL_DIFFUSE], m_parameters[U_MATERIAL_SPECULAR], m_parameters[U_MATERIAL_SHININESS]);
+	glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
+	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &light[0].color.r);
+	glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
+	glUniform1f(m_parameters[U_LIGHT0_KC], light[0].kC);
+	glUniform1f(m_parameters[U_LIGHT0_KL], light[0].kL);
+	glUniform1f(m_parameters[U_LIGHT0_KQ], light[0].kQ);
+	glUniform1f(m_parameters[U_LIGHT0_COSCUTOFF], light[0].cosCutoff);
+	glUniform1f(m_parameters[U_LIGHT0_COSINNER], light[0].cosInner);
+	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], light[0].exponent);
+
+	glUniform1i(m_parameters[U_LIGHT1_TYPE], light[1].type);
+	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &light[1].color.r);
+	glUniform1f(m_parameters[U_LIGHT1_POWER], light[1].power);
+	glUniform1f(m_parameters[U_LIGHT1_KC], light[1].kC);
+	glUniform1f(m_parameters[U_LIGHT1_KL], light[1].kL);
+	glUniform1f(m_parameters[U_LIGHT1_KQ], light[1].kQ);
+	glUniform1f(m_parameters[U_LIGHT1_COSCUTOFF], light[1].cosCutoff);
+	glUniform1f(m_parameters[U_LIGHT1_COSINNER], light[1].cosInner);
+	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], light[1].exponent);
+	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 }
 
 void OverworldScene::Update(double dt) {
@@ -567,37 +575,30 @@ void OverworldScene::CompleteTasks() {
 
 void OverworldScene::GetInCar() {
 	if (!currentCarObject) {
-		Quad* quad = sceneManager->getQuad(sceneManager->totalObjects);
-		if (quad) {
-			for (auto object : quad->gameObjects) {
-				if (isNearObject(object, 3.f)) {
-					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", Colors::WHITE, 4, 3, 4);
-					if (Application::IsKeyPressedOnce('F')) {
-						currentCarObject = object;
-						camera.position.x = object->transform->translate.x;
-						camera.position.z = object->transform->translate.z;
-						tasks[STEAL_CAR] = 1;
-						if (object->target != carOrigin) {
-							camera.carTarget = object->target;
-							camera.target = object->target;
-						} else {
-							camera.carTarget = camera.position + carOrigin;
-							camera.target = camera.position + carOrigin;
-						}
-						break;
+		for (auto object : sceneManager->allObjects) {
+			if (!object->camera && isNearObject(object, 3.f)) {
+				RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", Colors::WHITE, 4, 3, 4);
+				if (Application::IsKeyPressedOnce('F')) {
+					currentCarObject = object;
+					camera.position.x = object->transform->translate.x;
+					camera.position.z = object->transform->translate.z;
+					tasks[STEAL_CAR] = 1;
+					if (object->target != carOrigin) {
+						camera.carTarget = object->target;
+						camera.target = object->target;
+					} else {
+						camera.carTarget = camera.position + carOrigin;
+						camera.target = camera.position + carOrigin;
 					}
+					break;
 				}
 			}
-		} else {
-			Application::log("no quad");
 		}
 	}
 
 	if (currentCarObject) {
 		float carY = currentCarObject->transform->translate.y;
 		currentCarObject->transform->Translate(camera.position.x, carY, camera.position.z);
-		Application::log("carx: " + std::to_string(currentCarObject->transform->translate.x));
-		Application::log("playerx: " + std::to_string(camera.position.x));
 		camera.position.y = carY + 5;
 
 		currentCarObject->transform->RotateDegree(camera.getCarRotation(carOrigin));
@@ -623,9 +624,8 @@ void OverworldScene::GetInCar() {
 }
 
 void OverworldScene::DetectCollision() {
-	Quad* quad = sceneManager->getQuad(sceneManager->totalObjects);
-	if (quad) {
-		for (auto o : quad->gameObjects) {
+	if (!currentCarObject) {
+		for (auto o : sceneManager->allObjects) {
 			if (isNearObject(o, 2)) {
 				MoveBack();
 			}
@@ -634,13 +634,13 @@ void OverworldScene::DetectCollision() {
 }
 
 void OverworldScene::CreateCityObjects() {
-	for (int i = -4; i < 4; i+=2) {
-		for (int j = -4; j < 4; j+=2) {
+	for (int i = -4; i <= 4; i+=2) {
+		for (int j = -4; j <= 4; j+=2) {
 			if (i == 0 || j == 0) {
 				continue;
 			}
 			GameObject* object = new GameObject(meshList[STREETLIGHT]);
-			object->transform->Translate(i * 10, 0.5f, j * 10);
+			object->transform->Translate(i * 18, 0.5f, j * 18);
 			sceneManager->push(object);
 			object->id = sceneManager->totalObjects;
 		}
@@ -810,10 +810,10 @@ void OverworldScene::Reset() {
 	CreateCityObjects();
 
 	GameObject *cameraObject = new GameObject(meshList[CAMERA]);
-	*cameraObject->transform = camera.position;
+	cameraObject->transform->translate = camera.position;
 	sceneManager->push(cameraObject);
 	cameraObject->id = sceneManager->totalObjects;
-	Application::log(std::to_string(sceneManager->totalObjects));
+	cameraObject->camera = 1;
 
 	for (unsigned i = 0; i < NUM_TASKS; i++) {
 		tasks[i] = 0;

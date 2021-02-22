@@ -240,7 +240,7 @@ void toggleState() {
 }
 
 void Application::Run() {
-
+	int i = 0;
 	// Initialize and create scenes
 	scene[SCENESHAQ] = new SceneShaqeel();
 	scene[SCENEWALTON] = new SceneW();

@@ -1,4 +1,4 @@
-#include "SceneRyan.h"
+#include "SceneBeach.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -8,11 +8,11 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneRyan::SceneRyan() {}
+SceneBeach::SceneBeach() {}
 
-SceneRyan::~SceneRyan() {}
+SceneBeach::~SceneBeach() {}
 
-void SceneRyan::Init()
+void SceneBeach::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
@@ -32,7 +32,7 @@ void SceneRyan::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 10, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0),(float) 50);
+	camera.Init(Vector3(5, 10, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -124,55 +124,32 @@ void SceneRyan::Init()
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",Color(1, 1, 1), 10.1f);
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//Ocean.tga");
-	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front",Color(1, 1, 1), 50.1f);
+	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 50.1f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//OceanBack.tga");
 
-	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back",Color(1, 1, 1), 50.1f);
+	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", Color(1, 1, 1), 50.1f);
 	meshList[GEO_BACK]->textureID = LoadTGA("Image//OceanFront.tga");
 
-	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top",Color(1, 1, 1), 50.1f);
+	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", Color(1, 1, 1), 50.1f);
 	meshList[GEO_TOP]->textureID = LoadTGA("Image//OceanTop.tga");
 
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom",Color(1, 1, 1), 50.1f);
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", Color(1, 1, 1), 50.1f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//OceanBottom.tga");
 
-	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left",Color(1, 1, 1), 50.1f);
+	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 50.1f);
 	meshList[GEO_LEFT]->textureID = LoadTGA("Image//OceanLeft.tga");
 
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right",Color(1, 1, 1), 50.1f);
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 50.1f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//OceanRight.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	meshList[GEO_SHARKTOP] = MeshBuilder::GenerateOBJMTL("SharkTop","OBJ//SharkTop.obj", "OBJ//SharkTop.mtl");
-
-	meshList[GEO_SHARKBTM] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkBtm.obj", "OBJ//SharkBtm.mtl");
-
-	meshList[GEO_MINIGUN] = MeshBuilder::GenerateOBJMTL("Minigun", "OBJ//Minigun.obj", "OBJ//Minigun.mtl");
-
-	meshList[GEO_BEACH] = MeshBuilder::GenerateHemisphere("Beach", Color(1, 1, 1), 36, 36, 1);
-	meshList[GEO_BEACH]->material.kAmbient.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_BEACH]->material.kDiffuse.Set(0.900, 0.843, 0.000);
-	meshList[GEO_BEACH]->material.kSpecular.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_BEACH]->material.kShininess = 0.6f;
-
-	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 1, 1), 36, 36, 1);
-
-	rotate = true;
-	sharkattack = false;
-	Tempcounter = 0;
-	rotatetail = 0;
-	sharkcircle = 1;
-	camera.SharkPos.x = 100;
-	camera.SharkPos.y = 0;
-	camera.SharkPos.z = 0;
-
 }
 
-void SceneRyan::RenderMesh(Mesh* mesh, bool enableLight)
+void SceneBeach::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -214,7 +191,7 @@ void SceneRyan::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void SceneRyan::RenderText(Mesh* mesh, std::string text, Color color)
+void SceneBeach::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -241,7 +218,7 @@ void SceneRyan::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void SceneBeach::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -283,7 +260,7 @@ void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneRyan::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
+void SceneBeach::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
@@ -316,7 +293,7 @@ void SceneRyan::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x,
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneRyan::Update(double dt, Mouse mouse) {
+void SceneBeach::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 
@@ -329,108 +306,16 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
-	static const float LSPEED = 40.f;
-	if (Application::IsKeyPressed('I'))
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('P'))
-		light[0].position.y += (float)(LSPEED * dt);
-
-	if (rotate == true)
-	{
-		rotatetail += 1;
-		if (rotatetail > 20)
-		{
-			rotate = false;
-		}
-	}
-	else if (rotate == false)
-	{
-		rotatetail -= 1;
-		if (rotatetail < -20)
-		{
-			rotate = true;
-		}
-	}
-	if ((sharkcircle % 720) == 0 && sharkattack == false)
-	{
-		sharkattack = true;
-	}
-	if (sharkattack == true && (sharkcircle % 720) == 0)
-	{
-		if (Tempcounter == 0)
-		{
-			camera.SharkChaseinit();
-			Vector3 origin = Vector3(-1, 0, 0);
-			sharkdir = camera.getSharkRotation(origin) - 90;
-			Tempcounter = 1;
-		}
-		
-		std::cout << camera.SharkPos.x << std::endl;
-		if (camera.SharkPos.x > 30)
-		{
-			rotateshark -= 0.5;
-			camera.SharkPos.y += 0.1;
-			camera.SharkChaseMove();
-		}
-		else if (camera.SharkPos.x > 30)
-		{
-			rotateshark += 0.5;
-			camera.SharkPos.y -= 0.1;
-			camera.SharkChaseMove();
-		}
-		else if (camera.SharkPos.x > -100)
-		{
-			rotateshark += 0.5;
-			camera.SharkPos.y -= 0.1;
-			camera.SharkChaseMove();
-		}
-		else
-		{
-			camera.SharkPos.x = 100;
-			camera.SharkPos.z = 0;
-			sharkdir = 0;
-			sharkattack = false;
-			Tempcounter = 0;
-			sharkcircle = 1;
-			rotateshark = 0;
-			camera.SharkPos.y = 0;
-		}
-	}
-	else
-	{
-		sharkcircle += 1;
-		sharkcircleangle += 0.5;
-		temptime = dt;
-	}
-	
-
-	if (Application::IsKeyPressed('F')) 
-	{
-
-		Minigun();
-		Shootingspin += 3;
-	}
-
-
-
 	camera.Update(dt, mouse);
 }
 
-void SceneRyan::Update(double dt)
+void SceneBeach::Update(double dt)
 {
 	Mouse mouse;
 	Update(dt, mouse);
 }
 
-void SceneRyan::RenderSkybox() {
+void SceneBeach::RenderSkybox() {
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -50, 0);
 	//modelStack.Scale(5, 5, 5);
@@ -478,7 +363,7 @@ void SceneRyan::RenderSkybox() {
 	modelStack.PopMatrix();
 }
 
-void SceneRyan::Render()
+void SceneBeach::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -488,13 +373,15 @@ void SceneRyan::Render()
 		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
 
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_cameraspace.x);
-	} else if (light[0].type == Light::LIGHT_SPOT) {
+	}
+	else if (light[0].type == Light::LIGHT_SPOT) {
 		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
 
 		Vector3 spotDirection_cameraspace = viewStack.Top() * light[0].spotDirection;
 		glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	} else {
+	}
+	else {
 		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
 	}
@@ -503,13 +390,15 @@ void SceneRyan::Render()
 		Vector3 lightDir(light[1].position.x, light[1].position.y, light[1].position.z);
 		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
 		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
-	} else if (light[1].type == Light::LIGHT_SPOT) {
+	}
+	else if (light[1].type == Light::LIGHT_SPOT) {
 		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
 		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
 
 		Vector3 spotDirection_cameraspace = viewStack.Top() * light[1].spotDirection;
 		glUniform3fv(m_parameters[U_LIGHT1_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	} else {
+	}
+	else {
 		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
 		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
 	}
@@ -536,32 +425,6 @@ void SceneRyan::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Rotate(-sharkcircleangle, 0, 1, 0);
-	modelStack.Translate(camera.SharkPos.x, camera.SharkPos.y, camera.SharkPos.z);
-	modelStack.Rotate(sharkdir, 0, 1, 0);
-	modelStack.Rotate(rotateshark, 1, 0, 0);
-	modelStack.Scale(3, 3, 3);
-	RenderShark();
-	modelStack.PopMatrix();
-	
-	modelStack.PushMatrix();
-	modelStack.Translate(0, -145, 0);
-	modelStack.Scale(200, 150, 200);
-	RenderMesh(meshList[GEO_BEACH], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(meshList[GEO_MINIGUN]->transform.translate.x, meshList[GEO_MINIGUN]->transform.translate.y, meshList[GEO_MINIGUN]->transform.translate.z);
-	modelStack.Rotate(meshList[GEO_MINIGUN]->transform.rotate, 0, 1, 0);
-	modelStack.Rotate(90, 0, 0, 1);
-	modelStack.Scale(0.07, 0.07, 0.07);
-	modelStack.Rotate(Shootingspin, 0, 1, 0);
-	RenderMesh(meshList[GEO_MINIGUN], true);
-	modelStack.PopMatrix();
-
-
-
-	modelStack.PushMatrix();
 	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
 	modelStack.Scale(4.5, 4.5, 4.5);
 	RenderSkybox();
@@ -583,58 +446,9 @@ void SceneRyan::Render()
 	modelStack.Scale(2, 2, 2);
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
 	modelStack.PopMatrix();
-
-
-}
-void SceneRyan::RenderShark()
-{
-	modelStack.PushMatrix();
-	modelStack.Translate(0, -2.5, 4);
-	modelStack.Scale(1.1, 1.1, 1.1);
-	RenderMesh(meshList[GEO_SHARKTOP], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Rotate(rotatetail, 0, 1, 0);
-	RenderMesh(meshList[GEO_SHARKBTM], true);
-	modelStack.PopMatrix();
 }
 
-//NOT MY STUFF
-void SceneRyan::Minigun()
-{
-	MinigunHold = meshList[GEO_MINIGUN];
-	MinigunHold->prevTransform = MinigunHold->transform;
-	MinigunHold->transform.translate.x = camera.position.x;
-	MinigunHold->transform.translate.z = camera.position.z;
-	MinigunHold->transform.translate.y = camera.position.y - 2;
-	Vector3 origin = (MinigunHold->transform.translate + GunOrigin).Normalized();
-	MinigunHold->transform.rotate = camera.getRotation(GunOrigin);
-	switch (GEO_MINIGUN) {
-	default:
-		GunOrigin = Vector3(-1, 0, 0);
-		break;
-	}
-}
-
-//void SceneRyan::Bullets() {
-//	for (int i = 0; i < 256; i++) {
-//		if (bullet_array[i] != nullptr) {
-//			modelStack.PushMatrix();
-//			Vector3 pos = bullet_array[i]->getCurrPos();
-//
-//			modelStack.Translate(pos.x, pos.y, pos.z);
-//			modelStack.Rotate(bullet_array[i]->GetDirection(), 0, 1, 0);
-//			modelStack.Rotate(90, 1, 0, 0);
-//			modelStack.Scale(0.05f, 0.05f, 0.05f);
-//			RenderMesh(meshList[GEO_BULLET], true);
-//
-//			modelStack.PopMatrix();
-//		}
-//	}
-//}
-
-void SceneRyan::Exit() {
+void SceneBeach::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}

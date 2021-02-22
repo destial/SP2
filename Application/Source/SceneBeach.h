@@ -1,14 +1,13 @@
-#ifndef SCENE_RYAN_H
-#define SCENE_RYAN_H
+#ifndef SCENE_BEACH_H
+#define SCENE_BEACH_H
 
 #include "Scene.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
 #include "Camera3.h"
-#include "GameObject.h"
 
-class SceneRyan : public Scene
+class SceneBeach : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
@@ -20,11 +19,6 @@ class SceneRyan : public Scene
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
-		GEO_SHARKTOP,
-		GEO_SHARKBTM,
-		GEO_BEACH,
-		GEO_MINIGUN,
-		GEO_BULLET,
 		GEO_TEXT,
 		NUM_GEOMETRY,
 	};
@@ -81,33 +75,8 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
 
-	float rotateshark;
-
 	bool rotate;
-	float rotatetail;
-	int sharkcircle;
-	float sharkcircleangle;
-	bool sharkattack;
-	double temptime;
-
-	float sharkdir;
-	int Tempcounter;
-
 	Mesh* meshList[NUM_GEOMETRY];
-
-
-	//trying chasing code
-	Vector3 Temptarget;
-
-	//MINIGUN
-	float Shootingspin;
-	Mesh* MinigunHold;
-	Vector3 GunOrigin;
-	void Minigun();
-	//Array of bullets
-	void Bullets();
-	//NOT FOR MY SCENE
-
 
 	Light light[2];
 
@@ -119,15 +88,15 @@ private:
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
 public:
 
-	SceneRyan();
-	~SceneRyan();
+	SceneBeach();
+	~SceneBeach();
 
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void Update(double dt, Mouse mouse);
 	virtual void Render();
 	virtual void Exit();
-	void RenderShark();
+
 	Color RED = Color(1.f, 0.f, 0.f);
 	Color GREEN = Color(0.f, 1.f, 0.f);
 	Color BLUE = Color(0.f, 0.f, 1.f);

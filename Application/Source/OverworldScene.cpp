@@ -72,6 +72,7 @@ void OverworldScene::Init() {
 		m_parameters[U_MATERIAL_SPECULAR], 
 		m_parameters[U_MATERIAL_SHININESS]);
 
+	// Init scene manager
 	// Generate necessary meshes and starting transformations
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
@@ -143,7 +144,6 @@ void OverworldScene::Init() {
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::TYPE::CAMERA;
 
-	// Init scene manager
 	Reset();
 
 	// Init light

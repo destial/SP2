@@ -32,8 +32,7 @@ public:
 	void Init();
 	void Run();
 	void Exit();
-	enum SCENES
-	{
+	enum SCENES {
 		STARTSCENE,
 		MENUSCENE,
 		WINSCENE,
@@ -57,12 +56,14 @@ public:
 	static unsigned GetWindowHeight();
 	static unsigned GetUIWidth();
 	static unsigned GetUIHeight();
+	static unsigned GetFPS();
 	static unsigned m_width;
 	static unsigned m_height;
 	static unsigned ui_width;
 	static unsigned ui_height;
 	static unsigned sceneswitch;
 	static unsigned previousscene;
+	static unsigned FPS;
 	static bool quit;
 	static std::set<unsigned short> activeKeys;
 

@@ -381,11 +381,17 @@ void SceneW::Update(double dt, Mouse mouse) {
 void SceneW::DetectCollision() {
 	sceneManager = new SceneManager(this, camera.bounds);
 	CreateMaze();
-	for (auto object : sceneManager->root->gameObjects) {
-		if (isNear(object)) {
-			moveBack();
-			Application::log("hit");
-			break;
+	GameObject* cameraObject = new GameObject(nullptr);
+	*cameraObject->transform = camera.position;
+	cameraObject->id = ++sceneManager->root->count;
+	sceneManager->split(sceneManager->root);
+	Quad* quad = sceneManager->getQuad(sceneManager->root->count);
+	if (quad) {
+		for (auto object : quad->gameObjects) {
+			if (isNear(object)) {
+				moveBack(object);
+				break;
+			}
 		}
 	}
 	delete sceneManager;
@@ -398,9 +404,19 @@ bool SceneW::isNear(GameObject* object) {
 	return (d - 2.5*object->transform->scale.x <= 0);
 }
 
-void SceneW::moveBack() {
-	camera.position = oldCameraPos;
-	camera.target = oldCameraTarget;
+void SceneW::moveBack(GameObject* object) {
+	Vector3 view = (camera.target - camera.position).Normalized();
+
+	float zDistance = Math::sqrt(Math::Square(object->transform->translate.z - camera.position.z));
+	float xDistance = Math::sqrt(Math::Square(object->transform->translate.x - camera.position.x));
+	if (zDistance < 2.5 * object->transform->scale.x) {
+		camera.position.z = camera.prevPosition.z;
+	}
+	if (xDistance < 2.5 * object->transform->scale.x) {
+		camera.position.x = camera.prevPosition.x;
+	}
+
+	camera.target = camera.position + view;
 }
 
 void SceneW::Update(double dt)
@@ -501,11 +517,8 @@ void SceneW::Render()
 	modelStack.LoadIdentity();
 
 	Mtx44 view;
-	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
+	view.SetToPerspective(camera.orthographic_size, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
-	/*modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();*/
 
 	RenderSkybox();
 	RenderRoom();
@@ -518,7 +531,6 @@ void SceneW::Render()
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 
-	
 	// enemy with tags
 	/*modelStack.PushMatrix();
 	modelStack.Translate(0, 2.5, 0);
@@ -529,8 +541,6 @@ void SceneW::Render()
 	RenderText(meshList[GEO_TEXT], "Enemy #1", Color(0, 1, 1));
 	modelStack.PopMatrix();*/
 	RenderUI();
-
-	
 }
 
 void SceneW::Exit() {
@@ -721,7 +731,6 @@ void SceneW::RenderBoxes() {
 	modelStack.Scale(1, 1, 1);
 	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
-
 }
 
 void SceneW::RenderMaze() {

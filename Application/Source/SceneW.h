@@ -113,7 +113,7 @@ private:
 	void CreateMaze();
 	void RenderUI();
 	void RenderRoom();
-	void moveBack();
+	void moveBack(GameObject* object);
 	void DetectCollision();
 	bool isNear(GameObject* object);
 	void RenderBoxes();

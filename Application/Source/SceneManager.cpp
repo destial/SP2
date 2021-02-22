@@ -3,10 +3,12 @@
 SceneManager::SceneManager(Scene* scene, float bounds) {
 	root = new Quad(bounds);
 	this->scene = scene;
+	totalObjects = 0;
 }
 SceneManager::~SceneManager() {
 	root->deleteAll();
-	deleteAll(root);
+	allObjects.clear();
+	deleteAllQuad(root);
 }
 
 void SceneManager::split(Quad* parent) {
@@ -29,12 +31,12 @@ void SceneManager::split(Quad* parent) {
 	}
 }
 
-void SceneManager::deleteAll(Quad* parent) {
+void SceneManager::deleteAllQuad(Quad* parent) {
 	if (parent) {
-		deleteAll(parent->upL);
-		deleteAll(parent->upR);
-		deleteAll(parent->botL);
-		deleteAll(parent->botR);
+		deleteAllQuad(parent->upL);
+		deleteAllQuad(parent->upR);
+		deleteAllQuad(parent->botL);
+		deleteAllQuad(parent->botR);
 		delete parent;
 	}
 }
@@ -67,4 +69,7 @@ Quad* SceneManager::getQuad(int gameObjectID) {
 
 void SceneManager::push(GameObject* gameObject) {
 	root->push(gameObject);
+	++root->count;
+	allObjects.push_back(gameObject);
+	totalObjects = (allObjects.size() > root->gameObjects.size() ? allObjects.size() : root->gameObjects.size());
 }

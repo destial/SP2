@@ -94,6 +94,8 @@ private:
 	bool Chestlimit4;
 	bool Chestlimit5;
 
+	int rotateB;
+
 	float rotateChest;
 	float rotateChest2;
 	float rotateChest3;
@@ -117,7 +119,7 @@ private:
 	void CreateMaze();
 	void RenderUI();
 	void RenderRoom();
-	void moveBack();
+	void moveBack(GameObject* object);
 	void DetectCollision();
 	bool isNear(GameObject* object);
 	void RenderBoxes();

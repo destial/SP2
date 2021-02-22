@@ -20,12 +20,14 @@ class OverworldScene : public Scene {
 		GEO_BACK,
 		GEO_GROUND,
 		GEO_TEXT,
-
+		MOON,
 		SIDEBAR,
+
+		STREETLIGHT,
+		NUM_ROADOBJECTS,
 
 		SKYSCRAPER1,
 		SKYSCRAPER2,
-
 		NUM_BUILDINGS,
 
 		TRUCK1,
@@ -111,26 +113,31 @@ private:
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
-	void RenderVehicles();
-	void RenderBuildings();
+	void RenderObjects();
 	void RenderTasks();
 	void CompleteTasks();
 	void GetInCar();
 	void DetectCollision();
+	void CreateCityObjects();
 	void MoveBack();
 	void ObjectMoveBack(Mesh* mesh);
 	void Reset();
 	bool isNear(Mesh* mesh, const float& distance = 1.f);
+	bool isNearObject(GameObject* o, const float& distance = 1.f);
 	bool isHit(GameObject* o1, GameObject* o2, const float& distance = 1.f);
 
 	Mesh* meshList[NUM_GEOMETRY];
 	Mesh* currentCar;
+	GameObject* currentCarObject;
 	Vector3 carOrigin;
 	Light light[2];
 	Camera3 camera;
 	SceneManager* sceneManager;
 
 	bool tasks[NUM_TASKS];
+	bool showTaskbar;
+	int showTaskbarFrame;
+	int showTaskbarDelay;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);

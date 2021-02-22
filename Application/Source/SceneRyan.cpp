@@ -30,6 +30,8 @@ void SceneRyan::Init()
 	m_parameters[U_MATERIAL_AMBIENT] = glGetUniformLocation(m_programID, "material.kAmbient");
 	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
 	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
+
+
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
 	// Get a handle for our "textColor" uniform
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
@@ -90,7 +92,7 @@ void SceneRyan::Init()
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
 
 	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(0, 60, 0);
+	light[1].position.Set(0, 0, 0);
 	light[1].color.Set(1, 1, 1);
 	light[1].power = 1;
 	light[1].kC = 1.f;
@@ -158,6 +160,7 @@ void SceneRyan::Init()
 	meshList[GEO_BEACH]->material.kAmbient.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_BEACH]->material.kDiffuse.Set(0.900, 0.843, 0.000);
 	meshList[GEO_BEACH]->material.kSpecular.Set(0.6f, 0.6f, 0.6f);
+	meshList[GEO_BEACH]->material.kAlpha = 0;
 	meshList[GEO_BEACH]->material.kShininess = 0.6f;
 
 	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 1, 1), 36, 36, 1);
@@ -523,9 +526,16 @@ void SceneRyan::Render()
 	);
 	modelStack.LoadIdentity();
 
+
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
+	modelStack.Scale(4.5, 4.5, 4.5);
+	RenderSkybox();
+	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
@@ -562,11 +572,7 @@ void SceneRyan::Render()
 
 
 
-	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
-	modelStack.Scale(4.5, 4.5, 4.5);
-	RenderSkybox();
-	modelStack.PopMatrix();
+
 
 	std::stringstream ssX;
 	std::stringstream ssY;

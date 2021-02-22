@@ -15,10 +15,14 @@ OverworldScene::~OverworldScene() {}
 void OverworldScene::Init() {
 	// Clear background color to blue
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	// Generate shaders
+	glGenVertexArrays(1, &m_vertexArrayID);
+	glBindVertexArray(m_vertexArrayID);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
 	m_parameters[U_MODELVIEW] = glGetUniformLocation(m_programID, "MV");
@@ -27,16 +31,6 @@ void OverworldScene::Init() {
 	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
 	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
-	Mesh::SetMaterialLoc(
-		m_parameters[U_MATERIAL_AMBIENT],
-		m_parameters[U_MATERIAL_DIFFUSE], 
-		m_parameters[U_MATERIAL_SPECULAR], 
-		m_parameters[U_MATERIAL_SHININESS]);
-
-	// Generate shaders
-	glGenVertexArrays(1, &m_vertexArrayID);
-	glBindVertexArray(m_vertexArrayID);
-
 	// Get a handle for our "textColor" uniform
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
@@ -71,7 +65,12 @@ void OverworldScene::Init() {
 	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
 	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
-	glUseProgram(m_programID);
+
+	Mesh::SetMaterialLoc(
+		m_parameters[U_MATERIAL_AMBIENT],
+		m_parameters[U_MATERIAL_DIFFUSE], 
+		m_parameters[U_MATERIAL_SPECULAR], 
+		m_parameters[U_MATERIAL_SHININESS]);
 
 	// Generate necessary meshes and starting transformations
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
@@ -97,6 +96,9 @@ void OverworldScene::Init() {
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
 	meshList[GEO_BOTTOM]->type = Mesh::TYPE::IMAGE;
+
+	meshList[MOON] = MeshBuilder::GenerateSphere("moon", Colors::GRAY, 30, 30, 1.f);
+	meshList[MOON]->type = Mesh::TYPE::IMAGE;
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -126,13 +128,17 @@ void OverworldScene::Init() {
 	meshList[BUS1]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
 	meshList[BUS1]->type = Mesh::TYPE::OBJECT;
 
-	meshList[CAR2] = MeshBuilder::GenerateOBJ("Car2", "OBJ//NewCar2.obj");
+	meshList[CAR2] = MeshBuilder::GenerateOBJ("car2", "OBJ//NewCar2.obj");
 	meshList[CAR2]->textureID = LoadTGA("Image//RedVehicle.tga");
 	meshList[CAR2]->type = Mesh::TYPE::OBJECT;
 
 	meshList[SKYSCRAPER2] = MeshBuilder::GenerateOBJ("skyscraper", "OBJ//skyscraper4.obj");
 	meshList[SKYSCRAPER2]->transform.Scale(5);
 	meshList[SKYSCRAPER2]->type = Mesh::TYPE::OBJECT;
+
+	meshList[STREETLIGHT] = MeshBuilder::GenerateOBJ("streetlight", "OBJ//StreetLight.obj");
+	meshList[STREETLIGHT]->textureID = LoadTGA("Image//StreetLight.tga");
+	meshList[STREETLIGHT]->type = Mesh::TYPE::OBJECT;
 
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::TYPE::CAMERA;
@@ -142,7 +148,7 @@ void OverworldScene::Init() {
 
 	// Init light
 	light[0].color = Colors::WHITE;
-	light[0].power = 1;
+	light[0].power = 0.7;
 	light[0].kC = 1.f;
 	light[0].kL = 0.01f;
 	light[0].kQ = 0.001f;
@@ -160,6 +166,8 @@ void OverworldScene::Init() {
 	light[1].cosInner = cos(Math::DegreeToRadian(30));
 	light[1].exponent = 3.f;
 	light[1].spotDirection.Set(0.f, 1.f, 0.f);
+
+	glUseProgram(m_programID);
 
 	glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &light[0].color.r);
@@ -324,14 +332,30 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 		Application::sceneswitch = Application::STARTSCENE;
 	}
 
-	if (!currentCar) {
+	if (Application::IsKeyPressedOnce('G')) {
+		showTaskbar = showTaskbar ? 0 : 1;
+	}
+
+	light[0].position.Set(meshList[MOON]->transform.translate.x, meshList[MOON]->transform.translate.y, meshList[MOON]->transform.translate.z);
+
+	if (!currentCarObject) {
 		camera.Update(dt, mouse);
 	} else {
 		camera.UpdateCar(dt, mouse, (float)6.f);
+		Application::log("right after playerx: " + std::to_string(camera.position.x));
 	}
+	sceneManager->split(sceneManager->root);
 
 	DetectCollision();
+	GetInCar();
 	CompleteTasks();
+
+	sceneManager->deleteAllQuad(sceneManager->root);
+	sceneManager->root = new Quad(camera.bounds);
+	for (auto o : sceneManager->allObjects) {
+		sceneManager->root->gameObjects.push_back(o);
+	}
+	sceneManager->root->count = sceneManager->allObjects.size();
 }
 
 void OverworldScene::Update(double dt) {
@@ -340,7 +364,7 @@ void OverworldScene::Update(double dt) {
 }
 
 void OverworldScene::RenderSkybox() {
-	float translate = 100;
+	float translate = 2 * camera.bounds;
 	float scaleVal = (translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
 	modelStack.Translate(camera.position.x, camera.position.y + translate, camera.position.z);
@@ -388,83 +412,126 @@ void OverworldScene::RenderSkybox() {
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_GROUND], true);
 	modelStack.PopMatrix();
+
+	meshList[MOON]->transform.translate = camera.position;
+	meshList[MOON]->transform.translate.y = camera.position.y + translate;
+
+	modelStack.PushMatrix();
+	modelStack.Translate(meshList[MOON]->transform.translate.x, meshList[MOON]->transform.translate.y, meshList[MOON]->transform.translate.z);
+	modelStack.Rotate(meshList[MOON]->transform.rotate, 0, 1, 0);
+	modelStack.Scale(meshList[MOON]->transform.scale.x, meshList[MOON]->transform.scale.y, meshList[MOON]->transform.scale.z);
+	RenderMesh(meshList[MOON], false);
+	modelStack.PopMatrix();
 }
 
-void OverworldScene::RenderVehicles() {
-	for (unsigned car = TRUCK1; car < NUM_CAR; car++) {
-		if (meshList[car]) {
+void OverworldScene::RenderObjects() {
+	for (auto car : sceneManager->allObjects) {
+		if (car->mesh) {
 			modelStack.PushMatrix();
-			modelStack.Translate(meshList[car]->transform.translate.x, meshList[car]->transform.translate.y, meshList[car]->transform.translate.z);
-			modelStack.Rotate(meshList[car]->transform.rotate, 0, 1, 0);
-			modelStack.Scale(meshList[car]->transform.scale.x, meshList[car]->transform.scale.y, meshList[car]->transform.scale.z);
-			RenderMesh(meshList[car], true);
-			modelStack.PopMatrix();
-		}
-	}
-
-	GetInCar();
-}
-
-void OverworldScene::RenderBuildings() {
-	for (unsigned building = SKYSCRAPER1; building < NUM_BUILDINGS; building++) {
-		if (meshList[building]) {
-			modelStack.PushMatrix();
-			modelStack.Translate(meshList[building]->transform.translate.x, meshList[building]->transform.translate.y, meshList[building]->transform.translate.z);
-			modelStack.Rotate(meshList[building]->transform.rotate, 0, 1, 0);
-			modelStack.Scale(meshList[building]->transform.scale.x, meshList[building]->transform.scale.y, meshList[building]->transform.scale.z);
-			RenderMesh(meshList[building], true);
+			modelStack.Translate(car->transform->translate.x, car->transform->translate.y, car->transform->translate.z);
+			modelStack.Rotate(car->transform->rotate, 0, 1, 0);
+			modelStack.Scale(car->transform->scale.x, car->transform->scale.y, car->transform->scale.z);
+			RenderMesh(car->mesh, true);
 			modelStack.PopMatrix();
 		}
 	}
 }
 
 void OverworldScene::RenderTasks() {
-	RenderMeshOnScreen(meshList[SIDEBAR], 40, 80, 40);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Tasks", Colors::BLUE, 3, 21.8, 15.5f);
-	bool allComplete = true;
-	for (unsigned i = 0; i < NUM_TASKS; i++) {
-		Color completed = Colors::RED;
-		if (tasks[i]) {
-			completed = Colors::DARK_GREEN;
+	if (showTaskbar) {
+		bool allComplete = true;
+		if (showTaskbarFrame < 30) {
+			showTaskbarFrame++;
 		}
-		if (!tasks[i]) allComplete = false;
-		float x = 30.5f;
-		float y = 21.5f;
-		switch (i) {
-		case STEAL_CAR:
-			RenderTextOnScreen(meshList[GEO_TEXT], "Steal Vehicle", completed, 2, x, y - i);
-			break;
-		case ENTER_BUILDING:
-			RenderTextOnScreen(meshList[GEO_TEXT], "Enter Building", completed, 2, x, y - i);
-			break;
-		case SPRINT:
-			RenderTextOnScreen(meshList[GEO_TEXT], "LShift Sprint", completed, 2, x, y - i);
-			break;
-		case WALK:
-			RenderTextOnScreen(meshList[GEO_TEXT], "WASD Walking", completed, 2, x, y - i);
-			break;
-		case LOOK:
-			RenderTextOnScreen(meshList[GEO_TEXT], "Mouse Control", completed, 2, x, y - i);
-			break;
-		case JUMP:
-			RenderTextOnScreen(meshList[GEO_TEXT], "Space Jumping", completed, 2, x, y - i);
-			break;
-		default:
-			break;
+		RenderMeshOnScreen(meshList[SIDEBAR], 40, (80 + (30 - showTaskbarFrame)) * (Application::GetWindowWidth() / 800), 40 * (Application::GetWindowHeight() / 600));
+		RenderTextOnScreen(meshList[GEO_TEXT], "Tasks", Colors::BLUE, 3, (21.8f + (30 - showTaskbarFrame)) * (Application::GetWindowWidth() / 800), 15.5f * (Application::GetWindowHeight() / 600));
+		for (unsigned i = 0; i < NUM_TASKS; i++) {
+			Color completed = Colors::RED;
+			if (tasks[i]) {
+				completed = Colors::DARK_GREEN;
+			}
+			if (!tasks[i]) allComplete = false;
+			float x = (30.5f + (30 - showTaskbarFrame)) * (Application::GetWindowWidth() / 800);
+			float y = (21.5f - i) * (Application::GetWindowHeight() / 600);
+			switch (i) {
+			case STEAL_CAR:
+				RenderTextOnScreen(meshList[GEO_TEXT], "Steal Vehicle", completed, 2, x, y);
+				break;
+			case ENTER_BUILDING:
+				RenderTextOnScreen(meshList[GEO_TEXT], "Enter Building", completed, 2, x, y);
+				break;
+			case SPRINT:
+				RenderTextOnScreen(meshList[GEO_TEXT], "LShift Sprint", completed, 2, x, y);
+				break;
+			case WALK:
+				RenderTextOnScreen(meshList[GEO_TEXT], "WASD Walking", completed, 2, x, y);
+				break;
+			case LOOK:
+				RenderTextOnScreen(meshList[GEO_TEXT], "Mouse Control", completed, 2, x, y);
+				break;
+			case JUMP:
+				RenderTextOnScreen(meshList[GEO_TEXT], "Space Jumping", completed, 2, x, y);
+				break;
+			default:
+				break;
+			}
+		}
+		RenderTextOnScreen(meshList[GEO_TEXT], ".", allComplete ? Colors::DARK_GREEN : Colors::WHITE, 1, 0, 0);
+	} else {
+		if (showTaskbarFrame != 0) {
+			bool allComplete = true;
+			if (showTaskbarFrame > 0) {
+				showTaskbarFrame--;
+			}
+			RenderMeshOnScreen(meshList[SIDEBAR], 40, (80 + (30 - showTaskbarFrame)) * (Application::GetWindowWidth() / 800), 40 * (Application::GetWindowHeight() / 600));
+			RenderTextOnScreen(meshList[GEO_TEXT], "Tasks", Colors::BLUE, 3, (21.8f + (30 - showTaskbarFrame)) * (Application::GetWindowWidth() / 800), 15.5f * (Application::GetWindowHeight() / 600));
+			for (unsigned i = 0; i < NUM_TASKS; i++) {
+				Color completed = Colors::RED;
+				if (tasks[i]) {
+					completed = Colors::DARK_GREEN;
+				}
+				if (!tasks[i]) allComplete = false;
+				float x = (30.5f + (30 - showTaskbarFrame)) * (Application::GetWindowWidth() / 800);
+				float y = (21.5f - i) * (Application::GetWindowHeight() / 600);
+				switch (i) {
+				case STEAL_CAR:
+					RenderTextOnScreen(meshList[GEO_TEXT], "Steal Vehicle", completed, 2, x, y);
+					break;
+				case ENTER_BUILDING:
+					RenderTextOnScreen(meshList[GEO_TEXT], "Enter Building", completed, 2, x, y);
+					break;
+				case SPRINT:
+					RenderTextOnScreen(meshList[GEO_TEXT], "LShift Sprint", completed, 2, x, y);
+					break;
+				case WALK:
+					RenderTextOnScreen(meshList[GEO_TEXT], "WASD Walking", completed, 2, x, y);
+					break;
+				case LOOK:
+					RenderTextOnScreen(meshList[GEO_TEXT], "Mouse Control", completed, 2, x, y);
+					break;
+				case JUMP:
+					RenderTextOnScreen(meshList[GEO_TEXT], "Space Jumping", completed, 2, x, y);
+					break;
+				default:
+					break;
+				}
+			}
+			RenderTextOnScreen(meshList[GEO_TEXT], ".", allComplete ? Colors::DARK_GREEN : Colors::WHITE, 1, 0, 0);
 		}
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", allComplete ? Colors::DARK_GREEN : Colors::WHITE, 1, 0, 0);
 }
 
 void OverworldScene::CompleteTasks() {
 	if (!tasks[WALK]) {
 		if (camera.position != camera.defaultPosition) {
 			tasks[WALK] = 1;
+			showTaskbar = 1;
 		}
 	}
 	if (!tasks[SPRINT]) {
 		if (Application::IsKeyPressed(VK_LSHIFT) && Application::IsKeyPressed('W')) {
 			tasks[SPRINT] = 1;
+			showTaskbar = 1;
 		}
 	}
 	if (!tasks[LOOK]) {
@@ -472,36 +539,47 @@ void OverworldScene::CompleteTasks() {
 		Vector3 currentView = (camera.target - camera.position).Normalized();
 		if (defaultView != currentView) {
 			tasks[LOOK] = 1;
+			showTaskbar = 1;
 		}
 	}
 	if (!tasks[STEAL_CAR]) {
 		if (currentCar) {
 			tasks[STEAL_CAR] = 1;
+			showTaskbar = 1;
 		}
 	}
 	if (!tasks[ENTER_BUILDING]) {
-
+		//showTaskbar = 1;
 	}
 	if (!tasks[JUMP]) {
 		if (Application::IsKeyPressedOnce(' ')) {
 			tasks[JUMP] = 1;
+			showTaskbar = 1;
 		}
+	}
+	if (showTaskbar && showTaskbarFrame == 30) {
+		showTaskbarDelay++;
+	}
+	if (showTaskbarDelay > Application::GetFPS() * 5) {
+		showTaskbar = showTaskbarDelay = 0;
 	}
 }
 
 void OverworldScene::GetInCar() {
-	if (!currentCar) {
-		for (unsigned car = TRUCK1; car < NUM_CAR; car++) {
-			if (meshList[car]) {
-				if (isNear(meshList[car], (float)3.f)) {
+	if (!currentCarObject) {
+		Quad* quad = sceneManager->getQuad(sceneManager->totalObjects);
+		if (quad) {
+			for (auto object : quad->gameObjects) {
+				if (isNearObject(object, 3.f)) {
 					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", Colors::WHITE, 4, 3, 4);
 					if (Application::IsKeyPressedOnce('F')) {
-						currentCar = meshList[car];
-						camera.position.x = currentCar->transform.translate.x;
-						camera.position.z = currentCar->transform.translate.z;
-						if (currentCar->target != carOrigin) {
-							camera.carTarget = currentCar->target;
-							camera.target = currentCar->target;
+						currentCarObject = object;
+						camera.position.x = object->transform->translate.x;
+						camera.position.z = object->transform->translate.z;
+						tasks[STEAL_CAR] = 1;
+						if (object->target != carOrigin) {
+							camera.carTarget = object->target;
+							camera.target = object->target;
 						} else {
 							camera.carTarget = camera.position + carOrigin;
 							camera.target = camera.position + carOrigin;
@@ -510,23 +588,28 @@ void OverworldScene::GetInCar() {
 					}
 				}
 			}
+		} else {
+			Application::log("no quad");
 		}
 	}
-	if (currentCar) {
-		currentCar->prevTransform = currentCar->transform;
-		currentCar->transform.translate.x = camera.position.x;
-		currentCar->transform.translate.z = camera.position.z;
-		camera.position.y = currentCar->transform.translate.y + 5;
 
-		currentCar->transform.rotate = camera.getCarRotation(carOrigin);
-		currentCar->target = camera.carTarget;
+	if (currentCarObject) {
+		float carY = currentCarObject->transform->translate.y;
+		currentCarObject->transform->Translate(camera.position.x, carY, camera.position.z);
+		Application::log("carx: " + std::to_string(currentCarObject->transform->translate.x));
+		Application::log("playerx: " + std::to_string(camera.position.x));
+		camera.position.y = carY + 5;
+
+		currentCarObject->transform->RotateDegree(camera.getCarRotation(carOrigin));
+		currentCarObject->target = camera.carTarget;
+
 		if (Application::IsKeyPressedOnce('F')) {
 			Vector3 view = (camera.target - camera.position).Normalized();
 			Vector3 right = view.Cross(Vector3(0, 1, 0)).Normalized();
 			while (true) {
-				if (isNear(currentCar, 2)) {
-					camera.position.x += - (2 * right.x);
-					camera.position.z += - (2 * right.z);
+				if (isNearObject(currentCarObject, 2)) {
+					camera.position.x += -(2 * right.x);
+					camera.position.z += -(2 * right.z);
 				} else {
 					break;
 				}
@@ -534,57 +617,34 @@ void OverworldScene::GetInCar() {
 			camera.position.y = camera.defaultPosition.y;
 			camera.target.y = camera.defaultPosition.y;
 			camera.orthographic_size = camera.prevFOV;
-			currentCar = nullptr;
+			currentCarObject = nullptr;
 		}
 	}
 }
 
 void OverworldScene::DetectCollision() {
-	sceneManager = new SceneManager(this, camera.bounds);
-	for (unsigned i = 0; i < NUM_GEOMETRY; i++) {
-		if (meshList[i] && meshList[i]->type == Mesh::TYPE::OBJECT) {
-			meshList[i]->prevTransform = meshList[i]->transform;
-			if (i == CAMERA) {
-				Transform cameraTransform;
-				cameraTransform.translate = camera.position;
-				GameObject* cameraObject = new GameObject(meshList[CAMERA], cameraTransform);
-				cameraObject->id = CAMERA;
-				sceneManager->root->gameObjects.push_back(cameraObject);
-				sceneManager->root->count = sceneManager->root->count + 1;
-			} else {
-				GameObject* gameObject = new GameObject(meshList[i], meshList[i]->transform);
-				gameObject->id = i;
-				sceneManager->root->gameObjects.push_back(gameObject);
-				sceneManager->root->count = sceneManager->root->count + 1;
-			}
-		}
-	}
-
-	sceneManager->split(sceneManager->root);
-	Quad* quad = sceneManager->getQuad(CAMERA);
+	Quad* quad = sceneManager->getQuad(sceneManager->totalObjects);
 	if (quad) {
-		for (auto gameObject : quad->gameObjects) {
-			if (!gameObject->camera) {
-				if (isNear(gameObject->mesh)) {
-					//ObjectMoveBack(gameObject->mesh);
-				}
+		for (auto o : quad->gameObjects) {
+			if (isNearObject(o, 2)) {
+				MoveBack();
 			}
 		}
 	}
-	if (!currentCar) {
-		// For each object
-		for (unsigned object = 0; object < NUM_GEOMETRY; object++) {
-			// If object exists and is of type 'OBJECT'
-			if (meshList[object] && meshList[object]->type == Mesh::TYPE::OBJECT) {
-				// If object is near camera, move player back to previous position
-				if (isNear(meshList[object], (meshList[object]->transform.scale.x > 1 ? 2.f : meshList[object]->transform.scale.x * 5))) {
-					MoveBack();
-				}
+}
+
+void OverworldScene::CreateCityObjects() {
+	for (int i = -4; i < 4; i+=2) {
+		for (int j = -4; j < 4; j+=2) {
+			if (i == 0 || j == 0) {
+				continue;
 			}
+			GameObject* object = new GameObject(meshList[STREETLIGHT]);
+			object->transform->Translate(i * 10, 0.5f, j * 10);
+			sceneManager->push(object);
+			object->id = sceneManager->totalObjects;
 		}
 	}
-	delete sceneManager;
-	sceneManager = nullptr;
 }
 
 void OverworldScene::MoveBack() {
@@ -596,7 +656,7 @@ void OverworldScene::MoveBack() {
 }
 
 void OverworldScene::ObjectMoveBack(Mesh* mesh) {
-	mesh->transform = mesh->prevTransform;
+
 }
 
 bool OverworldScene::isNear(Mesh* mesh, const float& distance) {
@@ -604,6 +664,16 @@ bool OverworldScene::isNear(Mesh* mesh, const float& distance) {
 
 		// Get distance between object and camera
 		float d = Math::Square(mesh->transform.translate.x - camera.position.x) + Math::Square(mesh->transform.translate.z - camera.position.z);
+		return (d - (2 * distance)) <= 0;
+	}
+	return false;
+}
+
+bool OverworldScene::isNearObject(GameObject* o, const float& distance) {
+	if (o->mesh->type == Mesh::TYPE::OBJECT) {
+
+		// Get distance between object and camera
+		float d = Math::Square(o->transform->translate.x - camera.position.x) + Math::Square(o->transform->translate.z - camera.position.z);
 		return (d - (2 * distance)) <= 0;
 	}
 	return false;
@@ -636,31 +706,54 @@ void OverworldScene::Render() {
 	projectionStack.LoadMatrix(view);
 
 	RenderSkybox();
-	RenderBuildings();
-	RenderVehicles();
+	RenderObjects();
 	RenderTasks();
+
+	std::stringstream ssX;
+	std::stringstream ssY;
+	std::stringstream ssZ;
+	ssX.precision(3);
+	ssX << "X:" << camera.position.x;
+	ssX.precision(3);
+	ssX << "Y:" << camera.position.y;
+	ssZ.precision(3);
+	ssZ << "Z:" << camera.position.z;
+
+	modelStack.PushMatrix();
+	modelStack.Scale(2, 2, 2);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Colors::RED, 4, 0, 10);
+	modelStack.PopMatrix();
 }
 
 void OverworldScene::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}
+	delete sceneManager;
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 }
 
 void OverworldScene::Reset() {
+	if (sceneManager) {
+		delete sceneManager;
+	}
+	sceneManager = new SceneManager(this, camera.bounds);
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(20, 3, 20), Vector3(5, 3, 1), Vector3(0, 1, 0), (float)100);
+	camera.Init(Vector3(0, 3, 0), Vector3(5, 3, 1), Vector3(0, 1, 0), (float)100);
 	currentCar = nullptr;
+	currentCarObject = nullptr;
 
-	light[0].type = Light::LIGHT_DIRECTIONAL;
-	light[0].position.Set(0, 100, 0);
+	meshList[MOON]->transform.RotateDegree(0);
+	meshList[MOON]->transform.Scale(10.f);
 
-	light[1].type = Light::LIGHT_DIRECTIONAL;
-	light[1].position.Set(0, 100, 0);
+	light[0].type = Light::LIGHT_SPOT;
+	light[0].position.Set(meshList[MOON]->transform.translate.x, meshList[MOON]->transform.translate.y, meshList[MOON]->transform.translate.z);
+
+	light[1].type = Light::LIGHT_SPOT;
+	light[1].position.Set(0, -20, 0);
 
 	meshList[CAR2]->transform.Translate(-22, 1.8f, 65);
 	meshList[CAR2]->transform.RotateDegree(0);
@@ -669,6 +762,9 @@ void OverworldScene::Reset() {
 	meshList[CAR2]->corner[Mesh::CORNER::C2] = meshList[CAR2]->transform.translate + Vector3(1, 0, 1);
 	meshList[CAR2]->corner[Mesh::CORNER::C3] = meshList[CAR2]->transform.translate + Vector3(-1, 0, -1);
 	meshList[CAR2]->corner[Mesh::CORNER::C4] = meshList[CAR2]->transform.translate + Vector3(1, 0, 1);
+	GameObject* car = new GameObject(meshList[CAR2], meshList[CAR2]->transform);
+	sceneManager->push(car);
+	car->id = sceneManager->totalObjects;
 
 	meshList[BUS1]->transform.Translate(0, 4.5f, 55);
 	meshList[BUS1]->transform.RotateDegree(0);
@@ -677,6 +773,9 @@ void OverworldScene::Reset() {
 	meshList[BUS1]->corner[Mesh::CORNER::C2] = meshList[BUS1]->transform.translate + Vector3(1, 0, 1);
 	meshList[BUS1]->corner[Mesh::CORNER::C3] = meshList[BUS1]->transform.translate + Vector3(-1, 0, -1);
 	meshList[BUS1]->corner[Mesh::CORNER::C4] = meshList[BUS1]->transform.translate + Vector3(1, 0, 1);
+	car = new GameObject(meshList[BUS1], meshList[BUS1]->transform);
+	sceneManager->push(car);
+	car->id = sceneManager->totalObjects;
 
 	meshList[CAR1]->transform.Translate(-10, 2.3f, 65);
 	meshList[CAR1]->transform.RotateDegree(0);
@@ -685,10 +784,16 @@ void OverworldScene::Reset() {
 	meshList[CAR1]->corner[Mesh::CORNER::C2] = meshList[CAR1]->transform.translate + Vector3(1, 0, 1);
 	meshList[CAR1]->corner[Mesh::CORNER::C3] = meshList[CAR1]->transform.translate + Vector3(-1, 0, -1);
 	meshList[CAR1]->corner[Mesh::CORNER::C4] = meshList[CAR1]->transform.translate + Vector3(1, 0, 1);
+	car = new GameObject(meshList[CAR1], meshList[CAR1]->transform);
+	sceneManager->push(car);
+	car->id = sceneManager->totalObjects;
 
 	meshList[TRUCK2]->transform.Translate(-40, 5.3f, 65);
 	meshList[TRUCK2]->transform.RotateDegree(0);
 	meshList[TRUCK2]->transform.Scale(0.13);
+	car = new GameObject(meshList[TRUCK2], meshList[TRUCK2]->transform);
+	sceneManager->push(car);
+	car->id = sceneManager->totalObjects;
 
 	meshList[TRUCK1]->transform.Translate(10, 5.1f, 63);
 	meshList[TRUCK1]->transform.RotateDegree(0);
@@ -698,9 +803,22 @@ void OverworldScene::Reset() {
 	meshList[TRUCK1]->corner[Mesh::CORNER::C3] = meshList[TRUCK1]->transform.translate + Vector3(1, 0, 1);
 	meshList[TRUCK1]->corner[Mesh::CORNER::C4] = meshList[TRUCK1]->transform.translate + Vector3(-1, 0, -1);
 
+	car = new GameObject(meshList[TRUCK1], meshList[TRUCK1]->transform);
+	sceneManager->push(car);
+	car->id = sceneManager->totalObjects;
+
+	CreateCityObjects();
+
+	GameObject *cameraObject = new GameObject(meshList[CAMERA]);
+	*cameraObject->transform = camera.position;
+	sceneManager->push(cameraObject);
+	cameraObject->id = sceneManager->totalObjects;
+	Application::log(std::to_string(sceneManager->totalObjects));
+
 	for (unsigned i = 0; i < NUM_TASKS; i++) {
 		tasks[i] = 0;
 	}
-
+	showTaskbar = false;
+	showTaskbarFrame = showTaskbarDelay =0;
 	carOrigin = Vector3(-1, 0, 0);
 }

@@ -12,8 +12,7 @@ SceneShaqler::SceneShaqler() {}
 
 SceneShaqler::~SceneShaqler() {}
 
-void SceneShaqler::Init()
-{
+void SceneShaqler::Init() {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
 	glEnable(GL_DEPTH_TEST);
@@ -80,7 +79,7 @@ void SceneShaqler::Init()
 	//Replace previous code
 	light[0].type = Light::LIGHT_SPOT;
 	light[0].position.Set(4, 20, -34);
-	light[0].color.Set(1, 1, 1);
+	light[0].color.Set(1, 0, 0);
 	light[0].power = 3;
 	light[0].kC = 1.f;
 	light[0].kL = 0.01f;

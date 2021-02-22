@@ -7,6 +7,7 @@ GameObject::GameObject(Mesh* mesh) {
 	this->camera = false;
 	this->type = UNKNOWN;
 	id = 0;
+	this->target = Vector3(-1, 0, 0);
 }
 
 GameObject::GameObject(Mesh* mesh, Transform& transformation) {
@@ -15,6 +16,7 @@ GameObject::GameObject(Mesh* mesh, Transform& transformation) {
 	this->camera = false;
 	this->type = UNKNOWN;
 	id = 0;
+	this->target = Vector3(-1, 0, 0);
 }
 
 GameObject::~GameObject() {

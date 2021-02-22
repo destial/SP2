@@ -23,8 +23,8 @@
 #include "StartMenuScene.h"
 
 GLFWwindow* m_window;
-const unsigned char FPS = 120; // FPS of this game
-const unsigned int frameTime = 1000 / FPS; // time for each frame
+unsigned Application::FPS = 120; // FPS of this game
+unsigned frameTime = 1000 / Application::FPS; // time for each frame
 unsigned Application::m_width;
 unsigned Application::m_height;
 unsigned Application::ui_width;
@@ -107,6 +107,10 @@ unsigned Application::GetWindowHeight() {
 
 unsigned Application::GetUIHeight() {
 	return ui_height;
+}
+
+unsigned Application::GetFPS() {
+	return FPS;
 }
 
 unsigned Application::GetUIWidth() {
@@ -262,10 +266,10 @@ void Application::Run() {
 		// Update and render selected scene
 		if (scene[Application::sceneswitch]) {
 			int previousScene = Application::sceneswitch;
-			scene[Application::sceneswitch]->Update(m_timer.getElapsedTime(), mouse);
-			if (previousScene != Application::sceneswitch) 
+			scene[previousScene]->Update(m_timer.getElapsedTime(), mouse);
+			scene[previousScene]->Render();
+			if (previousScene != Application::sceneswitch)
 				continue;
-			scene[Application::sceneswitch]->Render();
 		} else {
 			Application::sceneswitch = STARTSCENE;
 			continue;
@@ -318,8 +322,8 @@ void Application::Run() {
 			break;
 		default:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::previousscene = Application::sceneswitch;
 				Application::sceneswitch = Application::SCENESHAQ;
-				Application::previousscene = OVERWORLD;
 			}
 			break;
 		}

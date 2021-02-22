@@ -20,12 +20,14 @@ struct Material
     Component kAmbient;
     Component kDiffuse;
     Component kSpecular;
+    float kAlpha;
     float kShininess;
     int size;
     Material() {
         kAmbient.Set(0.1f, 0.1f, 0.1f);
         kDiffuse.Set(0.3f, 0.3f, 0.3f);
         kSpecular.Set(0.6f, 0.6f, 0.6f);
+        kAlpha = 1.f;
         kShininess = 1.f;
         size = 0;
     }
@@ -34,6 +36,7 @@ struct Material
         kAmbient = rhs.kAmbient;
         kDiffuse = rhs.kDiffuse;
         kSpecular = rhs.kSpecular;
+        kAlpha = rhs.kAlpha;
         kShininess = rhs.kShininess;
         size = rhs.size;
     }

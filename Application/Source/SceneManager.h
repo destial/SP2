@@ -8,8 +8,10 @@ public:
 	~SceneManager();
 	Scene* scene;
 	Quad* root;
+	unsigned totalObjects;
+	std::vector<GameObject*> allObjects;
 	void split(Quad* parent);
-	void deleteAll(Quad* parent);
+	void deleteAllQuad(Quad* parent);
 	Quad* getQuad(int gameObjectID);
 	void push(GameObject* gameObject);
 };

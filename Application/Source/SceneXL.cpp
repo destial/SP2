@@ -138,8 +138,11 @@ void SceneXL::Init()
 	meshList[GEO_TEACUPSHEL] = MeshBuilder::GenerateOBJMTL("shelter tea cup",
 		"OBJ//cupshelter.obj", "OBJ//cupshelter.mtl"); //shelter for the tea cup
 
-	meshList[GEO_WHEEL] = MeshBuilder::GenerateOBJMTL("ferris wheel",
-		"OBJ//ferriswheels.obj", "OBJ//ferriswheels.mtl"); //shelter for the tea cup
+	meshList[GEO_WHEEL] = MeshBuilder::GenerateOBJMTL("ferris wheel the wheel",
+		"OBJ//bruhwheelsonly.obj", "OBJ//bruhwheelsonly.mtl");
+
+	meshList[GEO_BODYWHEEL] = MeshBuilder::GenerateOBJMTL("ferris wheel the body",
+		"OBJ//bodywheel.obj", "OBJ//bodywheel.mtl");
 
 	meshList[GEO_BORDERTEXT] = MeshBuilder::GenerateFaceQuad("border for text", WHITE, 1.f, 1.f);
 	meshList[GEO_BORDERTEXT]->textureID = LoadTGA("Image//bordertext.tga");
@@ -394,12 +397,18 @@ void SceneXL::RenderSurroundings()
 	modelStack.PopMatrix(); //tea cup shelter
 
 	modelStack.PushMatrix();
-	modelStack.Translate(100, 0, 30);
-	modelStack.Rotate(RotateAngle, 1, 0, 0);
-	modelStack.Scale(0.3, 0.3, 0.3);
+	modelStack.Translate(100, 48, 30);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(RotateAngle, 0, 0, 1);
+	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_WHEEL], true);
-	modelStack.PopMatrix(); //tea cup shelter
+	modelStack.PopMatrix(); //ferris wheel 
 
+	modelStack.PushMatrix();
+	modelStack.Translate(100, 10, 30);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_BODYWHEEL], true);
+	modelStack.PopMatrix(); //ferris wheel body
 
 }
 

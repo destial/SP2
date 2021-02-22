@@ -31,6 +31,7 @@ class SceneXL : public Scene
 		GEO_ROBOTT,
 		GEO_BOOTH,
 		GEO_WHEEL,
+		GEO_BODYWHEEL,
 		GEO_ROUND,
 		GEO_SWING,
 		GEO_TEACUP,

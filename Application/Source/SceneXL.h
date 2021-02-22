@@ -115,6 +115,8 @@ private:
 
 	void RenderMinigame();
 
+	void RenderSurroundings();
+
 	bool isNear(Mesh* mesh, const float& distance);
 
 public:
@@ -125,6 +127,7 @@ public:
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void Update(double dt, Mouse mouse);
+	virtual void InitGL();
 	virtual void Render();
 	virtual void Exit();
 

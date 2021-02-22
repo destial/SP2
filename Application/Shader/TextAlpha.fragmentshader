@@ -27,6 +27,7 @@ struct Material {
 	vec3 kAmbient;
 	vec3 kDiffuse;
 	vec3 kSpecular;
+	float kAlpha;
 	float kShininess;
 };
 
@@ -67,7 +68,7 @@ void main(){
 	if(colorTextureEnabled == true)
 		materialColor = texture2D( colorTexture, texCoord );
 	else
-		materialColor = vec4( fragmentColor, 1 );
+		materialColor = vec4( fragmentColor, 1);
 	if(lightEnabled == true)
 	{
 		// Vectors
@@ -77,7 +78,7 @@ void main(){
 		
 		color = 
 			// Ambient : simulates indirect lighting
-			materialColor * vec4(material.kAmbient, 1);
+			materialColor * vec4(material.kAmbient, 0.5);
 		
 		for(int i = 0; i < numLights; ++i)
 		{

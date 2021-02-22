@@ -32,7 +32,7 @@ void SceneShaqler::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(3.87, 4, 15.7), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(3.87, 5, 15.7), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -158,8 +158,16 @@ void SceneShaqler::Init()
 
 	meshList[GEO_STATUE] = MeshBuilder::GenerateOBJMTL("Statue", "OBJ//tom1.obj", "OBJ//tom.mtl");
 
+	//meshList[GEO_TABLEANDCHAIR] = MeshBuilder::GenerateOBJMTL("Tableandchair", "OBJ//diningSet.obj", "OBJ//diningSet.mtl"); // Try 1 first
+
 	meshList[GEO_KURENAI] = MeshBuilder::GenerateOBJMTL("Kurenai", "OBJ//Kurenai.obj", "OBJ//Kurenai.mtl"); // Try 1 first
 	// ELSE TRY OBJ
+
+	meshList[GEO_SAMIDAL] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//Samidalwithoutarms.obj", "OBJ//Samidalwithoutarms.mtl");
+
+	meshList[GEO_SAMIDALRIGHTARM] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//Samidalrightarm.obj", "OBJ//Samidalrightarm.mtl");
+
+	meshList[GEO_SAMIDALLEFTARM] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//Samidalleftarm.obj", "OBJ//Samidalleftarm.mtl");
 
 	meshList[GEO_BOOKSTACK] = MeshBuilder::GenerateOBJ("Bookstack", "OBJ//BookStack.obj"); // Try 1 first
 	meshList[GEO_BOOKSTACK]->textureID = LoadTGA("Image//BookStack.tga");
@@ -181,9 +189,6 @@ void SceneShaqler::Init()
 
 	meshList[GEO_BOOK6] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
 	meshList[GEO_BOOK6]->textureID = LoadTGA("Image//greenColour.tga");
-
-	meshList[GEO_BOOK7] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
-	meshList[GEO_BOOK7]->textureID = LoadTGA("Image//1984book.tga");
 
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJ("Book", "OBJ//MartDoor1.obj"); // Try 1 first
 	meshList[GEO_DOOR]->textureID = LoadTGA("Image//RedColour.tga");
@@ -650,6 +655,18 @@ void SceneShaqler::Render()
 	RenderText();
 	RenderNPC();
 	RenderBooks();
+	RenderBooks2();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, -27);
+	RenderBooks2();
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, -13.5);
+	RenderBooks2();
+	modelStack.PopMatrix();
+
 }
 
 void SceneShaqler::RenderWalls() 
@@ -766,6 +783,13 @@ void SceneShaqler::RenderInatimateobjects()
 	modelStack.Scale(1, 1, 1);
 	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();
+
+	/*modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Scale(5, 5, 5);
+	RenderMesh(meshList[GEO_TABLEANDCHAIR], true);
+	modelStack.PopMatrix();*/
+
 }
 
 void SceneShaqler::RenderText()
@@ -836,9 +860,10 @@ void SceneShaqler:: RenderBooks()
 		RenderMesh(meshList[GEO_BOOK], true);
 		modelStack.PopMatrix();
 	}
+}
 
-	// x - 16.5 y 4 z 11.1
-
+void SceneShaqler::RenderBooks2()
+{
 	modelStack.PushMatrix();
 	modelStack.Translate(-16.5, 2.85, 11.5); // 2.85
 	modelStack.Rotate(90, 0, 1, 0);
@@ -861,14 +886,77 @@ void SceneShaqler:: RenderBooks()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-16, 3.2, 14.15); // 2.85
+	modelStack.Translate(-16, 5.5, 10.85); // 2.85
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Rotate(30, 0, 0, 1);
 	modelStack.Scale(1, 1, 1);
-	RenderMesh(meshList[GEO_BOOK], true);
+	RenderMesh(meshList[GEO_BOOK6], true);
 	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 5, 15.1); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK5], true);
+	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 5.25, 15.1); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK2], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 0.5, 15.1); // 2.85
+	/*modelStack.Rotate(90, 0, 1, 0);*/
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK5], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 0.85, 15.1); // 2.85
+	/*modelStack.Rotate(90, 0, 1, 0);*/
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK2], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 7.35, 11.5); // 2.85
+	/*modelStack.Rotate(90, 0, 1, 0);*/
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK6], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 7.70, 11.5); // 2.85
+	/*modelStack.Rotate(90, 0, 1, 0);*/
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK4], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 7.35, 11.5); // 2.85
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK6], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.8, 1.05, 12.45); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(-40, 0, 0, 1);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK4], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.8, 7.95, 16); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(-40, 0, 0, 1);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK6], true);
+	modelStack.PopMatrix();
 }
 
 void SceneShaqler::Book()
@@ -895,6 +983,39 @@ void SceneShaqler::RenderNPC()
 	modelStack.Scale(3.5, 3.5, 3.5);
 	RenderMesh(meshList[GEO_KURENAI], true);
 	modelStack.PopMatrix();
+
+	// use hierach modelling
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-9, 3.5, -13.8);
+	modelStack.Scale(0.25, 0.25, 0.25);
+	RenderMesh(meshList[GEO_SPHERE], true);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0.32, -13, 1);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(16, 16, 16);
+	RenderMesh(meshList[GEO_SAMIDAL], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0.32, 6, -3);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Rotate(40, 0, 0, 1);
+	modelStack.Scale(21, 18, 18);
+	RenderMesh(meshList[GEO_SAMIDALRIGHTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0.32, 6, 5);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Rotate(-40, 0, 0, 1);
+	modelStack.Scale(21, 18, 18);
+	RenderMesh(meshList[GEO_SAMIDALLEFTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PopMatrix();
+
 }
 
 void SceneShaqler::Exit() {

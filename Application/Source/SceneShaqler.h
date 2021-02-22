@@ -21,6 +21,7 @@ class SceneShaqler : public Scene
 		GEO_DESKCORNER,
 		GEO_COMPUTERSCREEN,
 		GEO_KEYBOARD,
+		GEO_TABLEANDCHAIR,
 		GEO_STATUE,
 		GEO_BOOKSTACK,
 		GEO_BOOK,
@@ -35,6 +36,9 @@ class SceneShaqler : public Scene
 		GEO_CUBE,
 		GEO_BOOKCASE,
 		GEO_KURENAI,
+		GEO_SAMIDAL,
+		GEO_SAMIDALLEFTARM,
+		GEO_SAMIDALRIGHTARM,
 		GEO_UI,
 		GEO_TRASHCAN,
 		GEO_DOOR,
@@ -149,6 +153,7 @@ private:
 	void RenderText();
 	void RenderNPC();
 	void RenderBooks();
+	void RenderBooks2();
 	void Book();
 
 

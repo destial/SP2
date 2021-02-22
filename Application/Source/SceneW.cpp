@@ -622,20 +622,17 @@ void SceneW::RenderUI() {
 
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
-	if (w != 800 && h != 600)
+	/*if (w != 800 && h != 600)
 	{
 		RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 93.75);
 		RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 32.5);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 31.5);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 30.5);
-	}
-	else {
-		RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75);
-		RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17);
-	}
-	
+	}*/
+	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);//34.2
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);//32.4
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);//30.6
 }
 
 void SceneW::RenderRoom() {

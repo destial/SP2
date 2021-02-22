@@ -324,12 +324,12 @@ void StartMenuScene::Update(double dt, Mouse mouse) {
 		float posX = x / w * Application::GetUIWidth(); //convert (0,800) to (0,80)
 		float posY = (1.f - y / h) * Application::GetUIHeight(); //convert (600,0) to (0,60)
 		std::cout << "posX:" << posX << " , posY:" << posY << std::endl;
-		if (posX > 32 && posX < 48 && posY > 31 && posY < 39)
+		if (posX > 32 * w / 800 && posX < 48 * w / 800 && posY > 31 * h / 600 && posY < 39 * h / 600)
 		{
 			std::cout << "Hit!" << std::endl;
 			Application::sceneswitch = Application::OVERWORLD;
 		}
-		else if (posX > 32 && posX < 48 && posY > 21 && posY < 29)
+		else if (posX > 32 * w / 800 && posX < 48 * w / 800 && posY > 21 * h / 600 && posY < 29 * h / 600)
 		{
 			std::cout << "Hit!" << std::endl;
 			Application::quit = 1;
@@ -465,10 +465,10 @@ void StartMenuScene::Render()
 	RenderSkybox();
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
-	RenderMeshOnScreen(meshList[BUTTON], 15, 40 * w/800, 35 * h/600);
-	RenderMeshOnScreen(meshList[BUTTON], 15, 40, 25);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Start", BLUE, 3, 8.75, 8.5);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", BLUE, 3, 9, 6);
+	RenderMeshOnScreen(meshList[BUTTON], 15, 40 * w / 800, 35 * h / 600);
+	RenderMeshOnScreen(meshList[BUTTON], 15, 40*w/800, 25*h/600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Start", BLUE, 3, 9 * w / 750, 8.5 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", BLUE, 3, 9 * w / 750, 6 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 1, 0, 0);
 }
 

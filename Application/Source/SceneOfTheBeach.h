@@ -1,5 +1,5 @@
-#ifndef SCENE_BEACH_H
-#define SCENE_BEACH_H
+#ifndef SCENE_OFTHEBEACH_H
+#define SCENE_OFTHEBEACH_H
 
 #include "Scene.h"
 #include "Mesh.h"
@@ -7,7 +7,7 @@
 #include "Light.h"
 #include "Camera3.h"
 
-class SceneBeach : public Scene
+class SceneOfTheBeach : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
@@ -90,16 +90,14 @@ private:
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
 public:
 
-	SceneBeach();
-	~SceneBeach();
+	SceneOfTheBeach();
+	~SceneOfTheBeach();
 
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void Update(double dt, Mouse mouse);
 	virtual void Render();
 	virtual void Exit();
-
-	void RenderQuad();
 
 	Color RED = Color(1.f, 0.f, 0.f);
 	Color GREEN = Color(0.f, 1.f, 0.f);

@@ -1,4 +1,4 @@
-#include "SceneBeach.h"
+#include "SceneOfTheBeach.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -8,11 +8,11 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneBeach::SceneBeach() {}
+SceneOfTheBeach::SceneOfTheBeach() {}
 
-SceneBeach::~SceneBeach() {}
+SceneOfTheBeach::~SceneOfTheBeach() {}
 
-void SceneBeach::Init()
+void SceneOfTheBeach::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
@@ -32,7 +32,7 @@ void SceneBeach::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 10, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -75,10 +75,11 @@ void SceneBeach::Init()
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
 	glUseProgram(m_programID);
 	// Make sure you pass uniform parameters after glUseProgram()
+	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 
 	//Replace previous code
-	light[0].type = Light::LIGHT_POINT;
-	light[0].position.Set(0, 0, 0);
+	light[0].type = Light::LIGHT_SPOT;
+	light[0].position.Set(4, 20, -34);
 	light[0].color.Set(1, 1, 1);
 	light[0].power = 1;
 	light[0].kC = 1.f;
@@ -90,7 +91,7 @@ void SceneBeach::Init()
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
 
 	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(0, 60, 0);
+	light[1].position.Set(-53, 20, -31.6);
 	light[1].color.Set(1, 1, 1);
 	light[1].power = 1;
 	light[1].kC = 1.f;
@@ -123,40 +124,41 @@ void SceneBeach::Init()
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 50.1f);
+
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 1.f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//beachSand.tga");
 
-	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 50.1f);
+	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 1.f);
 	meshList[GEO_QUAD2]->textureID = LoadTGA("Image//oceanWater.tga");
 
-	meshList[GEO_QUAD3] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 50.1f);
+	meshList[GEO_QUAD3] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 1.f);
 	meshList[GEO_QUAD3]->textureID = LoadTGA("Image//RoadTopDown.tga");
 
-	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 50.1f);
-	meshList[GEO_FRONT]->textureID = LoadTGA("Image//OceanBack.tga");
+	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
+	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
-	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", Color(1, 1, 1), 50.1f);
-	meshList[GEO_BACK]->textureID = LoadTGA("Image//OceanFront.tga");
+	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", WHITE, 1.f, 1.f);
+	meshList[GEO_BACK]->textureID = LoadTGA("Image//back-space.tga");
 
-	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", Color(1, 1, 1), 50.1f);
-	meshList[GEO_TOP]->textureID = LoadTGA("Image//OceanTop.tga");
+	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", WHITE, 1.f, 1.f);
+	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right-space.tga");
 
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", Color(1, 1, 1), 50.1f);
-	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//OceanBottom.tga");
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", WHITE, 1.f, 1.f);
+	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left-space.tga");
 
-	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 50.1f);
-	meshList[GEO_LEFT]->textureID = LoadTGA("Image//OceanLeft.tga");
+	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", WHITE, 1.f, 1.f);
+	meshList[GEO_TOP]->textureID = LoadTGA("Image//top-space.tga");
 
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 50.1f);
-	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//OceanRight.tga");
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", WHITE, 1.f, 1.f);
+	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
-
 }
 
-void SceneBeach::RenderMesh(Mesh* mesh, bool enableLight)
+void SceneOfTheBeach::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -198,7 +200,7 @@ void SceneBeach::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void SceneBeach::RenderText(Mesh* mesh, std::string text, Color color)
+void SceneOfTheBeach::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -225,7 +227,7 @@ void SceneBeach::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneBeach::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void SceneOfTheBeach::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -267,7 +269,7 @@ void SceneBeach::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, f
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneBeach::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
+void SceneOfTheBeach::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
@@ -300,7 +302,7 @@ void SceneBeach::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneBeach::Update(double dt, Mouse mouse) {
+void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 
@@ -313,78 +315,63 @@ void SceneBeach::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
-	static const float LSPEED = 40.f;
-	if (Application::IsKeyPressed('I'))
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('P'))
-		light[0].position.y += (float)(LSPEED * dt);
-
 	camera.Update(dt, mouse);
 }
 
-void SceneBeach::Update(double dt)
+void SceneOfTheBeach::Update(double dt)
 {
 	Mouse mouse;
 	Update(dt, mouse);
 }
 
-void SceneBeach::RenderSkybox() {
+void SceneOfTheBeach::RenderSkybox() {
+	float translate = 50;
+	float scaleVal = (translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -50, 0);
-	//modelStack.Scale(5, 5, 5);
+	modelStack.Translate(camera.position.x, camera.position.y + translate, camera.position.z);
+	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Rotate(270, 0, 0, 1);
+	modelStack.Scale(scaleVal, scaleVal, scaleVal);
+	RenderMesh(meshList[GEO_TOP], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(camera.position.x, camera.position.y - translate, camera.position.z);
+	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, -50);
-	modelStack.Rotate(90, 1, 0, 0);
-	//modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_BACK], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 50);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Rotate(90, 1, 0, 0);
-	//modelStack.Scale(5, 5, 5);
+	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z - translate);
+	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_FRONT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-50, 0, 0);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Rotate(90, 1, 0, 0);
-	//modelStack.Scale(5, 5, 5);
+	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z + translate);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(scaleVal, scaleVal, scaleVal);
+	RenderMesh(meshList[GEO_BACK], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(camera.position.x + translate, camera.position.y - 0.4, camera.position.z);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(50, 0, 0);
+	modelStack.Translate(camera.position.x - translate, camera.position.y - 0.4, camera.position.z);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Rotate(180, 0, 0, 1);
-	//modelStack.Scale(5, 5, 5);
+	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_LEFT], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 50, 0);
-	modelStack.Rotate(180, 1, 0, 0);
-	modelStack.Rotate(-90, 0, 1, 0);
-	//modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
 }
 
-void SceneBeach::Render()
+void SceneOfTheBeach::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -394,15 +381,13 @@ void SceneBeach::Render()
 		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
 
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_cameraspace.x);
-	}
-	else if (light[0].type == Light::LIGHT_SPOT) {
+	} else if (light[0].type == Light::LIGHT_SPOT) {
 		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
 
 		Vector3 spotDirection_cameraspace = viewStack.Top() * light[0].spotDirection;
 		glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	}
-	else {
+	} else {
 		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
 	}
@@ -411,15 +396,13 @@ void SceneBeach::Render()
 		Vector3 lightDir(light[1].position.x, light[1].position.y, light[1].position.z);
 		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
 		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
-	}
-	else if (light[1].type == Light::LIGHT_SPOT) {
+	} else if (light[1].type == Light::LIGHT_SPOT) {
 		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
 		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
 
 		Vector3 spotDirection_cameraspace = viewStack.Top() * light[1].spotDirection;
 		glUniform3fv(m_parameters[U_LIGHT1_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	}
-	else {
+	} else {
 		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
 		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
 	}
@@ -435,30 +418,32 @@ void SceneBeach::Render()
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
-
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
+	RenderSkybox();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
-	modelStack.Scale(4.5, 4.5, 4.5);
-	RenderSkybox();
+	modelStack.Translate(-30, -2, 0);
+	modelStack.Scale(50, 50, 50);
+	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 
-	RenderQuad();
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -2.02, 0);
+	modelStack.Scale(100, 50, 50);
+	RenderMesh(meshList[GEO_QUAD2], true);
+	modelStack.PopMatrix();
 
 	std::stringstream ssX;
 	std::stringstream ssY;
 	std::stringstream ssZ;
-
 	ssX.precision(3);
 	ssX << "X:" << camera.position.x;
 	ssX.precision(3);
 	ssX << "Y:" << camera.position.y;
 	ssZ.precision(3);
 	ssZ << "Z:" << camera.position.z;
-
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
@@ -467,27 +452,7 @@ void SceneBeach::Render()
 
 }
 
-void SceneBeach::RenderQuad()
-{
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_QUAD], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 0.02, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_QUAD3], true);
-	modelStack.PopMatrix();
-
-
-
-
-}
-
-
-void SceneBeach::Exit() {
+void SceneOfTheBeach::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}

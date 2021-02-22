@@ -155,8 +155,11 @@ void SceneW::Init() {
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Door", "OBJ//doorway.obj", "OBJ//doorway.mtl");
 	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
 	meshList[BOX] = MeshBuilder::GenerateOBJMTL("Box", "OBJ//cardboardBoxClosed.obj", "OBJ//cardboardBoxClosed.mtl");
-	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall", 1, 1, 1);
-
+	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall",YELLOW, 1, 1, 1);
+	meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
+	meshList[MWALL]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+	meshList[MWALL]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+	meshList[MWALL]->material.kShininess = .3f;
 	meshList[CHESTTOP] = MeshBuilder::GenerateOBJ("Chest Top", "OBJ//chestTopPart.obj"); // Try 1 first
 	meshList[CHESTTOP]->textureID = LoadTGA("Image//ChestTexture.tga");
 
@@ -165,16 +168,13 @@ void SceneW::Init() {
 
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::CAMERA;
-	/*meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
-	meshList[MWALL]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[MWALL]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[MWALL]->material.kShininess = .3f;*/
 
 	rotateChest = 0;
 	rotateChest2 = 0;
 	rotateChest3 = 0;
 	rotateChest4 = 0;
 	rotateChest5 = 0;
+	countChest = 0;
 
 	Chestlimit = false;
 	Chestlimit2 = false;
@@ -375,6 +375,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = true;
 				Chestlimit5 = true;
+				countChest = 1;
 			}
 		}
 
@@ -388,6 +389,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = false;
 				Chestlimit4 = true;
 				Chestlimit5 = true;
+				countChest = 2;
 			}
 		}
 
@@ -401,6 +403,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = false;
 				Chestlimit5 = true;
+				countChest = 3;
 			}
 
 		}
@@ -415,6 +418,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = true;
 				Chestlimit5 = false;
+				countChest = 4;
 			}
 
 		}
@@ -429,6 +433,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = true;
 				Chestlimit5 = true;
+				countChest = 5;
 			}
 
 		}
@@ -636,17 +641,10 @@ void SceneW::RenderUI() {
 
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
-	/*if (w != 800 && h != 600)
-	{
-		RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 93.75);
-		RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 32.5);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 31.5);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 30.5);
-	}*/
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);//34.2
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);//32.4
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);//30.6
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);
 }
 
 void SceneW::RenderRoom() {
@@ -660,7 +658,7 @@ void SceneW::RenderRoom() {
 
 	// Door
 	modelStack.PushMatrix();
-	modelStack.Translate(-51, 0, -47);
+	modelStack.Translate(-51, 0, -47.5);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_DOOR], true);

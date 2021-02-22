@@ -20,4 +20,5 @@ public:
 	int id;
 	bool camera;
 	int type;
+
 };

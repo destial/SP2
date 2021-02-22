@@ -16,6 +16,10 @@ void SceneRyan::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
 
+		//shaders
+	glGenVertexArrays(1, &m_vertexArrayID);
+	glBindVertexArray(m_vertexArrayID);
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -26,18 +30,9 @@ void SceneRyan::Init()
 	m_parameters[U_MATERIAL_AMBIENT] = glGetUniformLocation(m_programID, "material.kAmbient");
 	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
 	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
+
+
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
-	Mesh::SetMaterialLoc(m_parameters[U_MATERIAL_AMBIENT], m_parameters[U_MATERIAL_DIFFUSE], m_parameters[U_MATERIAL_SPECULAR], m_parameters[U_MATERIAL_SHININESS]);
-
-	Mtx44 projection;
-	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
-	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 10, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0),(float) 50);
-
-	//shaders
-	glGenVertexArrays(1, &m_vertexArrayID);
-	glBindVertexArray(m_vertexArrayID);
-
 	// Get a handle for our "textColor" uniform
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
@@ -54,11 +49,13 @@ void SceneRyan::Init()
 	m_parameters[U_LIGHT0_KL] = glGetUniformLocation(m_programID, "lights[0].kL");
 	m_parameters[U_LIGHT0_KQ] = glGetUniformLocation(m_programID, "lights[0].kQ");
 	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
+
 	m_parameters[U_LIGHT0_TYPE] = glGetUniformLocation(m_programID, "lights[0].type");
 	m_parameters[U_LIGHT0_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[0].spotDirection");
 	m_parameters[U_LIGHT0_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[0].cosCutoff");
 	m_parameters[U_LIGHT0_COSINNER] = glGetUniformLocation(m_programID, "lights[0].cosInner");
 	m_parameters[U_LIGHT0_EXPONENT] = glGetUniformLocation(m_programID, "lights[0].exponent");
+
 	m_parameters[U_LIGHT1_POSITION] = glGetUniformLocation(m_programID, "lights[1].position_cameraspace");
 	m_parameters[U_LIGHT1_COLOR] = glGetUniformLocation(m_programID, "lights[1].color");
 	m_parameters[U_LIGHT1_POWER] = glGetUniformLocation(m_programID, "lights[1].power");
@@ -73,7 +70,12 @@ void SceneRyan::Init()
 	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
 	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
-	glUseProgram(m_programID);
+
+	Mtx44 projection;
+	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
+	projectionStack.LoadMatrix(projection);
+	camera.Init(Vector3(5, 10, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+
 	// Make sure you pass uniform parameters after glUseProgram()
 
 	//Replace previous code
@@ -100,7 +102,8 @@ void SceneRyan::Init()
 	light[1].cosInner = cos(Math::DegreeToRadian(30));
 	light[1].exponent = 3.f;
 	light[1].spotDirection.Set(0.f, 1.f, 0.f);
-
+	glUseProgram(m_programID);
+	Mesh::SetMaterialLoc(m_parameters[U_MATERIAL_AMBIENT], m_parameters[U_MATERIAL_DIFFUSE], m_parameters[U_MATERIAL_SPECULAR], m_parameters[U_MATERIAL_SHININESS]);
 	glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &light[0].color.r);
 	glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
@@ -158,6 +161,8 @@ void SceneRyan::Init()
 	meshList[GEO_BEACH]->material.kDiffuse.Set(0.900, 0.843, 0.000);
 	meshList[GEO_BEACH]->material.kSpecular.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_BEACH]->material.kShininess = 0.6f;
+
+	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 1, 1), 36, 36, 1);
 
 	rotate = true;
 	sharkattack = false;
@@ -520,9 +525,16 @@ void SceneRyan::Render()
 	);
 	modelStack.LoadIdentity();
 
+
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
+	modelStack.Scale(4.5, 4.5, 4.5);
+	RenderSkybox();
+	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
@@ -559,11 +571,7 @@ void SceneRyan::Render()
 
 
 
-	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
-	modelStack.Scale(4.5, 4.5, 4.5);
-	RenderSkybox();
-	modelStack.PopMatrix();
+
 
 	std::stringstream ssX;
 	std::stringstream ssY;
@@ -614,6 +622,23 @@ void SceneRyan::Minigun()
 		break;
 	}
 }
+
+//void SceneRyan::Bullets() {
+//	for (int i = 0; i < 256; i++) {
+//		if (bullet_array[i] != nullptr) {
+//			modelStack.PushMatrix();
+//			Vector3 pos = bullet_array[i]->getCurrPos();
+//
+//			modelStack.Translate(pos.x, pos.y, pos.z);
+//			modelStack.Rotate(bullet_array[i]->GetDirection(), 0, 1, 0);
+//			modelStack.Rotate(90, 1, 0, 0);
+//			modelStack.Scale(0.05f, 0.05f, 0.05f);
+//			RenderMesh(meshList[GEO_BULLET], true);
+//
+//			modelStack.PopMatrix();
+//		}
+//	}
+//}
 
 void SceneRyan::Exit() {
 	for (auto mesh : meshList) {

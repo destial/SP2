@@ -6,6 +6,7 @@
 #include "MatrixStack.h"
 #include "Light.h"
 #include "Camera3.h"
+#include "GameObject.h"
 
 class SceneRyan : public Scene
 {
@@ -23,6 +24,7 @@ class SceneRyan : public Scene
 		GEO_SHARKBTM,
 		GEO_BEACH,
 		GEO_MINIGUN,
+		GEO_BULLET,
 		GEO_TEXT,
 		NUM_GEOMETRY,
 	};
@@ -35,6 +37,7 @@ class SceneRyan : public Scene
 		U_MATERIAL_AMBIENT,
 		U_MATERIAL_DIFFUSE,
 		U_MATERIAL_SPECULAR,
+		U_MATERIAL_ALPHA,
 		U_MATERIAL_SHININESS,
 		U_LIGHT0_POSITION,
 		U_LIGHT0_COLOR,
@@ -102,6 +105,8 @@ private:
 	Mesh* MinigunHold;
 	Vector3 GunOrigin;
 	void Minigun();
+	//Array of bullets
+	void Bullets();
 	//NOT FOR MY SCENE
 
 

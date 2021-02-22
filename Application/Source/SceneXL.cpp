@@ -163,6 +163,8 @@ void SceneXL::Init()
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
+	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("lightball", Color(0, 0, 0), 12, 12, 1);
+
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
@@ -216,9 +218,13 @@ void SceneXL::Init()
 	meshList[GEO_ROBOT]->transform.Translate(-19.3, 0, -43.6); //robot
 
 	meshList[GEO_BOOTH] = MeshBuilder::GenerateOBJMTL("ticket booth",
-		"OBJ//ticketboothlmao.obj", "OBJ//ticketboothlmao.mtl");
+		"OBJ//ticketboothlmao.obj", "OBJ//ticketboothlmao.mtl"); //ticket booth
 
+	meshList[GEO_SWING] = MeshBuilder::GenerateOBJMTL("swing",
+		"OBJ//swingride.obj", "OBJ//swingride.mtl"); //swing ride
 
+	//meshList[GEO_TOWER] = MeshBuilder::GenerateOBJMTL("ferris wheel",
+	//	"OBJ//bruhcarnival.obj", "OBJ//bruhcarnival.mtl"); //ferris wheel
 
 	meshList[GEO_BORDERTEXT] = MeshBuilder::GenerateFaceQuad("border for text", WHITE, 1.f, 1.f);
 	meshList[GEO_BORDERTEXT]->textureID = LoadTGA("Image//bordertext.tga");
@@ -426,7 +432,7 @@ void SceneXL::RenderMinigame()
 
 void SceneXL::Update(double dt, Mouse mouse) {
 
-	RotateAngle += (float)(200 * dt);
+	RotateAngle += (float)(50 * dt);
 
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -439,6 +445,20 @@ void SceneXL::Update(double dt, Mouse mouse) {
 
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
+
+	static const float LSPEED = 40.f;
+	if (Application::IsKeyPressed('I'))
+		light[0].position.z -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('K'))
+		light[0].position.z += (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('J'))
+		light[0].position.x -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('L'))
+		light[0].position.x += (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('O'))
+		light[0].position.y -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('P'))
+		light[0].position.y += (float)(LSPEED * dt);
 
 	camera.Update(dt, mouse);
 
@@ -590,6 +610,11 @@ void SceneXL::Render()
 	modelStack.PopMatrix(); //axis
 
 	modelStack.PushMatrix();
+	modelStack.Translate(light[0].position.x, light[0].position.y, light[0].position.z);
+	RenderMesh(meshList[GEO_LIGHTBALL], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
 	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
 	modelStack.Scale(4.5, 4.5, 4.5);
 	RenderSkybox();
@@ -614,6 +639,13 @@ void SceneXL::Render()
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderMesh(meshList[GEO_BOOTH], true);
 	modelStack.PopMatrix(); //ticket booth
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, 50);
+	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_SWING], true);
+	modelStack.PopMatrix(); //swing ride
 
 	DetectRobot();
 	RenderRobot();

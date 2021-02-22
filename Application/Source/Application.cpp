@@ -14,6 +14,8 @@
 #include "TemplateScene.h"
 #include "SceneShaqeel.h"
 #include "SceneW.h"
+#include "StartMenuScene.h"
+#include "SceneBeach.h"
 #include "SceneRyan.h"
 #include "OverworldScene.h"
 #include "SceneShaqler.h"
@@ -241,6 +243,7 @@ void Application::Run() {
 	// Initialize and create scenes
 	scene[SCENESHAQ] = new SceneShaqeel();
 	scene[SCENEWALTON] = new SceneW();
+	scene[SCENEBEACH] = new SceneBeach();
 	scene[SCENERYAN] = new SceneRyan();
 	scene[SCENEXL] = new SceneXL();
 	scene[OVERWORLD] = new OverworldScene();
@@ -284,8 +287,14 @@ void Application::Run() {
 			break;
 		case Application::SCENEWALTON:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::SCENERYAN;
+				Application::sceneswitch = Application::SCENEBEACH;
 				Application::previousscene = SCENEWALTON;
+			}
+			break;
+		case Application::SCENEBEACH:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::SCENERYAN;
+				Application::previousscene = SCENEBEACH;
 			}
 			break;
 		case Application::SCENERYAN:

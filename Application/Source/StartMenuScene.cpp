@@ -463,7 +463,9 @@ void StartMenuScene::Render()
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
 	RenderSkybox();
-	RenderMeshOnScreen(meshList[BUTTON], 15, 40, 35);
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
+	RenderMeshOnScreen(meshList[BUTTON], 15, 40 * w/800, 35 * h/600);
 	RenderMeshOnScreen(meshList[BUTTON], 15, 40, 25);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Start", BLUE, 3, 8.75, 8.5);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", BLUE, 3, 9, 6);

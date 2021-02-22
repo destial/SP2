@@ -36,6 +36,9 @@ class OverworldScene : public Scene {
 		CAR2,
 		BUS1,
 		COP,
+
+		ROBO,
+
 		NUM_CAR,
 
 		CAMERA,

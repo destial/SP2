@@ -94,6 +94,8 @@ private:
 	bool Chestlimit4;
 	bool Chestlimit5;
 
+	int rotateB;
+
 	float rotateChest;
 	float rotateChest2;
 	float rotateChest3;

@@ -174,7 +174,12 @@ void SceneW::Init()
 	rotateChest3 = 0;
 	rotateChest4 = 0;
 	rotateChest5 = 0;
+
 	Chestlimit = false;
+	Chestlimit2 = false;
+	Chestlimit3 = false;
+	Chestlimit4 = false;
+	Chestlimit5 = false;
 
 }
 
@@ -350,39 +355,72 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('E'))
 	{
-		// chest 1
-		if (/*camera.position.x <= -43 && camera.position.x >= -50 && */camera.position.z <= 48 && camera.position.z >= 42)
-		{
-			Chestlimit = false;
-		}
-
 		if (Chestlimit == false)
 		{
 			rotateChest -= (float)(40 * dt);
-
+			if (rotateChest <= -70)
+			{
+				Chestlimit = true;
+				Chestlimit2 = false;
+				Chestlimit3 = true;
+				Chestlimit4 = true;
+				Chestlimit5 = true;
+			}
 		}
 
-		if (rotateChest <= -70)
-		{
-			Chestlimit = true;
-		}
-
-		// chest 2
-		if (/*camera.position.x <= -43 && camera.position.x >= -50 && */camera.position.z <= 48 && camera.position.z >= 42)
-		{
-			Chestlimit2 = false;
-
-		}
-
-		if (Chestlimit2 == false)
+		else if (Chestlimit2 == false)
 		{
 			rotateChest2 -= (float)(40 * dt);
+			if (rotateChest2 <= -70)
+			{
+				Chestlimit = true;
+				Chestlimit2 = true;
+				Chestlimit3 = false;
+				Chestlimit4 = true;
+				Chestlimit5 = true;
+			}
+		}
+
+		else if (Chestlimit3 == false)
+		{
+			rotateChest3 -= (float)(40 * dt);
+			if (rotateChest3 <= -70)
+			{
+				Chestlimit = true;
+				Chestlimit2 = true;
+				Chestlimit3 = true;
+				Chestlimit4 = false;
+				Chestlimit5 = true;
+			}
 
 		}
 
-		if (rotateChest2 <= -70)
+		else if (Chestlimit4 == false)
 		{
-			Chestlimit2 = true;
+			rotateChest4 -= (float)(40 * dt);
+			if (rotateChest4 <= -70)
+			{
+				Chestlimit = true;
+				Chestlimit2 = true;
+				Chestlimit3 = true;
+				Chestlimit4 = true;
+				Chestlimit5 = false;
+			}
+
+		}
+
+		else if (Chestlimit5 == false)
+		{
+			rotateChest5 -= (float)(40 * dt);
+			if (rotateChest5 <= -70)
+			{
+				Chestlimit = true;
+				Chestlimit2 = true;
+				Chestlimit3 = true;
+				Chestlimit4 = true;
+				Chestlimit5 = true;
+			}
+
 		}
 	}
 
@@ -694,7 +732,7 @@ void SceneW::RenderBoxes() {
 	modelStack.PushMatrix();
 	modelStack.Translate(-24, 1.4, 35);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Rotate(rotateChest, 1, 0, 0);
+	modelStack.Rotate(rotateChest3, 1, 0, 0);
 	modelStack.Scale(1, 1, 1);
 	RenderMesh(meshList[CHESTTOP], true);
 	modelStack.PopMatrix();
@@ -715,7 +753,7 @@ void SceneW::RenderBoxes() {
 
 	modelStack.PushMatrix();
 	modelStack.Translate(33.5, 1.4, -35);
-	modelStack.Rotate(rotateChest, 1, 0, 0);
+	modelStack.Rotate(rotateChest4, 1, 0, 0);
 	modelStack.Scale(1, 1, 1);
 	RenderMesh(meshList[CHESTTOP], true);
 	modelStack.PopMatrix();
@@ -736,7 +774,7 @@ void SceneW::RenderBoxes() {
 
 	modelStack.PushMatrix();
 	modelStack.Translate(20, 1.4, -5);
-	modelStack.Rotate(rotateChest, 1, 0, 0);
+	modelStack.Rotate(rotateChest5, 1, 0, 0);
 	modelStack.Scale(1, 1, 1);
 	RenderMesh(meshList[CHESTTOP], true);
 	modelStack.PopMatrix();

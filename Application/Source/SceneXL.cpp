@@ -138,6 +138,9 @@ void SceneXL::Init()
 	meshList[GEO_TEACUPSHEL] = MeshBuilder::GenerateOBJMTL("shelter tea cup",
 		"OBJ//cupshelter.obj", "OBJ//cupshelter.mtl"); //shelter for the tea cup
 
+	meshList[GEO_WHEEL] = MeshBuilder::GenerateOBJMTL("ferris wheel",
+		"OBJ//ferriswheels.obj", "OBJ//ferriswheels.mtl"); //shelter for the tea cup
+
 	meshList[GEO_BORDERTEXT] = MeshBuilder::GenerateFaceQuad("border for text", WHITE, 1.f, 1.f);
 	meshList[GEO_BORDERTEXT]->textureID = LoadTGA("Image//bordertext.tga");
 
@@ -341,6 +344,63 @@ void SceneXL::RenderMinigame()
 		RenderMesh(meshList[GEO_DUMMY], true);
 		modelStack.PopMatrix();
 	} //10 target dummies for the minigame/target shooting
+}
+
+void SceneXL::RenderSurroundings()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(-1.07, 1, -50);
+	//modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_RANGE], true);
+	modelStack.PopMatrix(); //shooting range
+
+	modelStack.PushMatrix();
+	modelStack.Translate(10, 0, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_BOOTH], true);
+	modelStack.PopMatrix(); //ticket booth
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, 50);
+	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_SWING], true);
+	modelStack.PopMatrix(); //swing ride
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, -30);
+	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Scale(0.1, 0.1, 0.1);
+	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Translate(50, 0, 0);
+	RenderMesh(meshList[GEO_TEACUP], true);
+	modelStack.PopMatrix(); //tea cup
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, -30);
+	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Scale(0.1, 0.1, 0.1);
+	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Translate(180, 0, 0);
+	RenderMesh(meshList[GEO_TEACUP], true);
+	modelStack.PopMatrix(); //tea cup 2
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, -30);
+	//modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Scale(0.3, 0.3, 0.3);
+	RenderMesh(meshList[GEO_TEACUPSHEL], true);
+	modelStack.PopMatrix(); //tea cup shelter
+
+	modelStack.PushMatrix();
+	modelStack.Translate(100, 0, 30);
+	modelStack.Rotate(RotateAngle, 1, 0, 0);
+	modelStack.Scale(0.3, 0.3, 0.3);
+	RenderMesh(meshList[GEO_WHEEL], true);
+	modelStack.PopMatrix(); //tea cup shelter
+
+
 }
 
 void SceneXL::Update(double dt, Mouse mouse) {
@@ -643,43 +703,7 @@ void SceneXL::Render()
 	RenderMesh(meshList[GEO_FLOORFUTURE], false);
 	modelStack.PopMatrix(); //floor 
 
-	modelStack.PushMatrix();
-	modelStack.Translate(-1.07, 1, -50);
-	//modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_RANGE], true);
-	modelStack.PopMatrix(); //shooting range
-
-	modelStack.PushMatrix();
-	modelStack.Translate(10,0,0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BOOTH], true);
-	modelStack.PopMatrix(); //ticket booth
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-100, 0, 50);
-	modelStack.Rotate(RotateAngle, 0, 1, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_SWING], true);
-	modelStack.PopMatrix(); //swing ride
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-100, 0, -30);
-	modelStack.Rotate(RotateAngle, 0, 1, 0);
-	modelStack.Scale(0.1, 0.1, 0.1);
-	modelStack.Rotate(RotateAngle, 0, 1, 0);
-	modelStack.Translate(50, 0, 0);
-	RenderMesh(meshList[GEO_TEACUP], true);
-	modelStack.PopMatrix(); //tea cup
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-100, 0, -30);
-	//modelStack.Rotate(RotateAngle, 0, 1, 0);
-	modelStack.Scale(0.3, 0.3, 0.3);
-	RenderMesh(meshList[GEO_TEACUPSHEL], true);
-	modelStack.PopMatrix(); //tea cup
-
-
+	RenderSurroundings();
 
 	DetectRobot();
 	RenderRobot();

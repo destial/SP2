@@ -30,8 +30,7 @@ void SceneRyan::Init()
 	m_parameters[U_MATERIAL_AMBIENT] = glGetUniformLocation(m_programID, "material.kAmbient");
 	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
 	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
-
-
+	m_parameters[U_MATERIAL_ALPHA] = glGetUniformLocation(m_programID, "material.kAlpha");
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
 	// Get a handle for our "textColor" uniform
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
@@ -157,10 +156,9 @@ void SceneRyan::Init()
 	meshList[GEO_MINIGUN] = MeshBuilder::GenerateOBJMTL("Minigun", "OBJ//Minigun.obj", "OBJ//Minigun.mtl");
 
 	meshList[GEO_BEACH] = MeshBuilder::GenerateHemisphere("Beach", Color(1, 1, 1), 36, 36, 1);
-	meshList[GEO_BEACH]->material.kAmbient.Set(0.3f, 0.3f, 0.3f);
+	meshList[GEO_BEACH]->material.kAmbient.Set(0.900, 0.843, 0.000);
 	meshList[GEO_BEACH]->material.kDiffuse.Set(0.900, 0.843, 0.000);
-	meshList[GEO_BEACH]->material.kSpecular.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_BEACH]->material.kAlpha = 0;
+	meshList[GEO_BEACH]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_BEACH]->material.kShininess = 0.6f;
 
 	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 1, 1), 36, 36, 1);

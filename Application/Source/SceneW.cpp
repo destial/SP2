@@ -282,7 +282,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = true;
 				Chestlimit5 = true;
-				countChest = 1;
+				countChest++;
 			}
 		}
 
@@ -296,7 +296,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = false;
 				Chestlimit4 = true;
 				Chestlimit5 = true;
-				countChest = 2;
+				countChest++;
 			}
 		}
 
@@ -310,7 +310,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = false;
 				Chestlimit5 = true;
-				countChest = 3;
+				countChest++;
 			}
 
 		}
@@ -325,7 +325,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = true;
 				Chestlimit5 = false;
-				countChest = 4;
+				countChest++;
 			}
 
 		}
@@ -340,7 +340,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 				Chestlimit3 = true;
 				Chestlimit4 = true;
 				Chestlimit5 = true;
-				countChest = 5;
+				countChest++;
 			}
 
 		}

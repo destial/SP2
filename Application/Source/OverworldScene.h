@@ -18,6 +18,7 @@ class OverworldScene : public Scene {
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
+		GEO_SPHERE,
 		GEO_GROUND,
 		GEO_TEXT,
 		MOON,
@@ -115,6 +116,7 @@ private:
 	void RenderSkybox();
 	void RenderObjects();
 	void RenderTasks();
+	void RenderRobo();
 	void CompleteTasks();
 	void GetInCar();
 	void DetectCollision();

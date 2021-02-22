@@ -19,6 +19,7 @@
 #include "SceneRyan.h"
 #include "OverworldScene.h"
 #include "SceneShaqler.h"
+#include "SceneOfTheBeach.h"
 #include "StartMenuScene.h"
 
 GLFWwindow* m_window;
@@ -243,7 +244,7 @@ void Application::Run() {
 	// Initialize and create scenes
 	scene[SCENESHAQ] = new SceneShaqeel();
 	scene[SCENEWALTON] = new SceneW();
-	scene[SCENEBEACH] = new SceneBeach();
+	scene[SCENEBEACH] = new SceneOfTheBeach();
 	scene[SCENERYAN] = new SceneRyan();
 	scene[SCENEXL] = new SceneXL();
 	scene[OVERWORLD] = new OverworldScene();

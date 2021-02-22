@@ -429,23 +429,23 @@ void SceneW::Update(double dt, Mouse mouse) {
 	oldCameraPos = camera.position;
 	oldCameraTarget = camera.target;
 	camera.Update(dt, mouse);
-	DetectCollision();
+	sceneManager = new SceneManager(this, camera.bounds);
+	CreateMaze();
+	//DetectCollision();
 }
 
 void SceneW::DetectCollision() {
-	sceneManager = new SceneManager(this, camera.bounds);
-	CreateMaze();
 	GameObject* cameraObject = new GameObject(nullptr);
 	*cameraObject->transform = camera.position;
-	cameraObject->id = ++sceneManager->root->count;
+	sceneManager->push(cameraObject);
+	cameraObject->id = sceneManager->totalObjects;
+
 	sceneManager->split(sceneManager->root);
-	Quad* quad = sceneManager->getQuad(sceneManager->root->count);
+
+	Quad* quad = sceneManager->getQuad(sceneManager->totalObjects);
 	if (quad) {
 		for (auto object : quad->gameObjects) {
-			if (isNear(object)) {
-				moveBack(object);
-				break;
-			}
+			//
 		}
 	}
 }
@@ -609,6 +609,9 @@ void SceneW::Render()
 	modelStack.PopMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3);
 	RenderUI();
+
+	delete sceneManager;
+	sceneManager = nullptr;
 }
 
 void SceneW::Exit() {
@@ -800,12 +803,14 @@ void SceneW::RenderMaze() {
 	// maze
 	for (auto object : sceneManager->root->gameObjects)
 	{
-		if (object->mesh == meshList[MWALL]) {
-			modelStack.PushMatrix();
-			modelStack.Translate(object->transform->translate.x, object->transform->translate.y, object->transform->translate.z);
-			modelStack.Scale(object->transform->scale.x, object->transform->scale.y, object->transform->scale.z);
-			RenderMesh(object->mesh, true);
-			modelStack.PopMatrix();
+		if (object) {
+			if (object->mesh == meshList[MWALL]) {
+				modelStack.PushMatrix();
+				modelStack.Translate(object->transform->translate.x, object->transform->translate.y, object->transform->translate.z);
+				modelStack.Scale(object->transform->scale.x, object->transform->scale.y, object->transform->scale.z);
+				RenderMesh(object->mesh, true);
+				modelStack.PopMatrix();
+			}
 		}
 	}
 }

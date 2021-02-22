@@ -125,7 +125,14 @@ void SceneBeach::Init()
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 50.1f);
-	meshList[GEO_QUAD]->textureID = LoadTGA("Image//Ocean.tga");
+	meshList[GEO_QUAD]->textureID = LoadTGA("Image//beachSand.tga");
+
+	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 50.1f);
+	meshList[GEO_QUAD2]->textureID = LoadTGA("Image//oceanWater.tga");
+
+	meshList[GEO_QUAD3] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 50.1f);
+	meshList[GEO_QUAD3]->textureID = LoadTGA("Image//RoadTopDown.tga");
+
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 50.1f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//OceanBack.tga");
 
@@ -306,6 +313,20 @@ void SceneBeach::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
+	static const float LSPEED = 40.f;
+	if (Application::IsKeyPressed('I'))
+		light[0].position.z -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('K'))
+		light[0].position.z += (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('J'))
+		light[0].position.x -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('L'))
+		light[0].position.x += (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('O'))
+		light[0].position.y -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('P'))
+		light[0].position.y += (float)(LSPEED * dt);
+
 	camera.Update(dt, mouse);
 }
 
@@ -420,15 +441,12 @@ void SceneBeach::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_QUAD], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
 	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
 	modelStack.Scale(4.5, 4.5, 4.5);
 	RenderSkybox();
 	modelStack.PopMatrix();
+
+	RenderQuad();
 
 	std::stringstream ssX;
 	std::stringstream ssY;
@@ -446,7 +464,28 @@ void SceneBeach::Render()
 	modelStack.Scale(2, 2, 2);
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
 	modelStack.PopMatrix();
+
 }
+
+void SceneBeach::RenderQuad()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_QUAD], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0.02, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_QUAD3], true);
+	modelStack.PopMatrix();
+
+
+
+
+}
+
 
 void SceneBeach::Exit() {
 	for (auto mesh : meshList) {

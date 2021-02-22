@@ -252,6 +252,7 @@ void SceneXL::Init()
 
 		targetList.push_back(temp); 
 	}
+	Application::log("Scene XL initialized");
 }
 
 void SceneXL::RenderMesh(Mesh* mesh, bool enableLight)

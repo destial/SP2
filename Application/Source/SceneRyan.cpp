@@ -30,7 +30,8 @@ void SceneRyan::Init()
 	m_parameters[U_MATERIAL_AMBIENT] = glGetUniformLocation(m_programID, "material.kAmbient");
 	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
 	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
-	m_parameters[U_MATERIAL_ALPHA] = glGetUniformLocation(m_programID, "material.kAlpha");
+
+
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
 	// Get a handle for our "textColor" uniform
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
@@ -524,9 +525,16 @@ void SceneRyan::Render()
 	);
 	modelStack.LoadIdentity();
 
+
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
+	modelStack.Scale(4.5, 4.5, 4.5);
+	RenderSkybox();
+	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
@@ -563,11 +571,7 @@ void SceneRyan::Render()
 
 
 
-	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
-	modelStack.Scale(4.5, 4.5, 4.5);
-	RenderSkybox();
-	modelStack.PopMatrix();
+
 
 	std::stringstream ssX;
 	std::stringstream ssY;

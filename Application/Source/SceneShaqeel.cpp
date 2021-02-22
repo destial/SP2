@@ -613,14 +613,15 @@ void SceneShaqeel::Render()
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
-	
+	RenderSkybox();
+
 	RenderQuad();
 	Rendervehicles();
 	Rendertrees();
 	Rendercityobjects();
 	RenderMytext();
 	RenderNPC();
-	RenderSkybox();
+
 }
 
 void SceneShaqeel::RenderQuad()

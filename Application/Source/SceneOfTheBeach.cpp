@@ -136,6 +136,8 @@ void SceneOfTheBeach::Init()
 	meshList[GEO_QUAD3] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 1.f);
 	meshList[GEO_QUAD3]->textureID = LoadTGA("Image//RoadTopDown.tga");
 
+	meshList[GEO_DRIZZLE] = MeshBuilder::GenerateOBJMTL("Drizzle", "OBJ//drizzle.obj", "OBJ//drizzle.mtl");
+
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
@@ -156,6 +158,12 @@ void SceneOfTheBeach::Init()
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1, 0.8);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//blueblacktextbox");
+
+	OpenTextBox = false;
+
 }
 
 void SceneOfTheBeach::RenderMesh(Mesh* mesh, bool enableLight)
@@ -315,6 +323,26 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
+	if (Application::IsKeyPressed('E'))
+	{
+		if (camera.position.x <= -27.6 && camera.position.x >= -31.6 && camera.position.z <= 34 && camera.position.z >= 28.8)
+		{
+			OpenTextBox = true;
+		}
+	}
+
+	if (Application::IsKeyPressed('N') && OpenTextBox == true)
+	{
+		OpenTextBox = false;
+	}
+
+	if (Application::IsKeyPressed('Y') && OpenTextBox == true)
+	{
+		Application::sceneswitch = Application::SCENERYAN;
+	}
+
+
+
 	camera.Update(dt, mouse);
 }
 
@@ -424,16 +452,16 @@ void SceneOfTheBeach::Render()
 	RenderSkybox();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-30, -2, 0);
-	modelStack.Scale(50, 50, 50);
+	modelStack.Translate(0, -2, 0);
+	modelStack.Scale(40, 40, 40);
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	modelStack.Translate(0, -2.02, 0);
 	modelStack.Scale(100, 50, 50);
 	RenderMesh(meshList[GEO_QUAD2], true);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix();*/
 
 	std::stringstream ssX;
 	std::stringstream ssY;
@@ -449,6 +477,32 @@ void SceneOfTheBeach::Render()
 	modelStack.Scale(2, 2, 2);
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
 	modelStack.PopMatrix();
+
+	RenderNPC();
+	RenderUI();
+
+}
+
+void SceneOfTheBeach::RenderNPC()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(-29.6, -2, 31.4);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(2, 2, 2);
+	RenderMesh(meshList[GEO_DRIZZLE], true);
+	modelStack.PopMatrix();
+}
+
+void SceneOfTheBeach::RenderUI()
+{
+	if (OpenTextBox == true)
+	{
+		RenderMeshOnScreen(meshList[GEO_UI], BLUE, 55, 40, -5); // 40 screenx
+		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to go to Shark Island?", WHITE, 23, 4.5, 3.5);
+		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 23, 4.5, 1.2); //X 1.5 AND Z 19.5
+	}
+
+
 
 }
 

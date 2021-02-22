@@ -223,8 +223,11 @@ void SceneXL::Init()
 	meshList[GEO_SWING] = MeshBuilder::GenerateOBJMTL("swing",
 		"OBJ//swingride.obj", "OBJ//swingride.mtl"); //swing ride
 
-	//meshList[GEO_TOWER] = MeshBuilder::GenerateOBJMTL("ferris wheel",
-	//	"OBJ//bruhcarnival.obj", "OBJ//bruhcarnival.mtl"); //ferris wheel
+	meshList[GEO_TEACUP] = MeshBuilder::GenerateOBJMTL("tea cup",
+		"OBJ//teacuplmao.obj", "OBJ//teacuplmao.mtl"); //tea cup
+
+	meshList[GEO_TEACUPSHEL] = MeshBuilder::GenerateOBJMTL("shelter tea cup",
+		"OBJ//cupshelter.obj", "OBJ//cupshelter.mtl"); //shelter for the tea cup
 
 	meshList[GEO_BORDERTEXT] = MeshBuilder::GenerateFaceQuad("border for text", WHITE, 1.f, 1.f);
 	meshList[GEO_BORDERTEXT]->textureID = LoadTGA("Image//bordertext.tga");
@@ -646,6 +649,24 @@ void SceneXL::Render()
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_SWING], true);
 	modelStack.PopMatrix(); //swing ride
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, -30);
+	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Scale(0.1, 0.1, 0.1);
+	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Translate(50, 0, 0);
+	RenderMesh(meshList[GEO_TEACUP], true);
+	modelStack.PopMatrix(); //tea cup
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, -30);
+	//modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Scale(0.3, 0.3, 0.3);
+	RenderMesh(meshList[GEO_TEACUPSHEL], true);
+	modelStack.PopMatrix(); //tea cup
+
+
 
 	DetectRobot();
 	RenderRobot();

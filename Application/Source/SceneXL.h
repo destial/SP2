@@ -115,6 +115,8 @@ private:
 
 	void RenderMinigame();
 
+	void RenderSurroundings();
+
 	bool isNear(Mesh* mesh, const float& distance);
 
 public:

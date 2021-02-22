@@ -167,6 +167,24 @@ void SceneShaqler::Init()
 	meshList[GEO_BOOK] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
 	meshList[GEO_BOOK]->textureID = LoadTGA("Image//1984book.tga");
 
+	meshList[GEO_BOOK2] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK2]->textureID = LoadTGA("Image//brownColour.tga");
+
+	meshList[GEO_BOOK3] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK3]->textureID = LoadTGA("Image//blueColour.tga");
+
+	meshList[GEO_BOOK4] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK4]->textureID = LoadTGA("Image//redColour.tga");
+
+	meshList[GEO_BOOK5] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK5]->textureID = LoadTGA("Image//orangeColour.tga");
+
+	meshList[GEO_BOOK6] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK6]->textureID = LoadTGA("Image//greenColour.tga");
+
+	meshList[GEO_BOOK7] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK7]->textureID = LoadTGA("Image//1984book.tga");
+
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJ("Book", "OBJ//MartDoor1.obj"); // Try 1 first
 	meshList[GEO_DOOR]->textureID = LoadTGA("Image//RedColour.tga");
 
@@ -627,6 +645,15 @@ void SceneShaqler::Render()
 	modelStack.PopMatrix();
 	RenderSkybox();
 
+	RenderWalls();
+	RenderInatimateobjects();
+	RenderText();
+	RenderNPC();
+	RenderBooks();
+}
+
+void SceneShaqler::RenderWalls() 
+{
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0.022, 0);
 	modelStack.Scale(15, 15, 15);
@@ -670,7 +697,10 @@ void SceneShaqler::Render()
 	modelStack.Scale(20, 20, 20);
 	RenderMesh(meshList[GEO_QUAD3], true);
 	modelStack.PopMatrix();
+}
 
+void SceneShaqler::RenderInatimateobjects()
+{
 	modelStack.PushMatrix();
 	modelStack.Translate(19.8, 0, -19.8);
 	modelStack.Scale(12, 8, 12);
@@ -712,26 +742,6 @@ void SceneShaqler::Render()
 	RenderMesh(meshList[GEO_BOOKSTACK], true);
 	modelStack.PopMatrix();
 
-	if (bookCollected == false)
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(bookX, bookY, bookZ); // 2.85
-		modelStack.Rotate(rotateBook, 0, 1, 0);
-		modelStack.Scale(1, 1, 1);
-		RenderMesh(meshList[GEO_BOOK], true);
-		modelStack.PopMatrix();
-	}
-
-	if (bookCollected == true)
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(meshList[GEO_BOOK]->transform.translate.x, meshList[GEO_BOOK]->transform.translate.y, meshList[GEO_BOOK]->transform.translate.z);
-		modelStack.Rotate(meshList[GEO_BOOK]->transform.rotate, 0, 1, 0);
-		modelStack.Rotate(270, 0, 1, 0);
-		RenderMesh(meshList[GEO_BOOK], true);
-		modelStack.PopMatrix();
-	}
-
 	modelStack.PushMatrix();
 	modelStack.Translate(-17, 0, 17);
 	modelStack.Scale(0.15, 0.15, 0.2);
@@ -751,12 +761,15 @@ void SceneShaqler::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(14.2, 0, -15.8);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(3.5, 3.5, 3.5);
-	RenderMesh(meshList[GEO_KURENAI], true);
+	modelStack.Translate(1.5, 0, 19.5);
+	modelStack.Rotate(rotateDoor, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();
+}
 
+void SceneShaqler::RenderText()
+{
 	modelStack.PushMatrix();
 	modelStack.Translate(TextX, 5, TextZ);
 	modelStack.Rotate(270, 0, 1, 0);
@@ -769,13 +782,6 @@ void SceneShaqler::Render()
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(0.3, 0.3, 0.3);
 	RenderText(meshList[GEO_TEXT], " Press F to leave", WHITE);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(1.5, 0, 19.5);
-	modelStack.Rotate(rotateDoor, 0, 1, 0);
-	modelStack.Scale(1, 1, 1);
-	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -799,15 +805,69 @@ void SceneShaqler::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 20, 0, 10);
 	modelStack.PopMatrix();
 
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", BLACK, 200, 0, 500); 
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", BLACK, 200, 0, 500);
 
-	if (isBuying == true && Bookhasbeenbaught == false) 
+	if (isBuying == true && Bookhasbeenbaught == false)
 	{
 		RenderMeshOnScreen(meshList[GEO_UI], 55, 40, -5); // 40 screenx
 		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 23, 4.5, 3.5);
-	    RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 23, 4.5, 1.2); //X 1.5 AND Z 19.5
+		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 23, 4.5, 1.2); //X 1.5 AND Z 19.5
 	}
-	
+}
+
+void SceneShaqler:: RenderBooks()
+{
+	if (bookCollected == false)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(bookX, bookY, bookZ); // 2.85
+		modelStack.Rotate(rotateBook, 0, 1, 0);
+		modelStack.Scale(1, 1, 1);
+		RenderMesh(meshList[GEO_BOOK], true);
+		modelStack.PopMatrix();
+	}
+
+	if (bookCollected == true)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(meshList[GEO_BOOK]->transform.translate.x, meshList[GEO_BOOK]->transform.translate.y, meshList[GEO_BOOK]->transform.translate.z);
+		modelStack.Rotate(meshList[GEO_BOOK]->transform.rotate, 0, 1, 0);
+		modelStack.Rotate(270, 0, 1, 0);
+		RenderMesh(meshList[GEO_BOOK], true);
+		modelStack.PopMatrix();
+	}
+
+	// x - 16.5 y 4 z 11.1
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 2.85, 11.5); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 3.1, 11.5); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK2], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 3.35, 11.5); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK3], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16, 3.2, 14.15); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(30, 0, 0, 1);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK], true);
+	modelStack.PopMatrix();
+
 
 }
 
@@ -825,6 +885,16 @@ void SceneShaqler::Book()
 		BookOrigin = Vector3(-1, 0, 0);
 		break;
 	}
+}
+
+void SceneShaqler::RenderNPC()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(14.2, 0, -15.8);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_KURENAI], true);
+	modelStack.PopMatrix();
 }
 
 void SceneShaqler::Exit() {

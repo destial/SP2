@@ -24,6 +24,13 @@ class SceneShaqler : public Scene
 		GEO_STATUE,
 		GEO_BOOKSTACK,
 		GEO_BOOK,
+		GEO_BOOK2,
+		GEO_BOOK3,
+		GEO_BOOK4,
+		GEO_BOOK5,
+		GEO_BOOK6,
+		GEO_BOOK7,
+		GEO_BOOK8,
 		GEO_CHAIR,
 		GEO_CUBE,
 		GEO_BOOKCASE,
@@ -127,7 +134,6 @@ private:
 
 	Mesh* BookHold;
 	Vector3 BookOrigin;
-	void Book();
 
 	Light light[2];
 
@@ -137,6 +143,15 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
+
+	void RenderWalls();
+	void RenderInatimateobjects();
+	void RenderText();
+	void RenderNPC();
+	void RenderBooks();
+	void Book();
+
+
 public:
 
 	SceneShaqler();

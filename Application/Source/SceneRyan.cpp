@@ -159,6 +159,8 @@ void SceneRyan::Init()
 	meshList[GEO_BEACH]->material.kSpecular.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_BEACH]->material.kShininess = 0.6f;
 
+	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 1, 1), 36, 36, 1);
+
 	rotate = true;
 	sharkattack = false;
 	Tempcounter = 0;
@@ -614,6 +616,23 @@ void SceneRyan::Minigun()
 		break;
 	}
 }
+
+//void SceneRyan::Bullets() {
+//	for (int i = 0; i < 256; i++) {
+//		if (bullet_array[i] != nullptr) {
+//			modelStack.PushMatrix();
+//			Vector3 pos = bullet_array[i]->getCurrPos();
+//
+//			modelStack.Translate(pos.x, pos.y, pos.z);
+//			modelStack.Rotate(bullet_array[i]->GetDirection(), 0, 1, 0);
+//			modelStack.Rotate(90, 1, 0, 0);
+//			modelStack.Scale(0.05f, 0.05f, 0.05f);
+//			RenderMesh(meshList[GEO_BULLET], true);
+//
+//			modelStack.PopMatrix();
+//		}
+//	}
+//}
 
 void SceneRyan::Exit() {
 	for (auto mesh : meshList) {

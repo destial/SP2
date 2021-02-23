@@ -60,6 +60,8 @@ void SceneRyan::Init()
 
 	meshList[GEO_SHARKBTM] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkBtm.obj", "OBJ//SharkBtm.mtl");
 
+	meshList[GEO_SHARKFIN] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkFin.obj", "OBJ//SharkFin.mtl");
+
 	meshList[GEO_MINIGUN] = MeshBuilder::GenerateOBJMTL("Minigun", "OBJ//Minigun.obj", "OBJ//Minigun.mtl");
 
 	meshList[GEO_BEACH] = MeshBuilder::GenerateHemisphere("Beach", Color(1, 1, 1), 36, 36, 1);
@@ -78,6 +80,7 @@ void SceneRyan::Init()
 	camera.SharkPos.x = 100;
 	camera.SharkPos.y = 0;
 	camera.SharkPos.z = 0;
+	survivecounter = 0;
 
 	Application::log("Scene Ryan initialized");
 }
@@ -320,9 +323,15 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 		sharkcircleangle += 0.5;
 	}
 	
+	if (camera.SharkPos.x > camera.position.x - 1 && camera.SharkPos.x < camera.position.x + 1 && camera.SharkPos.z > camera.position.z - 1 && camera.SharkPos.z < camera.position.z + 1)
+	{
+		Application::sceneswitch = Application::SCENEBEACH;
+	}
 
 	if (survivecounter == 6)
 	{
+
+		//something like bool win = true
 		Application::sceneswitch = Application::SCENEBEACH;
 	}
 
@@ -718,6 +727,13 @@ void SceneRyan::RenderShark()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
+	modelStack.Translate(0, -2.5, 4);
+	modelStack.Rotate((rotatetail * 2), 0, 1, 0);
+	modelStack.Scale(1.1, 1.1, 1.1);
+	RenderMesh(meshList[GEO_SHARKFIN], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
 	modelStack.Rotate(rotatetail, 0, 1, 0);
 	RenderMesh(meshList[GEO_SHARKBTM], true);
 	modelStack.PopMatrix();
@@ -739,23 +755,6 @@ void SceneRyan::Minigun()
 		break;
 	}
 }
-
-//void SceneRyan::Bullets() {
-//	for (int i = 0; i < 256; i++) {
-//		if (bullet_array[i] != nullptr) {
-//			modelStack.PushMatrix();
-//			Vector3 pos = bullet_array[i]->getCurrPos();
-//
-//			modelStack.Translate(pos.x, pos.y, pos.z);
-//			modelStack.Rotate(bullet_array[i]->GetDirection(), 0, 1, 0);
-//			modelStack.Rotate(90, 1, 0, 0);
-//			modelStack.Scale(0.05f, 0.05f, 0.05f);
-//			RenderMesh(meshList[GEO_BULLET], true);
-//
-//			modelStack.PopMatrix();
-//		}
-//	}
-//}
 
 void SceneRyan::Exit() {
 	for (auto mesh : meshList) {

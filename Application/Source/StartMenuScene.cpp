@@ -29,7 +29,7 @@ void StartMenuScene::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(0, 0, 0), Vector3(1, 0, 1), Vector3(0, 1, 0), (float)50);
 
 	
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
@@ -61,6 +61,20 @@ void StartMenuScene::Init()
 
 	meshList[BUTTON] = MeshBuilder::GenerateFaceQuad("startButton", WHITE, 1.f, 1.f);
 	meshList[BUTTON]->textureID = LoadTGA("Image//button.tga");
+
+	meshList[GEO_SHARK] = MeshBuilder::GenerateOBJMTL("Shark", "OBJ//Shark.obj", "OBJ//Shark.mtl");
+
+	meshList[GEO_CAR1] = MeshBuilder::GenerateOBJ("car1", "OBJ//NewCar1.obj");
+	meshList[GEO_CAR1]->textureID = LoadTGA("Image//GreenVehicle.tga");
+
+	meshList[GEO_TREE] = MeshBuilder::GenerateOBJ("Tree", "OBJ//Tree_4.obj"); // Try 1 first
+	meshList[GEO_TREE]->textureID = LoadTGA("Image//Tree_Texture2.tga");
+
+	meshList[GEO_CRAB] = MeshBuilder::GenerateOBJMTL("Crab", "OBJ//crab.obj", "OBJ//crab.mtl");
+
+	meshList[GEO_GNOME] = MeshBuilder::GenerateOBJMTL("gnome","OBJ//gnomelol.obj", "OBJ//gnomelol.mtl");
+
+	rotateangle = 0;
 
 	Application::log("Start menu scene initialized");
 }
@@ -266,6 +280,9 @@ void StartMenuScene::Update(double dt, Mouse mouse) {
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
+
+	rotateangle++;
+
 
 	camera.Update(dt, mouse);
 }
@@ -584,6 +601,55 @@ void StartMenuScene::Render()
 	camera.target = camera.position + v;
 
 	RenderSkybox();
+	
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(-40, 0, 0);
+	//modelStack.Rotate(90, 0, 1, 0);
+	//modelStack.Scale(1, 1, 1);
+	//RenderMesh(meshList[GEO_SHARK], true);
+	//modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(-rotateangle, 0, 1, 0);
+	modelStack.Translate(40, 5, 0);
+	modelStack.Rotate((-rotateangle * 5), 1, 0, 0);
+	RenderMesh(meshList[GEO_SHARK], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(rotateangle, 0, 1, 0);
+	modelStack.Translate(-20, 0, 0);
+	modelStack.Rotate((rotateangle * 2), 1, 1, 1);
+	modelStack.Scale(0.15, 0.15, 0.15);
+	RenderMesh(meshList[GEO_CAR1], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(10, -5, 0);
+	modelStack.Rotate(rotateangle, 1, 0, 1);
+	modelStack.Scale(0.15, 0.15, 0.15);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -3, 10);
+	modelStack.Rotate(rotateangle, 1, 0, 0);
+	modelStack.Translate(10, 0, 0);
+	modelStack.Rotate(rotateangle, 0, 1, 0);
+	modelStack.Scale(2, 2, 2);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(rotateangle, 1, 0, 0);
+	modelStack.Translate(-10, 0, 0);
+	modelStack.Rotate(rotateangle, 1, 0, 1);
+	modelStack.Scale(0.022, 0.022, 0.022);
+	RenderMesh(meshList[GEO_GNOME], true);
+	modelStack.PopMatrix();
+
+
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[BUTTON], 15, 40 * w / 800, 35 * h / 600);

@@ -22,6 +22,7 @@ class SceneRyan : public Scene
 		GEO_BACK,
 		GEO_SHARKTOP,
 		GEO_SHARKBTM,
+		GEO_SHARKFIN,
 		GEO_BEACH,
 		GEO_MINIGUN,
 		GEO_BULLET,

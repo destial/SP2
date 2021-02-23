@@ -23,6 +23,8 @@ class SceneShaqler : public Scene
 		GEO_KEYBOARD,
 		GEO_TABLEANDCHAIR,
 		GEO_STATUE,
+		GEO_SOFA,
+		GEO_TABLE,
 		GEO_BOOKSTACK,
 		GEO_BOOK,
 		GEO_BOOK2,
@@ -49,6 +51,7 @@ class SceneShaqler : public Scene
 		GEO_FRONT,
 		GEO_BACK,
 		GEO_TEXT,
+		GEO_UI2,
 		NUM_GEOMETRY,
 	};
 
@@ -155,7 +158,7 @@ private:
 	void RenderBooks();
 	void RenderBooks2();
 	void Book();
-
+	void RenderUI();
 
 public:
 

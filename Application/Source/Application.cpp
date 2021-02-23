@@ -268,8 +268,11 @@ void Application::Run() {
 			int previousScene = Application::sceneswitch;
 			scene[previousScene]->Update(m_timer.getElapsedTime(), mouse);
 			scene[previousScene]->Render();
-			if (previousScene != Application::sceneswitch)
+			if (previousScene != Application::sceneswitch) {
+				scene[Application::sceneswitch]->InitGL();
 				continue;
+			}
+
 		} else {
 			Application::sceneswitch = STARTSCENE;
 			continue;

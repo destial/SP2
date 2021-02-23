@@ -29,7 +29,7 @@ void SceneShaqeel::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)30);
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
@@ -80,7 +80,7 @@ void SceneShaqeel::Init()
 	meshList[GEO_STREETLIGHT]->textureID = LoadTGA("Image//StreetLight.tga");
 
 	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NewMart.obj"); // Try 1 first
-	meshList[GEO_MART]->textureID = LoadTGA("Image//house1.tga");
+	meshList[GEO_MART]->textureID = LoadTGA("Image//blueColour.tga");
 
 	meshList[GEO_ROBOBODY] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Robowithoutarmsandlegs.obj"); // Try 1 first
 	meshList[GEO_ROBOBODY]->textureID = LoadTGA("Image//robo_normal.tga");
@@ -122,6 +122,9 @@ void SceneShaqeel::Init()
 
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", WHITE, 1.f, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
+
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -219,7 +222,7 @@ void SceneShaqeel::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -240,7 +243,7 @@ void SceneShaqeel::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -254,9 +257,8 @@ void SceneShaqeel::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneShaqeel::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
-	if (!mesh || mesh->textureID <= 0) //Proper error check
-		return;
+void SceneShaqeel::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
+	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
@@ -737,7 +739,18 @@ void SceneShaqeel::Render()
 	Rendercityobjects();
 	RenderMytext();
 	RenderNPC();
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+	RenderUI();
+}
 
+void SceneShaqeel::RenderUI() {
+
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
+	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);
 }
 
 void SceneShaqeel::RenderQuad()
@@ -974,7 +987,7 @@ void SceneShaqeel::RenderMytext()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 2, 0, 7);
 	modelStack.PopMatrix();
 
 

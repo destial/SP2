@@ -23,6 +23,7 @@ class OverworldScene : public Scene {
 		GEO_TEXT,
 		MOON,
 		SIDEBAR,
+		GEO_UI,
 
 		STREETLIGHT,
 		NUM_ROADOBJECTS,
@@ -38,7 +39,11 @@ class OverworldScene : public Scene {
 		BUS1,
 		COP,
 
-		ROBO,
+		GEO_ROBOBODY,
+		GEO_ROBORIGHTLEG,
+		GEO_ROBOLEFTLEG,
+		GEO_ROBORIGHTARM,
+		GEO_ROBOLEFTARM,
 
 		NUM_CAR,
 
@@ -117,6 +122,8 @@ private:
 	void RenderObjects();
 	void RenderTasks();
 	void RenderRobo();
+	void RoadTeleport();
+	void RenderTeleportText();
 	void CompleteTasks();
 	void GetInCar();
 	void DetectCollision();
@@ -124,6 +131,7 @@ private:
 	void MoveBack();
 	void ObjectMoveBack(Mesh* mesh);
 	void Reset();
+	void RenderUI();
 	bool isNear(Mesh* mesh, const float& distance = 1.f);
 	bool isNearObject(GameObject* o, const float& distance = 1.f);
 	bool isHit(GameObject* o1, GameObject* o2, const float& distance = 1.f);
@@ -138,8 +146,17 @@ private:
 
 	bool tasks[NUM_TASKS];
 	bool showTaskbar;
+	bool leftleglimit;
 	int showTaskbarFrame;
 	int showTaskbarDelay;
+	float rotateleftleg;
+	float translateSphereZ;
+	float translateSphereZ2;
+	float translateSphereZ3;
+	float translateSphereZ4;
+	float translateSphereX1;
+	float translateSphereX2;
+
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);

@@ -57,6 +57,8 @@ void SceneShaqler::Init() {
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", Color(1, 0, 0), 30, 30, 1);
 	meshList[GEO_SPHERE]->textureID = LoadTGA("Image//BlackWallpaper.tga");
 
+	meshList[GEO_SOFA] = MeshBuilder::GenerateOBJMTL("Sofa", "OBJ//BlueSofa.obj", "OBJ//BlueSofa.mtl");
+
 	meshList[GEO_DESKCORNER] = MeshBuilder::GenerateOBJMTL("DeskCounter", "OBJ//deskCorner.obj", "OBJ//deskCorner.mtl");
 
 	meshList[GEO_CHAIR] = MeshBuilder::GenerateOBJMTL("Chair", "OBJ//chair.obj", "OBJ//chair.mtl");
@@ -77,6 +79,8 @@ void SceneShaqler::Init() {
 	meshList[GEO_SAMIDALRIGHTARM] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//Samidalrightarm.obj", "OBJ//Samidalrightarm.mtl");
 
 	meshList[GEO_SAMIDALLEFTARM] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//Samidalleftarm.obj", "OBJ//Samidalleftarm.mtl");
+
+	meshList[GEO_TABLE] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//BrownRoundTable.obj", "OBJ//BrownRoundTable.mtl");
 
 	meshList[GEO_BOOKSTACK] = MeshBuilder::GenerateOBJ("Bookstack", "OBJ//BookStack.obj"); // Try 1 first
 	meshList[GEO_BOOKSTACK]->textureID = LoadTGA("Image//BookStack.tga");
@@ -128,6 +132,9 @@ void SceneShaqler::Init() {
 
 	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1, 0.8);
 	meshList[GEO_UI]->textureID = LoadTGA("Image//blueblacktextbox");
+
+	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
+	meshList[GEO_UI2]->textureID = LoadTGA("Image//button.tga");
 
 	bookX = -17;
 	bookY = 2.85;
@@ -225,7 +232,7 @@ void SceneShaqler::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -246,7 +253,7 @@ void SceneShaqler::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -261,8 +268,7 @@ void SceneShaqler::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 }
 
 void SceneShaqler::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
-	if (!mesh || mesh->textureID <= 0) //Proper error check
-		return;
+	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
@@ -420,26 +426,6 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		isBuying = false;
 		Bookhasbeenbaught = false;
 	}
-
-	/*if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75)
-	{
-		switch (UIPhase)
-		{
-		case 0:
-			if (Application::IsKeyPressed('Y'))
-			{
-				Bookhasbeenbaught = true;
-			}
-			break;
-		case 1:
-			if (Application::IsKeyPressed('N'))
-			{
-				Bookhasbeenbaught = false;
-				isBuying = false;
-			}
-			break;
-		}
-	}*/
 
 	if (Application::IsKeyPressedOnce('F') && camera.position.x >= 1.13 && camera.position.x <= 6.6 
 		&& camera.position.z >= 14 && camera.position.z <= 20 && stopOpendoor == true) {
@@ -760,7 +746,7 @@ void SceneShaqler::Render()
 	modelStack.LoadIdentity();
 
 	Mtx44 view;
-	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
+	view.SetToPerspective(camera.orthographic_size, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
@@ -783,7 +769,18 @@ void SceneShaqler::Render()
 	modelStack.Translate(0, 0, -13.5);
 	RenderBooks2();
 	modelStack.PopMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+	RenderUI();
+}
 
+void SceneShaqler::RenderUI() {
+
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
+	RenderMeshOnScreen(meshList[GEO_UI2], 25, 12.5, 53.75 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);
 }
 
 void SceneShaqler::RenderWalls() 
@@ -863,8 +860,8 @@ void SceneShaqler::RenderInatimateobjects()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(18, 0, 18);
-	modelStack.Rotate(220, 0, 1, 0);
+	modelStack.Translate(17.2, 0, -7.1);
+	modelStack.Rotate(300, 0, 1, 0);
 	modelStack.Scale(0.1, 0.1, 0.1);
 	RenderMesh(meshList[GEO_STATUE], true);
 	modelStack.PopMatrix();
@@ -901,11 +898,19 @@ void SceneShaqler::RenderInatimateobjects()
 	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();
 
-	/*modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_TABLEANDCHAIR], true);
-	modelStack.PopMatrix();*/
+	modelStack.PushMatrix();
+	modelStack.Translate(17.2, 0, 8.5);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.7, 0.7,0.7);
+	RenderMesh(meshList[GEO_SOFA], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(16, 0, 17);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.4, 0.4, 0.4);
+	RenderMesh(meshList[GEO_TABLE], true);
+	modelStack.PopMatrix();
 
 }
 
@@ -951,8 +956,8 @@ void SceneShaqler::RenderText()
 	if (isBuying == true && Bookhasbeenbaught == false)
 	{
 		RenderMeshOnScreen(meshList[GEO_UI], 55, 40, -5); // 40 screenx
-		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 23, 4.5, 3.5);
-		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 23, 4.5, 1.2); //X 1.5 AND Z 19.5
+		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 2.3, 4.5, 3.5);
+		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2.3, 4.5, 1.2); //X 1.5 AND Z 19.5
 	}
 }
 

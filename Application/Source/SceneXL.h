@@ -37,6 +37,7 @@ class SceneXL : public Scene
 		GEO_TEACUPSHEL,
 		GEO_JETPACK,
 		GEO_BORDERTEXT,
+		GEO_UI,
 		NUM_GEOMETRY,
 	};
 
@@ -119,6 +120,7 @@ private:
 	void RenderMinigame();
 
 	void RenderSurroundings();
+	void RenderUI();
 
 	void DetectJetpack();
 	void RenderJetpack();

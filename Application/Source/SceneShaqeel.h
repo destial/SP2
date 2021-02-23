@@ -45,6 +45,7 @@ class SceneShaqeel : public Scene
 		GEO_CITY1,
 		GEO_CITY2,
 		GEO_CITY3,
+		GEO_UI,
 		NUM_GEOMETRY,
 	};
 
@@ -129,7 +130,7 @@ private:
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
+	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 public:
 
 	SceneShaqeel();
@@ -151,6 +152,7 @@ public:
 	void Rendercityobjects();
 	void RenderNPC();
 	void RenderMytext();
+	void RenderUI();
 
 	Color RED = Color(1.f, 0.f, 0.f);
 	Color GREEN = Color(0.f, 1.f, 0.f);

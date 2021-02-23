@@ -36,6 +36,8 @@ class SceneXL : public Scene
 		GEO_TEACUP,
 		GEO_TEACUPSHEL,
 		GEO_JETPACK,
+		GEO_MINIGUN,
+		GEO_BULLET,
 		GEO_BORDERTEXT,
 		GEO_UI,
 		NUM_GEOMETRY,
@@ -126,6 +128,12 @@ private:
 	void RenderJetpack();
 
 	bool isNear(Mesh* mesh, const float& distance);
+
+
+	float Shootingspin;
+	Mesh* MinigunHold;
+	Vector3 GunOrigin;
+	void Minigun();
 
 public:
 

@@ -83,6 +83,7 @@ private:
 
 	float rotateshark;
 
+	int survivecounter;
 	bool rotate;
 	float rotatetail;
 	int sharkcircle;

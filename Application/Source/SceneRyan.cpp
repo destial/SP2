@@ -281,9 +281,9 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 			Vector3 origin = Vector3(-1, 0, 0);
 			sharkdir = camera.getSharkRotation(origin) - 90;
 			Tempcounter = 1;
+			survivecounter++;
 		}
 		
-		std::cout << camera.SharkPos.x << std::endl;
 		if (camera.SharkPos.x > 30)
 		{
 			rotateshark -= 0.5;
@@ -318,9 +318,13 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 	{
 		sharkcircle += 1;
 		sharkcircleangle += 0.5;
-		temptime = dt;
 	}
 	
+
+	if (survivecounter == 6)
+	{
+		Application::sceneswitch = Application::SCENEBEACH;
+	}
 
 	if (Application::IsKeyPressed('F')) 
 	{

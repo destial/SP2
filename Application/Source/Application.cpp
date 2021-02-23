@@ -258,7 +258,13 @@ void Application::Run() {
 
 	// Main Loop
 	while (!glfwWindowShouldClose(m_window) && !Application::quit) {
-
+		for (std::set<unsigned short>::iterator i = activeKeys.begin(); i != activeKeys.end(); i++) {
+			if (((GetAsyncKeyState(*i) & 0x8001) != 0)) continue;
+			else {
+				activeKeys.erase(i);
+				break;
+			}
+		}
 		// Update and render selected scene
 		if (scene[Application::sceneswitch]) {
 			int previousScene = Application::sceneswitch;

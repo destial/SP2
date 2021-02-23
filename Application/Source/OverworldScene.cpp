@@ -991,21 +991,23 @@ void OverworldScene::RenderRobo() {
 void OverworldScene::GetInCar() {
 	if (!currentCarObject) {
 		for (auto object : sceneManager->allObjects) {
-			if (!object->camera && isNearObject(object, 3.f)) {
-				RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", Colors::WHITE, 4, 3, 4);
-				if (Application::IsKeyPressedOnce('F')) {
-					currentCarObject = object;
-					camera.position.x = object->transform->translate.x;
-					camera.position.z = object->transform->translate.z;
-					tasks[STEAL_CAR] = 1;
-					if (object->target != carOrigin) {
-						camera.carTarget = object->target;
-						camera.target = object->target;
-					} else {
-						camera.carTarget = camera.position + carOrigin;
-						camera.target = camera.position + carOrigin;
+			if (object->type == GameObject::CAR) {
+				if (!object->camera && isNearObject(object, 3.f)) {
+					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", Colors::WHITE, 4, 3, 4);
+					if (Application::IsKeyPressedOnce('F')) {
+						currentCarObject = object;
+						camera.position.x = object->transform->translate.x;
+						camera.position.z = object->transform->translate.z;
+						tasks[STEAL_CAR] = 1;
+						if (object->target != carOrigin) {
+							camera.carTarget = object->target;
+							camera.target = object->target;
+						} else {
+							camera.carTarget = camera.position + carOrigin;
+							camera.target = camera.position + carOrigin;
+						}
+						break;
 					}
-					break;
 				}
 			}
 		}
@@ -1114,13 +1116,9 @@ bool OverworldScene::isNear(Mesh* mesh, const float& distance) {
 }
 
 bool OverworldScene::isNearObject(GameObject* o, const float& distance) {
-	if (o->mesh->type == Mesh::TYPE::OBJECT) {
-
-		// Get distance between object and camera
-		float d = Math::Square(o->transform->translate.x - camera.position.x) + Math::Square(o->transform->translate.z - camera.position.z);
-		return (d - (2 * distance)) <= 0;
-	}
-	return false;
+	// Get distance between object and camera
+	float d = Math::Square(o->transform->translate.x - camera.position.x) + Math::Square(o->transform->translate.z - camera.position.z);
+	return (d - (2 * distance)) <= 0;
 }
 
 bool OverworldScene::isHit(GameObject* o1, GameObject* o2, const float& distance) {
@@ -1207,6 +1205,7 @@ void OverworldScene::Reset() {
 	meshList[CAR2]->corner[Mesh::CORNER::C3] = meshList[CAR2]->transform.translate + Vector3(-1, 0, -1);
 	meshList[CAR2]->corner[Mesh::CORNER::C4] = meshList[CAR2]->transform.translate + Vector3(1, 0, 1);
 	GameObject* car = new GameObject(meshList[CAR2], meshList[CAR2]->transform);
+	car->type = GameObject::CAR;
 	sceneManager->push(car);
 	car->id = sceneManager->totalObjects;
 
@@ -1218,6 +1217,7 @@ void OverworldScene::Reset() {
 	meshList[BUS1]->corner[Mesh::CORNER::C3] = meshList[BUS1]->transform.translate + Vector3(-1, 0, -1);
 	meshList[BUS1]->corner[Mesh::CORNER::C4] = meshList[BUS1]->transform.translate + Vector3(1, 0, 1);
 	car = new GameObject(meshList[BUS1], meshList[BUS1]->transform);
+	car->type = GameObject::CAR;
 	sceneManager->push(car);
 	car->id = sceneManager->totalObjects;
 
@@ -1229,6 +1229,7 @@ void OverworldScene::Reset() {
 	meshList[CAR1]->corner[Mesh::CORNER::C3] = meshList[CAR1]->transform.translate + Vector3(-1, 0, -1);
 	meshList[CAR1]->corner[Mesh::CORNER::C4] = meshList[CAR1]->transform.translate + Vector3(1, 0, 1);
 	car = new GameObject(meshList[CAR1], meshList[CAR1]->transform);
+	car->type = GameObject::CAR;
 	sceneManager->push(car);
 	car->id = sceneManager->totalObjects;
 
@@ -1236,6 +1237,7 @@ void OverworldScene::Reset() {
 	meshList[TRUCK2]->transform.RotateDegree(0);
 	meshList[TRUCK2]->transform.Scale(0.13);
 	car = new GameObject(meshList[TRUCK2], meshList[TRUCK2]->transform);
+	car->type = GameObject::CAR;
 	sceneManager->push(car);
 	car->id = sceneManager->totalObjects;
 
@@ -1248,6 +1250,7 @@ void OverworldScene::Reset() {
 	meshList[TRUCK1]->corner[Mesh::CORNER::C4] = meshList[TRUCK1]->transform.translate + Vector3(-1, 0, -1);
 
 	car = new GameObject(meshList[TRUCK1], meshList[TRUCK1]->transform);
+	car->type = GameObject::CAR;
 	sceneManager->push(car);
 	car->id = sceneManager->totalObjects;
 

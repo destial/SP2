@@ -1116,9 +1116,13 @@ bool OverworldScene::isNear(Mesh* mesh, const float& distance) {
 }
 
 bool OverworldScene::isNearObject(GameObject* o, const float& distance) {
-	// Get distance between object and camera
-	float d = Math::Square(o->transform->translate.x - camera.position.x) + Math::Square(o->transform->translate.z - camera.position.z);
-	return (d - (2 * distance)) <= 0;
+	if (o->mesh->type == Mesh::TYPE::OBJECT) {
+
+		// Get distance between object and camera
+		float d = Math::Square(o->transform->translate.x - camera.position.x) + Math::Square(o->transform->translate.z - camera.position.z);
+		return (d - (2 * distance)) <= 0;
+	}
+	return false;
 }
 
 bool OverworldScene::isHit(GameObject* o1, GameObject* o2, const float& distance) {

@@ -324,8 +324,6 @@ void Application::Run() {
 				Application::sceneswitch = Application::MENUSCENE;
 			}
 			break;
-		case Application::LOSESCENE:
-			break;
 		case Application::MENUSCENE:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::WINSCENE;

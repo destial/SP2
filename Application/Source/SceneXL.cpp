@@ -13,8 +13,7 @@ SceneXL::SceneXL() {}
 
 SceneXL::~SceneXL() {}
 
-void SceneXL::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y)
-{
+void SceneXL::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
@@ -150,6 +149,9 @@ void SceneXL::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
+
 	srand((unsigned)time(0));
 
 	for (int i = 0; i < 10; i++) 
@@ -243,7 +245,7 @@ void SceneXL::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, floa
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -832,11 +834,22 @@ void SceneXL::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 4, 0, 10);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 4, 0, 7);
 	modelStack.PopMatrix();
 
 	DetectGnome();
 	RenderGnome();
+	RenderUI();
+}
+
+void SceneXL::RenderUI() {
+
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
+	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);
 }
 
 void SceneXL::RenderRobot()

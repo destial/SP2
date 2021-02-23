@@ -49,6 +49,7 @@ class SceneShaqler : public Scene
 		GEO_FRONT,
 		GEO_BACK,
 		GEO_TEXT,
+		GEO_UI2,
 		NUM_GEOMETRY,
 	};
 
@@ -155,7 +156,7 @@ private:
 	void RenderBooks();
 	void RenderBooks2();
 	void Book();
-
+	void RenderUI();
 
 public:
 

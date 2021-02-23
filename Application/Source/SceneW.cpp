@@ -63,10 +63,10 @@ void SceneW::Init() {
 	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
 	meshList[BOX] = MeshBuilder::GenerateOBJMTL("Box", "OBJ//cardboardBoxClosed.obj", "OBJ//cardboardBoxClosed.mtl");
 	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall",YELLOW, 1, 1, 1);
-	meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
+	/*meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
 	meshList[MWALL]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[MWALL]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[MWALL]->material.kShininess = .3f;
+	meshList[MWALL]->material.kShininess = .3f;*/
 	meshList[CHESTTOP] = MeshBuilder::GenerateOBJ("Chest Top", "OBJ//chestTopPart.obj"); // Try 1 first
 	meshList[CHESTTOP]->textureID = LoadTGA("Image//ChestTexture.tga");
 
@@ -737,6 +737,7 @@ void SceneW::Render()
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderText(meshList[GEO_TEXT], "treasures", RED);
 	modelStack.PopMatrix();
+	//RenderTextOnScreen(meshList[GEO_TEXT], countChest, BLACK, 2, 10, 10);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3);
 	RenderUI();
 }
@@ -807,7 +808,7 @@ void SceneW::RenderRoom() {
 
 	// Exit Door
 	modelStack.PushMatrix();
-	modelStack.Translate(26.5, 0, 48);
+	modelStack.Translate(26.5, 0, 49);
 	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();

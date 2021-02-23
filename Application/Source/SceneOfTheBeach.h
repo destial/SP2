@@ -27,6 +27,7 @@ class SceneOfTheBeach : public Scene
 		GEO_CRAB,
 		GEO_CHAIR,
 		GEO_UI,
+		GEO_UI2,
 		NUM_GEOMETRY,
 	};
 
@@ -94,10 +95,11 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
-
+	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 	void RenderQuad();
 	void RenderNPC();
 	void RenderUI();
+
 
 public:
 

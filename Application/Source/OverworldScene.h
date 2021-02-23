@@ -23,6 +23,7 @@ class OverworldScene : public Scene {
 		GEO_TEXT,
 		MOON,
 		SIDEBAR,
+		GEO_UI,
 
 		STREETLIGHT,
 		NUM_ROADOBJECTS,
@@ -126,6 +127,7 @@ private:
 	void MoveBack();
 	void ObjectMoveBack(Mesh* mesh);
 	void Reset();
+	void RenderUI();
 	bool isNear(Mesh* mesh, const float& distance = 1.f);
 	bool isNearObject(GameObject* o, const float& distance = 1.f);
 	bool isHit(GameObject* o1, GameObject* o2, const float& distance = 1.f);

@@ -54,6 +54,9 @@ void OverworldScene::Init() {
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	meshList[GEO_TEXT]->type = Mesh::TYPE::IMAGE;
 
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", Colors::WHITE, 1.f, 1.f);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
+
 	meshList[SIDEBAR] = MeshBuilder::GenerateFaceQuad("sidebar", Colors::GRAY, 1.f, 1.f);
 	meshList[SIDEBAR]->textureID = LoadTGA("Image//button.tga");
 	meshList[SIDEBAR]->type = Mesh::TYPE::IMAGE;
@@ -835,6 +838,7 @@ void OverworldScene::Render() {
 
 	RenderSkybox();
 	RenderObjects();
+	RenderUI();
 	RenderTasks();
 	RenderTeleportText();
 
@@ -851,8 +855,8 @@ void OverworldScene::Render() {
 	/*modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Colors::RED, 4, 0, 10);
-	modelStack.PopMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 1, 0, 0);*/
+	modelStack.PopMatrix();*/
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 }
 
 void OverworldScene::Exit() {
@@ -862,6 +866,16 @@ void OverworldScene::Exit() {
 	delete sceneManager;
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
+}
+
+void OverworldScene::RenderUI() {
+
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
+	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", Colors::BLACK, 2, 0.75, 28 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", Colors::BLACK, 2, 0.75, 26.5 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", Colors::BLACK, 2, 0.75, 25.3 * h / 600);
 }
 
 void OverworldScene::Reset() {

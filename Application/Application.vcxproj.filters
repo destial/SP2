@@ -78,10 +78,13 @@
     <ClCompile Include="Source\Quad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneBeach.cpp">
+    <ClCompile Include="Source\SceneOfTheBeach.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneOfTheBeach.cpp">
+    <ClCompile Include="Source\PauseMenuScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WinnerScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,10 +164,13 @@
     <ClInclude Include="Source\Quad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneBeach.h">
+    <ClInclude Include="Source\SceneOfTheBeach.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneOfTheBeach.h">
+    <ClInclude Include="Source\PauseMenuScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WinnerScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

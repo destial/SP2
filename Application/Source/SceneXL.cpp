@@ -59,7 +59,7 @@ void SceneXL::PrintPosition()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 4, 0, 10);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 3, 0, 3);
 	modelStack.PopMatrix();
 }
 
@@ -171,6 +171,10 @@ void SceneXL::Init()
 
 	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
 	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
+
+	meshList[GEO_MINIGUN] = MeshBuilder::GenerateOBJMTL("Minigun", "OBJ//Minigun.obj", "OBJ//Minigun.mtl");
+
+	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 1, 1), 36, 36, 1);
 
 	srand((unsigned)time(0));
 
@@ -533,6 +537,11 @@ void SceneXL::Update(double dt, Mouse mouse) {
 		if (RotateAngle > 360)
 			rotate -= 360;
 	}
+
+	if (Application::IsKeyPressed('F'))
+	{
+		Shootingspin += 3;
+	}
 }
 
 void SceneXL::InitGL()
@@ -866,10 +875,7 @@ void SceneXL::Render()
 	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix(); //axis
 
-	modelStack.PushMatrix();
-	modelStack.Translate(light[0].position.x, light[0].position.y, light[0].position.z);
-	RenderMesh(meshList[GEO_LIGHTBALL], false);
-	modelStack.PopMatrix();
+
 
 	modelStack.PushMatrix();
 	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
@@ -884,30 +890,34 @@ void SceneXL::Render()
 	RenderMesh(meshList[GEO_FLOORFUTURE], false);
 	modelStack.PopMatrix(); //floor 
 
+	Minigun();
+
 	RenderSurroundings();
 
 	DetectRobot();
 	RenderRobot();
 
-	std::stringstream ssX;
-	std::stringstream ssY;
-	std::stringstream ssZ;
-	ssX.precision(3);
-	ssX << "X:" << camera.position.x;
-	ssX.precision(3);
-	ssX << "Y:" << camera.position.y;
-	ssZ.precision(3);
-	ssZ << "Z:" << camera.position.z;
-
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 4, 0, 7);
-	modelStack.PopMatrix();
 	DetectJetpack();
 	RenderJetpack();
 
 	DetectGnome();
 	RenderGnome();
+
+	PrintPosition();
+
+	DetectGnome();
+	RenderGnome();
+	RenderUI();
+}
+
+void SceneXL::RenderUI() {
+
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
+	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);
 }
 
 void SceneXL::RenderRobot()
@@ -918,6 +928,23 @@ void SceneXL::RenderRobot()
 	RenderMesh(meshList[GEO_ROBOT], true);
 	modelStack.PopMatrix(); // robot
 }
+
+void SceneXL::Minigun()
+{
+	MinigunHold = meshList[GEO_MINIGUN];
+	MinigunHold->prevTransform = MinigunHold->transform;
+	MinigunHold->transform.translate.x = camera.position.x;
+	MinigunHold->transform.translate.z = camera.position.z;
+	MinigunHold->transform.translate.y = camera.position.y - 2;
+	Vector3 origin = (MinigunHold->transform.translate + GunOrigin).Normalized();
+	MinigunHold->transform.rotate = camera.getRotation(GunOrigin);
+	switch (GEO_MINIGUN) {
+	default:
+		GunOrigin = Vector3(-1, 0, 0);
+		break;
+	}
+}
+
 
 void SceneXL::Exit() {
 	for (auto mesh : meshList) {

@@ -53,9 +53,6 @@ void SceneRyan::Init()
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right",Color(1, 1, 1), 50.1f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//OceanRight.tga");
 
-	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
-	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
-
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
@@ -63,7 +60,9 @@ void SceneRyan::Init()
 
 	meshList[GEO_SHARKBTM] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkBtm.obj", "OBJ//SharkBtm.mtl");
 
-	meshList[GEO_MINIGUN] = MeshBuilder::GenerateOBJMTL("Minigun", "OBJ//Minigun.obj", "OBJ//Minigun.mtl");
+	meshList[GEO_SHARKFIN] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkFin.obj", "OBJ//SharkFin.mtl");
+
+
 
 	meshList[GEO_BEACH] = MeshBuilder::GenerateHemisphere("Beach", Color(1, 1, 1), 36, 36, 1);
 	meshList[GEO_BEACH]->material.kAmbient.Set(0.900, 0.843, 0.000);
@@ -71,7 +70,7 @@ void SceneRyan::Init()
 	meshList[GEO_BEACH]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_BEACH]->material.kShininess = 0.6f;
 
-	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 1, 1), 36, 36, 1);
+
 
 	rotate = true;
 	sharkattack = false;
@@ -81,6 +80,7 @@ void SceneRyan::Init()
 	camera.SharkPos.x = 100;
 	camera.SharkPos.y = 0;
 	camera.SharkPos.z = 0;
+	survivecounter = 0;
 
 	Application::log("Scene Ryan initialized");
 }
@@ -161,7 +161,7 @@ void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -182,7 +182,7 @@ void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -197,7 +197,8 @@ void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 }
 
 void SceneRyan::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
-	if (!mesh || mesh->textureID <= 0) return;
+	if (!mesh || mesh->textureID <= 0) //Proper error check
+		return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
@@ -283,9 +284,9 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 			Vector3 origin = Vector3(-1, 0, 0);
 			sharkdir = camera.getSharkRotation(origin) - 90;
 			Tempcounter = 1;
+			survivecounter++;
 		}
 		
-		std::cout << camera.SharkPos.x << std::endl;
 		if (camera.SharkPos.x > 30)
 		{
 			rotateshark -= 0.5;
@@ -320,18 +321,19 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 	{
 		sharkcircle += 1;
 		sharkcircleangle += 0.5;
-		temptime = dt;
 	}
 	
-
-	if (Application::IsKeyPressed('F')) 
+	if (camera.SharkPos.x > camera.position.x - 1 && camera.SharkPos.x < camera.position.x + 1 && camera.SharkPos.z > camera.position.z - 1 && camera.SharkPos.z < camera.position.z + 1)
 	{
-
-		Minigun();
-		Shootingspin += 3;
+		Application::sceneswitch = Application::SCENEBEACH;
 	}
 
+	if (survivecounter == 6)
+	{
 
+		//something like bool win = true
+		Application::sceneswitch = Application::SCENEBEACH;
+	}
 
 	camera.Update(dt, mouse);
 }
@@ -642,7 +644,7 @@ void SceneRyan::Render()
 
 
 	Mtx44 view;
-	view.SetToPerspective(camera.orthographic_size, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
+	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
 
 	modelStack.PushMatrix();
@@ -675,14 +677,7 @@ void SceneRyan::Render()
 	RenderMesh(meshList[GEO_BEACH], true);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(meshList[GEO_MINIGUN]->transform.translate.x, meshList[GEO_MINIGUN]->transform.translate.y, meshList[GEO_MINIGUN]->transform.translate.z);
-	modelStack.Rotate(meshList[GEO_MINIGUN]->transform.rotate, 0, 1, 0);
-	modelStack.Rotate(90, 0, 0, 1);
-	modelStack.Scale(0.07, 0.07, 0.07);
-	modelStack.Rotate(Shootingspin, 0, 1, 0);
-	RenderMesh(meshList[GEO_MINIGUN], true);
-	modelStack.PopMatrix();
+
 
 
 
@@ -702,10 +697,10 @@ void SceneRyan::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 2, 0, 10);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
 	modelStack.PopMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
-	RenderUI();
+
+
 }
 void SceneRyan::RenderShark()
 {
@@ -716,53 +711,16 @@ void SceneRyan::RenderShark()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
+	modelStack.Translate(0, -2.5, 4);
+	modelStack.Rotate((rotatetail * 2), 0, 1, 0);
+	modelStack.Scale(1.1, 1.1, 1.1);
+	RenderMesh(meshList[GEO_SHARKFIN], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
 	modelStack.Rotate(rotatetail, 0, 1, 0);
 	RenderMesh(meshList[GEO_SHARKBTM], true);
 	modelStack.PopMatrix();
-}
-
-//NOT MY STUFF
-void SceneRyan::Minigun()
-{
-	MinigunHold = meshList[GEO_MINIGUN];
-	MinigunHold->prevTransform = MinigunHold->transform;
-	MinigunHold->transform.translate.x = camera.position.x;
-	MinigunHold->transform.translate.z = camera.position.z;
-	MinigunHold->transform.translate.y = camera.position.y - 2;
-	Vector3 origin = (MinigunHold->transform.translate + GunOrigin).Normalized();
-	MinigunHold->transform.rotate = camera.getRotation(GunOrigin);
-	switch (GEO_MINIGUN) {
-	default:
-		GunOrigin = Vector3(-1, 0, 0);
-		break;
-	}
-}
-
-//void SceneRyan::Bullets() {
-//	for (int i = 0; i < 256; i++) {
-//		if (bullet_array[i] != nullptr) {
-//			modelStack.PushMatrix();
-//			Vector3 pos = bullet_array[i]->getCurrPos();
-//
-//			modelStack.Translate(pos.x, pos.y, pos.z);
-//			modelStack.Rotate(bullet_array[i]->GetDirection(), 0, 1, 0);
-//			modelStack.Rotate(90, 1, 0, 0);
-//			modelStack.Scale(0.05f, 0.05f, 0.05f);
-//			RenderMesh(meshList[GEO_BULLET], true);
-//
-//			modelStack.PopMatrix();
-//		}
-//	}
-//}
-
-void SceneRyan::RenderUI() {
-
-	unsigned w = Application::GetWindowWidth();
-	unsigned h = Application::GetWindowHeight();
-	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);
 }
 
 void SceneRyan::Exit() {

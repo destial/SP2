@@ -96,8 +96,9 @@ void SceneShaqeel::Init()
 
 	meshList[GEO_ROBORIGHTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightarm.obj"); // Try 1 first
 	meshList[GEO_ROBORIGHTARM]->textureID = LoadTGA("Image//robo_normal.tga");
-
-	meshList[GEO_CITY1] = MeshBuilder::GenerateOBJ("Mart", "OBJ//skyscraper4.obj"); // Try 1 first
+	//LATER RENAME TO BUILDING
+	meshList[GEO_CITY1] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NYBuilding.obj"); // Try 1 first
+	meshList[GEO_CITY1]->textureID = LoadTGA("Image//NYBuilding.tga");
 
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJ("Door", "OBJ//MartDoor1.obj"); // Try 1 first
 	meshList[GEO_DOOR]->textureID = LoadTGA("Image//RedColour.tga");
@@ -926,22 +927,19 @@ void SceneShaqeel::Rendercityobjects()
 
 	modelStack.PushMatrix();
 	modelStack.Translate(22.1, -2, 0);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(1, 1, 1);
+	modelStack.Scale(0.4, 0.4, 0.4);
 	RenderMesh(meshList[GEO_CITY1], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(27, -2, 9);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(1.3, 1.3, 1.3);
+	modelStack.Translate(22.1, -2, -9);
+	modelStack.Scale(0.38, 0.38, 0.38);
 	RenderMesh(meshList[GEO_CITY1], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(27, -2, -9);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(1.3, 1.3, 1.3);
+	modelStack.Translate(22.1, -2, 9);
+	modelStack.Scale(0.38, 0.38, 0.38);
 	RenderMesh(meshList[GEO_CITY1], true);
 	modelStack.PopMatrix();
 

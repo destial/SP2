@@ -27,6 +27,7 @@ class SceneW : public Scene
 		GEO_UI,
 		GEO_CLAYMORE,
 		GEO_ARMOURPLATE,
+		GEO_HELMET,
 		MWALL,
 		BOX,
 		BOXOPEN,
@@ -98,6 +99,7 @@ private:
 
 	bool ClaymoreSpawn;
 	bool ArmourSpawn;
+	bool HelmetSpawn;
 
 	bool heightlimit;
 	bool Claymorelimit;
@@ -105,8 +107,12 @@ private:
 	bool heightlimit2;
 	bool armourlimit;
 
+	bool heightlimit3;
+	bool helmetlimit;
+
 	bool collectedClaymore;
 	bool collectedArmour;
+	bool collectedHelmet;
 
 	bool Dooropen;
 
@@ -120,17 +126,26 @@ private:
 
 	float rotateDoor;
 
-
 	float claymoreX;
 	float claymoreY;
+
 	float armourX;
 	float armourY;
+
+	float helmetX;
+	float helmetY;
+
 	float scaleCLX;
 	float scaleCLY;
 	float scaleCLZ;
+
 	float scaleARX;
 	float scaleARY;
 	float scaleARZ;
+
+	float scaleHLX;
+	float scaleHLY;
+	float scaleHLZ;
 
 
 	Mesh* meshList[NUM_GEOMETRY];

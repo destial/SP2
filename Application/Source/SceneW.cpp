@@ -79,6 +79,9 @@ void SceneW::Init() {
 	meshList[GEO_ARMOURPLATE] = MeshBuilder::GenerateOBJ("Armourplate", "OBJ//newarmourplate.obj"); // Try 1 first
 	meshList[GEO_ARMOURPLATE]->textureID = LoadTGA("Image//newarmourplate.tga");
 
+	meshList[GEO_HELMET] = MeshBuilder::GenerateOBJ("Armourplate", "OBJ//newhelmet.obj"); // Try 1 first
+	meshList[GEO_HELMET]->textureID = LoadTGA("Image//newhelmet.tga");
+
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::CAMERA;
 
@@ -98,6 +101,9 @@ void SceneW::Init() {
 	armourX = -23;
 	armourY = 1;
 
+	helmetX = 20.5;
+	helmetY = 1.5;
+
 	scaleCLX = 0.25; // 1
 	scaleCLY = 0.25; // 1 
 	scaleCLZ = 0.25; // 1
@@ -105,6 +111,10 @@ void SceneW::Init() {
 	scaleARX = 0.05; // 1
 	scaleARY = 0.05; // 1 
 	scaleARZ = 0.05; // 1
+
+	scaleHLX = 0.2; // 1
+	scaleHLY = 0.2; // 1 
+	scaleHLZ = 0.2; // 1
 
 	Chestlimit = false;
 	Chestlimit2 = false;
@@ -118,8 +128,12 @@ void SceneW::Init() {
 	ArmourSpawn = false;
 	armourlimit = false;
 
+	HelmetSpawn = false;
+	helmetlimit = false;
+
 	collectedClaymore = false;
 	collectedArmour = false;
+	collectedHelmet = false;
 
 	Dooropen = false;
 
@@ -327,7 +341,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && Chestlimit3 == false)
 		{
-			rotateChest3 -= (float)(40 * dt);
+			rotateChest3 -= (float)(45 * dt);
 			ArmourSpawn = true;
 			if (rotateChest3 <= -120)
 			{
@@ -346,8 +360,9 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && Chestlimit5 == false)
 		{
-			rotateChest5 -= (float)(40 * dt);
-			if (rotateChest5 <= -70)
+			rotateChest5 -= (float)(45 * dt);
+			HelmetSpawn = true;
+			if (rotateChest5 <= -120)
 			{
 				Chestlimit5 = true;
 			}
@@ -409,9 +424,9 @@ void SceneW::Update(double dt, Mouse mouse) {
 	{
 		if (scaleARX < 0.4 && scaleARY < 0.4 && scaleARZ < 0.4 && armourlimit == false) //does not bendup z -
 		{
-			scaleARX += (float)(1.1 * dt);
-			scaleARY += (float)(1.1 * dt);
-			scaleARZ += (float)(1.1 * dt);
+			scaleARX += (float)(0.1 * dt);
+			scaleARY += (float)(0.1 * dt);
+			scaleARZ += (float)(0.1 * dt);
 		}
 		else if (scaleARX >= 0.4 && scaleARY >= 0.4 && scaleARZ >= 0.4)
 		{
@@ -421,7 +436,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		
 		if (armourY > 1 && heightlimit2 == false)
 		{
-			armourY -= (float)(1.05 * dt);
+			armourY -= (float)(1 * dt);
 		}
 		else if (armourY >= -3.5 && armourY <= 3.5)
 		{
@@ -429,11 +444,43 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 		if (armourY >= -3.5 && armourY < 3.5 && heightlimit2 == true)
 		{
-			armourY += (float)(1.05 * dt);
+			armourY += (float)(1 * dt);
 		}
 		else if (armourY >= 3.5)
 		{
 			heightlimit2 = false;
+		}
+	}
+
+	if (HelmetSpawn == true)
+	{
+		if (scaleHLX < 2 && scaleHLY < 2 && scaleHLZ < 2 && helmetlimit == false) //does not bendup z -
+		{
+			scaleHLX += (float)(1 * dt);
+			scaleHLY += (float)(1 * dt);
+			scaleHLZ += (float)(1 * dt);
+		}
+
+		else if (scaleHLX >= 2 && scaleHLY >= 2 && scaleHLZ >= 2)
+		{
+			helmetlimit = true;
+		}
+
+		if (helmetY > 1.5 && heightlimit3 == false)
+		{
+			helmetY -= (float)(1 * dt);
+		}
+		else if (helmetY >= -3.5 && helmetY <= 3.5)
+		{
+			heightlimit3 = true;
+		}
+		if (helmetY >= -3.5 && helmetY < 3.5 && heightlimit3 == true)
+		{
+			helmetY += (float)(1 * dt);
+		}
+		else if (helmetY >= 3.5)
+		{
+			heightlimit3 = false;
 		}
 	}
 
@@ -449,6 +496,12 @@ void SceneW::Update(double dt, Mouse mouse) {
 		{
 			armourX = 1000;
 			collectedArmour = true;
+		}
+
+		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && helmetlimit == true)
+		{
+			helmetX = 1000;
+			collectedHelmet = true;
 		}
 	}
 
@@ -1052,6 +1105,13 @@ void SceneW::RenderItems() // inside chest
 	modelStack.Rotate(90, 0, 0, 1);
 	modelStack.Scale(scaleARX, scaleARY, scaleARZ);
 	RenderMesh(meshList[GEO_ARMOURPLATE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(helmetX, helmetY, -3.7);
+	modelStack.Rotate(270, 1, 0, 0);
+	modelStack.Scale(scaleHLX, scaleHLY, scaleHLZ);
+	RenderMesh(meshList[GEO_HELMET], true);
 	modelStack.PopMatrix();
 
 }

@@ -117,6 +117,8 @@ private:
 	void RenderObjects();
 	void RenderTasks();
 	void RenderRobo();
+	void RoadTeleport();
+	void RenderTeleportText();
 	void CompleteTasks();
 	void GetInCar();
 	void DetectCollision();

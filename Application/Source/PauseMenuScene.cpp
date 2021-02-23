@@ -249,15 +249,15 @@ void PauseMenuScene::Update(double dt, Mouse mouse) {
 		float posX = x / w * Application::GetUIWidth(); //convert (0,800) to (0,80)
 		float posY = (1.f - y / h) * Application::GetUIHeight(); //convert (600,0) to (0,60)
 		std::cout << "posX:" << posX << " , posY:" << posY << std::endl;
-		if (posX > 32 * w / 800 && posX < 48 * w / 800 && posY > 31 * h / 600 && posY < 39 * h / 600)
+		if (posX > 29 * w / 800 && posX < 50 * w / 800 && posY > 29 * h / 600 && posY < 41 * h / 600)
 		{
 			std::cout << "Hit!" << std::endl;
 			Application::sceneswitch = Application::OVERWORLD;
 		}
-		else if (posX > 32 * w / 800 && posX < 48 * w / 800 && posY > 21 * h / 600 && posY < 29 * h / 600)
+		else if (posX > 29 * w / 800 && posX < 50 * w / 800 && posY > 14 * h / 600 && posY < 26 * h / 600)
 		{
 			std::cout << "Hit!" << std::endl;
-			Application::quit = 1;
+			Application::sceneswitch = Application::STARTSCENE;
 		}
 		else
 		{
@@ -653,10 +653,11 @@ void PauseMenuScene::Render()
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[BUTTON], 20, 40 * w / 800, 35 * h / 600);
-	RenderMeshOnScreen(meshList[BUTTON], 20, 40 * w / 800, 25 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "SP2 Group 2 - My City Tour", WHITE, 4, 1.5 * w / 750, 10 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Continue", BLUE, 3, 9 * w / 750, 8.5 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Return to Main Menu", BLUE, 3, 9 * w / 750, 6 * h / 600);
+	RenderMeshOnScreen(meshList[BUTTON], 20, 40 * w / 800, 20 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "SP2 Group 2 - My City Tour", WHITE, 4, 3 * w / 750, 10 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Continue", BLUE, 3, 7.5 * w / 750, 8.5 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Return to", BLUE, 3, 7.25 * w / 750, 5 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Main Menu", BLUE, 3, 7.25 * w / 750, 4.5 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 1, 0, 0);
 }
 

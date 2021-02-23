@@ -18,6 +18,8 @@
 #include "SceneOfTheBeach.h"
 #include "SceneRyan.h"
 #include "SceneXL.h"
+#include "PauseMenuScene.h"
+#include "WinnerScene.h"
 
 
 GLFWwindow* m_window;
@@ -246,6 +248,8 @@ void Application::Run() {
 	scene[OVERWORLD] = new OverworldScene();
 	scene[SCENESHAQLER] = new SceneShaqler();
 	scene[STARTSCENE] = new StartMenuScene();
+	scene[MENUSCENE] = new PauseMenuScene();
+	scene[WINSCENE] = new WinnerScene();
 
 	/*scene[SHAQLER]*/
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
@@ -308,7 +312,7 @@ void Application::Run() {
 			break;
 		case Application::SCENEXL:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::STARTSCENE;
+				Application::sceneswitch = Application::MENUSCENE;
 			}
 			break;
 		case Application::STARTSCENE:
@@ -316,7 +320,16 @@ void Application::Run() {
 				Application::sceneswitch = Application::OVERWORLD;
 			}
 		case Application::WINSCENE:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::MENUSCENE;
+			}
+			break;
+		case Application::LOSESCENE:
+			break;
 		case Application::MENUSCENE:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::WINSCENE;
+			}
 			break;
 		case Application::OVERWORLD:
 			if (Application::IsKeyPressedOnce(VK_F1)) {

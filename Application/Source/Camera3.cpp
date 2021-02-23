@@ -422,24 +422,23 @@ void Camera3::UpdateFlying(double& dt, Mouse& mouse) {
 
 	}
 
-	if (Application::IsKeyPressed(' ')) {
+	if (Application::IsKeyPressed(VK_SPACE)) {
 		if (position.y <= boundary) {
 			position.y += up.y;
 			target.y += up.y;
 		}
 	}
-
-	if (Application::IsKeyPressed(VK_LCONTROL)) {
+	else
+	{
 		if (position.y >= -boundary) {
-			position.y -= up.y;
-			target.y -= up.y;
+			position.y -= up.y * 0.3;
+			target.y -= up.y * 0.3;
 		}
 		if (position.y < defaultPosition.y)
 		{
 			float diff = defaultPosition.y - position.y;
 			position.y = defaultPosition.y;
 			target.y += diff;
-
 		}
 	}
 }
@@ -688,19 +687,19 @@ void Camera3::SharkChaseMove()
 
 void Camera3::Bulletinit()
 {
-	SharkView = (SharkPos - position).Normalized();//change pos and target for bullet
-	SharkRight = SharkView.Cross(up).Normalized();
-	SharkRight.y = 0;
-	SharkFace = Vector3(0, 1, 0).Cross(SharkRight).Normalized();
+	BulletView = (BulletPos - position).Normalized();//change pos and target for bullet
+	BulletRight = BulletView.Cross(up).Normalized();
+	BulletRight.y = 0;
+	BulletFace = Vector3(0, 1, 0).Cross(BulletRight).Normalized();
 
 }
 
 void Camera3::BulletMove()
 {
 
-	SharkPos.x -= SharkFace.x;
-	SharkTarget.x -= SharkFace.x;
-	SharkPos.z -= SharkFace.z;
-	SharkTarget.z -= SharkFace.z;
+	BulletPos.x -= BulletFace.x;
+	BulletTarget.x -= BulletFace.x;
+	BulletPos.z -= BulletFace.z;
+	BulletTarget.z -= BulletFace.z;
 }
 

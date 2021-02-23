@@ -29,7 +29,7 @@ void SceneShaqeel::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)30);
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
@@ -80,7 +80,7 @@ void SceneShaqeel::Init()
 	meshList[GEO_STREETLIGHT]->textureID = LoadTGA("Image//StreetLight.tga");
 
 	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NewMart.obj"); // Try 1 first
-	meshList[GEO_MART]->textureID = LoadTGA("Image//house1.tga");
+	meshList[GEO_MART]->textureID = LoadTGA("Image//blueColour.tga");
 
 	meshList[GEO_ROBOBODY] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Robowithoutarmsandlegs.obj"); // Try 1 first
 	meshList[GEO_ROBOBODY]->textureID = LoadTGA("Image//robo_normal.tga");

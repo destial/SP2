@@ -90,8 +90,30 @@ void OverworldScene::Init() {
 	meshList[STREETLIGHT]->textureID = LoadTGA("Image//StreetLight.tga");
 	meshList[STREETLIGHT]->type = Mesh::TYPE::OBJECT;
 
+	meshList[GEO_ROBOBODY] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Robowithoutarmsandlegs.obj"); // Try 1 first
+	meshList[GEO_ROBOBODY]->textureID = LoadTGA("Image//robo_normal.tga");
+
+	meshList[GEO_ROBOLEFTLEG] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roboleftleg.obj"); // Try 1 first
+	meshList[GEO_ROBOLEFTLEG]->textureID = LoadTGA("Image//robo_normal.tga");
+
+	meshList[GEO_ROBORIGHTLEG] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightleg.obj"); // Try 1 first
+	meshList[GEO_ROBORIGHTLEG]->textureID = LoadTGA("Image//robo_normal.tga");
+
+	meshList[GEO_ROBOLEFTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roboleftarm.obj"); // Try 1 first
+	meshList[GEO_ROBOLEFTARM]->textureID = LoadTGA("Image//robo_normal.tga");
+
+	meshList[GEO_ROBORIGHTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightarm.obj"); // Try 1 first
+	meshList[GEO_ROBORIGHTARM]->textureID = LoadTGA("Image//robo_normal.tga");
+
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::TYPE::CAMERA;
+
+	rotateleftleg = 0;
+	leftleglimit = false;
+	translateSphereZ = -19.6;
+	translateSphereZ2 = 19.6;
+	translateSphereX1 = 40;
+	translateSphereX2 = 0;
 
 	Reset();
 
@@ -261,6 +283,43 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	for (auto o : sceneManager->allObjects) {
 		sceneManager->root->push(o);
 	}
+
+	translateSphereZ += (float)(2.5 * dt);
+	translateSphereZ2 -= (float)(2.75 * dt);
+	translateSphereX1 -= (float)(2.5 * dt);
+	
+	if (leftleglimit == true)
+	{
+		rotateleftleg += 1;
+		if (rotateleftleg > 30)
+		{
+			leftleglimit = false;
+		}
+	}
+	else if (leftleglimit == false)
+	{
+		rotateleftleg -= 1;
+		if (rotateleftleg < -30)
+		{
+			leftleglimit = true;
+		}
+	}
+
+	if (translateSphereZ >= 30.5)
+	{
+		translateSphereZ = -39;
+	}
+
+	if (translateSphereZ2 <= -38)
+	{
+		translateSphereZ2 = 29;
+	}
+
+	if (translateSphereX1 <= -33.4)
+	{
+		translateSphereX1 = 36.4;
+	}
+
 }
 
 void OverworldScene::InitGL()
@@ -676,6 +735,137 @@ void OverworldScene::CompleteTasks() {
 	}
 }
 
+void OverworldScene::RenderRobo()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(-32.2, 2.5, translateSphereZ);
+	modelStack.Scale(0.3, 0.27, 0.3);
+	RenderMesh(meshList[GEO_SPHERE], true);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-2.25, 4.5, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(2.25, 4.5, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -8.5, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOBODY], true);
+	modelStack.PopMatrix();
+
+	modelStack.PopMatrix();
+
+	
+	// 2nd robot
+	modelStack.PushMatrix();
+	modelStack.Translate(38.2, 2.5, translateSphereZ2);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.3, 0.27, 0.3);
+	RenderMesh(meshList[GEO_SPHERE], true);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-2.25, 4.5, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(2.25, 4.5, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -8.5, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOBODY], true);
+	modelStack.PopMatrix();
+
+	modelStack.PopMatrix();
+
+	// 3rd robot
+	modelStack.PushMatrix();
+	modelStack.Translate(translateSphereX1, 2.5, -79);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.3, 0.27, 0.3);
+	RenderMesh(meshList[GEO_SPHERE], true);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-2.25, 4.5, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(2.25, 4.5, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -8.5, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOBODY], true);
+	modelStack.PopMatrix();
+
+	modelStack.PopMatrix();
+}
+
 void OverworldScene::GetInCar() {
 	if (!currentCarObject) {
 		for (auto object : sceneManager->allObjects) {
@@ -826,6 +1016,8 @@ void OverworldScene::Render() {
 	modelStack.Scale(2, 2, 2);
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Colors::RED, 4, 0, 10);
 	modelStack.PopMatrix();
+
+	RenderRobo();
 }
 
 void OverworldScene::Exit() {

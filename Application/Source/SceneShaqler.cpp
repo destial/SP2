@@ -57,6 +57,8 @@ void SceneShaqler::Init() {
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", Color(1, 0, 0), 30, 30, 1);
 	meshList[GEO_SPHERE]->textureID = LoadTGA("Image//BlackWallpaper.tga");
 
+	meshList[GEO_SOFA] = MeshBuilder::GenerateOBJMTL("Sofa", "OBJ//BlueSofa.obj", "OBJ//BlueSofa.mtl");
+
 	meshList[GEO_DESKCORNER] = MeshBuilder::GenerateOBJMTL("DeskCounter", "OBJ//deskCorner.obj", "OBJ//deskCorner.mtl");
 
 	meshList[GEO_CHAIR] = MeshBuilder::GenerateOBJMTL("Chair", "OBJ//chair.obj", "OBJ//chair.mtl");
@@ -77,6 +79,8 @@ void SceneShaqler::Init() {
 	meshList[GEO_SAMIDALRIGHTARM] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//Samidalrightarm.obj", "OBJ//Samidalrightarm.mtl");
 
 	meshList[GEO_SAMIDALLEFTARM] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//Samidalleftarm.obj", "OBJ//Samidalleftarm.mtl");
+
+	meshList[GEO_TABLE] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//BrownRoundTable.obj", "OBJ//BrownRoundTable.mtl");
 
 	meshList[GEO_BOOKSTACK] = MeshBuilder::GenerateOBJ("Bookstack", "OBJ//BookStack.obj"); // Try 1 first
 	meshList[GEO_BOOKSTACK]->textureID = LoadTGA("Image//BookStack.tga");
@@ -420,26 +424,6 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		isBuying = false;
 		Bookhasbeenbaught = false;
 	}
-
-	/*if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75)
-	{
-		switch (UIPhase)
-		{
-		case 0:
-			if (Application::IsKeyPressed('Y'))
-			{
-				Bookhasbeenbaught = true;
-			}
-			break;
-		case 1:
-			if (Application::IsKeyPressed('N'))
-			{
-				Bookhasbeenbaught = false;
-				isBuying = false;
-			}
-			break;
-		}
-	}*/
 
 	if (Application::IsKeyPressedOnce('F') && camera.position.x >= 1.13 && camera.position.x <= 6.6 
 		&& camera.position.z >= 14 && camera.position.z <= 20 && stopOpendoor == true) {
@@ -863,8 +847,8 @@ void SceneShaqler::RenderInatimateobjects()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(18, 0, 18);
-	modelStack.Rotate(220, 0, 1, 0);
+	modelStack.Translate(17.2, 0, -7.1);
+	modelStack.Rotate(300, 0, 1, 0);
 	modelStack.Scale(0.1, 0.1, 0.1);
 	RenderMesh(meshList[GEO_STATUE], true);
 	modelStack.PopMatrix();
@@ -901,11 +885,19 @@ void SceneShaqler::RenderInatimateobjects()
 	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();
 
-	/*modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Scale(5, 5, 5);
-	RenderMesh(meshList[GEO_TABLEANDCHAIR], true);
-	modelStack.PopMatrix();*/
+	modelStack.PushMatrix();
+	modelStack.Translate(17.2, 0, 8.5);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.7, 0.7,0.7);
+	RenderMesh(meshList[GEO_SOFA], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(16, 0, 17);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.4, 0.4, 0.4);
+	RenderMesh(meshList[GEO_TABLE], true);
+	modelStack.PopMatrix();
 
 }
 

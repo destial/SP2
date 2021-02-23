@@ -241,7 +241,7 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('E'))
 	{
-		if (camera.position.x <= -27.6 && camera.position.x >= -31.6 && camera.position.z <= 34 && camera.position.z >= 28.8)
+		if (camera.position.x <= -35.6 && camera.position.x >= -41.6 && camera.position.z <= 34 && camera.position.z >= 28.8)
 		{
 			OpenTextBox = true;
 		}

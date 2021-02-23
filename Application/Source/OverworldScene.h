@@ -127,6 +127,7 @@ private:
 	void CompleteTasks();
 	void GetInCar();
 	void DetectCollision();
+	void UpdateRobo(double &dt);
 	void CreateCityObjects();
 	void MoveBack();
 	void ObjectMoveBack(Mesh* mesh);

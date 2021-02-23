@@ -36,7 +36,6 @@ public:
 		STARTSCENE,
 		MENUSCENE,
 		WINSCENE,
-		LOSESCENE,
 		OVERWORLD,
 		SCENESHAQ,
 		SCENESHAQLER,
@@ -44,8 +43,16 @@ public:
 		SCENEBEACH,
 		SCENERYAN,
 		SCENEXL,
-		SCENERANCE,
 		TOTALSCENES,
+	};
+
+	enum OBJECTIVES {
+		TUTORIAL,
+		GET_BOOK,
+		SURVIVE_SHARK,
+		FINISH_MAZE,
+		TOTAL_OBJECTIVES,
+
 	};
 	static bool IsKeyPressed(unsigned short key);
 	static bool IsMousePressed(unsigned short key);

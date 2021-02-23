@@ -13,8 +13,8 @@ class SceneOfTheBeach : public Scene
 	{
 		GEO_AXES = 0,
 		GEO_QUAD,
-		GEO_QUAD2,
-		GEO_QUAD3,
+		GEO_OCEAN,
+		GEO_ROAD,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -23,6 +23,9 @@ class SceneOfTheBeach : public Scene
 		GEO_BACK,
 		GEO_TEXT,
 		GEO_DRIZZLE,
+		GEO_TREE,
+		GEO_CRAB,
+		GEO_CHAIR,
 		GEO_UI,
 		NUM_GEOMETRY,
 	};
@@ -105,6 +108,7 @@ public:
 	virtual void Update(double dt);
 	virtual void Update(double dt, Mouse mouse);
 	virtual void InitGL();
+	virtual void InitGLXray();
 	virtual void Render();
 	virtual void Exit();
 

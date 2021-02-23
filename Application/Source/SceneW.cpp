@@ -90,6 +90,8 @@ void SceneW::Init() {
 	rotateChest5 = 0;
 	countChest = 0;
 
+	rotateDoor = 0;
+
 	claymoreX = -45.3;
 	claymoreY = 1.5;
 
@@ -118,6 +120,8 @@ void SceneW::Init() {
 
 	collectedClaymore = false;
 	collectedArmour = false;
+
+	Dooropen = false;
 
 	sceneManager = new SceneManager(this, camera.bounds);
 	CreateMaze();
@@ -349,6 +353,24 @@ void SceneW::Update(double dt, Mouse mouse) {
 			}
 		}
 
+		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && Dooropen == false)
+		{
+			rotateDoor -= (float)(30 * dt);
+		}
+
+	}
+
+	if (rotateDoor <= -90)
+	{
+		Dooropen = true;
+	}
+
+	if (Application::IsKeyPressed('F'))
+	{
+		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && Dooropen == true)
+		{
+			Application::sceneswitch = Application::OVERWORLD;
+		}
 	}
 
 	if (ClaymoreSpawn == true)
@@ -910,6 +932,7 @@ void SceneW::RenderRoom() {
 	// Exit Door
 	modelStack.PushMatrix();
 	modelStack.Translate(26.5, 0, 49);
+	modelStack.Rotate(rotateDoor, 0, 1, 0);
 	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();

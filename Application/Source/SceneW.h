@@ -108,6 +108,8 @@ private:
 	bool collectedClaymore;
 	bool collectedArmour;
 
+	bool Dooropen;
+
 	int countChest;
 
 	float rotateChest;
@@ -115,6 +117,8 @@ private:
 	float rotateChest3;
 	float rotateChest4;
 	float rotateChest5;
+
+	float rotateDoor;
 
 
 	float claymoreX;

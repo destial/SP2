@@ -98,7 +98,6 @@ private:
 
 	Mesh* meshList[NUM_GEOMETRY];
 
-
 	//trying chasing code
 	Vector3 Temptarget;
 

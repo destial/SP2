@@ -196,9 +196,8 @@ void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneRyan::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
-	if (!mesh || mesh->textureID <= 0) //Proper error check
-		return;
+void SceneRyan::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
+	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
@@ -228,7 +227,6 @@ void SceneRyan::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x,
 	modelStack.PopMatrix();
 	glEnable(GL_DEPTH_TEST);
 }
-
 void SceneRyan::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);

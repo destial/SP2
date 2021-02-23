@@ -313,69 +313,18 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 		camera.UpdateCar(dt, mouse, 6.f);
 	}
 
-	//sceneManager->split(sceneManager->root);
-
+	RoadTeleport();
 	DetectCollision();
 	GetInCar();
 	CompleteTasks();
-
-	sceneManager->deleteAllQuad(sceneManager->root);
-	sceneManager->root = new Quad(camera.bounds);
-	for (auto o : sceneManager->allObjects) {
-		sceneManager->root->push(o);
-	}
-
-	translateSphereZ += (float)(2.5 * dt);
-	translateSphereZ2 -= (float)(2.75 * dt);
-	translateSphereX1 -= (float)(2.5 * dt);
-	translateSphereX2 += (float)(2.75 * dt);
-	
-	if (leftleglimit == true)
-	{
-		rotateleftleg += 1;
-		if (rotateleftleg > 30)
-		{
-			leftleglimit = false;
-		}
-	}
-	else if (leftleglimit == false)
-	{
-		rotateleftleg -= 1;
-		if (rotateleftleg < -30)
-		{
-			leftleglimit = true;
-		}
-	}
-
-	if (translateSphereZ >= 30.5)
-	{
-		translateSphereZ = -39;
-	}
-
-	if (translateSphereZ2 <= -38)
-	{
-		translateSphereZ2 = 29;
-	}
-
-	if (translateSphereX1 <= -33.4)
-	{
-		translateSphereX1 = 36.4;
-	}
-
-	if (translateSphereX2 >= 34.2)
-	{
-		translateSphereX2 = -30;
-	}
-
+	UpdateRobo(dt);
 }
 
-void OverworldScene::InitGL()
-{
-
-
+void OverworldScene::InitGL() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
 	m_parameters[U_MODELVIEW] = glGetUniformLocation(m_programID, "MV");
@@ -384,10 +333,8 @@ void OverworldScene::InitGL()
 	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
 	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
-	// Get a handle for our "textColor" uniform
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
-	// Get a handle for our "colorTexture" uniform
 	m_parameters[U_COLOR_TEXTURE_ENABLED] = glGetUniformLocation(m_programID, "colorTextureEnabled");
 	m_parameters[U_COLOR_TEXTURE] = glGetUniformLocation(m_programID, "colorTexture");
 
@@ -420,13 +367,13 @@ void OverworldScene::InitGL()
 	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
 
+	Mesh::SetMaterialLoc(
+		m_parameters[U_MATERIAL_AMBIENT], 
+		m_parameters[U_MATERIAL_DIFFUSE], 
+		m_parameters[U_MATERIAL_SPECULAR], 
+		m_parameters[U_MATERIAL_SHININESS]
+	);
 
-
-	// Make sure you pass uniform parameters after glUseProgram()
-
-	//Replace previous code
-	//light[0].type = Light::LIGHT_POINT;
-	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
 	light[0].power = 1;
 	light[0].kC = 1.f;
@@ -437,8 +384,6 @@ void OverworldScene::InitGL()
 	light[0].exponent = 3.f;
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
 
-	//light[1].type = Light::LIGHT_POINT;
-	//light[1].position.Set(0, 0, 0);
 	light[1].color.Set(1, 1, 1);
 	light[1].power = 1;
 	light[1].kC = 1.f;
@@ -448,8 +393,9 @@ void OverworldScene::InitGL()
 	light[1].cosInner = cos(Math::DegreeToRadian(30));
 	light[1].exponent = 3.f;
 	light[1].spotDirection.Set(0.f, 1.f, 0.f);
+
 	glUseProgram(m_programID);
-	Mesh::SetMaterialLoc(m_parameters[U_MATERIAL_AMBIENT], m_parameters[U_MATERIAL_DIFFUSE], m_parameters[U_MATERIAL_SPECULAR], m_parameters[U_MATERIAL_SHININESS]);
+
 	glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &light[0].color.r);
 	glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
@@ -469,16 +415,15 @@ void OverworldScene::InitGL()
 	glUniform1f(m_parameters[U_LIGHT1_COSCUTOFF], light[1].cosCutoff);
 	glUniform1f(m_parameters[U_LIGHT1_COSINNER], light[1].cosInner);
 	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], light[1].exponent);
+
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 }
 
-void OverworldScene::InitGLXray()
-{
-
-
+void OverworldScene::InitGLXray() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//TextAlpha.fragmentshader");
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
 	m_parameters[U_MODELVIEW] = glGetUniformLocation(m_programID, "MV");
@@ -487,10 +432,8 @@ void OverworldScene::InitGLXray()
 	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
 	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
-	// Get a handle for our "textColor" uniform
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
-	// Get a handle for our "colorTexture" uniform
 	m_parameters[U_COLOR_TEXTURE_ENABLED] = glGetUniformLocation(m_programID, "colorTextureEnabled");
 	m_parameters[U_COLOR_TEXTURE] = glGetUniformLocation(m_programID, "colorTexture");
 
@@ -523,13 +466,13 @@ void OverworldScene::InitGLXray()
 	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
 
+	Mesh::SetMaterialLoc(
+		m_parameters[U_MATERIAL_AMBIENT], 
+		m_parameters[U_MATERIAL_DIFFUSE], 
+		m_parameters[U_MATERIAL_SPECULAR], 
+		m_parameters[U_MATERIAL_SHININESS]
+	);
 
-
-	// Make sure you pass uniform parameters after glUseProgram()
-
-	//Replace previous code
-	//light[0].type = Light::LIGHT_POINT;
-	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
 	light[0].power = 1;
 	light[0].kC = 1.f;
@@ -540,8 +483,6 @@ void OverworldScene::InitGLXray()
 	light[0].exponent = 3.f;
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
 
-	//light[1].type = Light::LIGHT_POINT;
-	//light[1].position.Set(0, 0, 0);
 	light[1].color.Set(1, 1, 1);
 	light[1].power = 1;
 	light[1].kC = 1.f;
@@ -551,8 +492,9 @@ void OverworldScene::InitGLXray()
 	light[1].cosInner = cos(Math::DegreeToRadian(30));
 	light[1].exponent = 3.f;
 	light[1].spotDirection.Set(0.f, 1.f, 0.f);
+
 	glUseProgram(m_programID);
-	Mesh::SetMaterialLoc(m_parameters[U_MATERIAL_AMBIENT], m_parameters[U_MATERIAL_DIFFUSE], m_parameters[U_MATERIAL_SPECULAR], m_parameters[U_MATERIAL_SHININESS]);
+
 	glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &light[0].color.r);
 	glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
@@ -782,9 +724,9 @@ void OverworldScene::CompleteTasks() {
 	}
 }
 
-void OverworldScene::RenderRobo()
-{
+void OverworldScene::RenderRobo() {
 	modelStack.PushMatrix();
+
 	modelStack.Translate(-32.2, 2.5, translateSphereZ);
 	modelStack.Scale(0.3, 0.27, 0.3);
 	RenderMesh(meshList[GEO_SPHERE], true);
@@ -828,6 +770,7 @@ void OverworldScene::RenderRobo()
 	
 	// 2nd robot
 	modelStack.PushMatrix();
+
 	modelStack.Translate(38.2, 2.5, translateSphereZ2);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(0.3, 0.27, 0.3);
@@ -871,6 +814,7 @@ void OverworldScene::RenderRobo()
 
 	// 3d robot
 	modelStack.PushMatrix();
+
 	modelStack.Translate(76.2, 2.5, translateSphereZ);
 	modelStack.Scale(0.3, 0.27, 0.3);
 	RenderMesh(meshList[GEO_SPHERE], true);
@@ -913,6 +857,7 @@ void OverworldScene::RenderRobo()
 
 	// 4th robot
 	modelStack.PushMatrix();
+
 	modelStack.Translate(-74.2, 2.5, translateSphereZ2);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(0.3, 0.27, 0.3);
@@ -956,6 +901,7 @@ void OverworldScene::RenderRobo()
 
 	// 5th robot
 	modelStack.PushMatrix();
+
 	modelStack.Translate(translateSphereX1, 2.5, -79);
 	modelStack.Rotate(270, 0, 1, 0);
 	modelStack.Scale(0.3, 0.27, 0.3);
@@ -999,6 +945,7 @@ void OverworldScene::RenderRobo()
 
 	// 6th robot
 	modelStack.PushMatrix();
+
 	modelStack.Translate(translateSphereX2, 2.5, 69.6);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(0.3, 0.27, 0.3);
@@ -1092,13 +1039,42 @@ void OverworldScene::GetInCar() {
 }
 
 void OverworldScene::DetectCollision() {
-	if (!currentCarObject) {
-		for (auto o : sceneManager->allObjects) {
-			if (isNearObject(o, 2)) {
-				MoveBack();
-			}
+	for (auto o : sceneManager->allObjects) {
+		if (o == currentCarObject) continue;
+		if (isNearObject(o, 2)) {
+			MoveBack();
 		}
 	}
+}
+
+void OverworldScene::UpdateRobo(double &dt) {
+	translateSphereZ += (float)(2.5 * dt);
+	translateSphereZ2 -= (float)(2.75 * dt);
+	translateSphereX1 -= (float)(2.5 * dt);
+	translateSphereX2 += (float)(2.75 * dt);
+
+	if (leftleglimit == true) {
+		rotateleftleg += 1;
+		if (rotateleftleg > 30)
+			leftleglimit = false;
+
+	} else if (leftleglimit == false) {
+		rotateleftleg -= 1;
+		if (rotateleftleg < -30)
+			leftleglimit = true;
+	}
+
+	if (translateSphereZ >= 30.5)
+		translateSphereZ = -39;
+
+	if (translateSphereZ2 <= -38)
+		translateSphereZ2 = 29;
+
+	if (translateSphereX1 <= -33.4)
+		translateSphereX1 = 36.4;
+
+	if (translateSphereX2 >= 34.2)
+		translateSphereX2 = -30;
 }
 
 void OverworldScene::CreateCityObjects() {
@@ -1108,7 +1084,7 @@ void OverworldScene::CreateCityObjects() {
 				continue;
 			}
 			GameObject* object = new GameObject(meshList[STREETLIGHT]);
-			object->transform->Translate(i * 18, 0.5f, j * 18);
+			object->transform->Translate(i * 19, 0.5f, j * 18);
 			sceneManager->push(object);
 			object->id = sceneManager->totalObjects;
 		}
@@ -1177,6 +1153,8 @@ void OverworldScene::Render() {
 	RenderObjects();
 	RenderTasks();
 	RenderRobo();
+	RenderTeleportText();
+
 	std::stringstream ssX;
 	std::stringstream ssY;
 	std::stringstream ssZ;
@@ -1187,10 +1165,7 @@ void OverworldScene::Render() {
 	ssZ.precision(3);
 	ssZ << "Z:" << camera.position.z;
 
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 2, 2);
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Colors::RED, 4, 0, 10);
-	modelStack.PopMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 1, 0, 0);
 }
 

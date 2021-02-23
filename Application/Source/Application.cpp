@@ -213,7 +213,6 @@ void toggleState() {
 	switch (Application::sceneswitch) {
 	case Application::MENUSCENE:
 	case Application::WINSCENE:
-	case Application::LOSESCENE:
 	case Application::STARTSCENE:
 
 		// Use mouse positioning to click on UI menu
@@ -225,7 +224,6 @@ void toggleState() {
 	case Application::SCENEWALTON:
 	case Application::SCENERYAN:
 	case Application::SCENEXL:
-	case Application::SCENERANCE:
 	case Application::SCENESHAQLER:
 	default:
 
@@ -282,51 +280,48 @@ void Application::Run() {
 		toggleState();
 
 		// Switch scenes
+		Application::previousscene = Application::sceneswitch;
 		switch (Application::sceneswitch) {
 		case Application::SCENESHAQ:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEWALTON;
-				Application::previousscene = SCENESHAQ;
 			}
 			break;
 		case Application::SCENEWALTON:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEBEACH;
-				Application::previousscene = SCENEWALTON;
 			}
 			break;
 		case Application::SCENEBEACH:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENERYAN;
-				Application::previousscene = SCENEBEACH;
 			}
 			break;
 		case Application::SCENERYAN:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEXL;
-				Application::previousscene = SCENERYAN;
 			}
 			break;
 		case Application::SCENEXL:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::previousscene = SCENEXL;
 				Application::sceneswitch = Application::STARTSCENE;
 			}
-			break;
-		case Application::SCENERANCE:
 			break;
 		case Application::STARTSCENE:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::OVERWORLD;
 			}
 		case Application::WINSCENE:
-		case Application::LOSESCENE:
 		case Application::MENUSCENE:
+			break;
+		case Application::OVERWORLD:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::SCENESHAQ;
+			}
 			break;
 		default:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::previousscene = Application::sceneswitch;
-				Application::sceneswitch = Application::SCENESHAQ;
+				Application::sceneswitch = Application::OVERWORLD;
 			}
 			break;
 		}

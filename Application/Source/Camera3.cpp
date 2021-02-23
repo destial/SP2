@@ -444,8 +444,6 @@ void Camera3::UpdateFlying(double& dt, Mouse& mouse) {
 	}
 }
 
-
-
 void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
 	prevTarget = target;
 	prevPosition = position;

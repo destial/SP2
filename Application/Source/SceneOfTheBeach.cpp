@@ -18,13 +18,12 @@ void SceneOfTheBeach::Init()
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
-	glBindVertexArray(m_vertexArrayID)
-		;
+	glBindVertexArray(m_vertexArrayID);
 
-	light[0].type = Light::LIGHT_POINT;
+	light[0].type = Light::LIGHT_DIRECTIONAL;
 	light[0].position.Set(0, 0, 0);
 	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(0, 0, 0);
+	light[1].position.Set(0, -20, 0);
 
 	InitGL();
 
@@ -70,6 +69,9 @@ void SceneOfTheBeach::Init()
 
 	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1, 0.8);
 	meshList[GEO_UI]->textureID = LoadTGA("Image//blueblacktextbox");
+
+	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
+	meshList[GEO_UI2]->textureID = LoadTGA("Image//button.tga");
 
 	meshList[GEO_CRAB] = MeshBuilder::GenerateOBJMTL("Crab", "OBJ//crab.obj", "OBJ//crab.mtl");
 
@@ -158,7 +160,7 @@ void SceneOfTheBeach::RenderTextOnScreen(Mesh* mesh, std::string text, Color col
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -179,7 +181,7 @@ void SceneOfTheBeach::RenderTextOnScreen(Mesh* mesh, std::string text, Color col
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -196,6 +198,38 @@ void SceneOfTheBeach::RenderTextOnScreen(Mesh* mesh, std::string text, Color col
 void SceneOfTheBeach::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
+
+	glDisable(GL_DEPTH_TEST);
+	Mtx44 ortho;
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
+	projectionStack.PushMatrix();
+	projectionStack.LoadMatrix(ortho);
+	viewStack.PushMatrix();
+	viewStack.LoadIdentity(); //No need camera for ortho mode
+	modelStack.PushMatrix();
+	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.Translate(x, y, 0);
+	modelStack.Scale(size, size, size);
+
+	glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
+	glUniform1i(m_parameters[U_LIGHTENABLED], 0);
+	glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
+	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+	mesh->Render();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
+	projectionStack.PopMatrix();
+	viewStack.PopMatrix();
+	modelStack.PopMatrix();
+	glEnable(GL_DEPTH_TEST);
+}
+
+void SceneOfTheBeach::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
+	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
@@ -262,13 +296,35 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 		InitGLXray();
 	}
 
+	Crabspeed = (float)(5 * dt);
+
+	if (CrabMoving < RandomMove - Crabspeed * 1.5 || CrabMoving > RandomMove + Crabspeed * 1.5)
+	{
+		float direction = Direction(RandomMove - CrabMoving);
+		CrabMoving += Crabspeed * direction;
+	}
+	else
+	{
+		RandomMove = Math::RandFloatMinMax(-5, 5);
+	}
+
 	camera.Update(dt, mouse);
+}
+
+int SceneOfTheBeach::Direction(float value)
+{
+	if (value > 0)
+	{
+		return 1;
+	}
+	else if (value < 0)
+	{
+		return -1;
+	} 
 }
 
 void SceneOfTheBeach::InitGL()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -324,7 +380,7 @@ void SceneOfTheBeach::InitGL()
 	//light[0].type = Light::LIGHT_POINT;
 	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
-	light[0].power = 1;
+	light[0].power = 100;
 	light[0].kC = 1.f;
 	light[0].kL = 0.01f;
 	light[0].kQ = 0.001f;
@@ -570,7 +626,7 @@ void SceneOfTheBeach::Render()
 	modelStack.LoadIdentity();
 
 	Mtx44 view;
-	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
+	view.SetToPerspective(camera.orthographic_size, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_AXES], false);
@@ -601,12 +657,60 @@ void SceneOfTheBeach::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
+	modelStack.Translate(-40, 0, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate(CrabMoving, 0, 0);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, -40);
+	modelStack.Translate(CrabMoving, 0, 0);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 0, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate(CrabMoving, 0, 0);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(23, 0, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate((CrabMoving * 2), 0, 0);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 0, 20);
+	modelStack.Translate(CrabMoving, 0, 0);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(16, 10, 0);
+	modelStack.Rotate(-90, 0, 0, 1);
+	modelStack.Translate(CrabMoving, 0, 0);
 	RenderMesh(meshList[GEO_CRAB], true);
 	modelStack.PopMatrix();
 
 
 	modelStack.PushMatrix();
 	modelStack.Translate(10, 0, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 0, -30);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-25, 0, 20);
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderMesh(meshList[GEO_TREE], true);
 	modelStack.PopMatrix();
@@ -629,6 +733,7 @@ void SceneOfTheBeach::Render()
 	modelStack.Scale(2, 2, 2);
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
 	modelStack.PopMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 
 void SceneOfTheBeach::RenderNPC()
@@ -646,11 +751,16 @@ void SceneOfTheBeach::RenderUI()
 	if (OpenTextBox == true)
 	{
 		RenderMeshOnScreen(meshList[GEO_UI], BLUE, 55, 40, -5); // 40 screenx
-		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to go to Shark Island?", WHITE, 23, 4.5, 3.5);
-		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 23, 4.5, 1.2); //X 1.5 AND Z 19.5
+		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to go to Shark Island?", WHITE, 2.3, 4.5, 3.5);
+		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2.3, 4.5, 1.2); //X 1.5 AND Z 19.5
 	}
 
-
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
+	RenderMeshOnScreen(meshList[GEO_UI2], 25, 12.5, 53.75 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);
 
 }
 

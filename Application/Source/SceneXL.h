@@ -37,6 +37,7 @@ class SceneXL : public Scene
 		GEO_TEACUP,
 		GEO_TEACUPSHEL,
 		GEO_BORDERTEXT,
+		GEO_UI,
 		NUM_GEOMETRY,
 	};
 
@@ -117,7 +118,7 @@ private:
 	void RenderMinigame();
 
 	void RenderSurroundings();
-
+	void RenderUI();
 	bool isNear(Mesh* mesh, const float& distance);
 
 public:

@@ -27,6 +27,7 @@ class SceneRyan : public Scene
 		GEO_MINIGUN,
 		GEO_BULLET,
 		GEO_TEXT,
+		GEO_UI,
 		NUM_GEOMETRY,
 	};
 
@@ -118,7 +119,7 @@ private:
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
+	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 public:
 
 	SceneRyan();
@@ -130,6 +131,7 @@ public:
 	virtual void InitGL();
 	virtual void InitGLXray();
 	virtual void Render();
+	void RenderUI();
 	virtual void Exit();
 	void RenderShark();
 	Color RED = Color(1.f, 0.f, 0.f);

@@ -97,6 +97,7 @@ public:
 	virtual void Update(double dt);
 	virtual void Update(double dt, Mouse mouse);
 	virtual void InitGL();
+	virtual void InitGLXray();
 	virtual void Render();
 	virtual void Exit();
 

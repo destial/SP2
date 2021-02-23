@@ -37,7 +37,6 @@ class SceneRyan : public Scene
 		U_MATERIAL_AMBIENT,
 		U_MATERIAL_DIFFUSE,
 		U_MATERIAL_SPECULAR,
-		U_MATERIAL_ALPHA,
 		U_MATERIAL_SHININESS,
 		U_LIGHT0_POSITION,
 		U_LIGHT0_COLOR,
@@ -127,6 +126,7 @@ public:
 	virtual void Update(double dt);
 	virtual void Update(double dt, Mouse mouse);
 	virtual void InitGL();
+	virtual void InitGLXray();
 	virtual void Render();
 	virtual void Exit();
 	void RenderShark();

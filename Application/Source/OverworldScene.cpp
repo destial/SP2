@@ -112,7 +112,7 @@ void OverworldScene::Init() {
 	leftleglimit = false;
 	translateSphereZ = -19.6;
 	translateSphereZ2 = 19.6;
-	translateSphereX1 = 40;
+	translateSphereX1 = 0;
 	translateSphereX2 = 0;
 
 	Reset();
@@ -287,6 +287,7 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	translateSphereZ += (float)(2.5 * dt);
 	translateSphereZ2 -= (float)(2.75 * dt);
 	translateSphereX1 -= (float)(2.5 * dt);
+	translateSphereX2 += (float)(2.75 * dt);
 	
 	if (leftleglimit == true)
 	{
@@ -318,6 +319,11 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	if (translateSphereX1 <= -33.4)
 	{
 		translateSphereX1 = 36.4;
+	}
+
+	if (translateSphereX2 >= 34.2)
+	{
+		translateSphereX2 = -30;
 	}
 
 }
@@ -822,10 +828,138 @@ void OverworldScene::RenderRobo()
 
 	modelStack.PopMatrix();
 
-	// 3rd robot
+	// 3d robot
+	modelStack.PushMatrix();
+	modelStack.Translate(76.2, 2.5, translateSphereZ);
+	modelStack.Scale(0.3, 0.27, 0.3);
+	RenderMesh(meshList[GEO_SPHERE], true);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-2.25, 4.5, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(2.25, 4.5, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -8.5, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOBODY], true);
+	modelStack.PopMatrix();
+
+	modelStack.PopMatrix();
+
+	// 4th robot
+	modelStack.PushMatrix();
+	modelStack.Translate(-74.2, 2.5, translateSphereZ2);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.3, 0.27, 0.3);
+	RenderMesh(meshList[GEO_SPHERE], true);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-2.25, 4.5, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(2.25, 4.5, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -8.5, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOBODY], true);
+	modelStack.PopMatrix();
+
+	modelStack.PopMatrix();
+
+	// 5th robot
 	modelStack.PushMatrix();
 	modelStack.Translate(translateSphereX1, 2.5, -79);
 	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.3, 0.27, 0.3);
+	RenderMesh(meshList[GEO_SPHERE], true);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-2.25, 4.5, 0);
+	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(2.25, 4.5, 0);
+	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -8.5, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_ROBOBODY], true);
+	modelStack.PopMatrix();
+
+	modelStack.PopMatrix();
+
+	// 6th robot
+	modelStack.PushMatrix();
+	modelStack.Translate(translateSphereX2, 2.5, 69.6);
+	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(0.3, 0.27, 0.3);
 	RenderMesh(meshList[GEO_SPHERE], true);
 

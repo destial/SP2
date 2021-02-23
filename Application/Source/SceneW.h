@@ -26,6 +26,7 @@ class SceneW : public Scene
 		GEO_WALL,
 		GEO_UI,
 		GEO_CLAYMORE,
+		GEO_ARMOURPLATE,
 		MWALL,
 		BOX,
 		BOXOPEN,
@@ -96,11 +97,16 @@ private:
 	bool Chestlimit5;
 
 	bool ClaymoreSpawn;
+	bool ArmourSpawn;
 
 	bool heightlimit;
 	bool Claymorelimit;
 
+	bool heightlimit2;
+	bool armourlimit;
+
 	bool collectedClaymore;
+	bool collectedArmour;
 
 	int countChest;
 
@@ -110,12 +116,18 @@ private:
 	float rotateChest4;
 	float rotateChest5;
 
-	float rotateClaymore;
+
 	float claymoreX;
 	float claymoreY;
+	float armourX;
+	float armourY;
 	float scaleCLX;
 	float scaleCLY;
 	float scaleCLZ;
+	float scaleARX;
+	float scaleARY;
+	float scaleARZ;
+
 
 	Mesh* meshList[NUM_GEOMETRY];
 	SceneManager* sceneManager;

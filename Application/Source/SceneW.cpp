@@ -76,8 +76,12 @@ void SceneW::Init() {
 	meshList[GEO_CLAYMORE] = MeshBuilder::GenerateOBJ("Claymore", "OBJ//claymore.obj"); // Try 1 first
 	meshList[GEO_CLAYMORE]->textureID = LoadTGA("Image//claymore.tga");
 
+	meshList[GEO_ARMOURPLATE] = MeshBuilder::GenerateOBJ("Armourplate", "OBJ//newarmourplate.obj"); // Try 1 first
+	meshList[GEO_ARMOURPLATE]->textureID = LoadTGA("Image//newarmourplate.tga");
+
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::CAMERA;
+
 
 	rotateChest = 0;
 	rotateChest2 = 0;
@@ -89,9 +93,16 @@ void SceneW::Init() {
 	claymoreX = -45.3;
 	claymoreY = 1.5;
 
+	armourX = -23;
+	armourY = 1;
+
 	scaleCLX = 0.25; // 1
 	scaleCLY = 0.25; // 1 
 	scaleCLZ = 0.25; // 1
+
+	scaleARX = 0.05; // 1
+	scaleARY = 0.05; // 1 
+	scaleARZ = 0.05; // 1
 
 	Chestlimit = false;
 	Chestlimit2 = false;
@@ -101,7 +112,12 @@ void SceneW::Init() {
 
 	ClaymoreSpawn = false;
 	Claymorelimit = false;
+
+	ArmourSpawn = false;
+	armourlimit = false;
+
 	collectedClaymore = false;
+	collectedArmour = false;
 
 	sceneManager = new SceneManager(this, camera.bounds);
 	CreateMaze();
@@ -308,7 +324,8 @@ void SceneW::Update(double dt, Mouse mouse) {
 		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && Chestlimit3 == false)
 		{
 			rotateChest3 -= (float)(40 * dt);
-			if (rotateChest3 <= -70)
+			ArmourSpawn = true;
+			if (rotateChest3 <= -120)
 			{
 				Chestlimit3 = true;
 			}
@@ -366,12 +383,50 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
+	if (ArmourSpawn == true)
+	{
+		if (scaleARX < 0.4 && scaleARY < 0.4 && scaleARZ < 0.4 && armourlimit == false) //does not bendup z -
+		{
+			scaleARX += (float)(1.1 * dt);
+			scaleARY += (float)(1.1 * dt);
+			scaleARZ += (float)(1.1 * dt);
+		}
+		else if (scaleARX >= 0.4 && scaleARY >= 0.4 && scaleARZ >= 0.4)
+		{
+			armourlimit = true;
+			//rotateAngle2;
+		}
+		
+		if (armourY > 1 && heightlimit2 == false)
+		{
+			armourY -= (float)(1.05 * dt);
+		}
+		else if (armourY >= -3.5 && armourY <= 3.5)
+		{
+			heightlimit2 = true;
+		}
+		if (armourY >= -3.5 && armourY < 3.5 && heightlimit2 == true)
+		{
+			armourY += (float)(1.05 * dt);
+		}
+		else if (armourY >= 3.5)
+		{
+			heightlimit2 = false;
+		}
+	}
+
 	if (Application::IsKeyPressed('R'))
 	{
 		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && Claymorelimit == true)
 		{
 			claymoreX = 1000;
 			collectedClaymore = true;
+		}
+
+		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && armourlimit == true)
+		{
+			armourX = 1000;
+			collectedArmour = true;
 		}
 	}
 
@@ -879,13 +934,6 @@ void SceneW::RenderBoxes() {
 	modelStack.PopMatrix();
 
 	// Box 2
-	/*modelStack.PushMatrix();
-	modelStack.Translate(-20, 0, 16);
-	modelStack.Rotate(-90, 0, 1, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[BOX], true);
-	modelStack.PopMatrix();*/
-
 	modelStack.PushMatrix();
 	modelStack.Translate(-20, 1.4, 15);
 	modelStack.Rotate(270, 0, 1, 0);
@@ -974,6 +1022,15 @@ void SceneW::RenderItems() // inside chest
 	modelStack.Scale(scaleCLX, scaleCLY, scaleCLZ);
 	RenderMesh(meshList[GEO_CLAYMORE], true);
 	modelStack.PopMatrix(); 
+
+	modelStack.PushMatrix();
+	modelStack.Translate(armourX, armourY, 35);
+	modelStack.Rotate(270, 1, 0, 0);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Scale(scaleARX, scaleARY, scaleARZ);
+	RenderMesh(meshList[GEO_ARMOURPLATE], true);
+	modelStack.PopMatrix();
+
 }
 
 void SceneW::RenderMaze() {

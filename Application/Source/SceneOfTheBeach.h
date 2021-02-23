@@ -83,6 +83,10 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
 
+	float CrabMoving;
+	float Crabspeed;
+	float RandomMove;
+
 	bool rotate;
 	bool OpenTextBox;
 	Mesh* meshList[NUM_GEOMETRY];
@@ -97,6 +101,7 @@ private:
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 	void RenderQuad();
+	int Direction(float value);
 	void RenderNPC();
 	void RenderUI();
 

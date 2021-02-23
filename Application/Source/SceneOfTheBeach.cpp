@@ -18,13 +18,12 @@ void SceneOfTheBeach::Init()
 
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
-	glBindVertexArray(m_vertexArrayID)
-		;
+	glBindVertexArray(m_vertexArrayID);
 
-	light[0].type = Light::LIGHT_POINT;
+	light[0].type = Light::LIGHT_DIRECTIONAL;
 	light[0].position.Set(0, 0, 0);
 	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(0, 0, 0);
+	light[1].position.Set(0, -20, 0);
 
 	InitGL();
 
@@ -297,13 +296,35 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 		InitGLXray();
 	}
 
+	Crabspeed = (float)(5 * dt);
+
+	if (CrabMoving < RandomMove - Crabspeed * 1.5 || CrabMoving > RandomMove + Crabspeed * 1.5)
+	{
+		float direction = Direction(RandomMove - CrabMoving);
+		CrabMoving += Crabspeed * direction;
+	}
+	else
+	{
+		RandomMove = Math::RandFloatMinMax(-5, 5);
+	}
+
 	camera.Update(dt, mouse);
+}
+
+int SceneOfTheBeach::Direction(float value)
+{
+	if (value > 0)
+	{
+		return 1;
+	}
+	else if (value < 0)
+	{
+		return -1;
+	} 
 }
 
 void SceneOfTheBeach::InitGL()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -359,7 +380,7 @@ void SceneOfTheBeach::InitGL()
 	//light[0].type = Light::LIGHT_POINT;
 	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
-	light[0].power = 1;
+	light[0].power = 100;
 	light[0].kC = 1.f;
 	light[0].kL = 0.01f;
 	light[0].kQ = 0.001f;
@@ -636,12 +657,60 @@ void SceneOfTheBeach::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
+	modelStack.Translate(-40, 0, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate(CrabMoving, 0, 0);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, -40);
+	modelStack.Translate(CrabMoving, 0, 0);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 0, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate(CrabMoving, 0, 0);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(23, 0, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate((CrabMoving * 2), 0, 0);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 0, 20);
+	modelStack.Translate(CrabMoving, 0, 0);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(16, 10, 0);
+	modelStack.Rotate(-90, 0, 0, 1);
+	modelStack.Translate(CrabMoving, 0, 0);
 	RenderMesh(meshList[GEO_CRAB], true);
 	modelStack.PopMatrix();
 
 
 	modelStack.PushMatrix();
 	modelStack.Translate(10, 0, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 0, -30);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-25, 0, 20);
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderMesh(meshList[GEO_TREE], true);
 	modelStack.PopMatrix();

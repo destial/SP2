@@ -28,7 +28,6 @@ class SceneXL : public Scene
 		GEO_DUMMY,
 		GEO_RANGE,
 		GEO_ROBOT,
-		GEO_ROBOTT,
 		GEO_BOOTH,
 		GEO_WHEEL,
 		GEO_BODYWHEEL,
@@ -36,6 +35,7 @@ class SceneXL : public Scene
 		GEO_SWING,
 		GEO_TEACUP,
 		GEO_TEACUPSHEL,
+		GEO_JETPACK,
 		GEO_BORDERTEXT,
 		NUM_GEOMETRY,
 	};
@@ -95,6 +95,7 @@ private:
 	bool rotate;
 	bool talktognome;
 	bool talktorobot;
+	bool talktojetpack;
 
 	Mesh* meshList[NUM_GEOMETRY];
 
@@ -107,6 +108,7 @@ private:
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 
+	void PrintPosition();
 
 	void DetectGnome();
 	void RenderGnome();
@@ -117,6 +119,9 @@ private:
 	void RenderMinigame();
 
 	void RenderSurroundings();
+
+	void DetectJetpack();
+	void RenderJetpack();
 
 	bool isNear(Mesh* mesh, const float& distance);
 
@@ -134,6 +139,7 @@ public:
 	virtual void Exit();
 
 	bool GotGnome;
+	bool GotJetpack;
 
 	bool Rotate;
 	float RotateAngle; //rotating of my dummy target

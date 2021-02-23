@@ -28,7 +28,7 @@ void SceneW::Init() {
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(-46,3.5,-48), Vector3(1, 0.5, 1), Vector3(0, 1, 0), 50.f);
+	camera.Init(Vector3(-46,3.5,-48), Vector3(1, 0.5, 1), Vector3(0, 1, 0), 49.5f);
 
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
@@ -62,7 +62,7 @@ void SceneW::Init() {
 	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJMTL("Door", "OBJ//doorway.obj", "OBJ//doorway.mtl");
 	meshList[GEO_WALLDOOR] = MeshBuilder::GenerateOBJMTL("WallDoor", "OBJ//wallDoorway.obj", "OBJ//wallDoorway.mtl");
 	meshList[BOX] = MeshBuilder::GenerateOBJMTL("Box", "OBJ//cardboardBoxClosed.obj", "OBJ//cardboardBoxClosed.mtl");
-	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall",YELLOW, 1, 1, 1);
+	meshList[MWALL] = MeshBuilder::GenerateCube("MazeWall", WHITE, 1, 1, 1);
 	/*meshList[MWALL]->material.kAmbient.Set(.03f, .03f, .03f);
 	meshList[MWALL]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[MWALL]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);

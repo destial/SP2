@@ -45,10 +45,29 @@ void SceneXL::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	glEnable(GL_DEPTH_TEST);
 }
 
+void SceneXL::PrintPosition()
+{
+	std::stringstream ssX;
+	std::stringstream ssY;
+	std::stringstream ssZ;
+	ssX.precision(3);
+	ssX << "X:" << camera.position.x;
+	ssX.precision(3);
+	ssX << "Y:" << camera.position.y;
+	ssZ.precision(3);
+	ssZ << "Z:" << camera.position.z;
+
+	modelStack.PushMatrix();
+	modelStack.Scale(2, 2, 2);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 3, 0, 3);
+	modelStack.PopMatrix();
+}
+
 void SceneXL::Init()
 {
 	talktognome = false;
 	talktorobot = false;
+	talktojetpack = false;
 	GotGnome = false;
 	// Clear background color to blue
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -76,10 +95,6 @@ void SceneXL::Init()
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
-
-	meshList[GEO_ROBOTT] = MeshBuilder::GenerateQuad("quad",
-		Color(1, 1, 1), 10.1f);
-	meshList[GEO_ROBOTT]->textureID = LoadTGA("Image//house1.tga");
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front",
 		Color(1, 1, 1), 50.1f);
@@ -142,6 +157,11 @@ void SceneXL::Init()
 
 	meshList[GEO_BODYWHEEL] = MeshBuilder::GenerateOBJMTL("ferris wheel the body",
 		"OBJ//bodywheel.obj", "OBJ//bodywheel.mtl");
+
+	meshList[GEO_JETPACK] = MeshBuilder::GenerateOBJMTL("jetpack",
+		"OBJ//jetpack.obj", "OBJ//jetpack.mtl");
+	meshList[GEO_JETPACK]->transform.Translate(-2.83, 0, 45);
+	meshList[GEO_JETPACK]->transform.Scale(0.1, 0.1, 0.1);
 
 	meshList[GEO_BORDERTEXT] = MeshBuilder::GenerateFaceQuad("border for text", WHITE, 1.f, 1.f);
 	meshList[GEO_BORDERTEXT]->textureID = LoadTGA("Image//bordertext.tga");
@@ -411,7 +431,46 @@ void SceneXL::RenderSurroundings()
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_BODYWHEEL], true);
 	modelStack.PopMatrix(); //ferris wheel body
+}
 
+void SceneXL::DetectJetpack()
+{
+	if (meshList[GEO_JETPACK] && !GotJetpack)
+	{
+		if (isNear(meshList[GEO_JETPACK], (float)10.f) && talktojetpack == false)
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to equip.", Color(0.541, 0.169, 0.886), 4, 1.8, 6.2);
+			if (Application::IsKeyPressedOnce('F'))
+			{
+				talktojetpack = true;
+				GotJetpack = true;
+			}
+		}
+		if (GotJetpack)
+		{
+			if (meshList[GEO_JETPACK])
+			{
+				delete meshList[GEO_JETPACK];
+				meshList[GEO_JETPACK] = nullptr;
+			}
+		}
+	}
+	else
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], "JETPACK EQUIPPED", BLUE, 3.5, 1, 1);
+	}
+}
+
+void SceneXL::RenderJetpack()
+{
+	if (meshList[GEO_JETPACK] && !GotJetpack)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(meshList[GEO_JETPACK]->transform.translate.x, meshList[GEO_JETPACK]->transform.translate.y, meshList[GEO_JETPACK]->transform.translate.z);
+		modelStack.Scale(meshList[GEO_JETPACK]->transform.scale.x, meshList[GEO_JETPACK]->transform.scale.y, meshList[GEO_JETPACK]->transform.scale.z);
+		RenderMesh(meshList[GEO_JETPACK], true);
+		modelStack.PopMatrix();
+	}
 }
 
 void SceneXL::Update(double dt, Mouse mouse) {
@@ -444,7 +503,15 @@ void SceneXL::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('P'))
 		light[0].position.y += (float)(LSPEED * dt);
 
-	camera.Update(dt, mouse);
+	if (talktojetpack == false)
+	{
+		camera.Update(dt, mouse);
+	}
+
+	if (talktojetpack == true)
+	{
+		camera.UpdateFlying(dt, mouse);
+	}
 
 	srand((unsigned)time(0));
 	for (int i = 0; i < targetList.size(); i++)
@@ -822,20 +889,13 @@ void SceneXL::Render()
 	DetectRobot();
 	RenderRobot();
 
-	std::stringstream ssX;
-	std::stringstream ssY;
-	std::stringstream ssZ;
-	ssX.precision(3);
-	ssX << "X:" << camera.position.x;
-	ssX.precision(3);
-	ssX << "Y:" << camera.position.y;
-	ssZ.precision(3);
-	ssZ << "Z:" << camera.position.z;
+	DetectJetpack();
+	RenderJetpack();
 
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 4, 0, 7);
-	modelStack.PopMatrix();
+	DetectGnome();
+	RenderGnome();
+
+	PrintPosition();
 
 	DetectGnome();
 	RenderGnome();

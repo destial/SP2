@@ -10,17 +10,15 @@
 //Include the standard C++ headers
 #include <stdio.h>
 #include <stdlib.h>
-#include "SceneXL.h"
-#include "TemplateScene.h"
-#include "SceneShaqeel.h"
-#include "SceneW.h"
 #include "StartMenuScene.h"
-#include "SceneBeach.h"
-#include "SceneRyan.h"
 #include "OverworldScene.h"
+#include "SceneShaqeel.h"
 #include "SceneShaqler.h"
+#include "SceneW.h"
 #include "SceneOfTheBeach.h"
-#include "StartMenuScene.h"
+#include "SceneRyan.h"
+#include "SceneXL.h"
+
 
 GLFWwindow* m_window;
 unsigned Application::FPS = 120; // FPS of this game

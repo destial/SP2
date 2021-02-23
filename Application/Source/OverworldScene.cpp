@@ -47,7 +47,7 @@ void OverworldScene::Init() {
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
 	meshList[GEO_BOTTOM]->type = Mesh::TYPE::IMAGE;
 
-	meshList[MOON] = MeshBuilder::GenerateSphere("moon", Colors::GRAY, 30, 30, 1.f);
+	meshList[MOON] = MeshBuilder::GenerateSphere("moon", Colors::YELLOW, 30, 30, 1.f);
 	meshList[MOON]->type = Mesh::TYPE::IMAGE;
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
@@ -179,6 +179,47 @@ void OverworldScene::RenderText(Mesh* mesh, std::string text, Color color) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
 	glEnable(GL_DEPTH_TEST);
+}
+
+void OverworldScene::RoadTeleport() {
+	if (camera.position.x >= 39.3 && 
+		camera.position.x <= 74.3 && 
+		camera.position.z <= 100 && 
+		camera.position.z >= 80) {
+		if (currentCarObject) {
+			Application::sceneswitch = Application::SCENEBEACH;
+			Application::previousscene = Application::OVERWORLD;
+			camera.position.z = 70;
+		} else {
+			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 0, 10);
+		}
+	}
+	else if (camera.position.x <= -36.4 &&
+		camera.position.x >= -52 &&
+		camera.position.z <= 100 &&
+		camera.position.z >= 80) {
+		if (currentCarObject) {
+			Application::sceneswitch = Application::SCENESHAQ;
+			Application::previousscene = Application::OVERWORLD;
+			camera.position.z = 70;
+		} else {
+			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 0, 10);
+		}
+	}
+}
+
+void OverworldScene::RenderTeleportText() {
+	modelStack.PushMatrix();
+	modelStack.Translate(74.3, 5, 100);
+	modelStack.Rotate(180, 0, 1, 0);
+	RenderText(meshList[GEO_TEXT], "This way to the beach!", Colors::WHITE);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-36.4, 4, 100);
+	modelStack.Rotate(180, 0, 1, 0);
+	RenderText(meshList[GEO_TEXT], "This way to the mart!", Colors::WHITE);
+	modelStack.PopMatrix();
 }
 
 void OverworldScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y) {
@@ -1135,7 +1176,7 @@ void OverworldScene::Render() {
 	RenderSkybox();
 	RenderObjects();
 	RenderTasks();
-
+	RenderRobo();
 	std::stringstream ssX;
 	std::stringstream ssY;
 	std::stringstream ssZ;
@@ -1150,8 +1191,7 @@ void OverworldScene::Render() {
 	modelStack.Scale(2, 2, 2);
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Colors::RED, 4, 0, 10);
 	modelStack.PopMatrix();
-
-	RenderRobo();
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 1, 0, 0);
 }
 
 void OverworldScene::Exit() {

@@ -425,12 +425,21 @@ void Camera3::UpdateFlying(double& dt, Mouse& mouse) {
 	if (Application::IsKeyPressed(' ')) {
 		if (position.y <= boundary) {
 			position.y += up.y;
+			target.y += up.y;
 		}
 	}
 
 	if (Application::IsKeyPressed(VK_LCONTROL)) {
 		if (position.y >= -boundary) {
 			position.y -= up.y;
+			target.y -= up.y;
+		}
+		if (position.y < defaultPosition.y)
+		{
+			float diff = defaultPosition.y - position.y;
+			position.y = defaultPosition.y;
+			target.y += diff;
+
 		}
 	}
 }

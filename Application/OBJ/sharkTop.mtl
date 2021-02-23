@@ -1,7 +1,7 @@
-# Blender MTL File: 'untitled.blend'
+# Blender MTL File: 'None'
 # Material Count: 3
 
-newmtl Base.002
+newmtl Base.001
 Ns 96.078443
 Ka 0.787908 0.787908 0.787908
 Kd 0.787908 0.787908 0.787908
@@ -11,7 +11,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-newmtl Eye.002
+newmtl Eye.001
 Ns 96.078443
 Ka 0.015079 0.015079 0.015079
 Kd 0.015079 0.015079 0.015079
@@ -21,7 +21,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-newmtl Top.002
+newmtl Top.001
 Ns 96.078443
 Ka 0.321575 0.321575 0.321575
 Kd 0.321575 0.321575 0.321575

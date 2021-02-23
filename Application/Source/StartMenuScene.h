@@ -12,6 +12,11 @@ class StartMenuScene : public Scene
 	enum GEOMETRY_TYPE
 	{
 		GEO_AXES = 0,
+		GEO_SHARK,
+		GEO_CAR1,
+		GEO_TREE,
+		GEO_CRAB,
+		GEO_GNOME,
 		GEO_QUAD,
 		GEO_LEFT,
 		GEO_RIGHT,
@@ -77,6 +82,9 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	float rotateangle;
+	float translate;
+	float scale;
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];

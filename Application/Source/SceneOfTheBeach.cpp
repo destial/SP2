@@ -75,7 +75,7 @@ void SceneOfTheBeach::Init()
 
 	meshList[GEO_CRAB] = MeshBuilder::GenerateOBJMTL("Crab", "OBJ//crab.obj", "OBJ//crab.mtl");
 
-	meshList[GEO_TREE] = MeshBuilder::GenerateOBJMTL("Chair", "OBJ//palmtree.obj", "OBJ//palmtree.mtl");
+	meshList[GEO_TREE] = MeshBuilder::GenerateOBJMTL("Tree", "OBJ//palmtree.obj", "OBJ//palmtree.mtl");
 
 
 	OpenTextBox = false;

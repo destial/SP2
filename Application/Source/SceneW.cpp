@@ -86,6 +86,7 @@ void SceneW::Init() {
 	rotateChest5 = 0;
 	countChest = 0;
 
+	claymoreX = -45.3;
 	claymoreY = 1.5;
 
 	scaleCLX = 0.25; // 1
@@ -100,6 +101,7 @@ void SceneW::Init() {
 
 	ClaymoreSpawn = false;
 	Claymorelimit = false;
+	collectedClaymore = false;
 
 	sceneManager = new SceneManager(this, camera.bounds);
 	CreateMaze();
@@ -361,6 +363,15 @@ void SceneW::Update(double dt, Mouse mouse) {
 		else if (claymoreY >= 3.5)
 		{
 			heightlimit = false;
+		}
+	}
+
+	if (Application::IsKeyPressed('R'))
+	{
+		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && Claymorelimit == true)
+		{
+			claymoreX = 1000;
+			collectedClaymore = true;
 		}
 	}
 
@@ -955,14 +966,14 @@ void SceneW::RenderBoxes() {
 	modelStack.PopMatrix();
 }
 
-void SceneW::RenderItems()
+void SceneW::RenderItems() // inside chest
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(-45.3, claymoreY, 43.5);
+	modelStack.Translate(claymoreX, claymoreY, 43.5);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(scaleCLX, scaleCLY, scaleCLZ);
 	RenderMesh(meshList[GEO_CLAYMORE], true);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix(); 
 }
 
 void SceneW::RenderMaze() {

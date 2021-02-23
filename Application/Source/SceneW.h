@@ -100,6 +100,8 @@ private:
 	bool heightlimit;
 	bool Claymorelimit;
 
+	bool collectedClaymore;
+
 	int countChest;
 
 	float rotateChest;
@@ -109,6 +111,7 @@ private:
 	float rotateChest5;
 
 	float rotateClaymore;
+	float claymoreX;
 	float claymoreY;
 	float scaleCLX;
 	float scaleCLY;

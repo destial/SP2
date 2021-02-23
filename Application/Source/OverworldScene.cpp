@@ -159,6 +159,28 @@ void OverworldScene::RenderText(Mesh* mesh, std::string text, Color color) {
 	glEnable(GL_DEPTH_TEST);
 }
 
+void OverworldScene::RoadTeleport() {
+	if (camera.position.x >= 39.3 && 
+		camera.position.x <= 74.3 && 
+		camera.position.z <= 100 && 
+		camera.position.z >= 80) {
+		if (currentCarObject) {
+			Application::sceneswitch = Application::SCENEBEACH;
+			Application::previousscene = Application::OVERWORLD;
+		} else {
+			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a car to go here!", Colors::WHITE, 4, 0, Application::GetUIHeight()/2);
+		}
+	}
+}
+
+void OverworldScene::RenderTeleportText() {
+	modelStack.PushMatrix();
+	modelStack.Translate(74.3, 5, 100);
+	modelStack.Rotate(180, 0, 1, 0);
+	RenderText(meshList[GEO_TEXT], "This way to the beach!", Colors::WHITE);
+	modelStack.PopMatrix();
+}
+
 void OverworldScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) return;
 
@@ -261,6 +283,8 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	for (auto o : sceneManager->allObjects) {
 		sceneManager->root->push(o);
 	}
+
+	RoadTeleport();
 }
 
 void OverworldScene::InitGL()
@@ -587,7 +611,6 @@ void OverworldScene::RenderTasks() {
 				break;
 			}
 		}
-		RenderTextOnScreen(meshList[GEO_TEXT], ".", allComplete ? Colors::DARK_GREEN : Colors::WHITE, 1, 0, 0);
 	} else {
 		if (showTaskbarFrame != 0) {
 			bool allComplete = true;
@@ -627,7 +650,6 @@ void OverworldScene::RenderTasks() {
 					break;
 				}
 			}
-			RenderTextOnScreen(meshList[GEO_TEXT], ".", allComplete ? Colors::DARK_GREEN : Colors::WHITE, 1, 0, 0);
 		}
 	}
 }
@@ -680,20 +702,22 @@ void OverworldScene::GetInCar() {
 	if (!currentCarObject) {
 		for (auto object : sceneManager->allObjects) {
 			if (!object->camera && isNearObject(object, 3.f)) {
-				RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", Colors::WHITE, 4, 3, 4);
-				if (Application::IsKeyPressedOnce('F')) {
-					currentCarObject = object;
-					camera.position.x = object->transform->translate.x;
-					camera.position.z = object->transform->translate.z;
-					tasks[STEAL_CAR] = 1;
-					if (object->target != carOrigin) {
-						camera.carTarget = object->target;
-						camera.target = object->target;
-					} else {
-						camera.carTarget = camera.position + carOrigin;
-						camera.target = camera.position + carOrigin;
+				if (object->type == GameObject::CAR) {
+					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", Colors::WHITE, 4, 5, 10);
+					if (Application::IsKeyPressedOnce('F')) {
+						currentCarObject = object;
+						camera.position.x = object->transform->translate.x;
+						camera.position.z = object->transform->translate.z;
+						tasks[STEAL_CAR] = 1;
+						if (object->target != carOrigin) {
+							camera.carTarget = object->target;
+							camera.target = object->target;
+						} else {
+							camera.carTarget = camera.position + carOrigin;
+							camera.target = camera.position + carOrigin;
+						}
+						break;
 					}
-					break;
 				}
 			}
 		}
@@ -745,6 +769,7 @@ void OverworldScene::CreateCityObjects() {
 			GameObject* object = new GameObject(meshList[STREETLIGHT]);
 			object->transform->Translate(i * 18, 0.5f, j * 18);
 			sceneManager->push(object);
+			object->type = GameObject::BUILDING;
 			object->id = sceneManager->totalObjects;
 		}
 	}
@@ -811,6 +836,7 @@ void OverworldScene::Render() {
 	RenderSkybox();
 	RenderObjects();
 	RenderTasks();
+	RenderTeleportText();
 
 	std::stringstream ssX;
 	std::stringstream ssY;
@@ -822,10 +848,11 @@ void OverworldScene::Render() {
 	ssZ.precision(3);
 	ssZ << "Z:" << camera.position.z;
 
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Colors::RED, 4, 0, 10);
 	modelStack.PopMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 1, 0, 0);*/
 }
 
 void OverworldScene::Exit() {
@@ -867,6 +894,7 @@ void OverworldScene::Reset() {
 	meshList[CAR2]->corner[Mesh::CORNER::C4] = meshList[CAR2]->transform.translate + Vector3(1, 0, 1);
 	GameObject* car = new GameObject(meshList[CAR2], meshList[CAR2]->transform);
 	sceneManager->push(car);
+	car->type = GameObject::CAR;
 	car->id = sceneManager->totalObjects;
 
 	meshList[BUS1]->transform.Translate(0, 4.5f, 55);
@@ -878,6 +906,7 @@ void OverworldScene::Reset() {
 	meshList[BUS1]->corner[Mesh::CORNER::C4] = meshList[BUS1]->transform.translate + Vector3(1, 0, 1);
 	car = new GameObject(meshList[BUS1], meshList[BUS1]->transform);
 	sceneManager->push(car);
+	car->type = GameObject::CAR;
 	car->id = sceneManager->totalObjects;
 
 	meshList[CAR1]->transform.Translate(-10, 2.3f, 65);
@@ -889,6 +918,7 @@ void OverworldScene::Reset() {
 	meshList[CAR1]->corner[Mesh::CORNER::C4] = meshList[CAR1]->transform.translate + Vector3(1, 0, 1);
 	car = new GameObject(meshList[CAR1], meshList[CAR1]->transform);
 	sceneManager->push(car);
+	car->type = GameObject::CAR;
 	car->id = sceneManager->totalObjects;
 
 	meshList[TRUCK2]->transform.Translate(-40, 5.3f, 65);
@@ -896,6 +926,7 @@ void OverworldScene::Reset() {
 	meshList[TRUCK2]->transform.Scale(0.13);
 	car = new GameObject(meshList[TRUCK2], meshList[TRUCK2]->transform);
 	sceneManager->push(car);
+	car->type = GameObject::CAR;
 	car->id = sceneManager->totalObjects;
 
 	meshList[TRUCK1]->transform.Translate(10, 5.1f, 63);
@@ -908,6 +939,7 @@ void OverworldScene::Reset() {
 
 	car = new GameObject(meshList[TRUCK1], meshList[TRUCK1]->transform);
 	sceneManager->push(car);
+	car->type = GameObject::CAR;
 	car->id = sceneManager->totalObjects;
 
 	CreateCityObjects();

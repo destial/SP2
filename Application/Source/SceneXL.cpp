@@ -523,7 +523,7 @@ void SceneXL::InitGL()
 
 	//Replace previous code
 	//light[0].type = Light::LIGHT_POINT;
-	//light[0].position.Set(0, 0, 0);
+	light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
 	light[0].power = 1;
 	light[0].kC = 1.f;

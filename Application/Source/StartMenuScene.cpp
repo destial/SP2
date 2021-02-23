@@ -574,16 +574,21 @@ void StartMenuScene::Render()
 	modelStack.LoadIdentity();
 
 	Mtx44 view;
-	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
+	view.SetToPerspective(camera.orthographic_size, Application::GetWindowWidth()/Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
-	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();
+
+	Mtx44 rotation;
+	rotation.SetToRotation(0.1f, 0, 1, 0);
+	Vector3 v = (camera.target - camera.position).Normalized();
+	v = (rotation * v).Normalized();
+	camera.target = camera.position + v;
+
 	RenderSkybox();
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[BUTTON], 15, 40 * w / 800, 35 * h / 600);
 	RenderMeshOnScreen(meshList[BUTTON], 15, 40*w/800, 25*h/600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "SP2 Group 2 - My City Tour", WHITE, 4, 3 * w / 750, 10 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Start", BLUE, 3, 9 * w / 750, 8.5 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", BLUE, 3, 9 * w / 750, 6 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 1, 0, 0);

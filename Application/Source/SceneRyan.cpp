@@ -196,7 +196,7 @@ void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneRyan::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
+void SceneRyan::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 

@@ -25,6 +25,7 @@ class SceneW : public Scene
 		GEO_DOOROPEN,
 		GEO_WALL,
 		GEO_UI,
+		GEO_CLAYMORE,
 		MWALL,
 		BOX,
 		BOXOPEN,
@@ -94,6 +95,11 @@ private:
 	bool Chestlimit4;
 	bool Chestlimit5;
 
+	bool ClaymoreSpawn;
+
+	bool heightlimit;
+	bool Claymorelimit;
+
 	int countChest;
 
 	float rotateChest;
@@ -101,6 +107,12 @@ private:
 	float rotateChest3;
 	float rotateChest4;
 	float rotateChest5;
+
+	float rotateClaymore;
+	float claymoreY;
+	float scaleCLX;
+	float scaleCLY;
+	float scaleCLZ;
 
 	Mesh* meshList[NUM_GEOMETRY];
 	SceneManager* sceneManager;
@@ -119,6 +131,7 @@ private:
 	void CreateMaze();
 	void RenderUI();
 	void RenderRoom();
+	void RenderItems();
 	void moveBack(GameObject* object);
 	void DetectCollision();
 	bool isNear(GameObject* object);

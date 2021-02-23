@@ -73,6 +73,9 @@ void SceneW::Init() {
 	meshList[CHESTBOTTOM] = MeshBuilder::GenerateOBJ("Chest Top", "OBJ//chestBottomPart.obj"); // Try 1 first
 	meshList[CHESTBOTTOM]->textureID = LoadTGA("Image//ChestTexture.tga");
 
+	meshList[GEO_CLAYMORE] = MeshBuilder::GenerateOBJ("Claymore", "OBJ//claymore.obj"); // Try 1 first
+	meshList[GEO_CLAYMORE]->textureID = LoadTGA("Image//claymore.tga");
+
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::CAMERA;
 
@@ -83,11 +86,20 @@ void SceneW::Init() {
 	rotateChest5 = 0;
 	countChest = 0;
 
+	claymoreY = 1.5;
+
+	scaleCLX = 0.25; // 1
+	scaleCLY = 0.25; // 1 
+	scaleCLZ = 0.25; // 1
+
 	Chestlimit = false;
 	Chestlimit2 = false;
 	Chestlimit3 = false;
 	Chestlimit4 = false;
 	Chestlimit5 = false;
+
+	ClaymoreSpawn = false;
+	Claymorelimit = false;
 
 	sceneManager = new SceneManager(this, camera.bounds);
 	CreateMaze();
@@ -272,77 +284,83 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('E'))
 	{
-		if (Chestlimit == false)
+		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && Chestlimit == false)
 		{
 			rotateChest -= (float)(40 * dt);
+			ClaymoreSpawn = true;
 			if (rotateChest <= -70)
 			{
 				Chestlimit = true;
-				Chestlimit2 = false;
-				Chestlimit3 = true;
-				Chestlimit4 = true;
-				Chestlimit5 = true;
-				countChest++;
 			}
 		}
 
-		else if (Chestlimit2 == false)
+		if (camera.position.x <= -18 && camera.position.x >= -28 && camera.position.z <= 16.5 && camera.position.z >= 13.5 && Chestlimit2 == false)
 		{
 			rotateChest2 -= (float)(40 * dt);
 			if (rotateChest2 <= -70)
 			{
-				Chestlimit = true;
 				Chestlimit2 = true;
-				Chestlimit3 = false;
-				Chestlimit4 = true;
-				Chestlimit5 = true;
-				countChest++;
 			}
 		}
 
-		else if (Chestlimit3 == false)
+		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && Chestlimit3 == false)
 		{
 			rotateChest3 -= (float)(40 * dt);
 			if (rotateChest3 <= -70)
 			{
-				Chestlimit = true;
-				Chestlimit2 = true;
 				Chestlimit3 = true;
-				Chestlimit4 = false;
-				Chestlimit5 = true;
-				countChest++;
 			}
-
 		}
 
-		else if (Chestlimit4 == false)
+		if (camera.position.x <= 36.6 && camera.position.x >= 29.4 && camera.position.z <= -26.3 && camera.position.z >= -36.3 && Chestlimit4 == false)
 		{
 			rotateChest4 -= (float)(40 * dt);
 			if (rotateChest4 <= -70)
 			{
-				Chestlimit = true;
-				Chestlimit2 = true;
-				Chestlimit3 = true;
 				Chestlimit4 = true;
-				Chestlimit5 = false;
-				countChest++;
 			}
-
 		}
 
-		else if (Chestlimit5 == false)
+		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && Chestlimit5 == false)
 		{
 			rotateChest5 -= (float)(40 * dt);
 			if (rotateChest5 <= -70)
 			{
-				Chestlimit = true;
-				Chestlimit2 = true;
-				Chestlimit3 = true;
-				Chestlimit4 = true;
 				Chestlimit5 = true;
-				countChest++;
 			}
+		}
 
+	}
+
+	if (ClaymoreSpawn == true)
+	{
+		if (scaleCLX < 1.05 && scaleCLY < 1.05 && scaleCLZ < 1.05 && Claymorelimit == false) //does not bendup z -
+		{
+			scaleCLX += (float)(10 * dt);
+			scaleCLY += (float)(10 * dt);
+			scaleCLZ += (float)(10 * dt);
+		}
+		else if (scaleCLX >= 1.05 && scaleCLY >= 1.05 && scaleCLZ >= 1.05)
+		{
+			Claymorelimit = true;
+			//rotateAngle2;
+		}
+
+		if (claymoreY > 1.5 && heightlimit == false)
+		{
+			claymoreY -= (float)(2 * dt);
+		}
+		else if (claymoreY >= -3.5 && claymoreY <= 3.5)
+		{
+			heightlimit = true;
+		}
+		if (claymoreY >= -3.5 && claymoreY < 3.5 && heightlimit == true)
+		{
+			claymoreY += (float)(2 * dt);
+		}
+		else if (claymoreY >= 3.5)
+		{
+			heightlimit = false;
 		}
 	}
 
@@ -756,6 +774,7 @@ void SceneW::Render()
 	//RenderTextOnScreen(meshList[GEO_TEXT], countChest, BLACK, 2, 10, 10);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3);
 	RenderUI();
+	RenderItems();
 }
 
 void SceneW::Exit() {
@@ -933,6 +952,16 @@ void SceneW::RenderBoxes() {
 	modelStack.Translate(20, 0, -5);
 	modelStack.Scale(1, 1, 1);
 	RenderMesh(meshList[CHESTBOTTOM], true);
+	modelStack.PopMatrix();
+}
+
+void SceneW::RenderItems()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(-45.3, claymoreY, 43.5);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(scaleCLX, scaleCLY, scaleCLZ);
+	RenderMesh(meshList[GEO_CLAYMORE], true);
 	modelStack.PopMatrix();
 }
 

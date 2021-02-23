@@ -1,0 +1,23 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl Claymore_Sword_1
+Ns 55.000005
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.675000 0.675000 0.675000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\zshaq\\Downloads\\Claymore_Sword_v1_L3.123c26ba7306-e906-44c0-9e4c-145c07c8fde8\\Claymore_Sword_v1_L3.123c26ba7306-e906-44c0-9e4c-145c07c8fde8\\Claymore_Sword_diffuse.JPG
+
+newmtl Claymore_Sword_2
+Ns 24.000002
+Ka 1.000000 1.000000 1.000000
+Kd 0.211800 0.078400 0.078400
+Ks 0.272900 0.272900 0.272900
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2

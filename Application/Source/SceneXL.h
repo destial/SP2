@@ -8,6 +8,7 @@
 #include "Camera3.h"
 #include <vector>
 #include "MinigameEntity.h"
+#include "GameObject.h"
 
 class SceneXL : public Scene
 {
@@ -129,11 +130,14 @@ private:
 
 	bool isNear(Mesh* mesh, const float& distance);
 
-
+	std::vector<GameObject*> bullets;
 	float Shootingspin;
 	Mesh* MinigunHold;
 	Vector3 GunOrigin;
 	void Minigun();
+	void Bullets();
+	int tempspin;
+
 
 public:
 

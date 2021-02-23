@@ -176,6 +176,8 @@ void SceneXL::Init()
 
 	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 1, 1), 36, 36, 1);
 
+	Shootingspin = 0.01;
+
 	srand((unsigned)time(0));
 
 	for (int i = 0; i < 10; i++) 
@@ -191,6 +193,7 @@ void SceneXL::Init()
 		targetList.push_back(temp); 
 	}
 	Application::log("Scene XL initialized");
+
 }
 
 void SceneXL::RenderMesh(Mesh* mesh, bool enableLight)
@@ -366,12 +369,14 @@ void SceneXL::RenderMinigame()
 {
 	for (int i = 0; i < targetList.size(); i++)
 	{
-		modelStack.PushMatrix();
-		modelStack.Translate(1.55 + targetList[i]->pos.x, 5, -79 + targetList[i]->pos.z);
-		modelStack.Rotate(RotateAngle, 0, 1, 0);
-		modelStack.Scale(1.5,1.5,1.5);
-		RenderMesh(meshList[GEO_DUMMY], true);
-		modelStack.PopMatrix();
+		if (targetList[i]) {
+			modelStack.PushMatrix();
+			modelStack.Translate(1.55 + targetList[i]->pos.x, 5, -79 + targetList[i]->pos.z);
+			modelStack.Rotate(RotateAngle, 0, 1, 0);
+			modelStack.Scale(1.5, 1.5, 1.5);
+			RenderMesh(meshList[GEO_DUMMY], true);
+			modelStack.PopMatrix();
+		}
 	} //10 target dummies for the minigame/target shooting
 }
 
@@ -477,6 +482,12 @@ void SceneXL::RenderJetpack()
 	}
 }
 
+bool isNearDummy(GameObject* o1, MinigameEntity* o2, const float& distance = 1.f) {
+	if (!o1 && !o2) return false;
+	float d = Math::sqrt(Math::Square(o1->transform->translate.x - (1.55 + o2->pos.x)) + Math::Square(o1->transform->translate.z - (o2->pos.z - 79)));
+	return (d <= distance);
+}
+
 void SceneXL::Update(double dt, Mouse mouse) {
 
 	RotateAngle += (float)(50 * dt);
@@ -520,15 +531,17 @@ void SceneXL::Update(double dt, Mouse mouse) {
 	srand((unsigned)time(0));
 	for (int i = 0; i < targetList.size(); i++)
 	{
-		if (targetList[i]->timemoved == 0 || targetList[i]->timemoved > 1)
-		{
-			targetList[i]->DirectionDummy = 1 + (rand() % 6);
-			if (targetList[i]->timemoved > 1)
+		if (targetList[i]) {
+			if (targetList[i]->timemoved == 0 || targetList[i]->timemoved > 1)
 			{
-				targetList[i]->timemoved = 0;
+				targetList[i]->DirectionDummy = 1 + (rand() % 6);
+				if (targetList[i]->timemoved > 1)
+				{
+					targetList[i]->timemoved = 0;
+				}
 			}
+			targetList[i]->MoveDummy(dt);
 		}
-		targetList[i]->MoveDummy(dt);
 	}
 
 	if (Rotate == true)
@@ -538,10 +551,76 @@ void SceneXL::Update(double dt, Mouse mouse) {
 			rotate -= 360;
 	}
 
-	if (Application::IsKeyPressed('F'))
+	if (Application::IsMousePressed(0))
 	{
-		Shootingspin += 3;
+		if (Shootingspin > 0 && tempspin == 0)
+		{
+			Shootingspin += Shootingspin;
+			if (Shootingspin > 360)
+			{
+				tempspin++;
+			}
+		}
+		else if (Shootingspin > 0 && tempspin == 1)
+		{
+			Shootingspin -= Shootingspin;
+			if (bullets.size() < 256)
+			{
+				GameObject* bullet = new GameObject(meshList[GEO_BULLET]);
+				bullet->transform->Translate(camera.position.x, camera.position.y - 2, camera.position.z);
+				bullet->transform->Scale(0.5);
+				Vector3 view = (camera.target - camera.position).Normalized();
+				Vector3 right = view.Cross(camera.up).Normalized();
+				right.y = 0;
+				Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
+				bullet->view = face;
+				bullets.push_back(bullet);
+			}
+			else {
+				for (auto b : bullets) {
+					if (b) {
+						delete b;
+					}
+				}
+				bullets.clear();
+			}
+		}
+		else
+		{
+			Shootingspin += 0.01;
+			tempspin = 0;
+		}
+		
+
 	}
+
+	for (auto bullet : bullets) {
+		bullet->transform->translate += (bullet->view)*3;
+	}
+
+	for (std::vector<GameObject*>::iterator b = bullets.begin(); b != bullets.end(); b++) {
+		bool hit = false;
+		if ((*b)->transform->translate.x > camera.bounds || (*b)->transform->translate.x < -camera.bounds) {
+			bullets.erase(b);
+			break;
+		}
+		if ((*b)->transform->translate.z > camera.bounds || (*b)->transform->translate.z < -camera.bounds - 50) {
+			bullets.erase(b);
+			break;
+		}
+		for (std::vector<MinigameEntity*>::iterator d = targetList.begin(); d != targetList.end(); d++) {
+			if (isNearDummy(*b, *d, 1.f)) {
+				bullets.erase(b);
+				targetList.erase(d);
+				hit = true;
+				break;
+			}
+		}
+		if (hit) break;
+	}
+	
+	Minigun();
+
 }
 
 void SceneXL::InitGL()
@@ -890,7 +969,14 @@ void SceneXL::Render()
 	RenderMesh(meshList[GEO_FLOORFUTURE], false);
 	modelStack.PopMatrix(); //floor 
 
-	Minigun();
+	modelStack.PushMatrix();
+	modelStack.Translate(meshList[GEO_MINIGUN]->transform.translate.x, meshList[GEO_MINIGUN]->transform.translate.y, meshList[GEO_MINIGUN]->transform.translate.z);
+	modelStack.Rotate(meshList[GEO_MINIGUN]->transform.rotate, 0, 1, 0);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Scale(0.07, 0.07, 0.07);
+	modelStack.Rotate(Shootingspin, 0, 1, 0);
+	RenderMesh(meshList[GEO_MINIGUN], true);
+	modelStack.PopMatrix();
 
 	RenderSurroundings();
 
@@ -900,14 +986,22 @@ void SceneXL::Render()
 	DetectJetpack();
 	RenderJetpack();
 
-	DetectGnome();
-	RenderGnome();
-
 	PrintPosition();
 
 	DetectGnome();
 	RenderGnome();
 	RenderUI();
+
+	for (auto o : bullets) {
+		if (o && o->transform) {
+			modelStack.PushMatrix();
+			modelStack.Translate(o->transform->translate.x, o->transform->translate.y, o->transform->translate.z);
+			modelStack.Rotate(o->transform->rotate, 0, 1, 0);
+			modelStack.Scale(o->transform->scale.x, o->transform->scale.y, o->transform->scale.z);
+			RenderMesh(o->mesh, true);
+			modelStack.PopMatrix();
+		}
+	}
 }
 
 void SceneXL::RenderUI() {
@@ -938,10 +1032,16 @@ void SceneXL::Minigun()
 	MinigunHold->transform.translate.y = camera.position.y - 2;
 	Vector3 origin = (MinigunHold->transform.translate + GunOrigin).Normalized();
 	MinigunHold->transform.rotate = camera.getRotation(GunOrigin);
-	switch (GEO_MINIGUN) {
-	default:
-		GunOrigin = Vector3(-1, 0, 0);
-		break;
+	GunOrigin = Vector3(-1, 0, 0);
+}
+
+void SceneXL::Bullets()
+{
+	if (meshList[GEO_BULLET])
+	{
+		modelStack.PushMatrix();
+		RenderMesh(meshList[GEO_BULLET], true);
+		modelStack.PopMatrix();
 	}
 }
 
@@ -949,6 +1049,16 @@ void SceneXL::Minigun()
 void SceneXL::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
+	}
+	for (auto b : bullets) {
+		if (b) {
+			delete b;
+		}
+	}
+	for (auto d : targetList) {
+		if (d) {
+			delete d;
+		}
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);

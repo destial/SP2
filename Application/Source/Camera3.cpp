@@ -690,19 +690,19 @@ void Camera3::SharkChaseMove()
 
 void Camera3::Bulletinit()
 {
-	SharkView = (SharkPos - position).Normalized();//change pos and target for bullet
-	SharkRight = SharkView.Cross(up).Normalized();
-	SharkRight.y = 0;
-	SharkFace = Vector3(0, 1, 0).Cross(SharkRight).Normalized();
+	BulletView = (BulletPos - position).Normalized();//change pos and target for bullet
+	BulletRight = BulletView.Cross(up).Normalized();
+	BulletRight.y = 0;
+	BulletFace = Vector3(0, 1, 0).Cross(BulletRight).Normalized();
 
 }
 
 void Camera3::BulletMove()
 {
 
-	SharkPos.x -= SharkFace.x;
-	SharkTarget.x -= SharkFace.x;
-	SharkPos.z -= SharkFace.z;
-	SharkTarget.z -= SharkFace.z;
+	BulletPos.x -= BulletFace.x;
+	BulletTarget.x -= BulletFace.x;
+	BulletPos.z -= BulletFace.z;
+	BulletTarget.z -= BulletFace.z;
 }
 

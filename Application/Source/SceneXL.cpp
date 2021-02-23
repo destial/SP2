@@ -59,7 +59,7 @@ void SceneXL::PrintPosition()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 4, 0, 10);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 3, 0, 3);
 	modelStack.PopMatrix();
 }
 
@@ -889,25 +889,27 @@ void SceneXL::Render()
 	DetectRobot();
 	RenderRobot();
 
-	std::stringstream ssX;
-	std::stringstream ssY;
-	std::stringstream ssZ;
-	ssX.precision(3);
-	ssX << "X:" << camera.position.x;
-	ssX.precision(3);
-	ssX << "Y:" << camera.position.y;
-	ssZ.precision(3);
-	ssZ << "Z:" << camera.position.z;
-
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 4, 0, 7);
-	modelStack.PopMatrix();
 	DetectJetpack();
 	RenderJetpack();
 
 	DetectGnome();
 	RenderGnome();
+
+	PrintPosition();
+
+	DetectGnome();
+	RenderGnome();
+	RenderUI();
+}
+
+void SceneXL::RenderUI() {
+
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
+	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:100", BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:100", BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$100", BLACK, 2, 0.5, 17.3 * h / 600);
 }
 
 void SceneXL::RenderRobot()

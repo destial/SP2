@@ -102,16 +102,6 @@ private:
 	//trying chasing code
 	Vector3 Temptarget;
 
-	//MINIGUN
-	float Shootingspin;
-	Mesh* MinigunHold;
-	Vector3 GunOrigin;
-	void Minigun();
-	//Array of bullets
-	void Bullets();
-	//NOT FOR MY SCENE
-
-
 	Light light[2];
 
 	Camera3 camera;

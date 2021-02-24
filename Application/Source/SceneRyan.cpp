@@ -323,7 +323,10 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 		sharkcircleangle += 0.5;
 	}
 	
-	if (camera.SharkPos.x > camera.position.x - 1 && camera.SharkPos.x < camera.position.x + 1 && camera.SharkPos.z > camera.position.z - 1 && camera.SharkPos.z < camera.position.z + 1)
+	if (camera.SharkPos.x > camera.position.x - 1 && 
+		camera.SharkPos.x < camera.position.x + 1 && 
+		camera.SharkPos.z > camera.position.z - 1 && 
+		camera.SharkPos.z < camera.position.z + 1)
 	{
 		Application::sceneswitch = Application::SCENEBEACH;
 	}

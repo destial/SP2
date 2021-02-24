@@ -161,7 +161,7 @@ void SceneXL::Init()
 	meshList[GEO_JETPACK] = MeshBuilder::GenerateOBJMTL("jetpack",
 		"OBJ//jetpack.obj", "OBJ//jetpack.mtl");
 	meshList[GEO_JETPACK]->transform.Translate(-2.83, 0, 45);
-	meshList[GEO_JETPACK]->transform.Scale(0.1, 0.1, 0.1);
+	meshList[GEO_JETPACK]->transform.Scale(0.4, 0.4, 0.4);
 
 	meshList[GEO_BORDERTEXT] = MeshBuilder::GenerateFaceQuad("border for text", WHITE, 1.f, 1.f);
 	meshList[GEO_BORDERTEXT]->textureID = LoadTGA("Image//bordertext.tga");
@@ -446,7 +446,7 @@ void SceneXL::DetectJetpack()
 {
 	if (meshList[GEO_JETPACK] && !GotJetpack)
 	{
-		if (isNear(meshList[GEO_JETPACK], (float)10.f) && talktojetpack == false)
+		if (isNear(meshList[GEO_JETPACK], (float)15.f) && talktojetpack == false)
 		{
 			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to equip.", Color(0.541, 0.169, 0.886), 4, 1.8, 6.2);
 			if (Application::IsKeyPressedOnce('F'))
@@ -983,8 +983,9 @@ void SceneXL::Render()
 	DetectRobot();
 	RenderRobot();
 
-	DetectJetpack();
 	RenderJetpack();
+	DetectJetpack();
+
 
 	PrintPosition();
 

@@ -174,7 +174,7 @@ private:
 
 	bool heightlimit4;
 
-	bool interact;
+	bool gl;
 
 	Mesh* meshList[NUM_GEOMETRY];
 	SceneManager* sceneManager;

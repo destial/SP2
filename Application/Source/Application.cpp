@@ -33,6 +33,10 @@ unsigned Application::sceneswitch;
 unsigned Application::previousscene;
 bool Application::quit;
 
+unsigned Player::ammo;
+int Player::health;
+int Player::money;
+
 unsigned Player::getAmmo() {
 	return ammo;
 }

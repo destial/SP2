@@ -834,3 +834,7 @@ void SceneOfTheBeach::Exit() {
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 }
+
+void SceneOfTheBeach::Reset() {
+
+}

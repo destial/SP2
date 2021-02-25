@@ -324,6 +324,7 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	DetectCollision();
 	GetInCar();
 	CompleteTasks();
+	EnterBuilding();
 	UpdateRobo(dt);
 	UpdatePlanes(dt);
 }
@@ -526,14 +527,19 @@ void OverworldScene::RenderSkybox() {
 }
 
 void OverworldScene::RenderObjects() {
-	for (auto car : sceneManager->allObjects) {
-		if (car->mesh) {
+	for (auto o : sceneManager->allObjects) {
+		if (o->mesh) {
 			modelStack.PushMatrix();
-			modelStack.Translate(car->transform->translate.x, car->transform->translate.y, car->transform->translate.z);
-			modelStack.Rotate(car->transform->rotate, 0, 1, 0);
-			modelStack.Scale(car->transform->scale.x, car->transform->scale.y, car->transform->scale.z);
-			RenderMesh(car->mesh, true);
+			modelStack.Translate(o->transform->translate.x, o->transform->translate.y, o->transform->translate.z);
+			modelStack.Rotate(o->transform->rotate, 0, 1, 0);
+			modelStack.Scale(o->transform->scale.x, o->transform->scale.y, o->transform->scale.z);
+			RenderMesh(o->mesh, true);
 			modelStack.PopMatrix();
+		}
+		if (o->mesh->name == "skyscraper") {
+			if (isNearObject(o, 2.5 * o->transform->scale.x)) {
+				RenderTextOnScreen(meshList[GEO_TEXT], "Press F to enter Maze", Colors::WHITE, 4, 10, 10);
+			}
 		}
 	}
 }
@@ -999,6 +1005,19 @@ void OverworldScene::GetInCar() {
 			camera.target.y = camera.defaultPosition.y;
 			camera.orthographic_size = camera.prevFOV;
 			currentCarObject = nullptr;
+		}
+	}
+}
+
+void OverworldScene::EnterBuilding() {
+	for (auto b : sceneManager->allObjects) {
+		if (b && b->mesh->name == "skyscraper") {
+			if (isNearObject(b, 2.5 * b->transform->scale.x)) {
+				if (Application::IsKeyPressed('F')) {
+					Application::sceneswitch = Application::SCENEWALTON;
+					tasks[ENTER_BUILDING] = 1;
+				}
+			}
 		}
 	}
 }

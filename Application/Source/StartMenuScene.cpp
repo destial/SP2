@@ -667,3 +667,7 @@ void StartMenuScene::Exit() {
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 }
+
+void StartMenuScene::Reset() {
+
+}

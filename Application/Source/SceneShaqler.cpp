@@ -1162,3 +1162,7 @@ void SceneShaqler::Exit() {
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 }
+
+void SceneShaqler::Reset() {
+
+}

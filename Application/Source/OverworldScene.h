@@ -108,6 +108,7 @@ private:
 	void RenderTeleportText();
 	void CompleteTasks();
 	void GetInCar();
+	void EnterBuilding();
 	void DetectCollision();
 	void UpdateRobo(double &dt);
 	void UpdatePlanes(double& dt);

@@ -2293,3 +2293,7 @@ void SceneW::CreateMaze() {
 	object->id = 162;
 	sceneManager->push(object);
 }
+
+void SceneW::Reset() {
+
+}

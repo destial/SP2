@@ -724,6 +724,15 @@ void OverworldScene::CompleteTasks() {
 	}
 }
 
+void OverworldScene::RenderUI() {
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
+	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), Colors::BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), Colors::BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), Colors::BLACK, 2, 0.5, 17.3 * h / 600);
+}
+
 void OverworldScene::RenderRobo() {
 	modelStack.PushMatrix();
 
@@ -1156,6 +1165,7 @@ void OverworldScene::Render() {
 	RenderTasks();
 	RenderRobo();
 	RenderTeleportText();
+	RenderUI();
 
 	std::stringstream ssX;
 	std::stringstream ssY;

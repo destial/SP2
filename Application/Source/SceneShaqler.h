@@ -112,6 +112,7 @@ private:
 	bool bookCollected;
 	bool Purchasebook;
 	bool Bookhasbeenbaught;
+	bool doorhasopened;
 	bool stopOpendoor;
 	bool isBuying;
 
@@ -132,6 +133,8 @@ private:
 	float ScreenTextZ1;
 	float ScreenTextZ2;
 	float textworldsceenY;
+
+	float amount;
 
 	float x;
 

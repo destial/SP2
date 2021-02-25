@@ -19,6 +19,7 @@ class SceneW : public Scene
 		GEO_SPHERE3,
 		GEO_SPHERE4,
 		GEO_SPHERE5,
+		GEO_CUBE,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -96,7 +97,13 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
-	bool interact;
+	bool doorhasopened;
+	bool stopopendoor;
+	bool chestOpen;
+	bool chestOpen2;
+	bool chestOpen3;
+	bool chestOpen4;
+	bool chestOpen5;
 	bool Chestlimit;
 	bool Chestlimit2;
 	bool Chestlimit3;
@@ -167,6 +174,8 @@ private:
 
 	bool heightlimit4;
 
+	bool interact;
+
 	Mesh* meshList[NUM_GEOMETRY];
 	SceneManager* sceneManager;
 
@@ -190,7 +199,6 @@ private:
 	void DetectCollision();
 	bool isNear(GameObject* object);
 	void RenderBoxes();
-	void InteractWithChest();
 public:
 
 	SceneW();

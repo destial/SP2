@@ -31,6 +31,7 @@ unsigned Application::ui_width;
 unsigned Application::ui_height;
 unsigned Application::sceneswitch;
 unsigned Application::previousscene;
+bool Application::restart;
 bool Application::quit;
 
 unsigned Player::ammo;
@@ -246,7 +247,7 @@ void Application::Init() {
 	Player::setHealth(100);
 	// sword armour and helmet all zero so dun need initalise
 	m_window = glfwCreateWindow(m_width, m_height, "SP2 - Group 2", NULL, NULL);
-	quit = false;
+	quit = restart = false;
 	mouse.reset();
 	glfwSetWindowSizeCallback(m_window, resize_callback);
 
@@ -334,6 +335,18 @@ void Application::Run() {
 				break;
 			}
 		}
+
+		if (restart) {
+			for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
+				if (scene[i]) {
+					scene[i]->Exit();
+					scene[i]->Init();
+				}
+			}
+			Application::sceneswitch = Application::previousscene = STARTSCENE;
+			restart = false;
+		}
+
 		// Update and render selected scene
 		if (scene[Application::sceneswitch]) {
 			int previousScene = Application::sceneswitch;
@@ -413,8 +426,7 @@ void Application::Run() {
 		glfwPollEvents();
 
 		// Frame rate limiter. Limits each frame to a specified time in ms.   
-		m_timer.waitUntil(frameTime);  
-
+		m_timer.waitUntil(frameTime);
 	} 
 
 	//If the window had been closed or quit from the main menu

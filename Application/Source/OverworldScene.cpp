@@ -1003,7 +1003,7 @@ void OverworldScene::GetInCar() {
 void OverworldScene::DetectCollision() {
 	for (auto o : sceneManager->allObjects) {
 		if (o == currentCarObject) continue;
-		if (isNearObject(o, (o->transform->scale.x > 1 ? 2 : 2.5* o->transform->scale.x))) {
+		if (isNearObject(o, (o->transform->scale.x > 1 ? 2 : 2.5 * o->transform->scale.x))) {
 			MoveBack();
 		}
 	}

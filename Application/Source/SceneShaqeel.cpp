@@ -81,6 +81,8 @@ void SceneShaqeel::Init()
 
 	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NewMart.obj"); // Try 1 first
 	meshList[GEO_MART]->textureID = LoadTGA("Image//blueColour.tga");
+	meshList[GEO_MART]->transform.Translate(-28, -2, -10);
+	meshList[GEO_MART]->transform.Scale(0.6, 0.6, 0.6);
 
 	meshList[GEO_ROBOBODY] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Robowithoutarmsandlegs.obj"); // Try 1 first
 	meshList[GEO_ROBOBODY]->textureID = LoadTGA("Image//robo_normal.tga");
@@ -426,7 +428,28 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		}
 	}
 
+	camera.prevPosition = camera.position;
 	camera.Update(dt, mouse);
+
+	if (isNear(meshList[GEO_MART], 4.5f)) {
+		// Get the current view vector and current y position
+		Vector3 view = (camera.target - camera.position).Normalized();
+		float y = camera.position.y;
+
+		// Set the player back to previous position but current y position (only x & z collision)
+		camera.position = camera.prevPosition;
+		camera.position.y = y;
+
+		// Set the correct target according to player's position and set the car speed to 0
+		camera.target = camera.position + view;
+	}
+}
+
+bool SceneShaqeel::isNear(Mesh* mesh, const float& distance) {
+
+	// Get distance between object and camera
+	double d = Math::sqrt(Math::Square(mesh->transform.translate.x - camera.position.x) + Math::Square(mesh->transform.translate.z - camera.position.z));
+	return (d - (4 * distance)) <= 0;
 }
 
 void SceneShaqeel::InitGL()

@@ -350,51 +350,56 @@ void SceneW::Update(double dt, Mouse mouse) {
 	{
 		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && Chestlimit == false)
 		{
-			rotateChest -= (float)(40 * dt);
+			chestOpen = true;
+			/*rotateChest -= (float)(40 * dt);*/
 			particles1spawn = true;
 			ClaymoreSpawn = true;
-			if (rotateChest <= -70)
+			/*if (rotateChest <= -70)
 			{
 				Chestlimit = true;
-			}
+			}*/
 		}
 
 		if (camera.position.x <= -18 && camera.position.x >= -28 && camera.position.z <= 16.5 && camera.position.z >= 13.5 && Chestlimit2 == false)
 		{
-			rotateChest2 -= (float)(40 * dt);
-			if (rotateChest2 <= -70)
+			chestOpen2 = true;
+			/*rotateChest2 -= (float)(40 * dt);*/
+			/*if (rotateChest2 <= -70)
 			{
 				Chestlimit2 = true;
-			}
+			}*/
 		}
 
 		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && Chestlimit3 == false)
 		{
-			rotateChest3 -= (float)(45 * dt);
+			chestOpen3 = true;
+			/*rotateChest3 -= (float)(45 * dt);*/
 			ArmourSpawn = true;
-			if (rotateChest3 <= -120)
+			/*if (rotateChest3 <= -120)
 			{
 				Chestlimit3 = true;
-			}
+			}*/
 		}
 
 		if (camera.position.x <= 36.6 && camera.position.x >= 29.4 && camera.position.z <= -26.3 && camera.position.z >= -36.3 && Chestlimit4 == false)
 		{
-			rotateChest4 -= (float)(40 * dt);
-			if (rotateChest4 <= -70)
+			chestOpen4 = true;
+			/*rotateChest4 -= (float)(40 * dt);*/
+			/*if (rotateChest4 <= -70)
 			{
 				Chestlimit4 = true;
-			}
+			}*/
 		}
 
 		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && Chestlimit5 == false)
 		{
-			rotateChest5 -= (float)(45 * dt);
+			chestOpen5 = true;
+			/*rotateChest5 -= (float)(45 * dt);*/
 			HelmetSpawn = true;
-			if (rotateChest5 <= -120)
+			/*if (rotateChest5 <= -120)
 			{
 				Chestlimit5 = true;
-			}
+			}*/
 		}
 
 		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45)
@@ -414,6 +419,71 @@ void SceneW::Update(double dt, Mouse mouse) {
 		if (rotateDoor <= -90)
 		{
 			stopopendoor = true;
+		}
+	}
+
+	if (chestOpen == true)
+	{
+		if (!Chestlimit)
+		{
+			rotateChest -= (float)(40 * dt);;
+		}
+
+		if (rotateChest <= -70)
+		{
+			Chestlimit = true;
+		}
+	}
+
+	if (chestOpen2 == true)
+	{
+		if (!Chestlimit2)
+		{
+			rotateChest2 -= (float)(40 * dt);;
+		}
+
+		if (rotateChest2 <= -70)
+		{
+			Chestlimit2 = true;
+		}
+	}
+
+	if (chestOpen3 == true)
+	{
+		if (!Chestlimit3)
+		{
+			rotateChest3 -= (float)(45 * dt);;
+		}
+
+		if (rotateChest3 <= -120)
+		{
+			Chestlimit3 = true;
+		}
+	}
+
+	if (chestOpen4 == true)
+	{
+		if (!Chestlimit4)
+		{
+			rotateChest4 -= (float)(40 * dt);;
+		}
+
+		if (rotateChest4 <= -70)
+		{
+			Chestlimit4 = true;
+		}
+	}
+
+	if (chestOpen5 == true)
+	{
+		if (!Chestlimit5)
+		{
+			rotateChest5 -= (float)(45 * dt);;
+		}
+
+		if (rotateChest5 <= -120)
+		{
+			Chestlimit5 = true;
 		}
 	}
 
@@ -553,24 +623,27 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 	}
 
-	if (Application::IsKeyPressed('R'))
+	if (Application::IsKeyPressedOnce('R'))
 	{
 		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && Claymorelimit == true)
 		{
 			claymoreX = 1000;
 			collectedClaymore = true;
+			Player::setSword(Player::getSword() + 1);
 		}
 
 		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && armourlimit == true)
 		{
 			armourX = 1000;
 			collectedArmour = true;
+			Player::setArmourplate(Player::getArmourplate() + 1);
 		}
 
 		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && helmetlimit == true)
 		{
 			helmetX = 1000;
 			collectedHelmet = true;
+			Player::setHelmet(Player::getHelmet() + 1);
 		}
 	}
 
@@ -1001,9 +1074,9 @@ void SceneW::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	/*RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);*/
+	RenderTextOnScreen(meshList[GEO_TEXT], "Sword:" + std::to_string(Player::getSword()), BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Armour:" + std::to_string(Player::getArmourplate()), BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Helmet:" + std::to_string(Player::getHelmet()), BLACK, 2, 0.5, 17.3 * h / 600);
 }
 
 void SceneW::RenderRoom() {

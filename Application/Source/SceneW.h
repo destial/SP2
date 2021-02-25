@@ -99,6 +99,11 @@ private:
 	bool rotate;
 	bool doorhasopened;
 	bool stopopendoor;
+	bool chestOpen;
+	bool chestOpen2;
+	bool chestOpen3;
+	bool chestOpen4;
+	bool chestOpen5;
 	bool Chestlimit;
 	bool Chestlimit2;
 	bool Chestlimit3;
@@ -168,6 +173,8 @@ private:
 	bool particles1limit;
 
 	bool heightlimit4;
+
+	bool interact;
 
 	Mesh* meshList[NUM_GEOMETRY];
 	SceneManager* sceneManager;

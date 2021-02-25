@@ -339,8 +339,7 @@ void Application::Run() {
 		if (restart) {
 			for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
 				if (scene[i]) {
-					scene[i]->Exit();
-					scene[i]->Init();
+					scene[i]->Reset();
 				}
 			}
 			Application::sceneswitch = Application::previousscene = STARTSCENE;

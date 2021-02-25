@@ -25,16 +25,16 @@ struct MinigameEntity
 			(DirectionDummy) 
 		{
 		case 1: //front
-			pos.x += 10 * dt;
+			pos.x += 5 * dt;
 			break;
 		case 2: //back
-			pos.x -= 10 * dt;
+			pos.x -= 5 * dt;
 			break;
 		case 3: //left
-			pos.z -= 10 * dt;
+			pos.z -= 5 * dt;
 			break;
 		case 4: //right
-			pos.z += 10 * dt;
+			pos.z += 5 * dt;
 			break;
 		case 5: //up
 			pos.y += 5 * dt;

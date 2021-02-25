@@ -115,6 +115,7 @@ private:
 	void RenderObjects();
 	void RenderTasks();
 	void RenderRobo();
+	void RenderSpeedometer();
 	void RoadTeleport();
 	void RenderTeleportText();
 	void CompleteTasks();
@@ -124,7 +125,6 @@ private:
 	void UpdatePlanes(double& dt);
 	void CreateCityObjects();
 	void MoveBack();
-	void Reset();
 	void RenderUI();
 	bool isNear(Mesh* mesh, const float& distance = 1.f);
 	bool isNearObject(GameObject* o, const float& distance = 1.f);
@@ -167,6 +167,7 @@ public:
 	virtual void InitGLXray();
 	virtual void Render();
 	virtual void Exit();
+	virtual void Reset();
 
 	MS modelStack, viewStack, projectionStack;
 };

@@ -123,6 +123,7 @@ public:
 	virtual void InitGL();
 	virtual void InitGLXray();
 	virtual void Render();
+	virtual void Reset();
 	void RenderUI();
 	virtual void Exit();
 	void RenderShark();

@@ -682,7 +682,7 @@ void SceneRyan::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Scale(100, 100, 100);
+	modelStack.Scale(400, 1, 400);
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 

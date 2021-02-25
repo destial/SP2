@@ -81,7 +81,17 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 			rightY -= 0.005f;
 		}
 	} else {
-		rightY > 0 ? rightY -= 0.005f : rightY += 0.005f;
+		if (rightY > 0) {
+			rightY -= 0.005f;
+			if (rightY < 0) {
+				rightY = 0;
+			}
+		} else {
+			rightY += 0.005f;
+			if (rightY > 0) {
+				rightY = 0;
+			}
+		}
 	}
 
 	right.y = rightY;

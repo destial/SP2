@@ -133,8 +133,8 @@ void SceneShaqler::Init() {
 	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
 	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
 
-	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 3, 1);
-	meshList[GEO_UI2]->textureID = LoadTGA("Image//button.tga");
+	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.5f, 0.4f);
+	meshList[GEO_UI2]->textureID = LoadTGA("Image//blueblacktextbox.tga");
 
 	bookX = -17;
 	bookY = 2.85;
@@ -253,7 +253,7 @@ void SceneShaqler::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -792,16 +792,18 @@ void SceneShaqler::RenderUI()
 {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
+	if (isBuying == true && Bookhasbeenbaught == false)
+	{
+		RenderMeshOnScreen(meshList[GEO_UI2], 50, 40, 8 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book?", WHITE, 2, 5, 3);
+		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2, 10, 2);
+		RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+	}
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5, 18 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);
-
-	if (isBuying == true && Bookhasbeenbaught == false)
-	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book?", WHITE, 2.3, 2.5, 3.5);
-		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2.3, 4.5, 1.2); //X 1.5 AND Z 19.5
-	}
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 
 void SceneShaqler::RenderWalls() 

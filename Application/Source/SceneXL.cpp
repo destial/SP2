@@ -173,6 +173,9 @@ void SceneXL::Init()
 	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
 	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
 
+	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.5f, 0.3f);
+	meshList[GEO_UI2]->textureID = LoadTGA("Image//blueblacktextbox.tga");
+
 	meshList[GEO_MINIGUN] = MeshBuilder::GenerateOBJMTL("Minigun", "OBJ//Minigun.obj", "OBJ//Minigun.mtl");
 
 	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 1, 1), 36, 36, 1);
@@ -294,7 +297,7 @@ void SceneXL::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, floa
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -322,6 +325,8 @@ bool SceneXL::isNear(Mesh* mesh, const float& distance)
 
 void SceneXL::DetectGnome()
 {
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
 	if (meshList[GEO_GNOME] && !GotGnome)
 	{
 		if (isNear(meshList[GEO_GNOME], (float)10.f) && talktognome == false)
@@ -350,7 +355,8 @@ void SceneXL::DetectGnome()
 	}
 	else  
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "Get GNOMED! ", RED, 4, 0, 0);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Get GNOMED! ", RED, 3, 3, 1);
+		RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 	}
 }
 
@@ -446,6 +452,8 @@ void SceneXL::RenderSurroundings()
 
 void SceneXL::DetectJetpack()
 {
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
 	if (meshList[GEO_JETPACK] && !GotJetpack)
 	{
 		if (isNear(meshList[GEO_JETPACK], (float)15.f) && talktojetpack == false)
@@ -468,7 +476,8 @@ void SceneXL::DetectJetpack()
 	}
 	else
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "JETPACK EQUIPPED", BLUE, 3.5, 1, 1);
+		RenderTextOnScreen(meshList[GEO_TEXT], "JETPACK EQUIPPED", BLUE, 3, 5, 2);
+		RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 	}
 }
 
@@ -985,7 +994,8 @@ void SceneXL::Render()
 
 	DetectRobot();
 	RenderRobot();
-
+	RenderMeshOnScreen(meshList[GEO_UI2], 40, 40, 7);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 	RenderJetpack();
 	DetectJetpack();
 
@@ -995,7 +1005,6 @@ void SceneXL::Render()
 	DetectGnome();
 	RenderGnome();
 	RenderUI();
-
 	for (auto o : bullets) {
 		if (o && o->transform) {
 			modelStack.PushMatrix();
@@ -1006,6 +1015,7 @@ void SceneXL::Render()
 			modelStack.PopMatrix();
 		}
 	}
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 
 void SceneXL::RenderUI() {
@@ -1015,6 +1025,7 @@ void SceneXL::RenderUI() {
 	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5, 18 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 
 void SceneXL::RenderRobot()

@@ -956,7 +956,7 @@ void SceneShaqler::RenderText()
 
 	if (isBuying == true && Bookhasbeenbaught == false)
 	{
-		RenderMeshOnScreen(meshList[GEO_UI], 55, 40, -5); // 40 screenx
+		RenderMeshOnScreen(meshList[GEO_UI2], 55, 40, -5); // 40 screenx
 		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 2.3, 4.5, 3.5);
 		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2.3, 4.5, 1.2); //X 1.5 AND Z 19.5
 	}

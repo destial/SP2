@@ -358,7 +358,7 @@ void Application::Run() {
 			break;
 		case Application::MENUSCENE:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::WINSCENE;
+				Application::sceneswitch = Application::STARTSCENE;
 			}
 			break;
 		case Application::OVERWORLD:

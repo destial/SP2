@@ -96,6 +96,7 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	bool interact;
 	bool Chestlimit;
 	bool Chestlimit2;
 	bool Chestlimit3;
@@ -189,6 +190,7 @@ private:
 	void DetectCollision();
 	bool isNear(GameObject* object);
 	void RenderBoxes();
+	void InteractWithChest();
 public:
 
 	SceneW();

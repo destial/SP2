@@ -590,8 +590,6 @@ void SceneXL::Update(double dt, Mouse mouse) {
 			Shootingspin += 0.01;
 			tempspin = 0;
 		}
-		
-
 	}
 
 	for (auto bullet : bullets) {

@@ -96,6 +96,9 @@ private:
 	float sharkdir;
 	int Tempcounter;
 
+	int scenecounter;
+	bool scenetransition;
+
 	Mesh* meshList[NUM_GEOMETRY];
 
 

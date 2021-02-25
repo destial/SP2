@@ -29,7 +29,7 @@ void SceneRyan::Init()
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 10, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(5, 8, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 
@@ -81,6 +81,8 @@ void SceneRyan::Init()
 	camera.SharkPos.y = 0;
 	camera.SharkPos.z = 0;
 	survivecounter = 0;
+	scenetransition = true;
+	scenecounter = 0;
 
 	Application::log("Scene Ryan initialized");
 }
@@ -241,101 +243,123 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
-	static const float LSPEED = 40.f;
-	if (Application::IsKeyPressed('I'))
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('P'))
-		light[0].position.y += (float)(LSPEED * dt);
-
-	if (rotate == true)
-	{
-		rotatetail += 1;
-		if (rotatetail > 20)
-		{
-			rotate = false;
-		}
-	}
-	else if (rotate == false)
-	{
-		rotatetail -= 1;
-		if (rotatetail < -20)
-		{
-			rotate = true;
-		}
-	}
-	if ((sharkcircle % 720) == 0 && sharkattack == false)
-	{
-		sharkattack = true;
-	}
-	if (sharkattack == true && (sharkcircle % 720) == 0)
-	{
-		if (Tempcounter == 0)
-		{
-			camera.SharkChaseinit();
-			Vector3 origin = Vector3(-1, 0, 0);
-			sharkdir = camera.getSharkRotation(origin) - 90;
-			Tempcounter = 1;
-			survivecounter++;
-		}
-		
-		if (camera.SharkPos.x > 30)
-		{
-			rotateshark -= 0.5;
-			camera.SharkPos.y += 0.1;
-			camera.SharkChaseMove();
-		}
-		else if (camera.SharkPos.x > 30)
-		{
-			rotateshark += 0.5;
-			camera.SharkPos.y -= 0.1;
-			camera.SharkChaseMove();
-		}
-		else if (camera.SharkPos.x > -100)
-		{
-			rotateshark += 0.5;
-			camera.SharkPos.y -= 0.1;
-			camera.SharkChaseMove();
-		}
-		else
-		{
-			camera.SharkPos.x = 100;
-			camera.SharkPos.z = 0;
-			sharkdir = 0;
-			sharkattack = false;
-			Tempcounter = 0;
-			sharkcircle = 1;
-			rotateshark = 0;
-			camera.SharkPos.y = 0;
-		}
-	}
-	else
-	{
-		sharkcircle += 1;
-		sharkcircleangle += 0.5;
-	}
 	
-	if (camera.SharkPos.x > camera.position.x - 1 && camera.SharkPos.x < camera.position.x + 1 && camera.SharkPos.z > camera.position.z - 1 && camera.SharkPos.z < camera.position.z + 1)
+	float dist = Math::sqrt(Math::Square(camera.SharkPos.x - camera.position.x + Math::Square(camera.SharkPos.z - camera.position.z)));
+
+	if (dist < 1)
 	{
 		Application::sceneswitch = Application::SCENEBEACH;
 	}
 
 	if (survivecounter == 6)
 	{
-
 		//something like bool win = true
 		Application::sceneswitch = Application::SCENEBEACH;
 	}
 
-	camera.Update(dt, mouse);
+
+	if (scenetransition == true)
+	{
+		if (scenecounter == 0)
+		{
+			camera.position.y = 60;
+			scenecounter++;
+		}
+		if (rotate == true)
+		{
+			rotatetail += 1;
+			if (rotatetail > 20)
+			{
+				rotate = false;
+			}
+		}
+		else if (rotate == false)
+		{
+			rotatetail -= 1;
+			if (rotatetail < -20)
+			{
+				rotate = true;
+			}
+		}
+		sharkcircle += 1;
+		sharkcircleangle += 0.5;
+		camera.position.y -= 0.05;
+		if (camera.position.y <= 8)
+		{
+			scenetransition = false;
+		}
+	}
+	else
+	{
+		if (rotate == true)
+		{
+			rotatetail += 1;
+			if (rotatetail > 20)
+			{
+				rotate = false;
+			}
+		}
+		else if (rotate == false)
+		{
+			rotatetail -= 1;
+			if (rotatetail < -20)
+			{
+				rotate = true;
+			}
+		}
+		if ((sharkcircle % 720) == 0 && sharkattack == false)
+		{
+			sharkattack = true;
+		}
+		if (sharkattack == true && (sharkcircle % 720) == 0)
+		{
+			if (Tempcounter == 0)
+			{
+				camera.SharkChaseinit();
+				Vector3 origin = Vector3(-1, 0, 0);
+				sharkdir = camera.getSharkRotation(origin) - 90;
+				Tempcounter = 1;
+				survivecounter++;
+			}
+
+			if (camera.SharkPos.x > 30)
+			{
+				rotateshark -= 0.5;
+				camera.SharkPos.y += 0.1;
+				camera.SharkChaseMove();
+			}
+			else if (camera.SharkPos.x > 30)
+			{
+				rotateshark += 0.5;
+				camera.SharkPos.y -= 0.1;
+				camera.SharkChaseMove();
+			}
+			else if (camera.SharkPos.x > -100)
+			{
+				rotateshark += 0.5;
+				camera.SharkPos.y -= 0.1;
+				camera.SharkChaseMove();
+			}
+			else
+			{
+				camera.SharkPos.x = 100;
+				camera.SharkPos.z = 0;
+				sharkdir = 0;
+				sharkattack = false;
+				Tempcounter = 0;
+				sharkcircle = 1;
+				rotateshark = 0;
+				camera.SharkPos.y = 0;
+			}
+		}
+		else
+		{
+			sharkcircle += 1;
+			sharkcircleangle += 0.5;
+		}
+		camera.Update(dt, mouse);
+	}
+
 }
 
 void SceneRyan::InitGL()
@@ -658,7 +682,7 @@ void SceneRyan::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Scale(10, 10, 10);
+	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 

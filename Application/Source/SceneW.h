@@ -19,6 +19,7 @@ class SceneW : public Scene
 		GEO_SPHERE3,
 		GEO_SPHERE4,
 		GEO_SPHERE5,
+		GEO_CUBE,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -96,6 +97,8 @@ private:
 	void RenderSkybox();
 
 	bool rotate;
+	bool doorhasopened;
+	bool stopopendoor;
 	bool Chestlimit;
 	bool Chestlimit2;
 	bool Chestlimit3;

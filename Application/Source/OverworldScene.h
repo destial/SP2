@@ -158,7 +158,6 @@ private:
 	float translateSphereX1;
 	float translateSphereX2;
 
-
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);

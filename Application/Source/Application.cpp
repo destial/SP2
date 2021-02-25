@@ -209,7 +209,7 @@ void Application::Init() {
 	ui_height = 60;
 	ui_width = 80;
 	sceneswitch = STARTSCENE;
-	Player::setMoney(1000);
+	Player::setMoney(100);
 	Player::setAmmo(256);
 	Player::setHealth(100);
 	m_window = glfwCreateWindow(m_width, m_height, "SP2 - Group 2", NULL, NULL);

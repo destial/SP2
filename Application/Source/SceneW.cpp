@@ -40,6 +40,12 @@ void SceneW::Init() {
 	meshList[GEO_SPHERE2] = MeshBuilder::GenerateSphere("sphere2", BLUE, 30, 30, 0.5);
 	//meshList[GEO_SPHERE2]->textureID = LoadTGA("Image//particle.tga");
 
+	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", 4, 4, 4);
+	meshList[GEO_CUBE]->material.kAmbient.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kDiffuse.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kSpecular.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kShininess = 1.f;
+
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", WHITE, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//tron_ft.tga");
 
@@ -389,21 +395,29 @@ void SceneW::Update(double dt, Mouse mouse) {
 			}
 		}
 
-		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && Dooropen == false)
+		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45)
 		{
-			rotateDoor -= (float)(30 * dt);
+			doorhasopened = true;
 		}
 
 	}
 
-	if (rotateDoor <= -90)
+	if (doorhasopened == true)
 	{
-		Dooropen = true;
+		if (!stopopendoor)
+		{
+			rotateDoor -= (float)(40 * dt);
+		}
+
+		if (rotateDoor <= -90)
+		{
+			stopopendoor = true;
+		}
 	}
 
 	if (Application::IsKeyPressed('F'))
 	{
-		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && Dooropen == true)
+		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && stopopendoor == true)
 		{
 			Application::sceneswitch = Application::OVERWORLD;
 		}
@@ -969,7 +983,7 @@ void SceneW::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3);
 	RenderUI();
 	RenderItems();
-	RenderParticles();
+	/*RenderParticles();*/
 }
 
 void SceneW::Exit() {
@@ -985,9 +999,9 @@ void SceneW::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
+	/*RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);*/
 }
 
 void SceneW::RenderRoom() {
@@ -1041,6 +1055,12 @@ void SceneW::RenderRoom() {
 	modelStack.Rotate(rotateDoor, 0, 1, 0);
 	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_DOOR], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(25.3, 0, 51.5);
+	modelStack.Scale(0.65, 2.5, 1);
+	RenderMesh(meshList[GEO_CUBE], true);
 	modelStack.PopMatrix();
 
 }
@@ -1145,7 +1165,7 @@ void SceneW::RenderBoxes() {
 
 void SceneW::RenderParticles()
 {
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	modelStack.Translate(translateSPHERE1X, translateSPHERE1Y, 43);
 	modelStack.Scale(scaleSPX, scaleSPY, scaleSPZ);
 	RenderMesh(meshList[GEO_SPHERE], true);
@@ -1155,7 +1175,7 @@ void SceneW::RenderParticles()
 	modelStack.Translate(translateSPHERE2X, translateSPHERE1Y, 43);
 	modelStack.Scale(scaleSPX, scaleSPY, scaleSPZ);
 	RenderMesh(meshList[GEO_SPHERE2], true);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix();*/
 }
 
 void SceneW::RenderItems() // inside chest

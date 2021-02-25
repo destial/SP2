@@ -130,10 +130,10 @@ void SceneShaqler::Init() {
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1, 0.8);
-	meshList[GEO_UI]->textureID = LoadTGA("Image//blueblacktextbox");
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
 
-	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
+	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 3, 1);
 	meshList[GEO_UI2]->textureID = LoadTGA("Image//button.tga");
 
 	bookX = -17;
@@ -151,7 +151,7 @@ void SceneShaqler::Init() {
 
 	Bookhasbeenbaught = false;
 
-	x = 1;
+	amount = 30;
 
 	Application::log("Scene Shaqler initialized");
 }
@@ -345,6 +345,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		heightlimit = false;
 	}
 
+
 	if (Application::IsKeyPressed('E')) // -0.685 and 4.75 for z x// -12.5 -15
 	{
 		if (camera.position.x >= -15 && camera.position.x <= -12 && camera.position.z >= -0.685 && camera.position.z <= 4.75)
@@ -366,10 +367,23 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 
 		if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 14 && camera.position.z <= 20 && !stopOpendoor)
 		{
-			rotateDoor += (float)(30 * dt);
+			doorhasopened = true;
 		}
 
-		if (rotateDoor >= 300)
+		/*if (rotateDoor >= 300)
+		{
+			stopOpendoor = true;
+		}*/
+	}
+
+	if (doorhasopened == true)
+	{
+		if (!stopOpendoor)
+		{
+			rotateDoor += (float)(40 * dt);
+		}
+
+		if (rotateDoor >= 290)
 		{
 			stopOpendoor = true;
 		}
@@ -413,12 +427,12 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Application::IsKeyPressed('Y'))
+	if (Application::IsKeyPressedOnce('Y'))
 	{
 		bookX = 1000;
 		isBuying = false;
 		Bookhasbeenbaught = true;
-		Player::setMoney(Player::getMoney() - 100);
+		Player::setMoney(Player::getMoney() - 30);
 
 	}
 
@@ -774,15 +788,21 @@ void SceneShaqler::Render()
 	RenderUI();
 }
 
-void SceneShaqler::RenderUI() {
+void SceneShaqler::RenderUI()
+{
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5, 18 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);
-}
 
+	if (isBuying == true && Bookhasbeenbaught == false)
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book?", WHITE, 2.3, 2.5, 3.5);
+		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2.3, 4.5, 1.2); //X 1.5 AND Z 19.5
+	}
+}
 
 void SceneShaqler::RenderWalls() 
 {
@@ -893,9 +913,9 @@ void SceneShaqler::RenderInatimateobjects()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(1.5, 0, 19.5);
+	modelStack.Translate(1.3, 0, 19.55);
 	modelStack.Rotate(rotateDoor, 0, 1, 0);
-	modelStack.Scale(1, 1, 1);
+	modelStack.Scale(1.12, 1.18, 1);
 	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();
 
@@ -954,12 +974,6 @@ void SceneShaqler::RenderText()
 
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", BLACK, 200, 0, 500);
 
-	if (isBuying == true && Bookhasbeenbaught == false)
-	{
-		RenderMeshOnScreen(meshList[GEO_UI2], 55, 40, -5); // 40 screenx
-		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 2.3, 4.5, 3.5);
-		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2.3, 4.5, 1.2); //X 1.5 AND Z 19.5
-	}
 }
 
 void SceneShaqler:: RenderBooks()

@@ -1,0 +1,90 @@
+# Blender MTL File: 'None'
+# Material Count: 8
+
+newmtl kage_out_1
+Ns 225.000000
+Ka 0.467000 0.533000 0.600000
+Kd 0.467000 0.533000 0.600000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd pokemonwheel\\Ferris Wheel\\kage_out.png
+
+newmtl wbase_a_1
+Ns 225.000000
+Ka 0.467000 0.533000 0.600000
+Kd 0.467000 0.533000 0.600000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd pokemonwheel\\Ferris Wheel\\wbase_a.png
+
+newmtl wbase_b_1
+Ns 225.000000
+Ka 0.467000 0.533000 0.600000
+Kd 0.467000 0.533000 0.600000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd pokemonwheel\\Ferris Wheel\\wbase_b.png
+
+newmtl wbase_c_1
+Ns 225.000000
+Ka 0.467000 0.533000 0.600000
+Kd 0.467000 0.533000 0.600000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd pokemonwheel\\Ferris Wheel\\wbase_c.png
+
+newmtl wbase_d_1
+Ns 225.000000
+Ka 0.467000 0.533000 0.600000
+Kd 0.467000 0.533000 0.600000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd pokemonwheel\\Ferris Wheel\\wbase_d.png
+
+newmtl wheel_b_1
+Ns 225.000000
+Ka 0.467000 0.533000 0.600000
+Kd 0.467000 0.533000 0.600000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd pokemonwheel\\Ferris Wheel\\wheel_b.png
+
+newmtl wheel_b__1
+Ns 225.000000
+Ka 0.467000 0.533000 0.600000
+Kd 0.467000 0.533000 0.600000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd pokemonwheel\\Ferris Wheel\\wheel_b_.png
+
+newmtl wheel_d_1
+Ns 225.000000
+Ka 0.467000 0.533000 0.600000
+Kd 0.467000 0.533000 0.600000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd pokemonwheel\\Ferris Wheel\\wheel_d.png

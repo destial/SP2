@@ -87,26 +87,29 @@ void OverworldScene::Init() {
 	meshList[CAR2]->type = Mesh::TYPE::OBJECT;
 
 	meshList[SKYSCRAPER2] = MeshBuilder::GenerateOBJ("skyscraper", "OBJ//skyscraper4.obj");
-	meshList[SKYSCRAPER2]->transform.Scale(5);
+	meshList[SKYSCRAPER2]->textureID = LoadTGA("Image//NewSkyscraper.tga");
 	meshList[SKYSCRAPER2]->type = Mesh::TYPE::OBJECT;
+
+	meshList[NY_BUILDING] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NYBuilding.obj");
+	meshList[NY_BUILDING]->textureID = LoadTGA("Image//NYBuilding.tga");
 
 	meshList[STREETLIGHT] = MeshBuilder::GenerateOBJ("streetlight", "OBJ//StreetLight.obj");
 	meshList[STREETLIGHT]->textureID = LoadTGA("Image//StreetLight.tga");
 	meshList[STREETLIGHT]->type = Mesh::TYPE::OBJECT;
 
-	meshList[GEO_ROBOBODY] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Robowithoutarmsandlegs.obj"); // Try 1 first
+	meshList[GEO_ROBOBODY] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Robowithoutarmsandlegs.obj");
 	meshList[GEO_ROBOBODY]->textureID = LoadTGA("Image//robo_normal.tga");
 
-	meshList[GEO_ROBOLEFTLEG] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roboleftleg.obj"); // Try 1 first
+	meshList[GEO_ROBOLEFTLEG] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roboleftleg.obj");
 	meshList[GEO_ROBOLEFTLEG]->textureID = LoadTGA("Image//robo_normal.tga");
 
-	meshList[GEO_ROBORIGHTLEG] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightleg.obj"); // Try 1 first
+	meshList[GEO_ROBORIGHTLEG] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightleg.obj");
 	meshList[GEO_ROBORIGHTLEG]->textureID = LoadTGA("Image//robo_normal.tga");
 
-	meshList[GEO_ROBOLEFTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roboleftarm.obj"); // Try 1 first
+	meshList[GEO_ROBOLEFTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roboleftarm.obj");
 	meshList[GEO_ROBOLEFTARM]->textureID = LoadTGA("Image//robo_normal.tga");
 
-	meshList[GEO_ROBORIGHTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightarm.obj"); // Try 1 first
+	meshList[GEO_ROBORIGHTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightarm.obj");
 	meshList[GEO_ROBORIGHTARM]->textureID = LoadTGA("Image//robo_normal.tga");
 
 	meshList[CAMERA] = new Mesh("camera");
@@ -309,6 +312,13 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 		showTaskbar = showTaskbar ? 0 : 1;
 	}
 
+	meshList[MOON]->transform.translate = camera.position;
+	meshList[MOON]->transform.translate.y = camera.position.y + (2 * camera.bounds);
+	
+	if (Application::previousscene != Application::OVERWORLD) {
+		InitGL();
+	}
+
 	light[0].position.Set(meshList[MOON]->transform.translate.x, meshList[MOON]->transform.translate.y, meshList[MOON]->transform.translate.z);
 
 	if (!currentCarObject) {
@@ -356,19 +366,7 @@ void OverworldScene::InitGL() {
 	m_parameters[U_LIGHT0_COSINNER] = glGetUniformLocation(m_programID, "lights[0].cosInner");
 	m_parameters[U_LIGHT0_EXPONENT] = glGetUniformLocation(m_programID, "lights[0].exponent");
 
-	m_parameters[U_LIGHT1_POSITION] = glGetUniformLocation(m_programID, "lights[1].position_cameraspace");
-	m_parameters[U_LIGHT1_COLOR] = glGetUniformLocation(m_programID, "lights[1].color");
-	m_parameters[U_LIGHT1_POWER] = glGetUniformLocation(m_programID, "lights[1].power");
-	m_parameters[U_LIGHT1_KC] = glGetUniformLocation(m_programID, "lights[1].kC");
-	m_parameters[U_LIGHT1_KL] = glGetUniformLocation(m_programID, "lights[1].kL");
-	m_parameters[U_LIGHT1_KQ] = glGetUniformLocation(m_programID, "lights[1].kQ");
 	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
-
-	m_parameters[U_LIGHT1_TYPE] = glGetUniformLocation(m_programID, "lights[1].type");
-	m_parameters[U_LIGHT1_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[1].spotDirection");
-	m_parameters[U_LIGHT1_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[1].cosCutoff");
-	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
-	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
 
 	Mesh::SetMaterialLoc(
@@ -378,25 +376,15 @@ void OverworldScene::InitGL() {
 		m_parameters[U_MATERIAL_SHININESS]
 	);
 
-	light[0].color.Set(1, 1, 1);
-	light[0].power = 1;
+	light[0].color = Colors::WHITE;
+	light[0].power = 1.f;
 	light[0].kC = 1.f;
 	light[0].kL = 0.01f;
 	light[0].kQ = 0.001f;
-	light[0].cosCutoff = cos(Math::DegreeToRadian(45));
-	light[0].cosInner = cos(Math::DegreeToRadian(30));
+	light[0].cosCutoff = cos(Math::DegreeToRadian(60));
+	light[0].cosInner = cos(Math::DegreeToRadian(45));
 	light[0].exponent = 3.f;
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
-
-	light[1].color.Set(1, 1, 1);
-	light[1].power = 1;
-	light[1].kC = 1.f;
-	light[1].kL = 0.01f;
-	light[1].kQ = 0.001f;
-	light[1].cosCutoff = cos(Math::DegreeToRadian(45));
-	light[1].cosInner = cos(Math::DegreeToRadian(30));
-	light[1].exponent = 3.f;
-	light[1].spotDirection.Set(0.f, 1.f, 0.f);
 
 	glUseProgram(m_programID);
 
@@ -409,16 +397,6 @@ void OverworldScene::InitGL() {
 	glUniform1f(m_parameters[U_LIGHT0_COSCUTOFF], light[0].cosCutoff);
 	glUniform1f(m_parameters[U_LIGHT0_COSINNER], light[0].cosInner);
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], light[0].exponent);
-
-	glUniform1i(m_parameters[U_LIGHT1_TYPE], light[1].type);
-	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &light[1].color.r);
-	glUniform1f(m_parameters[U_LIGHT1_POWER], light[1].power);
-	glUniform1f(m_parameters[U_LIGHT1_KC], light[1].kC);
-	glUniform1f(m_parameters[U_LIGHT1_KL], light[1].kL);
-	glUniform1f(m_parameters[U_LIGHT1_KQ], light[1].kQ);
-	glUniform1f(m_parameters[U_LIGHT1_COSCUTOFF], light[1].cosCutoff);
-	glUniform1f(m_parameters[U_LIGHT1_COSINNER], light[1].cosInner);
-	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], light[1].exponent);
 
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 }
@@ -455,19 +433,7 @@ void OverworldScene::InitGLXray() {
 	m_parameters[U_LIGHT0_COSINNER] = glGetUniformLocation(m_programID, "lights[0].cosInner");
 	m_parameters[U_LIGHT0_EXPONENT] = glGetUniformLocation(m_programID, "lights[0].exponent");
 
-	m_parameters[U_LIGHT1_POSITION] = glGetUniformLocation(m_programID, "lights[1].position_cameraspace");
-	m_parameters[U_LIGHT1_COLOR] = glGetUniformLocation(m_programID, "lights[1].color");
-	m_parameters[U_LIGHT1_POWER] = glGetUniformLocation(m_programID, "lights[1].power");
-	m_parameters[U_LIGHT1_KC] = glGetUniformLocation(m_programID, "lights[1].kC");
-	m_parameters[U_LIGHT1_KL] = glGetUniformLocation(m_programID, "lights[1].kL");
-	m_parameters[U_LIGHT1_KQ] = glGetUniformLocation(m_programID, "lights[1].kQ");
 	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
-
-	m_parameters[U_LIGHT1_TYPE] = glGetUniformLocation(m_programID, "lights[1].type");
-	m_parameters[U_LIGHT1_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[1].spotDirection");
-	m_parameters[U_LIGHT1_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[1].cosCutoff");
-	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
-	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
 
 	Mesh::SetMaterialLoc(
@@ -477,25 +443,15 @@ void OverworldScene::InitGLXray() {
 		m_parameters[U_MATERIAL_SHININESS]
 	);
 
-	light[0].color.Set(1, 1, 1);
-	light[0].power = 1;
+	light[0].color = Colors::WHITE;
+	light[0].power = 1.f;
 	light[0].kC = 1.f;
 	light[0].kL = 0.01f;
 	light[0].kQ = 0.001f;
-	light[0].cosCutoff = cos(Math::DegreeToRadian(45));
-	light[0].cosInner = cos(Math::DegreeToRadian(30));
+	light[0].cosCutoff = cos(Math::DegreeToRadian(60));
+	light[0].cosInner = cos(Math::DegreeToRadian(45));
 	light[0].exponent = 3.f;
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
-
-	light[1].color.Set(1, 1, 1);
-	light[1].power = 1;
-	light[1].kC = 1.f;
-	light[1].kL = 0.01f;
-	light[1].kQ = 0.001f;
-	light[1].cosCutoff = cos(Math::DegreeToRadian(45));
-	light[1].cosInner = cos(Math::DegreeToRadian(30));
-	light[1].exponent = 3.f;
-	light[1].spotDirection.Set(0.f, 1.f, 0.f);
 
 	glUseProgram(m_programID);
 
@@ -509,16 +465,7 @@ void OverworldScene::InitGLXray() {
 	glUniform1f(m_parameters[U_LIGHT0_COSINNER], light[0].cosInner);
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], light[0].exponent);
 
-	glUniform1i(m_parameters[U_LIGHT1_TYPE], light[1].type);
-	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &light[1].color.r);
-	glUniform1f(m_parameters[U_LIGHT1_POWER], light[1].power);
-	glUniform1f(m_parameters[U_LIGHT1_KC], light[1].kC);
-	glUniform1f(m_parameters[U_LIGHT1_KL], light[1].kL);
-	glUniform1f(m_parameters[U_LIGHT1_KQ], light[1].kQ);
-	glUniform1f(m_parameters[U_LIGHT1_COSCUTOFF], light[1].cosCutoff);
-	glUniform1f(m_parameters[U_LIGHT1_COSINNER], light[1].cosInner);
-	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], light[1].exponent);
-	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
+	glUniform1i(m_parameters[U_NUMLIGHTS], 1);
 }
 
 void OverworldScene::Update(double dt) {
@@ -575,9 +522,6 @@ void OverworldScene::RenderSkybox() {
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_GROUND], true);
 	modelStack.PopMatrix();
-
-	meshList[MOON]->transform.translate = camera.position;
-	meshList[MOON]->transform.translate.y = camera.position.y + translate;
 
 	modelStack.PushMatrix();
 	modelStack.Translate(meshList[MOON]->transform.translate.x, meshList[MOON]->transform.translate.y, meshList[MOON]->transform.translate.z);
@@ -1056,7 +1000,7 @@ void OverworldScene::GetInCar() {
 void OverworldScene::DetectCollision() {
 	for (auto o : sceneManager->allObjects) {
 		if (o == currentCarObject) continue;
-		if (isNearObject(o, 2)) {
+		if (isNearObject(o, (o->transform->scale.x > 1 ? 2 : 2.5* o->transform->scale.x))) {
 			MoveBack();
 		}
 	}
@@ -1104,18 +1048,143 @@ void OverworldScene::CreateCityObjects() {
 			object->id = sceneManager->totalObjects;
 		}
 	}
+
+	GameObject* building = new GameObject(meshList[SKYSCRAPER2]);
+	building->transform->Translate(0, 1, 0);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(115, 0, -25);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(115, 0, -10);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(115, 0, 5);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(115, 0, 20);
+	building->transform->RotateDegree(180);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-115, 0, 20);
+	building->transform->RotateDegree(180);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-115, 0, -25);
+	building->transform->RotateDegree(180);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-115, 0, -10);
+	building->transform->RotateDegree(180);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-115, 0, 5);
+	building->transform->RotateDegree(180);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-115, 0, 20);
+	building->transform->RotateDegree(180);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-115, 0, -25);
+	building->transform->RotateDegree(180);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-115, 0, -10);
+	building->transform->RotateDegree(180);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-115, 0, 5);
+	building->transform->RotateDegree(180);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-115, 0, 20);
+	building->transform->RotateDegree(180);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-25, 0, 115);
+	building->transform->RotateDegree(90);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-10, 0, 115);
+	building->transform->RotateDegree(90);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(5, 0, 115);
+	building->transform->RotateDegree(90);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(20, 0, 115);
+	building->transform->RotateDegree(90);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
 }
 
 void OverworldScene::MoveBack() {
+
+	// Get the current view vector and current y position
 	Vector3 view = (camera.target - camera.position).Normalized();
 	float y = camera.position.y;
+
+	// Set the player back to previous position but current y position (only x & z collision)
 	camera.position = camera.prevPosition;
 	camera.position.y = y;
+
+	// Set the correct target according to player's position and set the car speed to 0
 	camera.target = camera.position + view;
-}
-
-void OverworldScene::ObjectMoveBack(Mesh* mesh) {
-
+	camera.currentCarSpeed = 0;
 }
 
 bool OverworldScene::isNear(Mesh* mesh, const float& distance) {
@@ -1202,7 +1271,7 @@ void OverworldScene::Reset() {
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(0, 3, 0), Vector3(5, 3, 1), Vector3(0, 1, 0), (float)100);
+	camera.Init(Vector3(18, 3, 0), Vector3(5, 3, 1), Vector3(0, 1, 0), (float)100);
 	currentCar = nullptr;
 	currentCarObject = nullptr;
 
@@ -1210,10 +1279,6 @@ void OverworldScene::Reset() {
 	meshList[MOON]->transform.Scale(10.f);
 
 	light[0].type = Light::LIGHT_SPOT;
-	light[0].position.Set(meshList[MOON]->transform.translate.x, meshList[MOON]->transform.translate.y, meshList[MOON]->transform.translate.z);
-
-	light[1].type = Light::LIGHT_SPOT;
-	light[1].position.Set(0, -20, 0);
 
 	meshList[CAR2]->transform.Translate(-22, 1.8f, 65);
 	meshList[CAR2]->transform.RotateDegree(0);

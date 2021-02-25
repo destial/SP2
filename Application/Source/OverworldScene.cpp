@@ -1428,6 +1428,7 @@ void OverworldScene::Reset() {
 	for (unsigned i = 0; i < NUM_TASKS; i++) {
 		tasks[i] = 0;
 	}
+
 	showTaskbar = false;
 	showTaskbarFrame = showTaskbarDelay =0;
 	carOrigin = Vector3(-1, 0, 0);

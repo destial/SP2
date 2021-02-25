@@ -80,5 +80,21 @@ private:
 	StopWatch m_timer;
 };
 
+class Player {
+private:
+	static unsigned ammo;
+	static int money;
+	static int health;
+public:
+	Player() {};
+	~Player() {};
+	static unsigned getAmmo();
+	static int getMoney();
+	static int getHealth();
+	static void setAmmo(unsigned a);
+	static void setMoney(int m);
+	static void setHealth(int h);
+};
+
 #endif
 

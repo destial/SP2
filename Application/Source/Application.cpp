@@ -32,6 +32,31 @@ unsigned Application::ui_height;
 unsigned Application::sceneswitch;
 unsigned Application::previousscene;
 bool Application::quit;
+
+unsigned Player::getAmmo() {
+	return ammo;
+}
+
+int Player::getHealth() {
+	return health;
+}
+
+int Player::getMoney() {
+	return money;
+}
+
+void Player::setAmmo(unsigned a) {
+	ammo = a;
+}
+
+void Player::setHealth(int h) {
+	health = h;
+}
+
+void Player::setMoney(int m) {
+	money = m;
+}
+
 std::set<unsigned short> Application::activeKeys;
 Scene* scene[Application::TOTALSCENES];
 Mouse mouse;
@@ -180,6 +205,9 @@ void Application::Init() {
 	ui_height = 60;
 	ui_width = 80;
 	sceneswitch = STARTSCENE;
+	Player::setMoney(1000);
+	Player::setAmmo(256);
+	Player::setHealth(100);
 	m_window = glfwCreateWindow(m_width, m_height, "SP2 - Group 2", NULL, NULL);
 	quit = false;
 	mouse.reset();

@@ -67,6 +67,9 @@ void SceneShaqeel::Init()
 	meshList[GEO_CAR2] = MeshBuilder::GenerateOBJ("Car2", "OBJ//NewCar2.obj"); // Try 1 first
 	meshList[GEO_CAR2]->textureID = LoadTGA("Image//RedVehicle.tga");
 
+	meshList[GEO_PLANE] = MeshBuilder::GenerateOBJ("Plane", "OBJ//planewithoutwheels.obj"); // Try 1 first
+	meshList[GEO_PLANE]->textureID = LoadTGA("Image//whitemistcolour.tga");
+
 	meshList[GEO_BUSH] = MeshBuilder::GenerateOBJ("Bush", "OBJ//Bush_2.obj"); // Try 1 first
 	meshList[GEO_BUSH]->textureID = LoadTGA("Image//Tree_Texture2.tga");
 
@@ -143,6 +146,8 @@ void SceneShaqeel::Init()
 	rightleglimit = false;
 	translateSphereZ = -19.6;
 	translateSphereZ2 = 19.6;
+	translatePlaneX = 40;
+	translatePlaneZ = 10;
 
 	Application::log("Scene Shaqeel initialized");
 }
@@ -324,6 +329,8 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	translateCar2Z -= (float)(15 * dt);
 	translateSphereZ += (float)(2.5 * dt);
 	translateSphereZ2 -= (float)(2.75 * dt);
+	translatePlaneX -= (float)(7 * dt);
+	translatePlaneZ -= (float)(1.2 * dt);
 
 	if (translateTruckZ >= 40)
 	{
@@ -343,6 +350,12 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	if (translateCar2Z <= -40)
 	{
 		translateCar2Z = 40;
+	}
+
+	if (translatePlaneX <= -40)
+	{
+		translatePlaneX = 40;
+		translatePlaneZ = 10;
 	}
 
 	if (translateSphereZ >= 25)
@@ -393,21 +406,6 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	}
 
 	// robot movement
-
-	//if (rotateleftleg >= -30 && rotateleftleg <= 30 && leftleglimit == false/* && leftleglimit2 == false*/)
-	//{
-	//	rotateleftleg += (float)(15 * dt);
-	//}
-
-	//if (rotateleftleg >= 30)
-	//{
-	//	leftleglimit = true;
-	//}
-
-	//if (leftleglimit == true)
-	//{
-	//	rotateleftleg -= (float)(15 * dt);
-	//}
 
 	if (leftleglimit == true)
 	{
@@ -806,6 +804,13 @@ void SceneShaqeel::Rendervehicles()
 	modelStack.Rotate(270, 0, 1, 0);
 	modelStack.Scale(0.09, 0.09, 0.09);
 	RenderMesh(meshList[GEO_CAR2], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(translatePlaneX, 42, translatePlaneZ);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_PLANE], true);
 	modelStack.PopMatrix();
 }
 

@@ -31,6 +31,7 @@ class SceneShaqeel : public Scene
 		GEO_BUS,
 		GEO_CAR1,
 		GEO_CAR2,
+		GEO_PLANE,
 		GEO_TUNNEL,
 		GEO_TREE,
 		GEO_BUSH,
@@ -113,6 +114,8 @@ private:
 	float translateBusZ;
 	float translateCar1Z;
 	float translateCar2Z;
+	float translatePlaneX;
+	float translatePlaneZ;
 	float rotatedoor;
 	float busZ;
 	float rotateleftleg;

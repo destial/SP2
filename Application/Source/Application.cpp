@@ -36,6 +36,9 @@ bool Application::quit;
 unsigned Player::ammo;
 int Player::health;
 int Player::money;
+int Player::sword;
+int Player::armourplate;
+int Player::helmet;
 
 unsigned Player::getAmmo() {
 	return ammo;
@@ -49,6 +52,21 @@ int Player::getMoney() {
 	return money;
 }
 
+int Player::getSword()
+{
+	return sword;
+}
+
+int Player::getArmourplate()
+{
+	return armourplate;
+}
+
+int Player::getHelmet()
+{
+	return helmet;
+}
+
 void Player::setAmmo(unsigned a) {
 	ammo = a;
 }
@@ -59,6 +77,20 @@ void Player::setHealth(int h) {
 
 void Player::setMoney(int m) {
 	money = m;
+}
+
+void Player::setSword(int s)
+{
+	sword = s;
+}
+void Player::setArmourplate(int ap)
+{
+	armourplate = ap;
+}
+
+void Player::setHelmet(int ht)
+{
+	helmet = ht;
 }
 
 std::set<unsigned short> Application::activeKeys;
@@ -209,9 +241,10 @@ void Application::Init() {
 	ui_height = 60;
 	ui_width = 80;
 	sceneswitch = STARTSCENE;
-	Player::setMoney(1000);
+	Player::setMoney(100);
 	Player::setAmmo(256);
 	Player::setHealth(100);
+	// sword armour and helmet all zero so dun need initalise
 	m_window = glfwCreateWindow(m_width, m_height, "SP2 - Group 2", NULL, NULL);
 	quit = false;
 	mouse.reset();

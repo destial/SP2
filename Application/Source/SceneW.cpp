@@ -40,6 +40,12 @@ void SceneW::Init() {
 	meshList[GEO_SPHERE2] = MeshBuilder::GenerateSphere("sphere2", BLUE, 30, 30, 0.5);
 	//meshList[GEO_SPHERE2]->textureID = LoadTGA("Image//particle.tga");
 
+	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", 4, 4, 4);
+	meshList[GEO_CUBE]->material.kAmbient.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kDiffuse.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kSpecular.Set(0.5f, 1.f, 0.5f);
+	meshList[GEO_CUBE]->material.kShininess = 1.f;
+
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", WHITE, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//tron_ft.tga");
 
@@ -121,6 +127,8 @@ void SceneW::Init() {
 	scaleHLX = 0.2; // 1
 	scaleHLY = 0.2; // 1 
 	scaleHLZ = 0.2; // 1
+
+	interact = false;
 
 	Chestlimit = false;
 	Chestlimit2 = false;
@@ -342,68 +350,146 @@ void SceneW::Update(double dt, Mouse mouse) {
 	{
 		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && Chestlimit == false)
 		{
-			rotateChest -= (float)(40 * dt);
+			chestOpen = true;
+			/*rotateChest -= (float)(40 * dt);*/
 			particles1spawn = true;
 			ClaymoreSpawn = true;
-			if (rotateChest <= -70)
+			/*if (rotateChest <= -70)
 			{
 				Chestlimit = true;
-			}
+			}*/
 		}
 
 		if (camera.position.x <= -18 && camera.position.x >= -28 && camera.position.z <= 16.5 && camera.position.z >= 13.5 && Chestlimit2 == false)
 		{
-			rotateChest2 -= (float)(40 * dt);
-			if (rotateChest2 <= -70)
+			chestOpen2 = true;
+			/*rotateChest2 -= (float)(40 * dt);*/
+			/*if (rotateChest2 <= -70)
 			{
 				Chestlimit2 = true;
-			}
+			}*/
 		}
 
 		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && Chestlimit3 == false)
 		{
-			rotateChest3 -= (float)(45 * dt);
+			chestOpen3 = true;
+			/*rotateChest3 -= (float)(45 * dt);*/
 			ArmourSpawn = true;
-			if (rotateChest3 <= -120)
+			/*if (rotateChest3 <= -120)
 			{
 				Chestlimit3 = true;
-			}
+			}*/
 		}
 
 		if (camera.position.x <= 36.6 && camera.position.x >= 29.4 && camera.position.z <= -26.3 && camera.position.z >= -36.3 && Chestlimit4 == false)
 		{
-			rotateChest4 -= (float)(40 * dt);
-			if (rotateChest4 <= -70)
+			chestOpen4 = true;
+			/*rotateChest4 -= (float)(40 * dt);*/
+			/*if (rotateChest4 <= -70)
 			{
 				Chestlimit4 = true;
-			}
+			}*/
 		}
 
 		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && Chestlimit5 == false)
 		{
-			rotateChest5 -= (float)(45 * dt);
+			chestOpen5 = true;
+			/*rotateChest5 -= (float)(45 * dt);*/
 			HelmetSpawn = true;
-			if (rotateChest5 <= -120)
+			/*if (rotateChest5 <= -120)
 			{
 				Chestlimit5 = true;
-			}
+			}*/
 		}
 
-		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && Dooropen == false)
+		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45)
 		{
-			rotateDoor -= (float)(30 * dt);
+			doorhasopened = true;
 		}
 
 	}
 
-	if (rotateDoor <= -90)
+	if (doorhasopened == true)
 	{
-		Dooropen = true;
+		if (!stopopendoor)
+		{
+			rotateDoor -= (float)(40 * dt);
+		}
+
+		if (rotateDoor <= -90)
+		{
+			stopopendoor = true;
+		}
+	}
+
+	if (chestOpen == true)
+	{
+		if (!Chestlimit)
+		{
+			rotateChest -= (float)(40 * dt);;
+		}
+
+		if (rotateChest <= -70)
+		{
+			Chestlimit = true;
+		}
+	}
+
+	if (chestOpen2 == true)
+	{
+		if (!Chestlimit2)
+		{
+			rotateChest2 -= (float)(40 * dt);;
+		}
+
+		if (rotateChest2 <= -70)
+		{
+			Chestlimit2 = true;
+		}
+	}
+
+	if (chestOpen3 == true)
+	{
+		if (!Chestlimit3)
+		{
+			rotateChest3 -= (float)(45 * dt);;
+		}
+
+		if (rotateChest3 <= -120)
+		{
+			Chestlimit3 = true;
+		}
+	}
+
+	if (chestOpen4 == true)
+	{
+		if (!Chestlimit4)
+		{
+			rotateChest4 -= (float)(40 * dt);;
+		}
+
+		if (rotateChest4 <= -70)
+		{
+			Chestlimit4 = true;
+		}
+	}
+
+	if (chestOpen5 == true)
+	{
+		if (!Chestlimit5)
+		{
+			rotateChest5 -= (float)(45 * dt);;
+		}
+
+		if (rotateChest5 <= -120)
+		{
+			Chestlimit5 = true;
+		}
 	}
 
 	if (Application::IsKeyPressed('F'))
 	{
-		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && Dooropen == true)
+		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && stopopendoor == true)
 		{
 			Application::sceneswitch = Application::OVERWORLD;
 		}
@@ -537,24 +623,27 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 	}
 
-	if (Application::IsKeyPressed('R'))
+	if (Application::IsKeyPressedOnce('R'))
 	{
 		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && Claymorelimit == true)
 		{
 			claymoreX = 1000;
 			collectedClaymore = true;
+			Player::setSword(Player::getSword() + 1);
 		}
 
 		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && armourlimit == true)
 		{
 			armourX = 1000;
 			collectedArmour = true;
+			Player::setArmourplate(Player::getArmourplate() + 1);
 		}
 
 		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && helmetlimit == true)
 		{
 			helmetX = 1000;
 			collectedHelmet = true;
+			Player::setHelmet(Player::getHelmet() + 1);
 		}
 	}
 
@@ -969,7 +1058,7 @@ void SceneW::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3);
 	RenderUI();
 	RenderItems();
-	RenderParticles();
+	/*RenderParticles();*/
 }
 
 void SceneW::Exit() {
@@ -985,9 +1074,9 @@ void SceneW::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Sword:" + std::to_string(Player::getSword()), BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Armour:" + std::to_string(Player::getArmourplate()), BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Helmet:" + std::to_string(Player::getHelmet()), BLACK, 2, 0.5, 17.3 * h / 600);
 }
 
 void SceneW::RenderRoom() {
@@ -1041,6 +1130,12 @@ void SceneW::RenderRoom() {
 	modelStack.Rotate(rotateDoor, 0, 1, 0);
 	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_DOOR], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(25.3, 0, 51.5);
+	modelStack.Scale(0.65, 2.5, 1);
+	RenderMesh(meshList[GEO_CUBE], true);
 	modelStack.PopMatrix();
 
 }
@@ -1145,7 +1240,7 @@ void SceneW::RenderBoxes() {
 
 void SceneW::RenderParticles()
 {
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	modelStack.Translate(translateSPHERE1X, translateSPHERE1Y, 43);
 	modelStack.Scale(scaleSPX, scaleSPY, scaleSPZ);
 	RenderMesh(meshList[GEO_SPHERE], true);
@@ -1155,7 +1250,7 @@ void SceneW::RenderParticles()
 	modelStack.Translate(translateSPHERE2X, translateSPHERE1Y, 43);
 	modelStack.Scale(scaleSPX, scaleSPY, scaleSPZ);
 	RenderMesh(meshList[GEO_SPHERE2], true);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix();*/
 }
 
 void SceneW::RenderItems() // inside chest

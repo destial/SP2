@@ -30,6 +30,7 @@ class OverworldScene : public Scene {
 
 		SKYSCRAPER1,
 		SKYSCRAPER2,
+		NY_BUILDING,
 		NUM_BUILDINGS,
 
 		TRUCK1,
@@ -38,6 +39,8 @@ class OverworldScene : public Scene {
 		CAR2,
 		BUS1,
 		COP,
+		PLANE,
+		NUM_CAR,
 
 		GEO_ROBOBODY,
 		GEO_ROBORIGHTLEG,
@@ -45,19 +48,9 @@ class OverworldScene : public Scene {
 		GEO_ROBORIGHTARM,
 		GEO_ROBOLEFTARM,
 
-		NUM_CAR,
-
 		CAMERA,
 
 		NUM_GEOMETRY,
-	};
-
-	enum OBJECTS {
-		WALL1,
-		WALL2,
-		WALL3,
-
-		NUM_OBJECTS,
 	};
 
 	enum UNIFORM_TYPE {
@@ -80,18 +73,6 @@ class OverworldScene : public Scene {
 		U_LIGHT0_COSCUTOFF,
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
-		U_LIGHT1_POSITION,
-		U_LIGHT1_COLOR,
-		U_LIGHT1_POWER,
-		U_LIGHT1_KC,
-		U_LIGHT1_KL,
-		U_LIGHT1_KQ,
-		U_LIGHT1NABLED,
-		U_LIGHT1_TYPE,
-		U_LIGHT1_SPOTDIRECTION,
-		U_LIGHT1_COSCUTOFF,
-		U_LIGHT1_COSINNER,
-		U_LIGHT1_EXPONENT,
 		U_NUMLIGHTS,
 		U_COLOR_TEXTURE_ENABLED,
 		U_COLOR_TEXTURE,
@@ -128,9 +109,9 @@ private:
 	void GetInCar();
 	void DetectCollision();
 	void UpdateRobo(double &dt);
+	void UpdatePlanes(double& dt);
 	void CreateCityObjects();
 	void MoveBack();
-	void ObjectMoveBack(Mesh* mesh);
 	void Reset();
 	void RenderUI();
 	bool isNear(Mesh* mesh, const float& distance = 1.f);
@@ -141,7 +122,7 @@ private:
 	Mesh* currentCar;
 	GameObject* currentCarObject;
 	Vector3 carOrigin;
-	Light light[2];
+	Light light[1];
 	Camera3 camera;
 	SceneManager* sceneManager;
 
@@ -157,7 +138,6 @@ private:
 	float translateSphereZ4;
 	float translateSphereX1;
 	float translateSphereX2;
-
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);

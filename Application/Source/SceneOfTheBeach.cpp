@@ -651,9 +651,6 @@ void SceneOfTheBeach::Render()
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
-	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
@@ -781,20 +778,6 @@ void SceneOfTheBeach::Render()
 	
 	
 
-	std::stringstream ssX;
-	std::stringstream ssY;
-	std::stringstream ssZ;
-	ssX.precision(3);
-	ssX << "X:" << camera.position.x;
-	ssX.precision(3);
-	ssX << "Y:" << camera.position.y;
-	ssZ.precision(3);
-	ssZ << "Z:" << camera.position.z;
-
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 3, 0, 3);
-	modelStack.PopMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 

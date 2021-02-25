@@ -703,28 +703,6 @@ void SceneRyan::Render()
 
 
 
-
-
-
-
-	std::stringstream ssX;
-	std::stringstream ssY;
-	std::stringstream ssZ;
-
-	ssX.precision(3);
-	ssX << "X:" << camera.position.x;
-	ssX.precision(3);
-	ssX << "Y:" << camera.position.y;
-	ssZ.precision(3);
-	ssZ << "Z:" << camera.position.z;
-
-
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 20, 0, 10);
-	modelStack.PopMatrix();
-
-
 }
 void SceneRyan::RenderShark()
 {

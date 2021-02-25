@@ -18,10 +18,10 @@ void SceneW::Init() {
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	light[0].type = Light::LIGHT_POINT;
-	light[0].position.Set(0, 0, 0);
-	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(0, 0, 0);
+	light[0].type = Light::LIGHT_DIRECTIONAL;
+	light[0].position.Set(50, 20, 50);
+	light[1].type = Light::LIGHT_DIRECTIONAL;
+	light[1].position.Set(-50, 20, -50);
 
 	InitGL();
 
@@ -127,8 +127,6 @@ void SceneW::Init() {
 	scaleHLX = 0.2; // 1
 	scaleHLY = 0.2; // 1 
 	scaleHLZ = 0.2; // 1
-
-	interact = false;
 
 	Chestlimit = false;
 	Chestlimit2 = false;
@@ -345,6 +343,21 @@ void SceneW::Update(double dt, Mouse mouse) {
 		light[0].position.y -= (float)(LSPEED * dt);
 	if (Application::IsKeyPressed('P'))
 		light[0].position.y += (float)(LSPEED * dt);
+
+	if (Application::IsKeyPressedOnce('F'))
+	{
+		if (gl == false)
+		{
+			InitGLXray();
+			gl = true;
+		}
+		else if (gl == true)
+		{
+			InitGL();
+			gl = false;
+		}
+
+	}
 
 	if (Application::IsKeyPressed('E'))
 	{

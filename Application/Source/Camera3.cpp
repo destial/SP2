@@ -81,7 +81,17 @@ void Camera3::Update(double& dt, Mouse& mouse) {
 			rightY -= 0.005f;
 		}
 	} else {
-		rightY > 0 ? rightY -= 0.005f : rightY += 0.005f;
+		if (rightY > 0) {
+			rightY -= 0.005f;
+			if (rightY < 0) {
+				rightY = 0;
+			}
+		} else {
+			rightY += 0.005f;
+			if (rightY > 0) {
+				rightY = 0;
+			}
+		}
 	}
 
 	right.y = rightY;
@@ -470,22 +480,22 @@ void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
 
 	view = (target - position).Normalized();
 	Vector3 right = view.Cross(up).Normalized();
-	right.y = 0;
+	right.y = rightY;
 
 	if (mouse.down) {
 		Mtx44 rotation;
-		rotation.SetToRotation((-mouse.y * SENSITIVITY), right.x, right.y, right.z);
+		rotation.SetToRotation((-mouse.y * SENSITIVITY), right.x, 0, right.z);
 		view = (rotation * view).Normalized();
 		target = position + view;
 	} else if (mouse.up) {
 		Mtx44 rotation;
-		rotation.SetToRotation((mouse.y * SENSITIVITY), right.x, right.y, right.z);
+		rotation.SetToRotation((mouse.y * SENSITIVITY), right.x, 0, right.z);
 		view = (rotation * view).Normalized();
 		target = position + view;
 	}
 
 	view = (target - position).Normalized();
-	right.y = 0;
+	right.y = rightY;
 	this->up = right.Cross(view).Normalized();
 
 	if (up.y < 0.f) {
@@ -572,13 +582,33 @@ void Camera3::UpdateCar(double& dt, Mouse& mouse, const float& SPEED) {
 		rotation.SetToRotation((2*SPEED * SENSITIVITY), 0, 1, 0);
 		view = (rotation * view).Normalized();
 		carTarget = position + view;
+		if (rightY >= -0.3) {
+			rightY -= 0.01f;
+		}
 	}
 
-	if (Application::IsKeyPressed('D')) {
+	else if (Application::IsKeyPressed('D')) {
 		Mtx44 rotation;
 		rotation.SetToRotation((-2*SPEED * SENSITIVITY), 0, 1, 0);
 		view = (rotation * view).Normalized();
 		carTarget = position + view;
+		if (rightY <= 0.3) {
+			rightY += 0.01f;
+		}
+	}
+
+	else {
+		if (rightY > 0) {
+			rightY -= 0.01f;
+			if (rightY < 0) {
+				rightY = 0;
+			}
+		} else {
+			rightY += 0.01f;
+			if (rightY > 0) {
+				rightY = 0;
+			}
+		}
 	}
 }
 

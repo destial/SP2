@@ -273,7 +273,7 @@ void SceneW::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -1005,8 +1005,6 @@ void SceneW::Render()
 
 	RenderSkybox();
 	RenderRoom();
-	RenderBoxes();
-	RenderMaze();
 	
 	modelStack.PushMatrix();
 	modelStack.Translate(0, .1, 0);
@@ -1038,6 +1036,33 @@ void SceneW::Render()
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderText(meshList[GEO_TEXT], "treasures", RED);
 	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-43, 10, 44.8);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "Press E to open", RED);
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-43, 9, 44.8);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "chest", RED);
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-43, 8, 44.8);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "Press R to", RED);
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-43, 7, 44.8);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "collect treasures", RED);
+	modelStack.PopMatrix();
+
+	RenderBoxes();
+	RenderMaze();
 
 	std::stringstream ssX;
 	std::stringstream ssY;
@@ -1054,7 +1079,6 @@ void SceneW::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 2, 0, 7);
 	modelStack.PopMatrix();
 
-	//RenderTextOnScreen(meshList[GEO_TEXT], countChest, BLACK, 2, 10, 10);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3);
 	RenderUI();
 	RenderItems();
@@ -1074,9 +1098,9 @@ void SceneW::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Sword:" + std::to_string(Player::getSword()), BLACK, 2, 0.5, 19 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Armour:" + std::to_string(Player::getArmourplate()), BLACK, 2, 0.5, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Helmet:" + std::to_string(Player::getHelmet()), BLACK, 2, 0.5, 17.3 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Sword:" + std::to_string(Player::getSword()), BLACK, 2, 0.5 * w / 800, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Armour:" + std::to_string(Player::getArmourplate()), BLACK, 2, 0.5 * w / 800, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Helmet:" + std::to_string(Player::getHelmet()), BLACK, 2, 0.5 * w / 800, 17 * h / 600);
 }
 
 void SceneW::RenderRoom() {

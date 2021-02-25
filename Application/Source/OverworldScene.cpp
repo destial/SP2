@@ -58,6 +58,10 @@ void OverworldScene::Init() {
 	meshList[SIDEBAR]->textureID = LoadTGA("Image//button.tga");
 	meshList[SIDEBAR]->type = Mesh::TYPE::IMAGE;
 
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", Colors::WHITE, 1.f, 1.f);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
+	meshList[GEO_UI]->type = Mesh::TYPE::IMAGE;
+
 	meshList[GEO_GROUND] = MeshBuilder::GenerateGround("ground", Colors::GRAY, 1000.f, 18);
 	meshList[GEO_GROUND]->textureID = LoadTGA("Image//roadcross.tga");
 	meshList[GEO_GROUND]->type = Mesh::TYPE::IMAGE;
@@ -728,9 +732,9 @@ void OverworldScene::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), Colors::BLACK, 2, 0.5, 19 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), Colors::BLACK, 2, 0.5, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), Colors::BLACK, 2, 0.5, 17.3 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), Colors::BLACK, 2, 1, 28.5 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), Colors::BLACK, 2, 1, 27 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), Colors::BLACK, 2, 1, 25.5 * h / 600);
 }
 
 void OverworldScene::RenderRobo() {

@@ -122,6 +122,8 @@ void SceneW::Init() {
 	scaleHLY = 0.2; // 1 
 	scaleHLZ = 0.2; // 1
 
+	interact = false;
+
 	Chestlimit = false;
 	Chestlimit2 = false;
 	Chestlimit3 = false;

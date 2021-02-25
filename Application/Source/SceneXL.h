@@ -9,6 +9,7 @@
 #include <vector>
 #include "MinigameEntity.h"
 #include "GameObject.h"
+#include "SceneManager.h"
 
 class SceneXL : public Scene
 {
@@ -138,6 +139,8 @@ private:
 	float Shootingspin;
 	Mesh* MinigunHold;
 	Vector3 GunOrigin;
+
+
 	void Minigun();
 	void Bullets();
 	int tempspin;

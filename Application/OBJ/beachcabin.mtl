@@ -1,0 +1,25 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl 02___Default
+Ns 10.000002
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd disc_diffuse.JPG
+
+newmtl 20958_Log_Cabin_v1
+Ns 18.000005
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.324000 0.324000 0.324000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd D:\\Downloads 2\\Log_Cabin_v1_L1.123c50c062c6-53a1-42d9-98e4-76eb9b392482\\Log_Cabin_v1_L1.123c50c062c6-53a1-42d9-98e4-76eb9b392482\\20958_Log_Cabin_v1_diffuse.jpg
+map_Ks 20958_Log_Cabin_v1_specular.jpg

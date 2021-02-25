@@ -28,7 +28,7 @@ class SceneOfTheBeach : public Scene
 		GEO_DOLPHIN,
 		GEO_SHIP,
 		GEO_UMBRELLA,
-		GEO_CASTLE,
+		GEO_CABIN,
 		GEO_BUOY,
 		GEO_UI,
 		GEO_UI2,

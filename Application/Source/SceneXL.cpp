@@ -337,7 +337,7 @@ void SceneXL::DetectGnome()
 	{
 		if (isNear(meshList[GEO_GNOME], (float)10.f) && talktognome == false)
 		{
-			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to talk.", Color(1,1,1), 4, 3, 6);
+			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to talk.", Color(1,1,1), 4, 3*w/800, 6*h/600);
 
 			if (Application::IsKeyPressedOnce('F'))
 			{
@@ -361,7 +361,7 @@ void SceneXL::DetectGnome()
 	}
 	else  
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "Get GNOMED! ", RED, 3, 3, 1);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Get GNOMED! ", RED, 3, 5 * w / 800, 1 * h / 600);
 		RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 	}
 }
@@ -494,7 +494,7 @@ void SceneXL::DetectJetpack()
 	}
 	else
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "JETPACK EQUIPPED", BLUE, 3, 5, 2);
+		RenderTextOnScreen(meshList[GEO_TEXT], "JETPACK EQUIPPED", BLUE, 3, 5 * w / 800, 2 * h / 600);
 		RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 	}
 }
@@ -871,9 +871,11 @@ void SceneXL::DetectRobot()
 {
 	if (isNear(meshList[GEO_ROBOT], (float)5.f) && talktorobot == false)
 	{
+		unsigned w = Application::GetWindowWidth();
+		unsigned h = Application::GetWindowHeight();
 		//RenderMeshOnScreen(meshList[GEO_BORDERTEXT], 75, 45, 40);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Press F to start", Color(0.541, 0.169, 0.886), 4, 1.8, 6.2);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Your simulation.", Color(0.541, 0.169, 0.886), 4, 1.8, 4.2);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press F to start", Color(0.541, 0.169, 0.886), 4, 1.8 * w / 800, 6.2 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Your simulation.", Color(0.541, 0.169, 0.886), 4, 1.8 * w / 800, 4.2 * h / 600);
 		if (Application::IsKeyPressedOnce('F'))
 		{
 			camera.Init(Vector3(1.1, 10, -30.3), Vector3(1.1, 10, -30.4), Vector3(0, 1, 0), (float)50);
@@ -1042,9 +1044,9 @@ void SceneXL::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5 * w / 800, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5 * w / 800, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5 * w / 800, 17 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 

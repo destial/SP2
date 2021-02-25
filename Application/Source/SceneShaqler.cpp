@@ -795,14 +795,14 @@ void SceneShaqler::RenderUI()
 	if (isBuying == true && Bookhasbeenbaught == false)
 	{
 		RenderMeshOnScreen(meshList[GEO_UI2], 50, 40, 8 * h / 600);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book?", WHITE, 2, 5, 3);
-		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2, 10, 2);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book?", WHITE, 2, 5 * w / 800, 3 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2, 10 * w / 800, 2 * h / 600);
 		RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 	}
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5 * w / 800, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5 * w / 800, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5 * w / 800, 17 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 

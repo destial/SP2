@@ -100,6 +100,7 @@ private:
 	bool talktognome;
 	bool talktorobot;
 	bool talktojetpack;
+	bool movingdummy;
 
 	Mesh* meshList[NUM_GEOMETRY];
 

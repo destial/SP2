@@ -32,6 +32,31 @@ unsigned Application::ui_height;
 unsigned Application::sceneswitch;
 unsigned Application::previousscene;
 bool Application::quit;
+
+unsigned Player::getAmmo() {
+	return ammo;
+}
+
+int Player::getHealth() {
+	return health;
+}
+
+int Player::getMoney() {
+	return money;
+}
+
+void Player::setAmmo(unsigned a) {
+	ammo = a;
+}
+
+void Player::setHealth(int h) {
+	health = h;
+}
+
+void Player::setMoney(int m) {
+	money = m;
+}
+
 std::set<unsigned short> Application::activeKeys;
 Scene* scene[Application::TOTALSCENES];
 Mouse mouse;
@@ -180,6 +205,9 @@ void Application::Init() {
 	ui_height = 60;
 	ui_width = 80;
 	sceneswitch = STARTSCENE;
+	Player::setMoney(1000);
+	Player::setAmmo(256);
+	Player::setHealth(100);
 	m_window = glfwCreateWindow(m_width, m_height, "SP2 - Group 2", NULL, NULL);
 	quit = false;
 	mouse.reset();
@@ -213,7 +241,6 @@ void toggleState() {
 	switch (Application::sceneswitch) {
 	case Application::MENUSCENE:
 	case Application::WINSCENE:
-	case Application::LOSESCENE:
 	case Application::STARTSCENE:
 
 		// Use mouse positioning to click on UI menu
@@ -225,7 +252,6 @@ void toggleState() {
 	case Application::SCENEWALTON:
 	case Application::SCENERYAN:
 	case Application::SCENEXL:
-	case Application::SCENERANCE:
 	case Application::SCENESHAQLER:
 	default:
 
@@ -264,7 +290,13 @@ void Application::Run() {
 
 	// Main Loop
 	while (!glfwWindowShouldClose(m_window) && !Application::quit) {
-
+		for (std::set<unsigned short>::iterator i = activeKeys.begin(); i != activeKeys.end(); i++) {
+			if (((GetAsyncKeyState(*i) & 0x8001) != 0)) continue;
+			else {
+				activeKeys.erase(i);
+				break;
+			}
+		}
 		// Update and render selected scene
 		if (scene[Application::sceneswitch]) {
 			int previousScene = Application::sceneswitch;
@@ -284,38 +316,32 @@ void Application::Run() {
 		toggleState();
 
 		// Switch scenes
+		Application::previousscene = Application::sceneswitch;
 		switch (Application::sceneswitch) {
 		case Application::SCENESHAQ:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEWALTON;
-				Application::previousscene = SCENESHAQ;
 			}
 			break;
 		case Application::SCENEWALTON:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEBEACH;
-				Application::previousscene = SCENEWALTON;
 			}
 			break;
 		case Application::SCENEBEACH:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENERYAN;
-				Application::previousscene = SCENEBEACH;
 			}
 			break;
 		case Application::SCENERYAN:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
 				Application::sceneswitch = Application::SCENEXL;
-				Application::previousscene = SCENERYAN;
 			}
 			break;
 		case Application::SCENEXL:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::previousscene = SCENEXL;
 				Application::sceneswitch = Application::MENUSCENE;
 			}
-			break;
-		case Application::SCENERANCE:
 			break;
 		case Application::STARTSCENE:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
@@ -323,22 +349,22 @@ void Application::Run() {
 			}
 		case Application::WINSCENE:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::previousscene = WINSCENE;
 				Application::sceneswitch = Application::MENUSCENE;
 			}
 			break;
-		case Application::LOSESCENE:
-			break;
 		case Application::MENUSCENE:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::previousscene = MENUSCENE;
 				Application::sceneswitch = Application::WINSCENE;
+			}
+			break;
+		case Application::OVERWORLD:
+			if (Application::IsKeyPressedOnce(VK_F1)) {
+				Application::sceneswitch = Application::SCENESHAQ;
 			}
 			break;
 		default:
 			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::previousscene = Application::sceneswitch;
-				Application::sceneswitch = Application::SCENESHAQ;
+				Application::sceneswitch = Application::OVERWORLD;
 			}
 			break;
 		}

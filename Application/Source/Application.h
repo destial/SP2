@@ -36,7 +36,6 @@ public:
 		STARTSCENE,
 		MENUSCENE,
 		WINSCENE,
-		LOSESCENE,
 		OVERWORLD,
 		SCENESHAQ,
 		SCENESHAQLER,
@@ -44,8 +43,16 @@ public:
 		SCENEBEACH,
 		SCENERYAN,
 		SCENEXL,
-		SCENERANCE,
 		TOTALSCENES,
+	};
+
+	enum OBJECTIVES {
+		TUTORIAL,
+		GET_BOOK,
+		SURVIVE_SHARK,
+		FINISH_MAZE,
+		TOTAL_OBJECTIVES,
+
 	};
 	static bool IsKeyPressed(unsigned short key);
 	static bool IsMousePressed(unsigned short key);
@@ -71,6 +78,22 @@ public:
 private:
 	//Declare a window object
 	StopWatch m_timer;
+};
+
+class Player {
+private:
+	static unsigned ammo;
+	static int money;
+	static int health;
+public:
+	Player() {};
+	~Player() {};
+	static unsigned getAmmo();
+	static int getMoney();
+	static int getHealth();
+	static void setAmmo(unsigned a);
+	static void setMoney(int m);
+	static void setHealth(int h);
 };
 
 #endif

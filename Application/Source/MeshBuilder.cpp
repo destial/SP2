@@ -301,7 +301,7 @@ Then generate the VBO/IBO and store them in Mesh object
 */
 /******************************************************************************/
 
-Mesh* MeshBuilder::GenerateCube(const std::string& meshName, Color& color, float lengthX, float lengthY, float lengthZ) {
+Mesh* MeshBuilder::GenerateCube(const std::string& meshName, Color color, float lengthX, float lengthY, float lengthZ) {
 	Vertex v;
 	Mesh* mesh = new Mesh(meshName);
 	std::vector<Vertex> vertex_buffer_data;

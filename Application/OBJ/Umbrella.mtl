@@ -1,30 +1,22 @@
-# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 16.02.2012 13:08:22
+# Blender MTL File: 'None'
+# Material Count: 2
 
-newmtl Beach_Umbrella_1
-	Ns 10.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 0.0000
-	Tf 1.0000 1.0000 1.0000 
-	illum 2
-	Ka 0.5882 0.5882 0.5882
-	Kd 0.5882 0.5882 0.5882
-	Ks 0.0900 0.0900 0.0900
-	Ke 0.0000 0.0000 0.0000
-	map_Ka Beach_Umbrella_1.jpg
-	map_Kd Beach_Umbrella_1.jpg
+newmtl 01___Default
+Ns 10.000002
+Ka 1.000000 0.017990 0.012910
+Kd 1.000000 0.017990 0.012910
+Ks 0.090000 0.090000 0.090000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
 
-newmtl Beach_Umbrella_2
-	Ns 20.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 0.0000
-	Tf 1.0000 1.0000 1.0000 
-	illum 2
-	Ka 0.5882 0.5882 0.5882
-	Kd 0.5882 0.5882 0.5882
-	Ks 0.7200 0.7200 0.7200
-	Ke 0.0000 0.0000 0.0000
-	map_Ka Beach_Umbrella_2.jpg
-	map_Kd Beach_Umbrella_2.jpg
+newmtl Material.001
+Ns 323.999994
+Ka 0.800000 0.728251 0.755526
+Kd 0.800000 0.728251 0.755526
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2

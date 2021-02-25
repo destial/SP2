@@ -44,6 +44,7 @@ class SceneXL : public Scene
 		GEO_DROPTOWER,
 		GEO_BORDERTEXT,
 		GEO_UI,
+		GEO_UI2,
 		NUM_GEOMETRY,
 	};
 

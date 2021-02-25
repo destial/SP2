@@ -81,7 +81,10 @@ void SceneOfTheBeach::Init()
 
 	meshList[GEO_SHIP] = MeshBuilder::GenerateOBJMTL("Ship", "OBJ//ship_light.obj", "OBJ//ship_light.mtl");
 
-	meshList[GEO_UMBRELLA] = MeshBuilder::GenerateOBJMTL("Ship", "OBJ//Umbrella.obj", "OBJ//Umbrella.mtl");
+	meshList[GEO_UMBRELLA] = MeshBuilder::GenerateOBJMTL("Umbrella", "OBJ//Umbrella.obj", "OBJ//Umbrella.mtl");
+
+	meshList[GEO_CABIN] = MeshBuilder::GenerateOBJ("Cabin", "OBJ//beachcabin.obj");
+	meshList[GEO_CABIN]->textureID = LoadTGA("Image//BeachCabin.tga");
 
 	OpenTextBox = false;
 	gl = false;
@@ -448,8 +451,6 @@ void SceneOfTheBeach::InitGL()
 
 void SceneOfTheBeach::InitGLXray()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -597,7 +598,7 @@ void SceneOfTheBeach::RenderSkybox() {
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 50, 0);
 	modelStack.Rotate(180, 1, 0, 0);
-	modelStack.Rotate(-90, 0, 1, 0);
+	/*modelStack.Rotate(90, 0, 1, 0);*/
 	//modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
@@ -761,8 +762,16 @@ void SceneOfTheBeach::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate(-30, 0, -40);
+	modelStack.Scale(0.1, 0.1, 0.1);
 	RenderMesh(meshList[GEO_UMBRELLA], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, -4, 40);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(3, 3, 3);
+	RenderMesh(meshList[GEO_CABIN], true);
 	modelStack.PopMatrix();
 
 	RenderNPC();
@@ -815,7 +824,7 @@ void SceneOfTheBeach::RenderUI()
 	RenderMeshOnScreen(meshList[GEO_UI2], 25, 12.5, 53.75 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17 * h / 600);
 }
 
 void SceneOfTheBeach::Exit() {

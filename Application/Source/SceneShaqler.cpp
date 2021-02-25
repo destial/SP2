@@ -30,8 +30,6 @@ void SceneShaqler::Init() {
 	projectionStack.LoadMatrix(projection);
 	camera.Init(Vector3(3.87, 5, 15.7), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)20);
 
-	
-
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
@@ -427,7 +425,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Application::IsKeyPressedOnce('Y'))
+	if (Application::IsKeyPressedOnce('Y') && isBuying == true)
 	{
 		bookX = 1000;
 		isBuying = false;

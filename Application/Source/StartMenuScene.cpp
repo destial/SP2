@@ -654,7 +654,7 @@ void StartMenuScene::Render()
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[BUTTON], 15, 40 * w / 800, 35 * h / 600);
 	RenderMeshOnScreen(meshList[BUTTON], 15, 40 * w / 800, 25 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "SP2 Group 2 - My City Tour", WHITE, 4, 2.5 * w / 400, 10 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "SP2 Group 2 - My City Tour", WHITE, 4, 2.5 * w / 800, 10 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Start", BLUE, 3, 9 * w / 750, 8.5 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", BLUE, 3, 9 * w / 750, 6 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 1, 0, 0);

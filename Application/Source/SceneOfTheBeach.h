@@ -25,7 +25,7 @@ class SceneOfTheBeach : public Scene
 		GEO_DRIZZLE,
 		GEO_TREE,
 		GEO_CRAB,
-		GEO_CHAIR,
+		GEO_DOLPHIN,
 		GEO_UI,
 		GEO_UI2,
 		NUM_GEOMETRY,
@@ -83,9 +83,13 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
 
+	bool gl;
+
 	float CrabMoving;
 	float Crabspeed;
 	float RandomMove;
+
+	float rotatedolphin;
 
 	bool rotate;
 	bool OpenTextBox;

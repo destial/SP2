@@ -14,6 +14,11 @@ class SceneW : public Scene
 	{
 		GEO_AXES = 0,
 		GEO_QUAD,
+		GEO_SPHERE,
+		GEO_SPHERE2,
+		GEO_SPHERE3,
+		GEO_SPHERE4,
+		GEO_SPHERE5,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -147,6 +152,19 @@ private:
 	float scaleHLY;
 	float scaleHLZ;
 
+	float translateSPHERE1X;
+	float translateSPHERE1Y;
+
+	float translateSPHERE2X;
+
+	float scaleSPX;
+	float scaleSPY;
+	float scaleSPZ;
+
+	bool particles1spawn;
+	bool particles1limit;
+
+	bool heightlimit4;
 
 	Mesh* meshList[NUM_GEOMETRY];
 	SceneManager* sceneManager;
@@ -166,6 +184,7 @@ private:
 	void RenderUI();
 	void RenderRoom();
 	void RenderItems();
+	void RenderParticles();
 	void moveBack(GameObject* object);
 	void DetectCollision();
 	bool isNear(GameObject* object);

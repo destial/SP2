@@ -191,6 +191,8 @@ void OverworldScene::RenderText(Mesh* mesh, std::string text, Color color) {
 }
 
 void OverworldScene::RoadTeleport() {
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
 	if (camera.position.x >= 39.3 && 
 		camera.position.x <= 74.3 && 
 		camera.position.z <= 100 && 
@@ -200,7 +202,7 @@ void OverworldScene::RoadTeleport() {
 			Application::previousscene = Application::OVERWORLD;
 			camera.position.z = 70;
 		} else {
-			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 0, 10);
+			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 0 * w / 800, 10 * h / 600);
 		}
 	}
 	else if (camera.position.x <= -36.4 &&
@@ -212,7 +214,7 @@ void OverworldScene::RoadTeleport() {
 			Application::previousscene = Application::OVERWORLD;
 			camera.position.z = 70;
 		} else {
-			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 0, 10);
+			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 0 * w / 800, 10 * h / 600);
 		}
 	}
 }
@@ -679,9 +681,9 @@ void OverworldScene::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), Colors::BLACK, 2, 1, 28.5 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), Colors::BLACK, 2, 1, 27 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), Colors::BLACK, 2, 1, 25.5 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), Colors::BLACK, 2, 0.5 * w / 800, 28.5 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), Colors::BLACK, 2, 0.5 * w / 800, 27 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), Colors::BLACK, 2, 0.5 * w / 800, 25.5 * h / 600);
 }
 
 void OverworldScene::RenderRobo() {
@@ -949,11 +951,13 @@ void OverworldScene::RenderRobo() {
 }
 
 void OverworldScene::GetInCar() {
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
 	if (!currentCarObject) {
 		for (auto object : sceneManager->allObjects) {
 			if (object->type == GameObject::CAR) {
 				if (!object->camera && isNearObject(object, 3.f)) {
-					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", Colors::WHITE, 4, 3, 4);
+					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to get in Car", Colors::WHITE, 4, 3 * w / 800, 4 * h / 600);
 					if (Application::IsKeyPressedOnce('F')) {
 						currentCarObject = object;
 						camera.position.x = object->transform->translate.x;

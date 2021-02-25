@@ -189,11 +189,11 @@ void SceneXL::Init()
 
 	for (int i = 0; i < 10; i++) 
 	{
-		int x = (rand() % 2);
+		int x = (rand() % 3);
 
-		int y = (rand() % 2);
+		int y = (rand() % 3);
 
-		int z = (rand() % 2);
+		int z = (rand() % 3);
 		temp = new MinigameEntity;
 		temp->pos = Vector3(x, y, z);
 
@@ -380,7 +380,7 @@ void SceneXL::RenderMinigame()
 			modelStack.PushMatrix();
 			modelStack.Translate(1.55 + targetList[i]->pos.x, 5, -79 + targetList[i]->pos.z);
 			modelStack.Rotate(RotateAngle, 0, 1, 0);
-			modelStack.Scale(1.5, 1.5, 1.5);
+			modelStack.Scale(2, 2, 2);
 			RenderMesh(meshList[GEO_DUMMY], true);
 			modelStack.PopMatrix();
 		}
@@ -393,7 +393,7 @@ void SceneXL::RenderSurroundings()
 	modelStack.PushMatrix();
 	modelStack.Translate(-1.07, 1, -50);
 	//modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Scale(10, 10, 10);
+	modelStack.Scale(13, 10, 13);
 	RenderMesh(meshList[GEO_RANGE], true);
 	modelStack.PopMatrix(); //shooting range
 

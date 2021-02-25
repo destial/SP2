@@ -159,6 +159,12 @@ void SceneXL::Init()
 	meshList[GEO_BODYWHEEL] = MeshBuilder::GenerateOBJMTL("ferris wheel the body",
 		"OBJ//bodywheel.obj", "OBJ//bodywheel.mtl");
 
+	meshList[GEO_SITDROPTOWER] = MeshBuilder::GenerateOBJMTL("sits for the drop tower",
+		"OBJ//sitdroptower.obj", "OBJ//sitdroptower.mtl");
+
+	meshList[GEO_DROPTOWER] = MeshBuilder::GenerateOBJMTL("drop tower",
+		"OBJ//droptower.obj", "OBJ//droptower.mtl");
+		
 	meshList[GEO_JETPACK] = MeshBuilder::GenerateOBJMTL("jetpack",
 		"OBJ//jetpack.obj", "OBJ//jetpack.mtl");
 	meshList[GEO_JETPACK]->transform.Translate(-2.83, 0, 45);
@@ -448,6 +454,18 @@ void SceneXL::RenderSurroundings()
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_BODYWHEEL], true);
 	modelStack.PopMatrix(); //ferris wheel body
+
+	modelStack.PushMatrix();
+	modelStack.Translate(13, 10, 100);
+	modelStack.Scale(3, 3, 3);
+	RenderMesh(meshList[GEO_SITDROPTOWER], true);
+	modelStack.PopMatrix(); //the sit for the drop tower
+
+	modelStack.PushMatrix();
+	modelStack.Translate(13, 10, 100);
+	modelStack.Scale(3, 3, 3);
+	RenderMesh(meshList[GEO_DROPTOWER], true);
+	modelStack.PopMatrix(); //drop tower
 }
 
 void SceneXL::DetectJetpack()
@@ -578,7 +596,7 @@ void SceneXL::Update(double dt, Mouse mouse) {
 		else if (Shootingspin > 0 && tempspin == 1)
 		{
 			Shootingspin -= Shootingspin;
-			if (bullets.size() < 256)
+			if (bullets.size() < Player::getAmmo())
 			{
 				GameObject* bullet = new GameObject(meshList[GEO_BULLET]);
 				bullet->transform->Translate(camera.position.x, camera.position.y - 2, camera.position.z);
@@ -589,6 +607,7 @@ void SceneXL::Update(double dt, Mouse mouse) {
 				Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
 				bullet->view = face;
 				bullets.push_back(bullet);
+				Player::setAmmo(Player::getAmmo() - 1);
 			}
 			else {
 				for (auto b : bullets) {
@@ -597,6 +616,7 @@ void SceneXL::Update(double dt, Mouse mouse) {
 					}
 				}
 				bullets.clear();
+				Player::setAmmo(256);
 			}
 		}
 		else

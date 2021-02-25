@@ -35,8 +35,7 @@ void SceneShaqler::Init() {
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
-		Color(1, 1, 1), 50.1f);
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
 
 	meshList[GEO_QUAD1] = MeshBuilder::GenerateQuad("quad1", Color(1, 1, 1), 1.f);
@@ -130,8 +129,8 @@ void SceneShaqler::Init() {
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1, 0.8);
-	meshList[GEO_UI]->textureID = LoadTGA("Image//blueblacktextbox");
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", BLUE, 1.5f, 0.3f);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//blueblacktextbox.tga");
 
 	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
 	meshList[GEO_UI2]->textureID = LoadTGA("Image//button.tga");
@@ -253,7 +252,7 @@ void SceneShaqler::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -756,7 +755,7 @@ void SceneShaqler::Render()
 
 	RenderWalls();
 	RenderInatimateobjects();
-	RenderText();
+	
 	RenderNPC();
 	RenderBooks();
 	RenderBooks2();
@@ -771,13 +770,20 @@ void SceneShaqler::Render()
 	RenderBooks2();
 	modelStack.PopMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+	RenderText();
 	RenderUI();
 }
 
 void SceneShaqler::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
-	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
+	if (isBuying == true && Bookhasbeenbaught == false)
+	{
+		RenderMeshOnScreen(meshList[GEO_UI], 50, 40, 8 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 2, 5, 3);
+		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2, 10, 2); //X 1.5 AND Z 19.5
+	}
+	RenderMeshOnScreen(meshList[GEO_UI2], 25, 12.5, 53.75 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5, 18 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);
@@ -921,7 +927,7 @@ void SceneShaqler::RenderText()
 	modelStack.Translate(TextX, 5, TextZ);
 	modelStack.Rotate(270, 0, 1, 0);
 	modelStack.Scale(0.25, 0.25, 0.25);
-	RenderText(meshList[GEO_TEXT], " Press T to purchase", WHITE);
+	RenderText(meshList[GEO_TEXT], " Press T to purchase", BLUE);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -952,14 +958,7 @@ void SceneShaqler::RenderText()
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 20, 0, 10);
 	modelStack.PopMatrix();
 
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", BLACK, 200, 0, 500);
-
-	if (isBuying == true && Bookhasbeenbaught == false)
-	{
-		RenderMeshOnScreen(meshList[GEO_UI2], 55, 40, -5); // 40 screenx
-		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book", WHITE, 2.3, 4.5, 3.5);
-		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2.3, 4.5, 1.2); //X 1.5 AND Z 19.5
-	}
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 500);
 }
 
 void SceneShaqler:: RenderBooks()

@@ -82,9 +82,9 @@ void SceneShaqeel::Init()
 	meshList[GEO_STREETLIGHT] = MeshBuilder::GenerateOBJ("Bench", "OBJ//StreetLight.obj"); // Try 1 first
 	meshList[GEO_STREETLIGHT]->textureID = LoadTGA("Image//StreetLight.tga");
 
-	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NewMart.obj"); // Try 1 first
+	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//newmartoffset.obj"); // Try 1 first
 	meshList[GEO_MART]->textureID = LoadTGA("Image//blueColour.tga");
-	meshList[GEO_MART]->transform.Translate(-28, -2, -10);
+	meshList[GEO_MART]->transform.Translate(-21.3, -2, -0.1);
 	meshList[GEO_MART]->transform.Scale(0.6, 0.6, 0.6);
 
 	meshList[GEO_ROBOBODY] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Robowithoutarmsandlegs.obj"); // Try 1 first
@@ -429,7 +429,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	camera.prevPosition = camera.position;
 	camera.Update(dt, mouse);
 
-	if (isNear(meshList[GEO_MART], 4.5f)) {
+	if (isNear(meshList[GEO_MART], 2.f)) {
 		// Get the current view vector and current y position
 		Vector3 view = (camera.target - camera.position).Normalized();
 		float y = camera.position.y;
@@ -934,9 +934,9 @@ void SceneShaqeel::Rendercityobjects()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-28, -2, -10);
+	modelStack.Translate(meshList[GEO_MART]->transform.translate.x, meshList[GEO_MART]->transform.translate.y, meshList[GEO_MART]->transform.translate.z);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.6, 0.6, 0.6);
+	modelStack.Scale(meshList[GEO_MART]->transform.scale.x, meshList[GEO_MART]->transform.scale.y, meshList[GEO_MART]->transform.scale.z);
 	RenderMesh(meshList[GEO_MART], true);
 	modelStack.PopMatrix();
 

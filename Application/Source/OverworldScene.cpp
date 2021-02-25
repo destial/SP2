@@ -112,7 +112,7 @@ void OverworldScene::Init() {
 	meshList[GEO_ROBORIGHTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightarm.obj");
 	meshList[GEO_ROBORIGHTARM]->textureID = LoadTGA("Image//robo_normal.tga");
 
-	meshList[PLANE] = MeshBuilder::GenerateOBJ("plane", "OBJ//plane.obj");
+	meshList[PLANE] = MeshBuilder::GenerateOBJ("plane", "OBJ//planewithoutwheels.obj");
 
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::TYPE::CAMERA;
@@ -304,10 +304,6 @@ void OverworldScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 }
 
 void OverworldScene::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressedOnce('R')) {
-		Reset();
-	}
-
 	if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
 		Application::sceneswitch = Application::STARTSCENE;
 	}

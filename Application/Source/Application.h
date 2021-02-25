@@ -85,15 +85,24 @@ private:
 	static unsigned ammo;
 	static int money;
 	static int health;
+	static int sword;
+	static int armourplate;
+	static int helmet;
 public:
 	Player() {};
 	~Player() {};
 	static unsigned getAmmo();
 	static int getMoney();
 	static int getHealth();
+	static int getSword();
+	static int getArmourplate();
+	static int getHelmet();
 	static void setAmmo(unsigned a);
 	static void setMoney(int m);
 	static void setHealth(int h);
+	static void setSword(int s);
+	static void setArmourplate(int ap);
+	static void setHelmet(int ht);
 };
 
 #endif

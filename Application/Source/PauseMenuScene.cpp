@@ -252,7 +252,7 @@ void PauseMenuScene::Update(double dt, Mouse mouse) {
 		if (posX > 29 * w / 800 && posX < 50 * w / 800 && posY > 29 * h / 600 && posY < 41 * h / 600)
 		{
 			std::cout << "Hit!" << std::endl;
-			Application::sceneswitch = Application::OVERWORLD;
+			Application::sceneswitch = Application::previousscene;
 		}
 		else if (posX > 29 * w / 800 && posX < 50 * w / 800 && posY > 14 * h / 600 && posY < 26 * h / 600)
 		{

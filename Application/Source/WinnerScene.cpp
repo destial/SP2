@@ -252,7 +252,8 @@ void WinnerScene::Update(double dt, Mouse mouse) {
 		if (posX > 29 * w / 800 && posX < 50 * w / 800 && posY > 29 * h / 600 && posY < 41 * h / 600)
 		{
 			std::cout << "Hit!" << std::endl;
-			Application::sceneswitch = Application::MENUSCENE;
+			Application::restart = 1;
+			Application::sceneswitch = Application::STARTSCENE;
 		}
 		else if (posX > 29 * w / 800 && posX < 50 * w / 800 && posY > 14 * h / 600 && posY < 26 * h / 600)
 		{
@@ -667,4 +668,7 @@ void WinnerScene::Exit() {
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
+}
+
+void WinnerScene::Reset() {
 }

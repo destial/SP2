@@ -7,10 +7,8 @@
 #include "Light.h"
 #include "Camera3.h"
 
-class PauseMenuScene : public Scene
-{
-	enum GEOMETRY_TYPE
-	{
+class PauseMenuScene : public Scene {
+	enum GEOMETRY_TYPE {
 		GEO_AXES = 0,
 		GEO_SHARK,
 		GEO_CAR1,
@@ -107,6 +105,7 @@ public:
 	virtual void InitGLXray();
 	virtual void Render();
 	virtual void Exit();
+	virtual void Reset();
 
 	Color RED = Color(1.f, 0.f, 0.f);
 	Color GREEN = Color(0.f, 1.f, 0.f);

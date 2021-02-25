@@ -14,6 +14,7 @@ public:
 	virtual void InitGL() = 0;
 	virtual void InitGLXray() = 0;
 	virtual void Render() = 0;
+	virtual void Reset() = 0;
 	virtual void Exit() = 0;
 };
 

@@ -155,6 +155,7 @@ public:
 	virtual void InitGLXray();
 	virtual void Render();
 	virtual void Exit();
+	virtual void Reset();
 
 	bool GotGnome;
 	bool GotJetpack;

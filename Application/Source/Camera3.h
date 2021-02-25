@@ -16,7 +16,7 @@ public:
 
 	Vector3 carView, carTarget;
 	Vector3 prevTarget, prevPosition, prevUp;
-	Vector3 target, position, up;
+	Vector3 target, position, up, right;
 
 	//SharkVectors
 	Vector3 SharkView, SharkTarget;
@@ -32,6 +32,7 @@ public:
 	float yaw;
 	float pitch;
 	float orthographic_size;
+	float rightY;
 	float defaultFOV;
 	float prevFOV;
 	float bounds;

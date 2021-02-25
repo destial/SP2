@@ -357,10 +357,20 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('E'))
 	{
-		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.z <= 1.5 && camera.position.z >= -1.5 && !stopopenDoor)
+		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.z <= 1.5 && camera.position.z >= -1.5)
 		{
-			rotatedoor -= (float)(40 * dt); 
-		} 
+			doorhasopened = true;
+		}
+
+
+	}
+
+	if (doorhasopened == true)
+	{
+		if (!stopopenDoor)
+		{
+			rotatedoor -= (float)(40 * dt);
+		}
 
 		if (rotatedoor <= -30)
 		{

@@ -69,6 +69,7 @@ void SceneXL::Init()
 	talktorobot = false;
 	talktojetpack = false;
 	GotGnome = false;
+	movingdummy = false;
 	// Clear background color to blue
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	// Generate shaders
@@ -161,7 +162,7 @@ void SceneXL::Init()
 	meshList[GEO_JETPACK] = MeshBuilder::GenerateOBJMTL("jetpack",
 		"OBJ//jetpack.obj", "OBJ//jetpack.mtl");
 	meshList[GEO_JETPACK]->transform.Translate(-2.83, 0, 45);
-	meshList[GEO_JETPACK]->transform.Scale(0.1, 0.1, 0.1);
+	meshList[GEO_JETPACK]->transform.Scale(0.4, 0.4, 0.4);
 
 	meshList[GEO_BORDERTEXT] = MeshBuilder::GenerateFaceQuad("border for text", WHITE, 1.f, 1.f);
 	meshList[GEO_BORDERTEXT]->textureID = LoadTGA("Image//bordertext.tga");
@@ -182,11 +183,11 @@ void SceneXL::Init()
 
 	for (int i = 0; i < 10; i++) 
 	{
-		int x = (rand() % 5);
+		int x = (rand() % 2);
 
-		int y = (rand() % 5);
+		int y = (rand() % 2);
 
-		int z = (rand() % 5);
+		int z = (rand() % 2);
 		temp = new MinigameEntity;
 		temp->pos = Vector3(x, y, z);
 
@@ -367,7 +368,7 @@ void SceneXL::RenderGnome()
 
 void SceneXL::RenderMinigame()
 {
-	for (int i = 0; i < targetList.size(); i++)
+	for (int i = 0; i < targetList.size(); i++ && movingdummy == false)
 	{
 		if (targetList[i]) {
 			modelStack.PushMatrix();
@@ -377,6 +378,7 @@ void SceneXL::RenderMinigame()
 			RenderMesh(meshList[GEO_DUMMY], true);
 			modelStack.PopMatrix();
 		}
+		movingdummy = true;
 	} //10 target dummies for the minigame/target shooting
 }
 
@@ -446,7 +448,7 @@ void SceneXL::DetectJetpack()
 {
 	if (meshList[GEO_JETPACK] && !GotJetpack)
 	{
-		if (isNear(meshList[GEO_JETPACK], (float)10.f) && talktojetpack == false)
+		if (isNear(meshList[GEO_JETPACK], (float)15.f) && talktojetpack == false)
 		{
 			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to equip.", Color(0.541, 0.169, 0.886), 4, 1.8, 6.2);
 			if (Application::IsKeyPressedOnce('F'))
@@ -528,19 +530,22 @@ void SceneXL::Update(double dt, Mouse mouse) {
 		camera.UpdateFlying(dt, mouse);
 	}
 
-	srand((unsigned)time(0));
-	for (int i = 0; i < targetList.size(); i++)
+	if (movingdummy == true)
 	{
-		if (targetList[i]) {
-			if (targetList[i]->timemoved == 0 || targetList[i]->timemoved > 1)
-			{
-				targetList[i]->DirectionDummy = 1 + (rand() % 6);
-				if (targetList[i]->timemoved > 1)
+		srand((unsigned)time(0));
+		for (int i = 0; i < targetList.size(); i++)
+		{
+			if (targetList[i]) {
+				if (targetList[i]->timemoved == 0 || targetList[i]->timemoved > 1)
 				{
-					targetList[i]->timemoved = 0;
+					targetList[i]->DirectionDummy = 1 + (rand() % 6);
+					if (targetList[i]->timemoved > 1)
+					{
+						targetList[i]->timemoved = 0;
+					}
 				}
+				targetList[i]->MoveDummy(dt);
 			}
-			targetList[i]->MoveDummy(dt);
 		}
 	}
 
@@ -590,8 +595,6 @@ void SceneXL::Update(double dt, Mouse mouse) {
 			Shootingspin += 0.01;
 			tempspin = 0;
 		}
-		
-
 	}
 
 	for (auto bullet : bullets) {
@@ -983,8 +986,9 @@ void SceneXL::Render()
 	DetectRobot();
 	RenderRobot();
 
-	DetectJetpack();
 	RenderJetpack();
+	DetectJetpack();
+
 
 	PrintPosition();
 

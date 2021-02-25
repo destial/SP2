@@ -20,10 +20,10 @@ void SceneOfTheBeach::Init()
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	light[0].type = Light::LIGHT_POINT;
-	light[0].position.Set(0, 0, 0);
-	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(100, -20, 0);
+	light[0].type = Light::LIGHT_DIRECTIONAL;
+	light[0].position.Set(50, 20, 50);
+	light[1].type = Light::LIGHT_DIRECTIONAL;
+	light[1].position.Set(-50, 20, -50);
 
 	InitGL();
 
@@ -79,6 +79,9 @@ void SceneOfTheBeach::Init()
 
 	meshList[GEO_DOLPHIN] = MeshBuilder::GenerateOBJMTL("Dolphin", "OBJ//Dolphin.obj", "OBJ//Dolphin.mtl");
 
+	meshList[GEO_SHIP] = MeshBuilder::GenerateOBJMTL("Ship", "OBJ//ship_light.obj", "OBJ//ship_light.mtl");
+
+	meshList[GEO_UMBRELLA] = MeshBuilder::GenerateOBJMTL("Ship", "OBJ//Umbrella.obj", "OBJ//Umbrella.mtl");
 
 	OpenTextBox = false;
 	gl = false;
@@ -276,9 +279,6 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 	else if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
-	light[0].position.x = camera.position.x;
-	light[0].position.y = camera.position.y;
-	light[0].position.z = camera.position.z;
 
 	if (Application::IsKeyPressed('E'))
 	{
@@ -401,11 +401,11 @@ void SceneOfTheBeach::InitGL()
 	//Replace previous code
 	//light[0].type = Light::LIGHT_POINT;
 	//light[0].position.Set(0, 0, 0);
-	light[0].color.Set(1, 1, 1);
-	light[0].power = 5;
-	light[0].kC = 1.f;
-	light[0].kL = 0.01f;
-	light[0].kQ = 0.001f;
+	light[0].color.Set(1, 1,  1);
+	light[1].power = 1;
+	light[1].kC = 1.f;
+	light[1].kL = 0.01f;
+	light[1].kQ = 0.001f;
 	light[0].cosCutoff = cos(Math::DegreeToRadian(45));
 	light[0].cosInner = cos(Math::DegreeToRadian(30));
 	light[0].exponent = 3.f;
@@ -505,10 +505,10 @@ void SceneOfTheBeach::InitGLXray()
 	//light[0].type = Light::LIGHT_POINT;
 	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
-	light[0].power = 10;
-	light[0].kC = 1.f;
-	light[0].kL = 0.01f;
-	light[0].kQ = 0.001f;
+	light[1].power = 1;
+	light[1].kC = 1.f;
+	light[1].kL = 0.01f;
+	light[1].kQ = 0.001f;
 	light[0].cosCutoff = cos(Math::DegreeToRadian(45));
 	light[0].cosInner = cos(Math::DegreeToRadian(30));
 	light[0].exponent = 3.f;
@@ -680,7 +680,7 @@ void SceneOfTheBeach::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-40, 0, 0);
+	modelStack.Translate(-40, 0.5, 0);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Translate(CrabMoving, 0, 0);
 	modelStack.Scale(1, 3, 1);
@@ -688,14 +688,14 @@ void SceneOfTheBeach::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, -40);
+	modelStack.Translate(0, 0.5, -40);
 	modelStack.Translate(CrabMoving, 0, 0);
 	modelStack.Scale(1, 3, 1);
 	RenderMesh(meshList[GEO_CRAB], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-10, 0, 0);
+	modelStack.Translate(-10, 0.5, 0);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Translate(CrabMoving, 0, 0);
 	modelStack.Scale(1, 3, 1);
@@ -703,7 +703,7 @@ void SceneOfTheBeach::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(23, 0, 0);
+	modelStack.Translate(23, 0.5, 0);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Translate((CrabMoving * 2), 0, 0);
 	modelStack.Scale(1, 3, 1);
@@ -711,14 +711,14 @@ void SceneOfTheBeach::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(20, 0, 20);
+	modelStack.Translate(20, 0.5, 20);
 	modelStack.Translate(CrabMoving, 0, 0);
 	modelStack.Scale(1, 3, 1);
 	RenderMesh(meshList[GEO_CRAB], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(16, 10, 0);
+	modelStack.Translate(16, 8, 0);
 	modelStack.Rotate(-90, 0, 0, 1);
 	modelStack.Translate(CrabMoving, 0, 0);
 	modelStack.Scale(1, 3, 1);
@@ -745,12 +745,24 @@ void SceneOfTheBeach::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-80, 0, 0);
+	modelStack.Translate(-80, -2, 0);
 	modelStack.Rotate(rotatedolphin, 1, 0, 0);
 	modelStack.Translate(0, 0, 30);
 	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(0.1, 0.1, 0.1);
 	RenderMesh(meshList[GEO_DOLPHIN], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-CrabMoving, -5, -80);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.7, 0.7, 0.7);
+	RenderMesh(meshList[GEO_SHIP], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(90, 0, 1, 0);
+	RenderMesh(meshList[GEO_UMBRELLA], true);
 	modelStack.PopMatrix();
 
 	RenderNPC();

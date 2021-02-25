@@ -1043,7 +1043,7 @@ void SceneW::Render()
 	RenderText(meshList[GEO_TEXT], "Press E to open", RED);
 	modelStack.PopMatrix();
 	modelStack.PushMatrix();
-	modelStack.Translate(-45, 7, 44.8);
+	modelStack.Translate(-43, 7, 44.8);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderText(meshList[GEO_TEXT], "chest", RED);

@@ -273,7 +273,7 @@ void SceneW::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -1074,9 +1074,9 @@ void SceneW::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Sword:" + std::to_string(Player::getSword()), BLACK, 2, 0.5, 19 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Armour:" + std::to_string(Player::getArmourplate()), BLACK, 2, 0.5, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Helmet:" + std::to_string(Player::getHelmet()), BLACK, 2, 0.5, 17.3 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Sword:" + std::to_string(Player::getSword()), BLACK, 2, 0.5 * w / 800, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Armour:" + std::to_string(Player::getArmourplate()), BLACK, 2, 0.5 * w / 800, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Helmet:" + std::to_string(Player::getHelmet()), BLACK, 2, 0.5 * w / 800, 17 * h / 600);
 }
 
 void SceneW::RenderRoom() {

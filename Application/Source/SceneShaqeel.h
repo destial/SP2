@@ -101,6 +101,15 @@ private:
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
+	bool isNear(Mesh* mesh, const float& distance);
+
+	void RenderQuad();
+	void Rendervehicles();
+	void Rendertrees();
+	void Rendercityobjects();
+	void RenderNPC();
+	void RenderMytext();
+	void RenderUI();
 
 	bool rotate;
 	bool doorhasopened;
@@ -123,7 +132,6 @@ private:
 	float translateSphereZ;
 	float translateSphereZ2;
 
-
 	Mesh* meshList[NUM_GEOMETRY];
 
 	Light light[2];
@@ -134,28 +142,6 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
-public:
-
-	SceneShaqeel();
-	~SceneShaqeel();
-
-	/*float vehiclemove(double dt);*/
-
-	virtual void Init();
-	virtual void Update(double dt);
-	virtual void Update(double dt, Mouse mouse);
-	virtual void InitGL();
-	virtual void InitGLXray();
-	virtual void Render();
-	virtual void Exit();
-
-	void RenderQuad();
-	void Rendervehicles();
-	void Rendertrees();
-	void Rendercityobjects();
-	void RenderNPC();
-	void RenderMytext();
-	void RenderUI();
 
 	Color RED = Color(1.f, 0.f, 0.f);
 	Color GREEN = Color(0.f, 1.f, 0.f);
@@ -169,6 +155,18 @@ public:
 	Color ORANGE = Color((195 / 255), (82 / 255), (20 / 255));
 	Color GRAY = Color(0.4f, 0.4f, 0.4f);
 
+public:
+
+	SceneShaqeel();
+	~SceneShaqeel();
+
+	virtual void Init();
+	virtual void Update(double dt);
+	virtual void Update(double dt, Mouse mouse);
+	virtual void InitGL();
+	virtual void InitGLXray();
+	virtual void Render();
+	virtual void Exit();
 	MS modelStack, viewStack, projectionStack;
 };
 

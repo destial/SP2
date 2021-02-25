@@ -82,8 +82,10 @@ void SceneShaqeel::Init()
 	meshList[GEO_STREETLIGHT] = MeshBuilder::GenerateOBJ("Bench", "OBJ//StreetLight.obj"); // Try 1 first
 	meshList[GEO_STREETLIGHT]->textureID = LoadTGA("Image//StreetLight.tga");
 
-	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NewMart.obj"); // Try 1 first
+	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//newmartoffset.obj"); // Try 1 first
 	meshList[GEO_MART]->textureID = LoadTGA("Image//blueColour.tga");
+	meshList[GEO_MART]->transform.Translate(-21.3, -2, -0.1);
+	meshList[GEO_MART]->transform.Scale(0.6, 0.6, 0.6);
 
 	meshList[GEO_ROBOBODY] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Robowithoutarmsandlegs.obj"); // Try 1 first
 	meshList[GEO_ROBOBODY]->textureID = LoadTGA("Image//robo_normal.tga");
@@ -424,7 +426,28 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		}
 	}
 
+	camera.prevPosition = camera.position;
 	camera.Update(dt, mouse);
+
+	if (isNear(meshList[GEO_MART], 2.f)) {
+		// Get the current view vector and current y position
+		Vector3 view = (camera.target - camera.position).Normalized();
+		float y = camera.position.y;
+
+		// Set the player back to previous position but current y position (only x & z collision)
+		camera.position = camera.prevPosition;
+		camera.position.y = y;
+
+		// Set the correct target according to player's position and set the car speed to 0
+		camera.target = camera.position + view;
+	}
+}
+
+bool SceneShaqeel::isNear(Mesh* mesh, const float& distance) {
+
+	// Get distance between object and camera
+	double d = Math::sqrt(Math::Square(mesh->transform.translate.x - camera.position.x) + Math::Square(mesh->transform.translate.z - camera.position.z));
+	return (d - (4 * distance)) <= 0;
 }
 
 void SceneShaqeel::InitGL()
@@ -756,9 +779,9 @@ void SceneShaqeel::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5, 19 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5, 17.3 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5 * w / 800, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5 * w / 800, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5 * w / 800, 17 * h / 600);
 }
 
 void SceneShaqeel::RenderQuad()
@@ -911,9 +934,9 @@ void SceneShaqeel::Rendercityobjects()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-28, -2, -10);
+	modelStack.Translate(meshList[GEO_MART]->transform.translate.x, meshList[GEO_MART]->transform.translate.y, meshList[GEO_MART]->transform.translate.z);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.6, 0.6, 0.6);
+	modelStack.Scale(meshList[GEO_MART]->transform.scale.x, meshList[GEO_MART]->transform.scale.y, meshList[GEO_MART]->transform.scale.z);
 	RenderMesh(meshList[GEO_MART], true);
 	modelStack.PopMatrix();
 

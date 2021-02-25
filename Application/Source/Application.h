@@ -73,6 +73,7 @@ public:
 	static unsigned previousscene;
 	static unsigned FPS;
 	static bool quit;
+	static bool restart;
 	static std::set<unsigned short> activeKeys;
 
 private:

@@ -112,6 +112,8 @@ void OverworldScene::Init() {
 	meshList[GEO_ROBORIGHTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightarm.obj");
 	meshList[GEO_ROBORIGHTARM]->textureID = LoadTGA("Image//robo_normal.tga");
 
+	meshList[PLANE] = MeshBuilder::GenerateOBJ("plane", "OBJ//plane.obj");
+
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::TYPE::CAMERA;
 
@@ -332,6 +334,7 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	GetInCar();
 	CompleteTasks();
 	UpdateRobo(dt);
+	UpdatePlanes(dt);
 }
 
 void OverworldScene::InitGL() {
@@ -1036,6 +1039,30 @@ void OverworldScene::UpdateRobo(double &dt) {
 		translateSphereX2 = -30;
 }
 
+void OverworldScene::UpdatePlanes(double& dt) {
+	for (auto p : sceneManager->allObjects) {
+		if (p && p->mesh->name == "plane") {
+			if (p->transform->translate.x > 2 * camera.bounds) {
+				p->transform->translate.x = -2 * camera.bounds;
+			}
+			if (p->transform->translate.x < -2 * camera.bounds) {
+				p->transform->translate.x = 2 * camera.bounds;
+			}
+			if (p->transform->translate.z > 2 * camera.bounds) {
+				p->transform->translate.z = -2 * camera.bounds;
+			}
+			if (p->transform->translate.z < -2 * camera.bounds) {
+				p->transform->translate.z = 2 * camera.bounds;
+			}
+			p->transform->Translate(
+				p->transform->translate.x + (p->target.x), 
+				p->transform->translate.y + (p->target.y), 
+				p->transform->translate.z + (p->target.z)
+			);
+		}
+	}
+}
+
 void OverworldScene::CreateCityObjects() {
 	for (int i = -4; i <= 4; i+=2) {
 		for (int j = -4; j <= 4; j+=2) {
@@ -1051,8 +1078,11 @@ void OverworldScene::CreateCityObjects() {
 
 	GameObject* building = new GameObject(meshList[SKYSCRAPER2]);
 	building->transform->Translate(0, 1, 0);
+	building->transform->Scale(2, 5, 2);
 	sceneManager->push(building);
 	building->id = sceneManager->totalObjects;
+
+	///////////////////////////////////////////////
 
 	building = new GameObject(meshList[NY_BUILDING]);
 	building->transform->Translate(115, 0, -25);
@@ -1074,17 +1104,11 @@ void OverworldScene::CreateCityObjects() {
 
 	building = new GameObject(meshList[NY_BUILDING]);
 	building->transform->Translate(115, 0, 20);
-	building->transform->RotateDegree(180);
 	building->transform->Scale(0.6);
 	sceneManager->push(building);
 	building->id = sceneManager->totalObjects;
 
-	building = new GameObject(meshList[NY_BUILDING]);
-	building->transform->Translate(-115, 0, 20);
-	building->transform->RotateDegree(180);
-	building->transform->Scale(0.6);
-	sceneManager->push(building);
-	building->id = sceneManager->totalObjects;
+	///////////////////////////////////////////////
 
 	building = new GameObject(meshList[NY_BUILDING]);
 	building->transform->Translate(-115, 0, -25);
@@ -1114,6 +1138,8 @@ void OverworldScene::CreateCityObjects() {
 	sceneManager->push(building);
 	building->id = sceneManager->totalObjects;
 
+	///////////////////////////////////////////////
+
 	building = new GameObject(meshList[NY_BUILDING]);
 	building->transform->Translate(-115, 0, -25);
 	building->transform->RotateDegree(180);
@@ -1142,30 +1168,61 @@ void OverworldScene::CreateCityObjects() {
 	sceneManager->push(building);
 	building->id = sceneManager->totalObjects;
 
+	///////////////////////////////////////////////
 
 	building = new GameObject(meshList[NY_BUILDING]);
 	building->transform->Translate(-25, 0, 115);
-	building->transform->RotateDegree(90);
+	building->transform->RotateDegree(-90);
 	building->transform->Scale(0.6);
 	sceneManager->push(building);
 	building->id = sceneManager->totalObjects;
 
 	building = new GameObject(meshList[NY_BUILDING]);
 	building->transform->Translate(-10, 0, 115);
-	building->transform->RotateDegree(90);
+	building->transform->RotateDegree(-90);
 	building->transform->Scale(0.6);
 	sceneManager->push(building);
 	building->id = sceneManager->totalObjects;
 
 	building = new GameObject(meshList[NY_BUILDING]);
 	building->transform->Translate(5, 0, 115);
-	building->transform->RotateDegree(90);
+	building->transform->RotateDegree(-90);
 	building->transform->Scale(0.6);
 	sceneManager->push(building);
 	building->id = sceneManager->totalObjects;
 
 	building = new GameObject(meshList[NY_BUILDING]);
 	building->transform->Translate(20, 0, 115);
+	building->transform->RotateDegree(-90);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	///////////////////////////////////////////////
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-25, 0, -115);
+	building->transform->RotateDegree(90);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(-10, 0, -115);
+	building->transform->RotateDegree(90);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(5, 0, -115);
+	building->transform->RotateDegree(90);
+	building->transform->Scale(0.6);
+	sceneManager->push(building);
+	building->id = sceneManager->totalObjects;
+
+	building = new GameObject(meshList[NY_BUILDING]);
+	building->transform->Translate(20, 0, -115);
 	building->transform->RotateDegree(90);
 	building->transform->Scale(0.6);
 	sceneManager->push(building);
@@ -1336,6 +1393,29 @@ void OverworldScene::Reset() {
 	car->type = GameObject::CAR;
 	sceneManager->push(car);
 	car->id = sceneManager->totalObjects;
+
+	car = new GameObject(meshList[PLANE]);
+	car->transform->Translate(camera.bounds, 50, camera.bounds);
+	car->type = GameObject::CAR;
+	sceneManager->push(car);
+	car->id = sceneManager->totalObjects;
+	car->target = Vector3(0, 0, 1);
+
+	car = new GameObject(meshList[PLANE]);
+	car->transform->Translate(camera.bounds, 60, -camera.bounds);
+	car->transform->RotateDegree(90);
+	car->type = GameObject::CAR;
+	sceneManager->push(car);
+	car->id = sceneManager->totalObjects;
+	car->target = Vector3(1, 0, 0);
+
+	car = new GameObject(meshList[PLANE]);
+	car->transform->Translate(camera.bounds, 70, camera.bounds);
+	car->transform->RotateDegree(270);
+	car->type = GameObject::CAR;
+	sceneManager->push(car);
+	car->id = sceneManager->totalObjects;
+	car->target = Vector3(-1, 0, 0);
 
 	CreateCityObjects();
 

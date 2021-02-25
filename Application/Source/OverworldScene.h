@@ -39,14 +39,14 @@ class OverworldScene : public Scene {
 		CAR2,
 		BUS1,
 		COP,
+		PLANE,
+		NUM_CAR,
 
 		GEO_ROBOBODY,
 		GEO_ROBORIGHTLEG,
 		GEO_ROBOLEFTLEG,
 		GEO_ROBORIGHTARM,
 		GEO_ROBOLEFTARM,
-
-		NUM_CAR,
 
 		CAMERA,
 
@@ -109,6 +109,7 @@ private:
 	void GetInCar();
 	void DetectCollision();
 	void UpdateRobo(double &dt);
+	void UpdatePlanes(double& dt);
 	void CreateCityObjects();
 	void MoveBack();
 	void Reset();

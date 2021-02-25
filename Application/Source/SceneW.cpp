@@ -1005,8 +1005,6 @@ void SceneW::Render()
 
 	RenderSkybox();
 	RenderRoom();
-	RenderBoxes();
-	RenderMaze();
 	
 	modelStack.PushMatrix();
 	modelStack.Translate(0, .1, 0);
@@ -1038,6 +1036,33 @@ void SceneW::Render()
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderText(meshList[GEO_TEXT], "treasures", RED);
 	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-43, 8, 44.8);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "Press E to open", RED);
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-45, 7, 44.8);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "chest", RED);
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-43, 6, 44.8);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "Press R to", RED);
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-43, 5, 44.8);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.5, 0.5, 0.5);
+	RenderText(meshList[GEO_TEXT], "collect treasures", RED);
+	modelStack.PopMatrix();
+
+	RenderBoxes();
+	RenderMaze();
 
 	std::stringstream ssX;
 	std::stringstream ssY;
@@ -1054,7 +1079,6 @@ void SceneW::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 2, 0, 7);
 	modelStack.PopMatrix();
 
-	//RenderTextOnScreen(meshList[GEO_TEXT], countChest, BLACK, 2, 10, 10);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3);
 	RenderUI();
 	RenderItems();

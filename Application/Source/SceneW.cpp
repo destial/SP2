@@ -34,6 +34,12 @@ void SceneW::Init() {
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
+	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", BLUE, 30, 30, 0.5);
+	//meshList[GEO_SPHERE]->textureID = LoadTGA("Image//particle.tga");
+
+	meshList[GEO_SPHERE2] = MeshBuilder::GenerateSphere("sphere2", BLUE, 30, 30, 0.5);
+	//meshList[GEO_SPHERE2]->textureID = LoadTGA("Image//particle.tga");
+
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", WHITE, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//tron_ft.tga");
 
@@ -136,6 +142,20 @@ void SceneW::Init() {
 	collectedHelmet = false;
 
 	Dooropen = false;
+
+	translateSPHERE1X = -45.7;
+	translateSPHERE1Y = 1;
+
+	translateSPHERE2X = -47;
+
+	scaleSPX = 0.1;
+	scaleSPY = 0.1;
+	scaleSPZ = 0.1;
+
+	particles1spawn = false;
+	particles1limit = false;
+
+	heightlimit4 = false;
 
 	sceneManager = new SceneManager(this, camera.bounds);
 	CreateMaze();
@@ -323,6 +343,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && Chestlimit == false)
 		{
 			rotateChest -= (float)(40 * dt);
+			particles1spawn = true;
 			ClaymoreSpawn = true;
 			if (rotateChest <= -70)
 			{
@@ -482,6 +503,38 @@ void SceneW::Update(double dt, Mouse mouse) {
 		{
 			heightlimit3 = false;
 		}
+	}
+
+	if (particles1spawn == true)
+	{
+		if (scaleSPX < 0.5 && scaleSPY < 0.65 && scaleSPZ < 0.5 && particles1limit == false) //does not bendup z -
+		{
+			scaleSPX += (float)(1 * dt);
+			scaleSPY += (float)(1.3 * dt);
+			scaleSPZ += (float)(1 * dt);
+		}
+
+		else if (scaleSPX >= 0.5 && scaleSPY >= 0.65 && scaleSPZ >= 0.5)
+		{
+			particles1limit = true;
+		}
+
+		if (translateSPHERE1Y >= -3.5 && translateSPHERE1Y < 3.5 && heightlimit4 == false)
+		{
+			translateSPHERE1Y += (float)(1 * dt);
+			translateSPHERE1X += (float)(0.3 * dt);
+			translateSPHERE2X -= (float)(0.3 * dt);
+		}
+		else if (translateSPHERE1Y >= 3.5)
+		{
+			heightlimit4 = true;
+		}
+		if (heightlimit4 == true)
+		{
+			translateSPHERE1X = 1000;
+			translateSPHERE2X = 1000;
+		}
+
 	}
 
 	if (Application::IsKeyPressed('R'))
@@ -916,6 +969,7 @@ void SceneW::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3);
 	RenderUI();
 	RenderItems();
+	RenderParticles();
 }
 
 void SceneW::Exit() {
@@ -1087,6 +1141,21 @@ void SceneW::RenderBoxes() {
 	modelStack.Translate(20, 0, -5);
 	modelStack.Scale(1, 1, 1);
 	RenderMesh(meshList[CHESTBOTTOM], true);
+	modelStack.PopMatrix();
+}
+
+void SceneW::RenderParticles()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(translateSPHERE1X, translateSPHERE1Y, 43);
+	modelStack.Scale(scaleSPX, scaleSPY, scaleSPZ);
+	RenderMesh(meshList[GEO_SPHERE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(translateSPHERE2X, translateSPHERE1Y, 43);
+	modelStack.Scale(scaleSPX, scaleSPY, scaleSPZ);
+	RenderMesh(meshList[GEO_SPHERE2], true);
 	modelStack.PopMatrix();
 }
 

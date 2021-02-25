@@ -1,0 +1,14 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl 13592_Breastplate_Armor_ver_D_v1
+Ns 14.999996
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.540000 0.540000 0.540000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\zshaq\\Downloads\\Breastplate_Armor_verD_v1_L3.123c47577265-dd31-4f79-9e41-d66fd45ff7d8\\Breastplate_Armor_verD_v1_L3.123c47577265-dd31-4f79-9e41-d66fd45ff7d8\\13592_Breastplate_Armor_verD_v1_diff.JPG
+map_Ks C:\\Users\\zshaq\\Downloads\\Breastplate_Armor_verD_v1_L3.123c47577265-dd31-4f79-9e41-d66fd45ff7d8\\Breastplate_Armor_verD_v1_L3.123c47577265-dd31-4f79-9e41-d66fd45ff7d8\\13592_Breastplate_Armor_verD_v1_spec.JPG

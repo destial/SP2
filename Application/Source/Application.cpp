@@ -208,7 +208,7 @@ void Application::Init() {
 	m_height = 600;
 	ui_height = 60;
 	ui_width = 80;
-	sceneswitch = STARTSCENE;
+	previousscene = sceneswitch = STARTSCENE;
 	Player::setMoney(1000);
 	Player::setAmmo(256);
 	Player::setHealth(100);

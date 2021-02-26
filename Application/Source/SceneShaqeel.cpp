@@ -279,6 +279,9 @@ void SceneShaqeel::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) 
 
 void SceneShaqeel::Update(double dt, Mouse mouse) {
 
+	if (Application::previousscene != Application::SCENESHAQ) {
+		InitGL();
+	}
 	// vehicle movement
 	sceneFloats[F_TRANSLATE_TRUCK_Z] += (float)(7 * dt); // 3.87 15.7
 	sceneFloats[F_TRANSLATE_BUS_Z] -= (float)(7 * dt);

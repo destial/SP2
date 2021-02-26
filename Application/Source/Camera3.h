@@ -23,6 +23,7 @@ public:
 	Vector3 SharkRight;
 	Vector3 SharkFace;
 	Vector3 SharkPos;
+
 	//BulletVectors
 	Vector3 BulletView, BulletTarget;
 	Vector3 BulletRight;
@@ -51,15 +52,15 @@ public:
 	void UpdateFlying(double& dt, Mouse& mouse);
 	void UpdateCar(double& dt, Mouse& mouse, const float& SPEED);
 	void Reset();
+
 	//Shark stuff
 	void SharkChaseinit();
 	float getSharkRotation(Vector3& origin);
 	void SharkChaseMove();
+
 	//Bullet stuff
 	void Bulletinit();
 	void BulletMove();
-
-
 
 	float getRotation(void);
 	float getCarRotation();

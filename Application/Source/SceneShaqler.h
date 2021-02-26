@@ -36,6 +36,7 @@ class SceneShaqler : public Scene
 		GEO_BOOK8,
 		GEO_CHAIR,
 		GEO_CUBE,
+		GEO_PAINTING,
 		GEO_BOOKCASE,
 		GEO_KURENAI,
 		GEO_SAMIDAL,

@@ -223,7 +223,9 @@ void PauseMenuScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 }
 
 void PauseMenuScene::Update(double dt, Mouse mouse) {
-
+	if (Application::previousscene != Application::MENUSCENE) {
+		InitGL();
+	}
 	//Mouse Inputs
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))

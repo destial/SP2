@@ -409,6 +409,10 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 
 	// robot movement
 
+	if (Application::previousscene != Application::SCENESHAQ) {
+		InitGL();
+	}
+
 	if (leftleglimit == true)
 	{
 		rotateleftleg += 1;

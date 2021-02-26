@@ -754,6 +754,7 @@ void SceneOfTheBeach::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(-CrabMoving, -5, -80);
 	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(CrabMoving, 1, 0, 0);
 	modelStack.Scale(0.7, 0.7, 0.7);
 	RenderMesh(meshList[GEO_SHIP], true);
 	modelStack.PopMatrix();

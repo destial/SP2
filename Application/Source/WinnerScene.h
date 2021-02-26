@@ -70,16 +70,14 @@ class WinnerScene : public Scene
 
 		U_TOTAL,
 	};
-
-
 private:
+	MS modelStack, viewStack, projectionStack;
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
 	unsigned m_colorBuffer[NUM_GEOMETRY];
 	unsigned m_indexBuffer[NUM_GEOMETRY];
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	void RenderSkybox();
 
 	bool rotate;
 	float rotateangle;
@@ -95,6 +93,7 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
+	void RenderSkybox();
 public:
 
 	WinnerScene();
@@ -108,20 +107,6 @@ public:
 	virtual void Render();
 	virtual void Exit();
 	virtual void Reset();
-
-	Color RED = Color(1.f, 0.f, 0.f);
-	Color GREEN = Color(0.f, 1.f, 0.f);
-	Color BLUE = Color(0.f, 0.f, 1.f);
-	Color WHITE = Color(1.f, 1.f, 1.f);
-	Color YELLOW = Color(1.f, 1.f, 0.f);
-	Color PURPLE = Color(1.f, 0.f, 1.f);
-	Color CYAN = Color(0.f, 1.f, 1.f);
-	Color BROWN = Color(.6f, .1f, .2f);
-	Color BLACK = Color(0.f, 0.f, 0.f);
-	Color ORANGE = Color((195 / 255), (82 / 255), (20 / 255));
-	Color GRAY = Color(0.4f, 0.4f, 0.4f);
-
-	MS modelStack, viewStack, projectionStack;
 };
 
 #endif

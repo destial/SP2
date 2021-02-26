@@ -38,28 +38,28 @@ void StartMenuScene::Init()
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
-	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
+	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
-	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", WHITE, 1.f, 1.f);
+	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BACK]->textureID = LoadTGA("Image//back-space.tga");
 
-	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", WHITE, 1.f, 1.f);
+	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right-space.tga");
 
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", WHITE, 1.f, 1.f);
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left-space.tga");
 
-	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", WHITE, 1.f, 1.f);
+	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_TOP]->textureID = LoadTGA("Image//top-space.tga");
 
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", WHITE, 1.f, 1.f);
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	meshList[BUTTON] = MeshBuilder::GenerateFaceQuad("startButton", WHITE, 1.f, 1.f);
+	meshList[BUTTON] = MeshBuilder::GenerateFaceQuad("startButton", Colors::WHITE, 1.f, 1.f);
 	meshList[BUTTON]->textureID = LoadTGA("Image//button.tga");
 
 	meshList[GEO_SHARK] = MeshBuilder::GenerateOBJMTL("Shark", "OBJ//Shark.obj", "OBJ//Shark.mtl");
@@ -281,8 +281,6 @@ void StartMenuScene::Update(double dt, Mouse mouse) {
 
 void StartMenuScene::InitGL()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -646,10 +644,10 @@ void StartMenuScene::Render()
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[BUTTON], 15, 40 * w / 800, 35 * h / 600);
 	RenderMeshOnScreen(meshList[BUTTON], 15, 40 * w / 800, 25 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "SP2 Group 2 - My City Tour", WHITE, 4, 1 * w / 800, 10 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Start", BLUE, 3, 9 * w / 750, 8.5 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", BLUE, 3, 9 * w / 750, 6 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 1, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], "SP2 Group 2 - My City Tour", Colors::WHITE, 4, 1 * w / 800, 10 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Start", Colors::BLUE, 3, 9 * w / 750, 8.5 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", Colors::BLUE, 3, 9 * w / 750, 6 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 1, 0, 0);
 }
 
 void StartMenuScene::Exit() {

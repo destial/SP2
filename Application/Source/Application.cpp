@@ -378,8 +378,22 @@ void Application::Run() {
 		// Toggle mouse states depending on scene
 		toggleState();
 
+		switch (Application::sceneswitch) {
+		case Application::MENUSCENE:
+			Application::sceneswitch = Application::previousscene;
+			break;
+		case Application::STARTSCENE:
+		case Application::WINSCENE:
+			break;
+		default:
+			if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
+				Application::previousscene = Application::sceneswitch;
+				Application::sceneswitch = MENUSCENE;
+			}
+			break;
+		}
+
 		// Switch scenes
-		Application::previousscene = Application::sceneswitch;
 		switch (Application::sceneswitch) {
 		case Application::SCENESHAQ:
 			if (Application::IsKeyPressedOnce(VK_F1)) {

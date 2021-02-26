@@ -26,7 +26,6 @@ void OverworldScene::Init() {
 
 	InitGL();
 
-	// Init scene manager
 	// Generate necessary meshes and starting transformations
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
@@ -97,6 +96,7 @@ void OverworldScene::Init() {
 
 	meshList[NY_BUILDING] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NYBuilding.obj");
 	meshList[NY_BUILDING]->textureID = LoadTGA("Image//NYBuilding.tga");
+	meshList[NY_BUILDING]->type = Mesh::TYPE::OBJECT;
 
 	meshList[STREETLIGHT] = MeshBuilder::GenerateOBJ("streetlight", "OBJ//StreetLight.obj");
 	meshList[STREETLIGHT]->textureID = LoadTGA("Image//StreetLight.tga");
@@ -236,13 +236,13 @@ void OverworldScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color colo
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10);
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
-	viewStack.LoadIdentity(); //No need camera for ortho mode
+	viewStack.LoadIdentity();
 	modelStack.PushMatrix();
-	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.LoadIdentity();
 	modelStack.Scale(size, size, size);
 	modelStack.Translate(x, y, 0);
 
@@ -274,13 +274,13 @@ void OverworldScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10);
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
-	viewStack.LoadIdentity(); //No need camera for ortho mode
+	viewStack.LoadIdentity();
 	modelStack.PushMatrix();
-	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
 	modelStack.Scale(size, size, size);
 
@@ -302,9 +302,6 @@ void OverworldScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 }
 
 void OverworldScene::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
-		Application::sceneswitch = Application::STARTSCENE;
-	}
 
 	if (Application::IsKeyPressedOnce('G')) {
 		showTaskbar = showTaskbar ? 0 : 1;

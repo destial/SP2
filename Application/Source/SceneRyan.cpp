@@ -678,10 +678,6 @@ void SceneRyan::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
 	modelStack.Scale(400, 1, 400);
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();

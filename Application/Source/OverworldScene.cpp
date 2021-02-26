@@ -26,7 +26,6 @@ void OverworldScene::Init() {
 
 	InitGL();
 
-	// Init scene manager
 	// Generate necessary meshes and starting transformations
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
@@ -97,6 +96,7 @@ void OverworldScene::Init() {
 
 	meshList[NY_BUILDING] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NYBuilding.obj");
 	meshList[NY_BUILDING]->textureID = LoadTGA("Image//NYBuilding.tga");
+	meshList[NY_BUILDING]->type = Mesh::TYPE::OBJECT;
 
 	meshList[STREETLIGHT] = MeshBuilder::GenerateOBJ("streetlight", "OBJ//StreetLight.obj");
 	meshList[STREETLIGHT]->textureID = LoadTGA("Image//StreetLight.tga");
@@ -236,13 +236,13 @@ void OverworldScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color colo
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10);
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
-	viewStack.LoadIdentity(); //No need camera for ortho mode
+	viewStack.LoadIdentity();
 	modelStack.PushMatrix();
-	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.LoadIdentity();
 	modelStack.Scale(size, size, size);
 	modelStack.Translate(x, y, 0);
 
@@ -274,13 +274,13 @@ void OverworldScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10);
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
-	viewStack.LoadIdentity(); //No need camera for ortho mode
+	viewStack.LoadIdentity();
 	modelStack.PushMatrix();
-	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
 	modelStack.Scale(size, size, size);
 
@@ -302,9 +302,6 @@ void OverworldScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 }
 
 void OverworldScene::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
-		Application::sceneswitch = Application::STARTSCENE;
-	}
 
 	if (Application::IsKeyPressedOnce('G')) {
 		showTaskbar = showTaskbar ? 0 : 1;
@@ -316,16 +313,25 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	if (Application::previousscene != Application::OVERWORLD) {
 		InitGL();
 	}
-	if (Application::IsKeyPressedOnce('X'))
+
+	if (Player::getJetpack() == false)
 	{
-		InitGL();
+		if (!currentCarObject) {
+			camera.Update(dt, mouse);
+		}
+		else {
+			camera.UpdateCar(dt, mouse, 6.f);
+		}
 	}
 
-
-	if (!currentCarObject) {
-		camera.Update(dt, mouse);
-	} else {
-		camera.UpdateCar(dt, mouse, 6.f);
+	if (Player::getJetpack() == true)
+	{
+		if (!currentCarObject) {
+			camera.UpdateFlying(dt, mouse);
+		}
+		else {
+			camera.UpdateCar(dt, mouse, 6.f);
+		}
 	}
 
 	RoadTeleport();
@@ -1375,6 +1381,36 @@ bool OverworldScene::isHit(GameObject* o1, GameObject* o2, const float& distance
 void OverworldScene::Render() {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if (light[0].type == Light::LIGHT_DIRECTIONAL) {
+		Vector3 lightDir(light[0].position.x, light[0].position.y, light[0].position.z);
+		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
+
+		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_cameraspace.x);
+	} else if (light[0].type == Light::LIGHT_SPOT) {
+		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
+		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
+
+		Vector3 spotDirection_cameraspace = viewStack.Top() * light[0].spotDirection;
+		glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
+	} else {
+		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
+		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
+	}
+
+	if (light[1].type == Light::LIGHT_DIRECTIONAL) {
+		Vector3 lightDir(light[1].position.x, light[1].position.y, light[1].position.z);
+		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
+		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
+	} else if (light[1].type == Light::LIGHT_SPOT) {
+		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
+		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
+
+		Vector3 spotDirection_cameraspace = viewStack.Top() * light[1].spotDirection;
+		glUniform3fv(m_parameters[U_LIGHT1_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
+	} else {
+		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
+		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
+	}
 
 	if (light[0].type == Light::LIGHT_DIRECTIONAL) {
 		Vector3 lightDir(light[0].position.x, light[0].position.y, light[0].position.z);
@@ -1453,7 +1489,7 @@ void OverworldScene::Reset() {
 	projection.SetToPerspective(45.f, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
 	camera.Init(Vector3(18, 3, 0), Vector3(5, 3, 1), Vector3(0, 1, 0), (float)100);
-	currentCar = nullptr;
+	camera.orthographic_size = 45.f;
 	currentCarObject = nullptr;
 
 	meshList[MOON]->transform.RotateDegree(0);

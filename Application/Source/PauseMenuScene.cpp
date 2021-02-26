@@ -38,28 +38,28 @@ void PauseMenuScene::Init()
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
-	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
+	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
-	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", WHITE, 1.f, 1.f);
+	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BACK]->textureID = LoadTGA("Image//back-space.tga");
 
-	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", WHITE, 1.f, 1.f);
+	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right-space.tga");
 
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", WHITE, 1.f, 1.f);
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left-space.tga");
 
-	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", WHITE, 1.f, 1.f);
+	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_TOP]->textureID = LoadTGA("Image//top-space.tga");
 
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", WHITE, 1.f, 1.f);
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	meshList[BUTTON] = MeshBuilder::GenerateFaceQuad("startButton", WHITE, 1.f, 1.f);
+	meshList[BUTTON] = MeshBuilder::GenerateFaceQuad("startButton", Colors::WHITE, 1.f, 1.f);
 	meshList[BUTTON]->textureID = LoadTGA("Image//button.tga");
 
 	meshList[GEO_SHARK] = MeshBuilder::GenerateOBJMTL("Shark", "OBJ//Shark.obj", "OBJ//Shark.mtl");
@@ -223,18 +223,6 @@ void PauseMenuScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 }
 
 void PauseMenuScene::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-
-	else if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
 	//Mouse Inputs
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
@@ -289,8 +277,6 @@ void PauseMenuScene::Update(double dt, Mouse mouse) {
 
 void PauseMenuScene::InitGL()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -654,11 +640,11 @@ void PauseMenuScene::Render()
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[BUTTON], 20, 40 * w / 800, 35 * h / 600);
 	RenderMeshOnScreen(meshList[BUTTON], 20, 40 * w / 800, 20 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "SP2 Group 2 - My City Tour", WHITE, 4, 1 * w / 750, 10 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Continue", BLUE, 3, 7.5 * w / 750, 8.5 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Return to", BLUE, 3, 7.25 * w / 750, 5 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Main Menu", BLUE, 3, 7.25 * w / 750, 4.5 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 1, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], "SP2 Group 2 - My City Tour", Colors::WHITE, 4, 1 * w / 750, 10 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Continue", Colors::BLUE, 3, 7.5 * w / 750, 8.5 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Return to", Colors::BLUE, 3, 7.25 * w / 750, 5 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Main Menu", Colors::BLUE, 3, 7.25 * w / 750, 4.5 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 1, 0, 0);
 }
 
 void PauseMenuScene::Exit() {

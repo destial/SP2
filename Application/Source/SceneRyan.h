@@ -73,36 +73,42 @@ class SceneRyan : public Scene
 		U_TOTAL,
 	};
 
+	enum SCENE_FLOATS {
+		ROTATE_SHARK,
+		ROTATE_TAIL,
+		SHARK_CIRCLE_ANGLE,
+		SHARK_DIRECTION,
+		TEMP_TIME,
+		NUM_SCENE_FLOATS
+	};
 
+	enum SCENE_BOOLS {
+		ROTATE,
+		SHARK_ATTACK,
+		SCENE_TRANSITION,
+		NUM_SCENE_BOOLS
+	};
+
+	enum SCENE_INTS {
+		SURVIVE_COUNTER,
+		SHARK_CIRCLE,
+		TEMP_COUNTER,
+		SCENE_COUNTER,
+		NUM_SCENE_INTS
+	};
 private:
+
+	MS modelStack, viewStack, projectionStack;
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
 	unsigned m_colorBuffer[NUM_GEOMETRY];
 	unsigned m_indexBuffer[NUM_GEOMETRY];
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	void RenderSkybox();
-
-	float rotateshark;
-
-	int survivecounter;
-	bool rotate;
-	float rotatetail;
-	int sharkcircle;
-	float sharkcircleangle;
-	bool sharkattack;
-	double temptime;
-
-	float sharkdir;
-	int Tempcounter;
-
-	int scenecounter;
-	bool scenetransition;
-
+	bool sceneBools[NUM_SCENE_BOOLS];
+	float sceneFloats[NUM_SCENE_FLOATS];
+	int sceneInts[NUM_SCENE_INTS];
 	Mesh* meshList[NUM_GEOMETRY];
-
-	//trying chasing code
-	Vector3 Temptarget;
 
 	Light light[2];
 
@@ -112,6 +118,9 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
+	void RenderSkybox();
+	void RenderUI();
+	void RenderShark();
 public:
 
 	SceneRyan();
@@ -124,22 +133,7 @@ public:
 	virtual void InitGLXray();
 	virtual void Render();
 	virtual void Reset();
-	void RenderUI();
 	virtual void Exit();
-	void RenderShark();
-	Color RED = Color(1.f, 0.f, 0.f);
-	Color GREEN = Color(0.f, 1.f, 0.f);
-	Color BLUE = Color(0.f, 0.f, 1.f);
-	Color WHITE = Color(1.f, 1.f, 1.f);
-	Color YELLOW = Color(1.f, 1.f, 0.f);
-	Color PURPLE = Color(1.f, 0.f, 1.f);
-	Color CYAN = Color(0.f, 1.f, 1.f);
-	Color BROWN = Color(.6f, .1f, .2f);
-	Color BLACK = Color(0.f, 0.f, 0.f);
-	Color ORANGE = Color((195 / 255), (82 / 255), (20 / 255));
-	Color GRAY = Color(0.4f, 0.4f, 0.4f);
-
-	MS modelStack, viewStack, projectionStack;
 };
 
 #endif

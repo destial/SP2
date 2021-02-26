@@ -26,11 +26,6 @@ void SceneShaqeel::Init()
 
 	InitGL();
 
-	Mtx44 projection;
-	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
-	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)30);
-
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
@@ -49,7 +44,7 @@ void SceneShaqeel::Init()
 	meshList[GEO_CUBE]->material.kSpecular.Set(0.5f, 1.f, 0.5f);
 	meshList[GEO_CUBE]->material.kShininess = 1.f;
 
-	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", BLUE, 30, 30, 0.5);
+	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", Colors::BLUE, 30, 30, 0.5);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.5f, 1.f, 0.5f);
 	meshList[GEO_SPHERE]->material.kDiffuse.Set(0.5f, 1.f, 0.5f);
 	meshList[GEO_SPHERE]->material.kSpecular.Set(0.5f, 1.f, 0.5f);
@@ -111,45 +106,31 @@ void SceneShaqeel::Init()
 	meshList[GEO_TUNNEL] = MeshBuilder::GenerateOBJ("Tunnel", "OBJ//Tunnel1.obj"); // Try 1 first
 	meshList[GEO_TUNNEL]->textureID = LoadTGA("Image//DarkGray.tga");
 
-	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
+	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
-	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", WHITE, 1.f, 1.f);
+	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BACK]->textureID = LoadTGA("Image//back-space.tga");
 
-	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", WHITE, 1.f, 1.f);
+	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right-space.tga");
 
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", WHITE, 1.f, 1.f);
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left-space.tga");
 
-	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", WHITE, 1.f, 1.f);
+	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_TOP]->textureID = LoadTGA("Image//top-space.tga");
 
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", WHITE, 1.f, 1.f);
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
 
-	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	// initialised
-	translateTruckZ = 10;
-	busZ = 0;
-	translateCar1Z = -10;
-	translateCar2Z = 20;
-	rotatedoor = 90;
-	translateWordY = 1000;
-	rotateleftleg = 0;
-	rotaterightleg = 0;
-	leftleglimit = false;
-	translateSphereZ = -19.6;
-	translateSphereZ2 = 19.6;
-	translatePlaneX = 40;
-	translatePlaneZ = 10;
-
+	Reset();
 	Application::log("Scene Shaqeel initialized");
 }
 
@@ -297,80 +278,54 @@ void SceneShaqeel::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) 
 }
 
 void SceneShaqeel::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
 
-	else if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-
-	else if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
-	static const float LSPEED = 40.f;
-	if (Application::IsKeyPressed('I'))
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('P'))
-		light[0].position.y += (float)(LSPEED * dt);
-
+	if (Application::previousscene != Application::SCENESHAQ) {
+		InitGL();
+	}
 	// vehicle movement
-	translateTruckZ += (float)(7 * dt); 
-	translateBusZ -= (float)(7 * dt);
-	translateCar1Z += (float)(10 * dt);
-	translateCar2Z -= (float)(15 * dt);
-	translatePlaneX -= (float)(7 * dt);
-	translatePlaneZ -= (float)(1.2 * dt);
+	sceneFloats[F_TRANSLATE_TRUCK_Z] += (float)(7 * dt); // 3.87 15.7
+	sceneFloats[F_TRANSLATE_BUS_Z] -= (float)(7 * dt);
+	sceneFloats[F_TRANSLATE_CAR1_Z] += (float)(10 * dt);
+	sceneFloats[F_TRANSLATE_CAR2_Z] -= (float)(15 * dt);
+	sceneFloats[F_TRANSLATE_SPHERE_Z] += (float)(2.5 * dt);
+	sceneFloats[F_TRANSLATE_SPHERE_Z_2] -= (float)(2.75 * dt);
+	sceneFloats[F_TRANSLATE_PLANE_X] -= (float)(7 * dt);
+	sceneFloats[F_TRANSLATE_PLANE_Z] -= (float)(1.2 * dt);
 
-	// character moving using hierach modelling
-	translateSphereZ += (float)(2.5 * dt);
-	translateSphereZ2 -= (float)(2.75 * dt);
-
-	// vehicles will respawn once they cross certain distance 
-	if (translateTruckZ >= 40)
+	if (sceneFloats[F_TRANSLATE_TRUCK_Z] >= 40)
 	{
-		translateTruckZ = -40;
+		sceneFloats[F_TRANSLATE_TRUCK_Z] = -40;
 	}
 
-	if (translateCar1Z >= 40)
+	if (sceneFloats[F_TRANSLATE_CAR1_Z] >= 40)
 	{
-		translateCar1Z = -40;
+		sceneFloats[F_TRANSLATE_CAR1_Z] = -40;
 	}
 
-	if (translateBusZ <= -40)
+	if (sceneFloats[F_TRANSLATE_BUS_Z] <= -40)
 	{
-		translateBusZ = 40;
+		sceneFloats[F_TRANSLATE_BUS_Z] = 40;
 	}
 
-	if (translateCar2Z <= -40)
+	if (sceneFloats[F_TRANSLATE_CAR2_Z] <= -40)
 	{
-		translateCar2Z = 40;
+		sceneFloats[F_TRANSLATE_CAR2_Z] = 40;
 	}
 
-	if (translatePlaneX <= -40)
+	if (sceneFloats[F_TRANSLATE_PLANE_X] <= -40)
 	{
-		translatePlaneX = 40;
-		translatePlaneZ = 10;
+		sceneFloats[F_TRANSLATE_PLANE_X] = 40;
+		sceneFloats[F_TRANSLATE_PLANE_Z] = 10;
 	}
 
-	// same with robos
-	if (translateSphereZ >= 25)
+	if (sceneFloats[F_TRANSLATE_SPHERE_Z] >= 25)
 	{
-		translateSphereZ = -25;
+		sceneFloats[F_TRANSLATE_SPHERE_Z] = -25;
 	}
 
-	if (translateSphereZ2 <= -30)
+	if (sceneFloats[F_TRANSLATE_SPHERE_Z_2] <= -30)
 	{
-		translateSphereZ2 = 20;
+		sceneFloats[F_TRANSLATE_SPHERE_Z_2] = 20;
 	}
 
 	// press e to open the door
@@ -379,35 +334,33 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		// using the location of where the camera is 
 		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.z <= 1.5 && camera.position.z >= -1.5)
 		{
-			doorhasopened = true;
+			sceneBools[B_DOOR_OPENED] = true;
 		}
 
 
 	}
 
-	// ensures door doesnt open past a certain point
-	if (doorhasopened == true)
+	if (sceneBools[B_DOOR_OPENED] == true)
 	{
-		if (!stopopenDoor)
+		if (!sceneBools[B_STOP_OPEN_DOOR])
 		{
-			rotatedoor -= (float)(40 * dt);
+			sceneFloats[F_ROTATE_DOOR] -= (float)(40 * dt);
 		}
 
-		if (rotatedoor <= -30)
+		if (sceneFloats[F_ROTATE_DOOR] <= -30)
 		{
-			stopopenDoor = true;
+			sceneBools[B_STOP_OPEN_DOOR] = true;
 		}
 	}
 
-	// text will appear telling you that you can now enter 
-	if (stopopenDoor == true)
+	if (sceneBools[B_STOP_OPEN_DOOR] == true)
 	{
-		translateWordY = 2.5;
+		sceneFloats[F_TRANSLATE_WORD_Y] = 2.5;
 	}
 
 	// F to enter the mart using same x and z coords as opening door
 	if (Application::IsKeyPressedOnce('F') && camera.position.x <= -10 && camera.position.x >= -15 && 
-		camera.position.z <= 1.5 && camera.position.z >= -1.5 && stopopenDoor == true) {
+		camera.position.z <= 1.5 && camera.position.z >= -1.5 && sceneBools[B_STOP_OPEN_DOOR] == true) {
 		Application::sceneswitch = Application::SCENESHAQLER;
 	}
 
@@ -417,22 +370,20 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 
 	// robot movement
 
-	// using bool and angles to make sure limbs wont go past certain points
-	// and then go back and forth 
-	if (leftleglimit == true)
+	if (sceneBools[B_LEFT_LEG_LIMIT] == true)
 	{
-		rotateleftleg += 1;
-		if (rotateleftleg > 30)
+		sceneFloats[F_ROTATE_LEFT_LEG] += 1;
+		if (sceneFloats[F_ROTATE_LEFT_LEG] > 30)
 		{
-			leftleglimit = false;
+			sceneBools[B_LEFT_LEG_LIMIT] = false;
 		}
 	}
-	else if (leftleglimit == false)
+	else if (sceneBools[B_LEFT_LEG_LIMIT] == false)
 	{
-		rotateleftleg -= 1;
-		if (rotateleftleg < -30)
+		sceneFloats[F_ROTATE_LEFT_LEG] -= 1;
+		if (sceneFloats[F_ROTATE_LEFT_LEG] < -30)
 		{
-			leftleglimit = true;
+			sceneBools[B_LEFT_LEG_LIMIT] = true;
 		}
 	}
 
@@ -463,8 +414,6 @@ bool SceneShaqeel::isNear(Mesh* mesh, const float& distance) {
 
 void SceneShaqeel::InitGL()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -673,7 +622,7 @@ void SceneShaqeel::Update(double dt)
 
 	Update(dt, mouse);
 
-	/*translateTruckZ -= (float)(30 * dt);*/
+	/*sceneFloats[F_TRANSLATE_TRUCK_Z] -= (float)(30 * dt);*/
 
 }
 
@@ -783,7 +732,7 @@ void SceneShaqeel::Render()
 	Rendercityobjects();
 	RenderMytext();
 	RenderNPC();
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 	RenderUI();
 }
 
@@ -791,9 +740,9 @@ void SceneShaqeel::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5 * w / 800, 19 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5 * w / 800, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5 * w / 800, 17 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), Colors::BLACK, 2, 0.5 * w / 800, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), Colors::BLACK, 2, 0.5 * w / 800, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), Colors::BLACK, 2, 0.5 * w / 800, 17 * h / 600);
 }
 
 void SceneShaqeel::RenderQuad()
@@ -816,35 +765,35 @@ void SceneShaqeel::RenderQuad()
 void SceneShaqeel::Rendervehicles()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(-1.3, -0.8, translateTruckZ); // if translateTruckZ is past a certain point, it will respawn
+	modelStack.Translate(-1.3, -0.8, sceneFloats[F_TRANSLATE_TRUCK_Z]);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(0.022, 0.022, 0.022);
 	RenderMesh(meshList[GEO_TRUCK], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(5, -0.6, translateBusZ);
+	modelStack.Translate(5, -0.6, sceneFloats[F_TRANSLATE_BUS_Z]);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(0.038, 0.038, 0.038);
 	RenderMesh(meshList[GEO_BUS], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-6, -0.5, translateCar1Z);
+	modelStack.Translate(-6, -0.5, sceneFloats[F_TRANSLATE_CAR1_Z]);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(0.095, 0.095, 0.095);
 	RenderMesh(meshList[GEO_CAR1], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(5.5, -0.7, translateCar2Z);
+	modelStack.Translate(5.5, -0.7, sceneFloats[F_TRANSLATE_CAR2_Z]);
 	modelStack.Rotate(270, 0, 1, 0);
 	modelStack.Scale(0.09, 0.09, 0.09);
 	RenderMesh(meshList[GEO_CAR2], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(translatePlaneX, 42, translatePlaneZ);
+	modelStack.Translate(sceneFloats[F_TRANSLATE_PLANE_X], 42, sceneFloats[F_TRANSLATE_PLANE_Z]);
 	modelStack.Rotate(270, 0, 1, 0);
 	modelStack.Scale(1, 1, 1);
 	RenderMesh(meshList[GEO_PLANE], true);
@@ -952,7 +901,7 @@ void SceneShaqeel::Rendercityobjects()
 	modelStack.PushMatrix();
 	modelStack.Translate(-15, -2, 1);
 	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Rotate(rotatedoor, 0, 1, 0);
+	modelStack.Rotate(sceneFloats[F_ROTATE_DOOR], 0, 1, 0);
 	modelStack.Scale(0.61, 0.61, 0.61);
 	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();
@@ -1014,10 +963,10 @@ void SceneShaqeel::Rendercityobjects()
 void SceneShaqeel::RenderMytext()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(-14.8, translateWordY, 0.9);
+	modelStack.Translate(-14.8, sceneFloats[F_TRANSLATE_WORD_Y], 0.9);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(0.15, 0.15, 0.15);
-	RenderText(meshList[GEO_TEXT], " Press F to Enter", WHITE);
+	RenderText(meshList[GEO_TEXT], " Press F to Enter", Colors::WHITE);
 	modelStack.PopMatrix();
 
 	std::stringstream ssX;
@@ -1042,34 +991,34 @@ void SceneShaqeel::RenderMytext()
 void SceneShaqeel::RenderNPC()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(-13.2, 0, translateSphereZ);
+	modelStack.Translate(-13.2, 0, sceneFloats[F_TRANSLATE_SPHERE_Z]);
 	modelStack.Scale(0.25, 0.25, 0.25);
 	RenderMesh(meshList[GEO_SPHERE], true);
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
-	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Rotate(sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
 	modelStack.Scale(3.5, 3.5, 3.5);
 	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
-	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Rotate(-sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
 	modelStack.Scale(3.5, 3.5, 3.5);
 	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-2.25, 4.5, 0);
-	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Rotate(-sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
 	modelStack.Scale(3.5, 3.5, 3.5);
 	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(2.25, 4.5, 0);
-	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Rotate(sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
 	modelStack.Scale(3.5, 3.5, 3.5);
 	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
 	modelStack.PopMatrix();
@@ -1086,35 +1035,35 @@ void SceneShaqeel::RenderNPC()
 
 
 	modelStack.PushMatrix();
-	modelStack.Translate(13.2, 0, translateSphereZ2);
+	modelStack.Translate(13.2, 0, sceneFloats[F_TRANSLATE_SPHERE_Z_2]);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(0.25, 0.25, 0.25);
 	RenderMesh(meshList[GEO_SPHERE], true);
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
-	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Rotate(sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
 	modelStack.Scale(3.5, 3.5, 3.5);
 	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
-	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Rotate(-sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
 	modelStack.Scale(3.5, 3.5, 3.5);
 	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-2.25, 4.5, 0);
-	modelStack.Rotate(-rotateleftleg, 1, 0, 0);
+	modelStack.Rotate(-sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
 	modelStack.Scale(3.5, 3.5, 3.5);
 	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(2.25, 4.5, 0);
-	modelStack.Rotate(rotateleftleg, 1, 0, 0);
+	modelStack.Rotate(sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
 	modelStack.Scale(3.5, 3.5, 3.5);
 	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
 	modelStack.PopMatrix();
@@ -1137,5 +1086,26 @@ void SceneShaqeel::Exit() {
 }
 
 void SceneShaqeel::Reset() {
+	Mtx44 projection;
+	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
+	projectionStack.LoadMatrix(projection);
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)30);
+	camera.orthographic_size = 45.f;
 
+	sceneFloats[F_TRANSLATE_TRUCK_Z] = 10;
+	sceneFloats[F_BUS_Z] = 0;
+	sceneFloats[F_TRANSLATE_CAR1_Z] = -10;
+	sceneFloats[F_TRANSLATE_CAR2_Z] = 20;
+	sceneFloats[F_ROTATE_DOOR] = 90;
+	sceneFloats[F_TRANSLATE_WORD_Y] = 1000;
+	sceneFloats[F_ROTATE_LEFT_LEG] = 0;
+	sceneFloats[F_ROTATE_RIGHT_LEG] = 0;
+	sceneFloats[F_TRANSLATE_SPHERE_Z] = -19.6;
+	sceneFloats[F_TRANSLATE_SPHERE_Z_2] = 19.6;
+	sceneFloats[F_TRANSLATE_PLANE_X] = 40;
+	sceneFloats[F_TRANSLATE_PLANE_Z] = 10;
+
+	sceneBools[B_LEFT_LEG_LIMIT] = false;
+	sceneBools[B_LEFT_LEG_LIMIT_2] = false;
+	sceneBools[B_RIGHT_LEG_LIMIT] = false;
 }

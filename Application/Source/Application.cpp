@@ -40,6 +40,7 @@ int Player::money;
 int Player::sword;
 int Player::armourplate;
 int Player::helmet;
+bool Player::jetpackequipped;
 
 unsigned Player::getAmmo() {
 	return ammo;
@@ -68,6 +69,11 @@ int Player::getHelmet()
 	return helmet;
 }
 
+int Player::getJetpack()
+{
+	return jetpackequipped;
+}
+
 void Player::setAmmo(unsigned a) {
 	ammo = a;
 }
@@ -92,6 +98,11 @@ void Player::setArmourplate(int ap)
 void Player::setHelmet(int ht)
 {
 	helmet = ht;
+}
+
+void Player::setJetpack(bool jp)
+{
+	jetpackequipped = jp;
 }
 
 std::set<unsigned short> Application::activeKeys;
@@ -119,23 +130,24 @@ static void scroll_callback(GLFWwindow* window, double nan, double offSet) {
 }
 
 static void mouse_callback(GLFWwindow* window, double x, double y) {
-	if (x < Application::m_width / 2) {
+	if (x < Application::GetWindowWidth() / 2) {
 		mouse.left = true;
 		mouse.right = false;
-		mouse.x = (Application::m_width / 2) - x;
-	} else if (x > Application::m_width / 2) {
+		mouse.x = (Application::GetWindowWidth() / 2) - x;
+	} else if (x > Application::GetWindowWidth() / 2) {
 		mouse.left = false;
 		mouse.right = true;
-		mouse.x = x - (Application::m_width / 2);
+		mouse.x = x - (Application::GetWindowWidth() / 2);
 	}
-	if (y < Application::m_height / 2) {
+
+	if (y < Application::GetWindowHeight() / 2) {
 		mouse.up = true;
 		mouse.down = false;
-		mouse.y = (Application::m_height / 2) - y;
-	} else if (y > Application::m_height / 2) {
+		mouse.y = (Application::GetWindowHeight() / 2) - y;
+	} else if (y > Application::GetWindowHeight() / 2) {
 		mouse.up = false;
 		mouse.down = true;
-		mouse.y = y - (Application::m_height / 2);
+		mouse.y = y - (Application::GetWindowHeight() / 2);
 	}
 }
 
@@ -245,6 +257,7 @@ void Application::Init() {
 	Player::setMoney(100);
 	Player::setAmmo(256);
 	Player::setHealth(100);
+	Player::setJetpack(false);
 	// sword armour and helmet all zero so dun need initalise
 	m_window = glfwCreateWindow(m_width, m_height, "SP2 - Group 2", NULL, NULL);
 	quit = restart = false;
@@ -329,7 +342,8 @@ void Application::Run() {
 	// Main Loop
 	while (!glfwWindowShouldClose(m_window) && !Application::quit) {
 		for (std::set<unsigned short>::iterator i = activeKeys.begin(); i != activeKeys.end(); i++) {
-			if (((GetAsyncKeyState(*i) & 0x8001) != 0)) continue;
+			unsigned short key = *i;
+			if ((GetAsyncKeyState(key) & 0x8001) != 0) continue;
 			else {
 				activeKeys.erase(i);
 				break;
@@ -364,8 +378,22 @@ void Application::Run() {
 		// Toggle mouse states depending on scene
 		toggleState();
 
+		switch (Application::sceneswitch) {
+		case Application::MENUSCENE:
+			Application::sceneswitch = Application::previousscene;
+			break;
+		case Application::STARTSCENE:
+		case Application::WINSCENE:
+			break;
+		default:
+			if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
+				Application::previousscene = Application::sceneswitch;
+				Application::sceneswitch = MENUSCENE;
+			}
+			break;
+		}
+
 		// Switch scenes
-		Application::previousscene = Application::sceneswitch;
 		switch (Application::sceneswitch) {
 		case Application::SCENESHAQ:
 			if (Application::IsKeyPressedOnce(VK_F1)) {

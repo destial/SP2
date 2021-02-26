@@ -7,7 +7,7 @@
 #include "Light.h"
 #include "Camera3.h"
 
-class SceneOfTheBeach : public Scene
+class SceneOfTheBeach : public Scene 
 {
 	enum GEOMETRY_TYPE
 	{
@@ -77,30 +77,37 @@ class SceneOfTheBeach : public Scene
 		U_TOTAL,
 	};
 
+	enum SCENE_FLOATS 
+	{
+		CRAB_MOVING,
+		CRAB_SPEED,
+		RANDOM_MOVE,
+		ROTATE_DOLPHIN,
 
+		NUM_SCENE_FLOATS
+	};
+
+	enum SCENE_BOOLS 
+	{
+		ROTATE,
+		OPEN_TEXT_BOX,
+		GL,
+
+		NUM_SCENE_BOOLS
+	};
 private:
+	MS modelStack, viewStack, projectionStack;
+
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
 	unsigned m_colorBuffer[NUM_GEOMETRY];
 	unsigned m_indexBuffer[NUM_GEOMETRY];
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	void RenderSkybox();
-
-	bool gl;
-
-	float CrabMoving;
-	float Crabspeed;
-	float RandomMove;
-
-	float rotatedolphin;
-
-	bool rotate;
-	bool OpenTextBox;
+	bool sceneBools[NUM_SCENE_BOOLS];
+	float sceneFloats[NUM_SCENE_FLOATS];
 	Mesh* meshList[NUM_GEOMETRY];
-
 	Light light[2];
-
 	Camera3 camera;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
@@ -109,13 +116,11 @@ private:
 	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 	void RenderQuad();
+	void RenderSkybox();
 	int Direction(float value);
 	void RenderNPC();
 	void RenderUI();
-
-
 public:
-
 	SceneOfTheBeach();
 	~SceneOfTheBeach();
 
@@ -127,20 +132,6 @@ public:
 	virtual void Render();
 	virtual void Exit();
 	virtual void Reset();
-
-	Color RED = Color(1.f, 0.f, 0.f);
-	Color GREEN = Color(0.f, 1.f, 0.f);
-	Color BLUE = Color(0.f, 0.f, 1.f);
-	Color WHITE = Color(1.f, 1.f, 1.f);
-	Color YELLOW = Color(1.f, 1.f, 0.f);
-	Color PURPLE = Color(1.f, 0.f, 1.f);
-	Color CYAN = Color(0.f, 1.f, 1.f);
-	Color BROWN = Color(.6f, .1f, .2f);
-	Color BLACK = Color(0.f, 0.f, 0.f);
-	Color ORANGE = Color((195 / 255), (82 / 255), (20 / 255));
-	Color GRAY = Color(0.4f, 0.4f, 0.4f);
-
-	MS modelStack, viewStack, projectionStack;
 };
 
 #endif

@@ -45,24 +45,6 @@ void SceneXL::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneXL::PrintPosition()
-{
-	std::stringstream ssX;
-	std::stringstream ssY;
-	std::stringstream ssZ;
-	ssX.precision(3);
-	ssX << "Xupdata:" << camera.position.x;
-	ssX.precision(3);
-	ssX << "Y:" << camera.position.y;
-	ssZ.precision(3);
-	ssZ << "Z:" << camera.position.z;
-
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.000, 1.000, 0.498), 3, 0, 3);
-	modelStack.PopMatrix();
-}
-
 void SceneXL::Init()
 {
 	// Clear background color to blue
@@ -293,7 +275,7 @@ void SceneXL::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, floa
 }
 
 
-bool SceneXL::isNear(Mesh* mesh, const float& distance)
+bool SceneXL::isNear(Mesh* mesh, const float& distance) 
 {
 	if (mesh->type == Mesh::TYPE::OBJECT) {
 		return (camera.position.x <= (mesh->transform.translate.x + distance) &&
@@ -304,7 +286,7 @@ bool SceneXL::isNear(Mesh* mesh, const float& distance)
 	return false;
 }
 
-void SceneXL::DetectGnome()
+void SceneXL::DetectGnome() //detects if you have interacted with the gnome or not, if yes then gnomed
 {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
@@ -341,7 +323,7 @@ void SceneXL::DetectGnome()
 	}
 }
 
-void SceneXL::RenderGnome()
+void SceneXL::RenderGnome() //rendering of the gnome
 {
 	if (meshList[GEO_GNOME] && !sceneBools[B_GOT_GNOMED])
 	{
@@ -353,7 +335,7 @@ void SceneXL::RenderGnome()
 	}
 }
 
-void SceneXL::RenderMinigame()
+void SceneXL::RenderMinigame() //rendering of the minigames
 {
 	for (int i = 0; i < targetList.size(); i++ && sceneBools[B_MOVING_DUMMY] == false)
 	{
@@ -369,7 +351,7 @@ void SceneXL::RenderMinigame()
 	} //10 target dummies for the minigame/target shooting
 }
 
-void SceneXL::RenderSurroundings()
+void SceneXL::RenderSurroundings() //scene decorations
 {
 	modelStack.PushMatrix();
 	modelStack.Translate(-1.07, 1, -50);
@@ -443,7 +425,7 @@ void SceneXL::RenderSurroundings()
 	modelStack.PopMatrix(); //drop tower
 }
 
-void SceneXL::DetectJetpack()
+void SceneXL::DetectJetpack() //Detecting whether the jetpack has been interacted or not
 {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
@@ -474,7 +456,7 @@ void SceneXL::DetectJetpack()
 	}
 }
 
-void SceneXL::RenderJetpack()
+void SceneXL::RenderJetpack() //render my jetpack
 {
 	if (meshList[GEO_JETPACK] && !Player::getJetpack())
 	{
@@ -486,6 +468,7 @@ void SceneXL::RenderJetpack()
 	}
 }
 
+//checks if the bullets are near the dummy for the collision
 bool isNearDummy(GameObject* o1, MinigameEntity* o2, const float& distance = 1.f) {
 	if (!o1 && !o2) return false;
 	float d = Math::sqrt(Math::Square(o1->transform->translate.x - (1.55 + o2->pos.x)) + Math::Square(o1->transform->translate.z - (o2->pos.z - 79)));
@@ -498,12 +481,12 @@ void SceneXL::Update(double dt, Mouse mouse) {
 	}
 	sceneFloats[F_ROTATE_ANGLE] += (float)(50 * dt);
 
-	if (Player::getJetpack() == false)
+	if (Player::getJetpack() == false) //if there is no jetpack, the camera is normal
 	{
 		camera.Update(dt, mouse);
 	}
 
-	if (Player::getJetpack() == true)
+	if (Player::getJetpack() == true)//if there is no jetpack, the camera is updated to jetpack mode, able to fly.
 	{
 		camera.UpdateFlying(dt, mouse);
 	}
@@ -958,7 +941,7 @@ void SceneXL::Render()
 	RenderJetpack();
 	DetectJetpack();
 
-	PrintPosition();
+
 
 	DetectGnome();
 	RenderGnome();

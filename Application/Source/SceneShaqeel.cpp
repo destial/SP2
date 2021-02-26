@@ -909,13 +909,6 @@ void SceneShaqeel::Rendertrees()
 	modelStack.Scale(0.5, 0.25, 0.25);
 	RenderMesh(meshList[GEO_TREE], true);
 	modelStack.PopMatrix();
-
-    modelStack.PushMatrix();
-	modelStack.Translate(-18, -1.9, 18);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.06, 0.06, 0.06);
-	RenderMesh(meshList[GEO_BUSH], true);
-	modelStack.PopMatrix();
 }
 
 // buildings, streetlight, mart etc...

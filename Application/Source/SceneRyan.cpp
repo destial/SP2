@@ -216,28 +216,37 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 	if (Application::previousscene != Application::SCENERYAN) {
 		InitGL();
 	}
-	
+	//Ensures distance between player and shark is positive
 	float dist = Math::sqrt(Math::Square(camera.SharkPos.x - camera.position.x + Math::Square(camera.SharkPos.z - camera.position.z)));
 
+	//The shark hitbox agaisnt the player
 	if (dist < 1)
 	{
 		Application::sceneswitch = Application::SCENEBEACH;
 	}
-
+	//Player must survive 5 shark attack then will switch to next scene on the 6th attack
 	if (sceneInts[SURVIVE_COUNTER] == 6)
 	{
 		//something like bool win = true
 		Application::sceneswitch = Application::SCENEBEACH;
 	}
 
-
+	//Make Camera slowly pan down
 	if (sceneBools[SCENE_TRANSITION] == true)
 	{
+		//
 		if (sceneInts[SCENE_COUNTER] == 0)
 		{
 			camera.position.y = 60;
 			sceneInts[SCENE_COUNTER]++;
 		}
+		camera.position.y -= 0.1;
+		if (camera.position.y <= 8)
+		{
+			sceneBools[SCENE_TRANSITION] = false;
+		}
+
+		//Shark animation
 		if (sceneBools[ROTATE] == true)
 		{
 			sceneFloats[ROTATE_TAIL] += 1;
@@ -256,14 +265,11 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 		}
 		sceneInts[SHARK_CIRCLE] += 1;
 		sceneFloats[SHARK_CIRCLE_ANGLE] += 0.5;
-		camera.position.y -= 0.05;
-		if (camera.position.y <= 8)
-		{
-			sceneBools[SCENE_TRANSITION] = false;
-		}
+
 	}
 	else
 	{
+		//Shark animation
 		if (sceneBools[ROTATE] == true)
 		{
 			sceneFloats[ROTATE_TAIL] += 1;
@@ -284,8 +290,10 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 		{
 			sceneBools[SHARK_ATTACK] = true;
 		}
+		//Shark attack starts
 		if (sceneBools[SHARK_ATTACK] == true && (sceneInts[SHARK_CIRCLE] % 720) == 0)
 		{
+			//Takes the current position of player
 			if (sceneInts[TEMP_COUNTER] == 0)
 			{
 				camera.SharkChaseinit();
@@ -297,9 +305,9 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 
 			if (camera.SharkPos.x > 30)
 			{
-				sceneFloats[ROTATE_SHARK] -= 0.5;
-				camera.SharkPos.y += 0.1;
-				camera.SharkChaseMove();
+				sceneFloats[ROTATE_SHARK] -= 0.5;//Rotate Shark to face player
+				camera.SharkPos.y += 0.1;//Shark jumps from the water
+				camera.SharkChaseMove();//Shark moves to the temp position of player
 			}
 			else if (camera.SharkPos.x > 30)
 			{
@@ -315,6 +323,7 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 			}
 			else
 			{
+				//Reset
 				camera.SharkPos.x = 100;
 				camera.SharkPos.z = 0;
 				sceneFloats[SHARK_DIRECTION] = 0;

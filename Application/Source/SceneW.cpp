@@ -264,7 +264,6 @@ void SceneW::Update(double dt, Mouse mouse) {
 		{
 			sceneBools[B_CHEST_OPEN_1] = true;
 			/*sceneFloats[F_ROTATE_CHEST_1] -= (float)(40 * dt);*/
-			sceneBools[B_PARTICLES_SPAWN_1] = true;
 			sceneBools[B_CLAYMORE_SPAWN] = true;
 			/*if (sceneFloats[F_ROTATE_CHEST_1] <= -70)
 			{
@@ -503,55 +502,26 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (sceneBools[B_PARTICLES_SPAWN_1])
-	{
-		if (sceneVectors[V_SCALE_SP].x < 0.5 && sceneVectors[V_SCALE_SP].y < 0.65 && sceneVectors[V_SCALE_SP].z < 0.5 && !sceneBools[B_PARTICLES_LIMIT_1]) //does not bendup z -
-		{
-			sceneVectors[V_SCALE_SP].x += (float)(1 * dt);
-			sceneVectors[V_SCALE_SP].y += (float)(1.3 * dt);
-			sceneVectors[V_SCALE_SP].z += (float)(1 * dt);
-		}
-
-		else if (sceneVectors[V_SCALE_SP].x >= 0.5 && sceneVectors[V_SCALE_SP].y >= 0.65 && sceneVectors[V_SCALE_SP].z >= 0.5)
-		{
-			sceneBools[B_PARTICLES_LIMIT_1] = true;
-		}
-
-		if (sceneVectors[V_TRANSLATE_SPHERE_1].y >= -3.5 && sceneVectors[V_TRANSLATE_SPHERE_1].y < 3.5 && !sceneBools[B_HEIGHT_LIMIT_4])
-		{
-			sceneVectors[V_TRANSLATE_SPHERE_1].y += (float)(1 * dt);
-			sceneVectors[V_TRANSLATE_SPHERE_1].x += (float)(0.3 * dt);
-			sceneVectors[V_TRANSLATE_SPHERE_2].x -= (float)(0.3 * dt);
-		}
-		else if (sceneVectors[V_TRANSLATE_SPHERE_1].y >= 3.5)
-		{
-			sceneBools[B_HEIGHT_LIMIT_4] = true;
-		}
-		if (sceneBools[B_HEIGHT_LIMIT_4])
-		{
-			sceneVectors[V_TRANSLATE_SPHERE_1].x = 1000;
-			sceneVectors[V_TRANSLATE_SPHERE_2].x = 1000;
-		}
-
-	}
-
 	if (Application::IsKeyPressedOnce('R'))
 	{
-		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && sceneBools[B_CLAYMORE_LIMIT])
+		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 
+			&& sceneBools[B_CLAYMORE_LIMIT] && sceneBools[B_COLLECTED_CLAYMORE] == false)
 		{
 			sceneVectors[V_CLAYMORE].x = 1000;
 			sceneBools[B_COLLECTED_CLAYMORE] = true;
 			Player::setSword(Player::getSword() + 1);
 		}
 
-		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && sceneBools[B_ARMOR_LIMIT])
+		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 &&
+			sceneBools[B_ARMOR_LIMIT] && sceneBools[B_COLLECTED_ARMOR] == false)
 		{
 			sceneVectors[V_ARMOR].x = 1000;
 			sceneBools[B_COLLECTED_ARMOR] = true;
 			Player::setArmourplate(Player::getArmourplate() + 1);
 		}
 
-		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && sceneBools[B_HELMET_LIMIT])
+		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 &&
+			sceneBools[B_HELMET_LIMIT] && sceneBools[B_COLLECTED_HELMET] == false)
 		{
 			sceneVectors[V_HELMET].x = 1000;
 			sceneBools[B_COLLECTED_HELMET] = true;
@@ -1136,21 +1106,6 @@ void SceneW::RenderBoxes() {
 	modelStack.Scale(1, 1, 1);
 	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
-}
-
-void SceneW::RenderParticles()
-{
-	/*modelStack.PushMatrix();
-	modelStack.Translate(sceneVectors[V_TRANSLATE_SPHERE_1].x, sceneVectors[V_TRANSLATE_SPHERE_1].y, 43);
-	modelStack.Scale(sceneVectors[V_SCALE_SP].x, sceneVectors[V_SCALE_SP].y, sceneVectors[V_SCALE_SP].z);
-	RenderMesh(meshList[GEO_SPHERE], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(sceneVectors[V_TRANSLATE_SPHERE_2].x, sceneVectors[V_TRANSLATE_SPHERE_1].y, 43);
-	modelStack.Scale(sceneVectors[V_SCALE_SP].x, sceneVectors[V_SCALE_SP].y, sceneVectors[V_SCALE_SP].z);
-	RenderMesh(meshList[GEO_SPHERE2], true);
-	modelStack.PopMatrix();*/
 }
 
 void SceneW::RenderItems() // inside chest
@@ -2227,20 +2182,6 @@ void SceneW::Reset() {
 	sceneBools[B_COLLECTED_HELMET] = false;
 
 	sceneBools[B_DOOR_OPEN] = false;
-
-	sceneVectors[V_TRANSLATE_SPHERE_1].x = -45.7;
-	sceneVectors[V_TRANSLATE_SPHERE_1].y = 1;
-
-	sceneVectors[V_TRANSLATE_SPHERE_2].x = -47;
-
-	sceneVectors[V_SCALE_SP].x = 0.1;
-	sceneVectors[V_SCALE_SP].y = 0.1;
-	sceneVectors[V_SCALE_SP].z = 0.1;
-
-	sceneBools[B_PARTICLES_SPAWN_1] = false;
-	sceneBools[B_PARTICLES_LIMIT_1] = false;
-
-	sceneBools[B_HEIGHT_LIMIT_4] = false;
 
 	if (sceneManager) {
 		delete sceneManager;

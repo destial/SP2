@@ -239,6 +239,9 @@ void SceneW::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 }
 
 void SceneW::Update(double dt, Mouse mouse) {
+	if (Application::previousscene != Application::SCENEWALTON) {
+		InitGL();
+	}
 
 	if (Application::IsKeyPressedOnce('F'))
 	{
@@ -255,9 +258,9 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 	}
 
-	if (Application::IsKeyPressed('E'))
+	if (Application::IsKeyPressed('E')) // to open chest and door
 	{
-		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && sceneBools[B_CHEST_LIMIT_1] == false)
+		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && !sceneBools[B_CHEST_LIMIT_1])
 		{
 			sceneBools[B_CHEST_OPEN_1] = true;
 			/*sceneFloats[F_ROTATE_CHEST_1] -= (float)(40 * dt);*/
@@ -269,7 +272,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 			}*/
 		}
 
-		if (camera.position.x <= -18 && camera.position.x >= -28 && camera.position.z <= 16.5 && camera.position.z >= 13.5 && sceneBools[B_CHEST_LIMIT_2] == false)
+		if (camera.position.x <= -18 && camera.position.x >= -28 && camera.position.z <= 16.5 && camera.position.z >= 13.5 && !sceneBools[B_CHEST_LIMIT_2])
 		{
 			sceneBools[B_CHEST_OPEN_2] = true;
 			/*sceneFloats[F_ROTATE_CHEST_2] -= (float)(40 * dt);*/
@@ -279,7 +282,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 			}*/
 		}
 
-		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && sceneBools[B_CHEST_LIMIT_3] == false)
+		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && !sceneBools[B_CHEST_LIMIT_3])
 		{
 			sceneBools[B_CHEST_OPEN_3] = true;
 			/*sceneFloats[F_ROTATE_CHEST_3] -= (float)(45 * dt);*/
@@ -290,7 +293,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 			}*/
 		}
 
-		if (camera.position.x <= 36.6 && camera.position.x >= 29.4 && camera.position.z <= -26.3 && camera.position.z >= -36.3 && sceneBools[B_CHEST_LIMIT_4] == false)
+		if (camera.position.x <= 36.6 && camera.position.x >= 29.4 && camera.position.z <= -26.3 && camera.position.z >= -36.3 && !sceneBools[B_CHEST_LIMIT_4])
 		{
 			sceneBools[B_CHEST_OPEN_4] = true;
 			/*sceneFloats[F_ROTATE_CHEST_4] -= (float)(40 * dt);*/
@@ -300,7 +303,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 			}*/
 		}
 
-		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && sceneBools[B_CHEST_LIMIT_5] == false)
+		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && !sceneBools[B_CHEST_LIMIT_5])
 		{
 			sceneBools[B_CHEST_OPEN_5] = true;
 			/*sceneFloats[F_ROTATE_CHEST_5] -= (float)(45 * dt);*/
@@ -318,7 +321,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 	}
 
-	if (sceneBools[B_DOOR_OPENED] == true)
+	if (sceneBools[B_DOOR_OPENED])
 	{
 		if (!sceneBools[B_STOP_DOOR_OPEN])
 		{
@@ -331,7 +334,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (sceneBools[B_CHEST_OPEN_1] == true)
+	if (sceneBools[B_CHEST_OPEN_1])
 	{
 		if (!sceneBools[B_CHEST_LIMIT_1])
 		{
@@ -344,7 +347,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (sceneBools[B_CHEST_OPEN_2] == true)
+	if (sceneBools[B_CHEST_OPEN_2])
 	{
 		if (!sceneBools[B_CHEST_LIMIT_2])
 		{
@@ -357,7 +360,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (sceneBools[B_CHEST_OPEN_3] == true)
+	if (sceneBools[B_CHEST_OPEN_3])
 	{
 		if (!sceneBools[B_CHEST_LIMIT_3])
 		{
@@ -370,7 +373,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (sceneBools[B_CHEST_OPEN_4] == true)
+	if (sceneBools[B_CHEST_OPEN_4])
 	{
 		if (!sceneBools[B_CHEST_LIMIT_4])
 		{
@@ -383,7 +386,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (sceneBools[B_CHEST_OPEN_5] == true)
+	if (sceneBools[B_CHEST_OPEN_5])
 	{
 		if (!sceneBools[B_CHEST_LIMIT_5])
 		{
@@ -396,15 +399,15 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Application::IsKeyPressed('F'))
+	if (Application::IsKeyPressed('F')) // F to leave area at the end of the maze (open door first)
 	{
 		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && sceneBools[B_STOP_DOOR_OPEN] == true)
 		{
-			Application::sceneswitch = Application::OVERWORLD;
+			Application::sceneswitch = Application::OVERWORLD; // f will bring you back to overworld
 		}
 	}
 
-	if (sceneBools[B_CLAYMORE_SPAWN] == true)
+	if (sceneBools[B_CLAYMORE_SPAWN])
 	{
 		if (sceneVectors[V_SCALE_CLAYMORE].x < 1.05 && sceneVectors[V_SCALE_CLAYMORE].y < 1.05 && sceneVectors[V_SCALE_CLAYMORE].z < 1.05 && sceneBools[B_CLAYMORE_LIMIT] == false) //does not bendup z -
 		{
@@ -418,7 +421,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 			//rotateAngle2;
 		}
 
-		if (sceneVectors[V_CLAYMORE].y > 1.5 && sceneBools[B_HEIGHT_LIMIT_1] == false)
+		if (sceneVectors[V_CLAYMORE].y > 1.5 && !sceneBools[B_HEIGHT_LIMIT_1])
 		{
 			sceneVectors[V_CLAYMORE].y -= (float)(2 * dt);
 		}
@@ -426,7 +429,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		{
 			sceneBools[B_HEIGHT_LIMIT_1] = true;
 		}
-		if (sceneVectors[V_CLAYMORE].y >= -3.5 && sceneVectors[V_CLAYMORE].y < 3.5 && sceneBools[B_HEIGHT_LIMIT_1] == true)
+		if (sceneVectors[V_CLAYMORE].y >= -3.5 && sceneVectors[V_CLAYMORE].y < 3.5 && sceneBools[B_HEIGHT_LIMIT_1])
 		{
 			sceneVectors[V_CLAYMORE].y += (float)(2 * dt);
 		}
@@ -436,9 +439,9 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (sceneBools[B_ARMOR_SPAWN] == true)
+	if (sceneBools[B_ARMOR_SPAWN])
 	{
-		if (sceneVectors[V_SCALE_ARMOR].x < 0.4 && sceneVectors[V_SCALE_ARMOR].y < 0.4 && sceneVectors[V_SCALE_ARMOR].z < 0.4 && sceneBools[B_ARMOR_LIMIT] == false) //does not bendup z -
+		if (sceneVectors[V_SCALE_ARMOR].x < 0.4 && sceneVectors[V_SCALE_ARMOR].y < 0.4 && sceneVectors[V_SCALE_ARMOR].z < 0.4 && !sceneBools[B_ARMOR_LIMIT]) //does not bendup z -
 		{
 			sceneVectors[V_SCALE_ARMOR].x += (float)(0.1 * dt);
 			sceneVectors[V_SCALE_ARMOR].y += (float)(0.1 * dt);
@@ -450,7 +453,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 			//rotateAngle2;
 		}
 		
-		if (sceneVectors[V_ARMOR].y > 1 && sceneBools[B_HEIGHT_LIMIT_2] == false)
+		if (sceneVectors[V_ARMOR].y > 1 && !sceneBools[B_HEIGHT_LIMIT_2])
 		{
 			sceneVectors[V_ARMOR].y -= (float)(1 * dt);
 		}
@@ -458,7 +461,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		{
 			sceneBools[B_HEIGHT_LIMIT_2] = true;
 		}
-		if (sceneVectors[V_ARMOR].y >= -3.5 && sceneVectors[V_ARMOR].y < 3.5 && sceneBools[B_HEIGHT_LIMIT_2] == true)
+		if (sceneVectors[V_ARMOR].y >= -3.5 && sceneVectors[V_ARMOR].y < 3.5 && sceneBools[B_HEIGHT_LIMIT_2])
 		{
 			sceneVectors[V_ARMOR].y += (float)(1 * dt);
 		}
@@ -468,9 +471,9 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (sceneBools[B_HELMET_SPAWN] == true)
+	if (sceneBools[B_HELMET_SPAWN])
 	{
-		if (sceneVectors[V_SCALE_HELMET].x < 2 && sceneVectors[V_SCALE_HELMET].y < 2 && sceneVectors[V_SCALE_HELMET].z < 2 && sceneBools[B_HELMET_LIMIT] == false) //does not bendup z -
+		if (sceneVectors[V_SCALE_HELMET].x < 2 && sceneVectors[V_SCALE_HELMET].y < 2 && sceneVectors[V_SCALE_HELMET].z < 2 && !sceneBools[B_HELMET_LIMIT]) //does not bendup z -
 		{
 			sceneVectors[V_SCALE_HELMET].x += (float)(1 * dt);
 			sceneVectors[V_SCALE_HELMET].y += (float)(1 * dt);
@@ -482,7 +485,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 			sceneBools[B_HELMET_LIMIT] = true;
 		}
 
-		if (sceneVectors[V_HELMET].y > 1.5 && sceneBools[B_HEIGHT_LIMIT_3] == false)
+		if (sceneVectors[V_HELMET].y > 1.5 && sceneBools[B_HEIGHT_LIMIT_3])
 		{
 			sceneVectors[V_HELMET].y -= (float)(1 * dt);
 		}
@@ -490,7 +493,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		{
 			sceneBools[B_HEIGHT_LIMIT_3] = true;
 		}
-		if (sceneVectors[V_HELMET].y >= -3.5 && sceneVectors[V_HELMET].y < 3.5 && sceneBools[B_HEIGHT_LIMIT_3] == true)
+		if (sceneVectors[V_HELMET].y >= -3.5 && sceneVectors[V_HELMET].y < 3.5 && sceneBools[B_HEIGHT_LIMIT_3])
 		{
 			sceneVectors[V_HELMET].y += (float)(1 * dt);
 		}
@@ -500,9 +503,9 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (sceneBools[B_PARTICLES_SPAWN_1] == true)
+	if (sceneBools[B_PARTICLES_SPAWN_1])
 	{
-		if (sceneVectors[V_SCALE_SP].x < 0.5 && sceneVectors[V_SCALE_SP].y < 0.65 && sceneVectors[V_SCALE_SP].z < 0.5 && sceneBools[B_PARTICLES_LIMIT_1] == false) //does not bendup z -
+		if (sceneVectors[V_SCALE_SP].x < 0.5 && sceneVectors[V_SCALE_SP].y < 0.65 && sceneVectors[V_SCALE_SP].z < 0.5 && !sceneBools[B_PARTICLES_LIMIT_1]) //does not bendup z -
 		{
 			sceneVectors[V_SCALE_SP].x += (float)(1 * dt);
 			sceneVectors[V_SCALE_SP].y += (float)(1.3 * dt);
@@ -514,7 +517,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 			sceneBools[B_PARTICLES_LIMIT_1] = true;
 		}
 
-		if (sceneVectors[V_TRANSLATE_SPHERE_1].y >= -3.5 && sceneVectors[V_TRANSLATE_SPHERE_1].y < 3.5 && sceneBools[B_HEIGHT_LIMIT_4] == false)
+		if (sceneVectors[V_TRANSLATE_SPHERE_1].y >= -3.5 && sceneVectors[V_TRANSLATE_SPHERE_1].y < 3.5 && !sceneBools[B_HEIGHT_LIMIT_4])
 		{
 			sceneVectors[V_TRANSLATE_SPHERE_1].y += (float)(1 * dt);
 			sceneVectors[V_TRANSLATE_SPHERE_1].x += (float)(0.3 * dt);
@@ -524,7 +527,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		{
 			sceneBools[B_HEIGHT_LIMIT_4] = true;
 		}
-		if (sceneBools[B_HEIGHT_LIMIT_4] == true)
+		if (sceneBools[B_HEIGHT_LIMIT_4])
 		{
 			sceneVectors[V_TRANSLATE_SPHERE_1].x = 1000;
 			sceneVectors[V_TRANSLATE_SPHERE_2].x = 1000;
@@ -534,21 +537,21 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressedOnce('R'))
 	{
-		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && sceneBools[B_CLAYMORE_LIMIT] == true)
+		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && sceneBools[B_CLAYMORE_LIMIT])
 		{
 			sceneVectors[V_CLAYMORE].x = 1000;
 			sceneBools[B_COLLECTED_CLAYMORE] = true;
 			Player::setSword(Player::getSword() + 1);
 		}
 
-		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && sceneBools[B_ARMOR_LIMIT] == true)
+		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && sceneBools[B_ARMOR_LIMIT])
 		{
 			sceneVectors[V_ARMOR].x = 1000;
 			sceneBools[B_COLLECTED_ARMOR] = true;
 			Player::setArmourplate(Player::getArmourplate() + 1);
 		}
 
-		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && sceneBools[B_HELMET_LIMIT] == true)
+		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && sceneBools[B_HELMET_LIMIT])
 		{
 			sceneVectors[V_HELMET].x = 1000;
 			sceneBools[B_COLLECTED_HELMET] = true;
@@ -897,12 +900,14 @@ void SceneW::Render()
 	RenderSkybox();
 	RenderRoom();
 	
+	// ground mesh
 	modelStack.PushMatrix();
 	modelStack.Translate(0, .1, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 	
+	// instruction on the wall
 	modelStack.PushMatrix();
 	modelStack.Translate(-49.5, 10, 0);
 	modelStack.Rotate(90, 0, 1, 0);
@@ -927,6 +932,7 @@ void SceneW::Render()
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderText(meshList[GEO_TEXT], "treasures", Colors::RED);
 	modelStack.PopMatrix();
+	// Instruction on how to open chest and get equipment
 	modelStack.PushMatrix();
 	modelStack.Translate(-43, 10, 44.8);
 	modelStack.Rotate(180, 0, 1, 0);
@@ -952,7 +958,7 @@ void SceneW::Render()
 	RenderText(meshList[GEO_TEXT], "collect treasures", Colors::RED);
 	modelStack.PopMatrix();
 
-	RenderBoxes();
+	RenderBoxes(); // boxes are chests
 	RenderMaze();
 
 	std::stringstream ssX;
@@ -972,8 +978,7 @@ void SceneW::Render()
 
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, -3);
 	RenderUI();
-	RenderItems();
-	/*RenderParticles();*/
+	RenderItems(); 
 }
 
 void SceneW::Exit() {
@@ -1046,7 +1051,7 @@ void SceneW::RenderRoom() {
 	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();
-
+	// cube to interact and go to other scene
 	modelStack.PushMatrix();
 	modelStack.Translate(25.3, 0, 51.5);
 	modelStack.Scale(0.65, 2.5, 1);
@@ -1056,8 +1061,8 @@ void SceneW::RenderRoom() {
 }
 
 void SceneW::RenderBoxes() {
-	
-	modelStack.PushMatrix();
+	// chest 1
+	modelStack.PushMatrix(); // splited up chest top and bottom
 	modelStack.Translate(-46.5, 2, 45);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Rotate(sceneFloats[F_ROTATE_CHEST_1], 1, 0, 0);
@@ -1072,7 +1077,7 @@ void SceneW::RenderBoxes() {
 	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
 
-	// Box 2
+	// chest 2
 	modelStack.PushMatrix();
 	modelStack.Translate(-20, 1.4, 15);
 	modelStack.Rotate(270, 0, 1, 0);
@@ -1088,14 +1093,7 @@ void SceneW::RenderBoxes() {
 	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
 
-	// Box 3
-	//modelStack.PushMatrix();
-	//modelStack.Translate(-24, 0, 34);
-	////modelStack.Rotate(90, 0, 1, 0);
-	//modelStack.Scale(10, 10, 10);
-	//RenderMesh(meshList[BOX], true);
-	//modelStack.PopMatrix();
-
+	// chest 3
 	modelStack.PushMatrix();
 	modelStack.Translate(-24, 1.4, 35);
 	modelStack.Rotate(90, 0, 1, 0);
@@ -1111,13 +1109,7 @@ void SceneW::RenderBoxes() {
 	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
 
-	// Box 4
-	/*modelStack.PushMatrix();
-	modelStack.Translate(33.5, 0, -35);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[BOX], true);
-	modelStack.PopMatrix();*/
-
+	// chest 4
 	modelStack.PushMatrix();
 	modelStack.Translate(33.5, 1.4, -35);
 	modelStack.Rotate(sceneFloats[F_ROTATE_CHEST_4], 1, 0, 0);
@@ -1131,14 +1123,7 @@ void SceneW::RenderBoxes() {
 	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
 
-	// Box 5
-	/*modelStack.PushMatrix();
-	modelStack.Translate(20, 0, -5);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[BOX], true);
-	modelStack.PopMatrix();*/
-
+	// chest 5
 	modelStack.PushMatrix();
 	modelStack.Translate(20, 1.4, -5);
 	modelStack.Rotate(sceneFloats[F_ROTATE_CHEST_5], 1, 0, 0);
@@ -1211,7 +1196,7 @@ void SceneW::RenderMaze() {
 	}
 }
 
-void SceneW::CreateMaze() {
+void SceneW::CreateMaze() { // Use for collision
 	GameObject* object = new GameObject(meshList[MWALL]);
 	object->transform->Translate(-40, 2.5, -50);
 	object->transform->Scale(5, 5, 5);

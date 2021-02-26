@@ -278,6 +278,9 @@ void SceneShaqler::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) 
 }
 
 void SceneShaqler::Update(double dt, Mouse mouse) {
+	if (Application::previousscene != Application::SCENESHAQLER) {
+		InitGL();
+	}
 	sceneFloats[F_ROTATE_BOOK] += (float)(40 * dt);
 
 	if (sceneVectors[V_BOOK].y > 2.85 && sceneBools[B_HEIGHT_LIMIT] == false)
@@ -297,9 +300,11 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		sceneBools[B_HEIGHT_LIMIT] = false;
 	}
 
-	if (Application::IsKeyPressed('E')) // -0.685 and 4.75 for z x// -12.5 -15
+
+	if (Application::IsKeyPressed('E')) // E to pickup book from shelf and place on counter. Also to open door
 	{
-		if (camera.position.x >= -15 && camera.position.x <= -12 && camera.position.z >= -0.685 && camera.position.z <= 4.75)
+		if (camera.position.x >= -15 && camera.position.x <= -12 && camera.position.z >= -0.685 
+			&& camera.position.z <= 4.75 && Bookhasbeenbaught == false) // pickup book, bookhasbeenbaught = false stops from continuously picking up book
 		{
 			sceneBools[B_BOOK_COLLECTED] = true;
 			sceneVectors[V_BOOK].x = 10.9;
@@ -307,7 +312,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 			sceneVectors[V_BOOK].z = -11.5;
 		}
 
-		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75)
+		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75) // place book on counter
 		{
 			sceneBools[B_BOOK_COLLECTED] = false;
 			sceneBools[B_PURCHASE_BOOK] = true;
@@ -339,7 +344,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 
 	if (sceneBools[B_BOOK_COLLECTED] == true)
 	{
-		Book();
+		Book(); // this is how book will teleport on to player after pressing e at the shelf
 	}
 
 	if (sceneBools[B_PURCHASE_BOOK] == true)
@@ -351,7 +356,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('T'))
 	{
-		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75 )
+		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75 && Bookhasbeenbaught == false)
 		{
 			sceneBools[B_IS_BUYING] = true;
 			
@@ -745,6 +750,7 @@ void SceneShaqler::RenderUI()
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 }
 
+// walls rendered
 void SceneShaqler::RenderWalls() 
 {
 	modelStack.PushMatrix();
@@ -792,6 +798,7 @@ void SceneShaqler::RenderWalls()
 	modelStack.PopMatrix();
 }
 
+// objs like couch, shelves and table
 void SceneShaqler::RenderInatimateobjects()
 {
 	modelStack.PushMatrix();
@@ -876,6 +883,7 @@ void SceneShaqler::RenderInatimateobjects()
 
 }
 
+// text
 void SceneShaqler::RenderText()
 {
 	modelStack.PushMatrix();
@@ -917,6 +925,7 @@ void SceneShaqler::RenderText()
 
 }
 
+// floating books
 void SceneShaqler:: RenderBooks()
 {
 	if (sceneBools[B_BOOK_COLLECTED] == false)
@@ -940,6 +949,7 @@ void SceneShaqler:: RenderBooks()
 	}
 }
 
+// regular books
 void SceneShaqler::RenderBooks2()
 {
 	modelStack.PushMatrix();
@@ -1037,6 +1047,7 @@ void SceneShaqler::RenderBooks2()
 	modelStack.PopMatrix();
 }
 
+// function to put book at "waist" of camera. 
 void SceneShaqler::Book()
 {
 	BookHold = meshList[GEO_BOOK];
@@ -1048,6 +1059,7 @@ void SceneShaqler::Book()
 	BookHold->transform.rotate = camera.getRotation(sceneVectors[V_BOOK_ORIGIN]);
 }
 
+// cashier to purchase from and stranger in mart
 void SceneShaqler::RenderNPC()
 {
 	modelStack.PushMatrix();

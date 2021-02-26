@@ -51,7 +51,7 @@ void SceneXL::PrintPosition()
 	std::stringstream ssY;
 	std::stringstream ssZ;
 	ssX.precision(3);
-	ssX << "X:" << camera.position.x;
+	ssX << "Xupdata:" << camera.position.x;
 	ssX.precision(3);
 	ssX << "Y:" << camera.position.y;
 	ssZ.precision(3);
@@ -493,7 +493,9 @@ bool isNearDummy(GameObject* o1, MinigameEntity* o2, const float& distance = 1.f
 }
 
 void SceneXL::Update(double dt, Mouse mouse) {
-
+	if (Application::previousscene != Application::SCENEXL) {
+		InitGL();
+	}
 	sceneFloats[F_ROTATE_ANGLE] += (float)(50 * dt);
 
 	if (!sceneBools[B_TALK_TO_JETPACK]) {

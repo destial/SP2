@@ -89,6 +89,7 @@ private:
 	static int sword;
 	static int armourplate;
 	static int helmet;
+	static bool jetpackequipped;
 public:
 	Player() {};
 	~Player() {};
@@ -98,12 +99,14 @@ public:
 	static int getSword();
 	static int getArmourplate();
 	static int getHelmet();
+	static int getJetpack();
 	static void setAmmo(unsigned a);
 	static void setMoney(int m);
 	static void setHealth(int h);
 	static void setSword(int s);
 	static void setArmourplate(int ap);
 	static void setHelmet(int ht);
+	static void setJetpack(bool jp);
 };
 
 #endif

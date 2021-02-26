@@ -325,8 +325,10 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		sceneFloats[F_TRANSLATE_SPHERE_Z_2] = 20;
 	}
 
+	// press e to open the door
 	if (Application::IsKeyPressed('E'))
 	{
+		// using the location of where the camera is 
 		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.z <= 1.5 && camera.position.z >= -1.5)
 		{
 			sceneBools[B_DOOR_OPENED] = true;
@@ -353,6 +355,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		sceneFloats[F_TRANSLATE_WORD_Y] = 2.5;
 	}
 
+	// F to enter the mart using same x and z coords as opening door
 	if (Application::IsKeyPressedOnce('F') && camera.position.x <= -10 && camera.position.x >= -15 && 
 		camera.position.z <= 1.5 && camera.position.z >= -1.5 && sceneBools[B_STOP_OPEN_DOOR] == true) {
 		Application::sceneswitch = Application::SCENESHAQLER;
@@ -384,6 +387,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	camera.prevPosition = camera.position;
 	camera.Update(dt, mouse);
 
+	// collision of the mart
 	if (isNear(meshList[GEO_MART], 2.f)) {
 		// Get the current view vector and current y position
 		Vector3 view = (camera.target - camera.position).Normalized();
@@ -718,6 +722,7 @@ void SceneShaqeel::Render()
 	modelStack.PopMatrix();
 	RenderSkybox();
 
+	// items are rendered in the functions below
 	RenderQuad();
 	Rendervehicles();
 	Rendertrees();
@@ -739,6 +744,7 @@ void SceneShaqeel::RenderUI() {
 
 void SceneShaqeel::RenderQuad()
 {
+	// road quad is smaller and very slightly above the ground quad
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -2, 0);
 	modelStack.Scale(10, 10, 40);
@@ -752,6 +758,7 @@ void SceneShaqeel::RenderQuad()
 	modelStack.PopMatrix();
 }
 
+// vehicles such as truck and plane are rendered here
 void SceneShaqeel::Rendervehicles()
 {
 	modelStack.PushMatrix();
@@ -790,6 +797,7 @@ void SceneShaqeel::Rendervehicles()
 	modelStack.PopMatrix();
 }
 
+// trees and bushes
 void SceneShaqeel::Rendertrees()
 {
 	modelStack.PushMatrix();
@@ -856,6 +864,7 @@ void SceneShaqeel::Rendertrees()
 	modelStack.PopMatrix();
 }
 
+// buildings, streetlight, mart etc...
 void SceneShaqeel::Rendercityobjects()
 {
 	modelStack.PushMatrix();
@@ -954,6 +963,7 @@ void SceneShaqeel::Rendercityobjects()
 
 }
 
+// text for door
 void SceneShaqeel::RenderMytext()
 {
 	modelStack.PushMatrix();
@@ -981,6 +991,7 @@ void SceneShaqeel::RenderMytext()
 
 }
 
+// robos
 void SceneShaqeel::RenderNPC()
 {
 	modelStack.PushMatrix();

@@ -213,7 +213,10 @@ void SceneRyan::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 }
 
 void SceneRyan::Update(double dt, Mouse mouse) {
-
+	if (Application::previousscene != Application::SCENERYAN) {
+		InitGL();
+	}
+	
 	float dist = Math::sqrt(Math::Square(camera.SharkPos.x - camera.position.x + Math::Square(camera.SharkPos.z - camera.position.z)));
 
 	if (dist < 1)
@@ -437,8 +440,6 @@ void SceneRyan::InitGL()
 
 void SceneRyan::InitGLXray()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -644,10 +645,6 @@ void SceneRyan::Render()
 	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
 	modelStack.Scale(4.5, 4.5, 4.5);
 	RenderSkybox();
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();

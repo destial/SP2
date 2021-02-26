@@ -27,38 +27,34 @@ void TemplateScene::Init()
 
 	InitGL();
 
-	Mtx44 projection;
-	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
-	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
-
-
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
-	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", WHITE, 1.f, 1.f);
+	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
 
-	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", WHITE, 1.f, 1.f);
+	meshList[GEO_BACK] = MeshBuilder::GenerateSkybox("back", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BACK]->textureID = LoadTGA("Image//back-space.tga");
 
-	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", WHITE, 1.f, 1.f);
+	meshList[GEO_LEFT] = MeshBuilder::GenerateSkybox("left", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right-space.tga");
 
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", WHITE, 1.f, 1.f);
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateSkybox("right", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left-space.tga");
 
-	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", WHITE, 1.f, 1.f);
+	meshList[GEO_TOP] = MeshBuilder::GenerateSkybox("top", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_TOP]->textureID = LoadTGA("Image//top-space.tga");
 
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", WHITE, 1.f, 1.f);
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
+
+	Reset();
 }
 
 void TemplateScene::RenderMesh(Mesh* mesh, bool enableLight)
@@ -132,18 +128,18 @@ void TemplateScene::RenderText(Mesh* mesh, std::string text, Color color)
 
 void TemplateScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
-	if (!mesh || mesh->textureID <= 0) //Proper error check
+	if (!mesh || mesh->textureID <= 0)
 		return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10);
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
-	viewStack.LoadIdentity(); //No need camera for ortho mode
+	viewStack.LoadIdentity();
 	modelStack.PushMatrix();
-	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
 	modelStack.Scale(size, size, size);
 	modelStack.Translate(x, y, 0);
@@ -173,18 +169,18 @@ void TemplateScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color
 }
 
 void TemplateScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
-	if (!mesh || mesh->textureID <= 0) //Proper error check
+	if (!mesh || mesh->textureID <= 0)
 		return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10);
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
-	viewStack.LoadIdentity(); //No need camera for ortho mode
+	viewStack.LoadIdentity();
 	modelStack.PushMatrix();
-	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
 	modelStack.Scale(size, size, size);
 
@@ -206,25 +202,11 @@ void TemplateScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, floa
 }
 
 void TemplateScene::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-
-	else if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
 	camera.Update(dt, mouse);
 }
 
 void TemplateScene::InitGL()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -236,10 +218,10 @@ void TemplateScene::InitGL()
 	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
 	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
-	// Get a handle for our "textColor" uniform
+
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
-	// Get a handle for our "colorTexture" uniform
+
 	m_parameters[U_COLOR_TEXTURE_ENABLED] = glGetUniformLocation(m_programID, "colorTextureEnabled");
 	m_parameters[U_COLOR_TEXTURE] = glGetUniformLocation(m_programID, "colorTexture");
 
@@ -272,13 +254,6 @@ void TemplateScene::InitGL()
 	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
 
-
-
-	// Make sure you pass uniform parameters after glUseProgram()
-
-	//Replace previous code
-	//light[0].type = Light::LIGHT_POINT;
-	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
 	light[0].power = 1;
 	light[0].kC = 1.f;
@@ -289,8 +264,6 @@ void TemplateScene::InitGL()
 	light[0].exponent = 3.f;
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
 
-	//light[1].type = Light::LIGHT_POINT;
-	//light[1].position.Set(0, 0, 0);
 	light[1].color.Set(1, 1, 1);
 	light[1].power = 1;
 	light[1].kC = 1.f;
@@ -300,8 +273,10 @@ void TemplateScene::InitGL()
 	light[1].cosInner = cos(Math::DegreeToRadian(30));
 	light[1].exponent = 3.f;
 	light[1].spotDirection.Set(0.f, 1.f, 0.f);
+
 	glUseProgram(m_programID);
 	Mesh::SetMaterialLoc(m_parameters[U_MATERIAL_AMBIENT], m_parameters[U_MATERIAL_DIFFUSE], m_parameters[U_MATERIAL_SPECULAR], m_parameters[U_MATERIAL_SHININESS]);
+
 	glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &light[0].color.r);
 	glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
@@ -326,8 +301,6 @@ void TemplateScene::InitGL()
 
 void TemplateScene::InitGLXray()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -339,10 +312,10 @@ void TemplateScene::InitGLXray()
 	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
 	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
-	// Get a handle for our "textColor" uniform
+
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
-	// Get a handle for our "colorTexture" uniform
+
 	m_parameters[U_COLOR_TEXTURE_ENABLED] = glGetUniformLocation(m_programID, "colorTextureEnabled");
 	m_parameters[U_COLOR_TEXTURE] = glGetUniformLocation(m_programID, "colorTexture");
 
@@ -375,13 +348,6 @@ void TemplateScene::InitGLXray()
 	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
 
-
-
-	// Make sure you pass uniform parameters after glUseProgram()
-
-	//Replace previous code
-	//light[0].type = Light::LIGHT_POINT;
-	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
 	light[0].power = 1;
 	light[0].kC = 1.f;
@@ -392,8 +358,6 @@ void TemplateScene::InitGLXray()
 	light[0].exponent = 3.f;
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
 
-	//light[1].type = Light::LIGHT_POINT;
-	//light[1].position.Set(0, 0, 0);
 	light[1].color.Set(1, 1, 1);
 	light[1].power = 1;
 	light[1].kC = 1.f;
@@ -403,8 +367,10 @@ void TemplateScene::InitGLXray()
 	light[1].cosInner = cos(Math::DegreeToRadian(30));
 	light[1].exponent = 3.f;
 	light[1].spotDirection.Set(0.f, 1.f, 0.f);
+
 	glUseProgram(m_programID);
 	Mesh::SetMaterialLoc(m_parameters[U_MATERIAL_AMBIENT], m_parameters[U_MATERIAL_DIFFUSE], m_parameters[U_MATERIAL_SPECULAR], m_parameters[U_MATERIAL_SHININESS]);
+
 	glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &light[0].color.r);
 	glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
@@ -434,10 +400,9 @@ void TemplateScene::Update(double dt)
 }
 
 void TemplateScene::RenderSkybox() {
-	float translate = 50;
-	float scaleVal = (translate * 2) + (translate * 0.01f);
+	float scaleVal = (camera.bounds * 2) + (camera.bounds * 0.01f);
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y + translate, camera.position.z);
+	modelStack.Translate(camera.position.x, camera.position.y + camera.bounds, camera.position.z);
 	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Rotate(270, 0, 0, 1);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
@@ -445,7 +410,7 @@ void TemplateScene::RenderSkybox() {
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y - translate, camera.position.z);
+	modelStack.Translate(camera.position.x, camera.position.y - camera.bounds, camera.position.z);
 	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Rotate(90, 0, 0, 1);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
@@ -453,36 +418,34 @@ void TemplateScene::RenderSkybox() {
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z - translate);
+	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z - camera.bounds);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_FRONT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z + translate);
+	modelStack.Translate(camera.position.x, camera.position.y - 0.4, camera.position.z + camera.bounds);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x + translate, camera.position.y - 0.4, camera.position.z);
+	modelStack.Translate(camera.position.x + camera.bounds, camera.position.y - 0.4, camera.position.z);
 	modelStack.Rotate(-90, 0, 1, 0);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(camera.position.x - translate, camera.position.y - 0.4, camera.position.z);
+	modelStack.Translate(camera.position.x - camera.bounds, camera.position.y - 0.4, camera.position.z);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(scaleVal, scaleVal, scaleVal);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
 }
 
-void TemplateScene::Render()
-{
-	//Clear the color buffer every frame
+void TemplateScene::Render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (light[0].type == Light::LIGHT_DIRECTIONAL) {
@@ -524,12 +487,10 @@ void TemplateScene::Render()
 	);
 	modelStack.LoadIdentity();
 
-	Mtx44 view;
-	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
-	projectionStack.LoadMatrix(view);
-	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();
+	Mtx44 projection;
+	projection.SetToPerspective(camera.orthographic_size, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
+	projectionStack.LoadMatrix(projection);
+
 	RenderSkybox();
 }
 
@@ -542,5 +503,17 @@ void TemplateScene::Exit() {
 }
 
 void TemplateScene::Reset() {
+	Mtx44 projection;
+	projection.SetToPerspective(45.f, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
+	projectionStack.LoadMatrix(projection);
+	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.orthographic_size = 45.f;
 
+	for (unsigned i = 0; i < NUM_SCENE_BOOLS; i++) {
+		sceneBools[i] = 0;
+	}
+
+	for (unsigned i = 0; i < NUM_SCENE_FLOATS; i++) {
+		sceneFloats[i] = 0;
+	}
 }

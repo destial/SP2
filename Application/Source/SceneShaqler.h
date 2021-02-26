@@ -97,56 +97,51 @@ class SceneShaqler : public Scene
 		U_TOTAL,
 	};
 
+	enum SCENE_FLOATS {
+		F_ROTATE_BOOK,
+		F_ROTATE_DOOR,
+		F_AMOUNT,
+		F_X,
+		NUM_SCENE_FLOATS
+	};
 
+	enum SCENE_VECTORS {
+		V_BOOK,
+		V_TEXT,
+		V_SCREEN,
+		V_SCREEN_TEXT_1,
+		V_SCREEN_TEXT_2,
+		V_TEXT_WORLD_SCREEN,
+		V_BOOK_ORIGIN,
+		NUM_SCENE_VECTORS
+	};
+
+	enum SCENE_BOOLS {
+		B_ROTATE,
+		B_HEIGHT_LIMIT,
+		B_BOOK_COLLECTED,
+		B_PURCHASE_BOOK,
+		B_BOOK_BOUGHT,
+		B_DOOR_OPENED,
+		B_STOP_OPEN_DOOR,
+		B_IS_BUYING,
+		NUM_SCENE_BOOLS
+	};
 private:
+	MS modelStack, viewStack, projectionStack;
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
 	unsigned m_colorBuffer[NUM_GEOMETRY];
 	unsigned m_indexBuffer[NUM_GEOMETRY];
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	void RenderSkybox();
 
-	bool rotate;
-	bool heightlimit;
-	bool bookCollected;
-	bool Purchasebook;
-	bool Bookhasbeenbaught;
-	bool doorhasopened;
-	bool stopOpendoor;
-	bool isBuying;
-
-	float bookX;
-	float bookY;
-	float bookZ;
-	float TextX;
-	float TextY;
-	float TextZ;
-	float ScreenX;
-	float ScreenY;
-	float rotateBook;
-	float rotateDoor;
-	float ScreenTextX1;
-	float ScreenTextX2;
-	float ScreenTextY1;
-	float ScreenTextY2;
-	float ScreenTextZ1;
-	float ScreenTextZ2;
-	float textworldsceenY;
-
-	float amount;
-
-	float x;
-
-	int UIPhase;
-
+	Vector3 sceneVectors[NUM_SCENE_VECTORS];
+	bool sceneBools[NUM_SCENE_BOOLS];
+	float sceneFloats[NUM_SCENE_FLOATS];
 	Mesh* meshList[NUM_GEOMETRY];
-
 	Mesh* BookHold;
-	Vector3 BookOrigin;
-
 	Light light[2];
-
 	Camera3 camera;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
@@ -162,9 +157,9 @@ private:
 	void RenderBooks2();
 	void Book();
 	void RenderUI();
+	void RenderSkybox();
 
 public:
-
 	SceneShaqler();
 	~SceneShaqler();
 
@@ -176,22 +171,6 @@ public:
 	virtual void Render();
 	virtual void Exit();
 	virtual void Reset();
-	
-
-
-	Color RED = Color(1.f, 0.f, 0.f);
-	Color GREEN = Color(0.f, 1.f, 0.f);
-	Color BLUE = Color(0.f, 0.f, 1.f);
-	Color WHITE = Color(1.f, 1.f, 1.f);
-	Color YELLOW = Color(1.f, 1.f, 0.f);
-	Color PURPLE = Color(1.f, 0.f, 1.f);
-	Color CYAN = Color(0.f, 1.f, 1.f);
-	Color BROWN = Color(.6f, .1f, .2f);
-	Color BLACK = Color(0.f, 0.f, 0.f);
-	Color ORANGE = Color((195 / 255), (82 / 255), (20 / 255));
-	Color GRAY = Color(0.4f, 0.4f, 0.4f);
-
-	MS modelStack, viewStack, projectionStack;
 };
 
 #endif

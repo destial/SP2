@@ -86,95 +86,76 @@ class SceneW : public Scene
 		U_TOTAL,
 	};
 
+	enum SCENE_BOOLS {
+		B_ROTATE,
+		B_DOOR_OPENED,
+		B_STOP_DOOR_OPEN,
+		B_CHEST_OPEN_1,
+		B_CHEST_OPEN_2,
+		B_CHEST_OPEN_3,
+		B_CHEST_OPEN_4,
+		B_CHEST_OPEN_5,
+		B_CHEST_LIMIT_1,
+		B_CHEST_LIMIT_2,
+		B_CHEST_LIMIT_3,
+		B_CHEST_LIMIT_4,
+		B_CHEST_LIMIT_5,
+		B_CLAYMORE_SPAWN,
+		B_ARMOR_SPAWN,
+		B_HELMET_SPAWN,
+		B_HEIGHT_LIMIT_1,
+		B_HEIGHT_LIMIT_2,
+		B_HEIGHT_LIMIT_3,
+		B_HEIGHT_LIMIT_4,
+		B_HEIGHT_LIMIT_5,
+		B_CLAYMORE_LIMIT,
+		B_HELMET_LIMIT,
+		B_ARMOR_LIMIT,
+		B_COLLECTED_CLAYMORE,
+		B_COLLECTED_ARMOR,
+		B_COLLECTED_HELMET,
+		B_DOOR_OPEN,
+		B_PARTICLES_SPAWN_1,
+		B_PARTICLES_LIMIT_1,
+		B_GL,
+		NUM_SCENE_BOOLS,
+	};
 
+	enum SCENE_FLOATS {
+		F_ROTATE_CHEST_1,
+		F_ROTATE_CHEST_2,
+		F_ROTATE_CHEST_3,
+		F_ROTATE_CHEST_4,
+		F_ROTATE_CHEST_5,
+		F_ROTATE_DOOR,
+		NUM_SCENE_FLOATS,
+	};
+
+	enum SCENE_VECTORS {
+		V_ARMOR,
+		V_HELMET,
+		V_CLAYMORE,
+		V_SCALE_CLAYMORE,
+		V_SCALE_ARMOR,
+		V_SCALE_HELMET,
+		V_SCALE_SP,
+		V_TRANSLATE_SPHERE_1,
+		V_TRANSLATE_SPHERE_2,
+		NUM_SCENE_VECTORS,
+	};
 private:
+	MS modelStack, viewStack, projectionStack;
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
 	unsigned m_colorBuffer[NUM_GEOMETRY];
 	unsigned m_indexBuffer[NUM_GEOMETRY];
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	void RenderSkybox();
-
-	bool rotate;
-	bool doorhasopened;
-	bool stopopendoor;
-	bool chestOpen;
-	bool chestOpen2;
-	bool chestOpen3;
-	bool chestOpen4;
-	bool chestOpen5;
-	bool Chestlimit;
-	bool Chestlimit2;
-	bool Chestlimit3;
-	bool Chestlimit4;
-	bool Chestlimit5;
-
-	bool ClaymoreSpawn;
-	bool ArmourSpawn;
-	bool HelmetSpawn;
-
-	bool heightlimit;
-	bool Claymorelimit;
-
-	bool heightlimit2;
-	bool armourlimit;
-
-	bool heightlimit3;
-	bool helmetlimit;
-
-	bool collectedClaymore;
-	bool collectedArmour;
-	bool collectedHelmet;
-
-	bool Dooropen;
+	bool sceneBools[NUM_SCENE_BOOLS];
+	Vector3 sceneVectors[NUM_SCENE_VECTORS];
+	float sceneFloats[NUM_SCENE_FLOATS];
 
 	int countChest;
-
-	float rotateChest;
-	float rotateChest2;
-	float rotateChest3;
-	float rotateChest4;
-	float rotateChest5;
-
-	float rotateDoor;
-
-	float claymoreX;
-	float claymoreY;
-
-	float armourX;
-	float armourY;
-
-	float helmetX;
-	float helmetY;
-
-	float scaleCLX;
-	float scaleCLY;
-	float scaleCLZ;
-
-	float scaleARX;
-	float scaleARY;
-	float scaleARZ;
-
-	float scaleHLX;
-	float scaleHLY;
-	float scaleHLZ;
-
-	float translateSPHERE1X;
-	float translateSPHERE1Y;
-
-	float translateSPHERE2X;
-
-	float scaleSPX;
-	float scaleSPY;
-	float scaleSPZ;
-
-	bool particles1spawn;
-	bool particles1limit;
-
-	bool heightlimit4;
-
-	bool gl;
 
 	Mesh* meshList[NUM_GEOMETRY];
 	SceneManager* sceneManager;
@@ -182,8 +163,6 @@ private:
 	Light light[2];
 
 	Camera3 camera;
-	Vector3 oldCameraPos;
-	Vector3 oldCameraTarget;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
@@ -191,6 +170,7 @@ private:
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 	void RenderMaze();
 	void CreateMaze();
+	void RenderSkybox();
 	void RenderUI();
 	void RenderRoom();
 	void RenderItems();
@@ -200,7 +180,6 @@ private:
 	bool isNear(GameObject* object);
 	void RenderBoxes();
 public:
-
 	SceneW();
 	~SceneW();
 
@@ -212,20 +191,6 @@ public:
 	virtual void Render();
 	virtual void Exit();
 	virtual void Reset();
-
-	Color RED = Color(1.f, 0.f, 0.f);
-	Color GREEN = Color(0.f, 1.f, 0.f);
-	Color BLUE = Color(0.f, 0.f, 1.f);
-	Color WHITE = Color(1.f, 1.f, 1.f);
-	Color YELLOW = Color(1.f, 1.f, 0.f);
-	Color PURPLE = Color(1.f, 0.f, 1.f);
-	Color CYAN = Color(0.f, 1.f, 1.f);
-	Color BROWN = Color(.6f, .1f, .2f);
-	Color BLACK = Color(0.f, 0.f, 0.f);
-	Color ORANGE = Color((195 / 255), (82 / 255), (20 / 255));
-	Color GRAY = Color(0.4f, 0.4f, 0.4f);
-
-	MS modelStack, viewStack, projectionStack;
 };
 
 #endif

@@ -26,11 +26,6 @@ void SceneRyan::Init()
 
 	InitGL();
 
-	Mtx44 projection;
-	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
-	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 8, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
-
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",Color(1, 1, 1), 10.1f);
@@ -62,27 +57,13 @@ void SceneRyan::Init()
 
 	meshList[GEO_SHARKFIN] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkFin.obj", "OBJ//SharkFin.mtl");
 
-
-
 	meshList[GEO_BEACH] = MeshBuilder::GenerateHemisphere("Beach", Color(1, 1, 1), 36, 36, 1);
 	meshList[GEO_BEACH]->material.kAmbient.Set(0.900, 0.843, 0.000);
 	meshList[GEO_BEACH]->material.kDiffuse.Set(0.900, 0.843, 0.000);
 	meshList[GEO_BEACH]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_BEACH]->material.kShininess = 0.6f;
 
-
-
-	rotate = true;
-	sharkattack = false;
-	Tempcounter = 0;
-	rotatetail = 0;
-	sharkcircle = 1;
-	camera.SharkPos.x = 100;
-	camera.SharkPos.y = 0;
-	camera.SharkPos.z = 0;
-	survivecounter = 0;
-	scenetransition = true;
-	scenecounter = 0;
+	Reset();
 
 	Application::log("Scene Ryan initialized");
 }
@@ -232,18 +213,7 @@ void SceneRyan::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 }
 
 void SceneRyan::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
 
-	else if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-
-	else if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-	
 	float dist = Math::sqrt(Math::Square(camera.SharkPos.x - camera.position.x + Math::Square(camera.SharkPos.z - camera.position.z)));
 
 	if (dist < 1)
@@ -251,92 +221,92 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 		Application::sceneswitch = Application::SCENEBEACH;
 	}
 
-	if (survivecounter == 6)
+	if (sceneInts[SURVIVE_COUNTER] == 6)
 	{
 		//something like bool win = true
 		Application::sceneswitch = Application::SCENEBEACH;
 	}
 
 
-	if (scenetransition == true)
+	if (sceneBools[SCENE_TRANSITION] == true)
 	{
-		if (scenecounter == 0)
+		if (sceneInts[SCENE_COUNTER] == 0)
 		{
 			camera.position.y = 60;
-			scenecounter++;
+			sceneInts[SCENE_COUNTER]++;
 		}
-		if (rotate == true)
+		if (sceneBools[ROTATE] == true)
 		{
-			rotatetail += 1;
-			if (rotatetail > 20)
+			sceneFloats[ROTATE_TAIL] += 1;
+			if (sceneFloats[ROTATE_TAIL] > 20)
 			{
-				rotate = false;
+				sceneBools[ROTATE] = false;
 			}
 		}
-		else if (rotate == false)
+		else if (sceneBools[ROTATE] == false)
 		{
-			rotatetail -= 1;
-			if (rotatetail < -20)
+			sceneFloats[ROTATE_TAIL] -= 1;
+			if (sceneFloats[ROTATE_TAIL] < -20)
 			{
-				rotate = true;
+				sceneBools[ROTATE] = true;
 			}
 		}
-		sharkcircle += 1;
-		sharkcircleangle += 0.5;
+		sceneInts[SHARK_CIRCLE] += 1;
+		sceneFloats[SHARK_CIRCLE_ANGLE] += 0.5;
 		camera.position.y -= 0.05;
 		if (camera.position.y <= 8)
 		{
-			scenetransition = false;
+			sceneBools[SCENE_TRANSITION] = false;
 		}
 	}
 	else
 	{
-		if (rotate == true)
+		if (sceneBools[ROTATE] == true)
 		{
-			rotatetail += 1;
-			if (rotatetail > 20)
+			sceneFloats[ROTATE_TAIL] += 1;
+			if (sceneFloats[ROTATE_TAIL] > 20)
 			{
-				rotate = false;
+				sceneBools[ROTATE] = false;
 			}
 		}
-		else if (rotate == false)
+		else if (sceneBools[ROTATE] == false)
 		{
-			rotatetail -= 1;
-			if (rotatetail < -20)
+			sceneFloats[ROTATE_TAIL] -= 1;
+			if (sceneFloats[ROTATE_TAIL] < -20)
 			{
-				rotate = true;
+				sceneBools[ROTATE] = true;
 			}
 		}
-		if ((sharkcircle % 720) == 0 && sharkattack == false)
+		if ((sceneInts[SHARK_CIRCLE] % 720) == 0 && sceneBools[SHARK_ATTACK] == false)
 		{
-			sharkattack = true;
+			sceneBools[SHARK_ATTACK] = true;
 		}
-		if (sharkattack == true && (sharkcircle % 720) == 0)
+		if (sceneBools[SHARK_ATTACK] == true && (sceneInts[SHARK_CIRCLE] % 720) == 0)
 		{
-			if (Tempcounter == 0)
+			if (sceneInts[TEMP_COUNTER] == 0)
 			{
 				camera.SharkChaseinit();
 				Vector3 origin = Vector3(-1, 0, 0);
-				sharkdir = camera.getSharkRotation(origin) - 90;
-				Tempcounter = 1;
-				survivecounter++;
+				sceneFloats[SHARK_DIRECTION] = camera.getSharkRotation(origin) - 90;
+				sceneInts[TEMP_COUNTER] = 1;
+				sceneInts[SURVIVE_COUNTER]++;
 			}
 
 			if (camera.SharkPos.x > 30)
 			{
-				rotateshark -= 0.5;
+				sceneFloats[ROTATE_SHARK] -= 0.5;
 				camera.SharkPos.y += 0.1;
 				camera.SharkChaseMove();
 			}
 			else if (camera.SharkPos.x > 30)
 			{
-				rotateshark += 0.5;
+				sceneFloats[ROTATE_SHARK] += 0.5;
 				camera.SharkPos.y -= 0.1;
 				camera.SharkChaseMove();
 			}
 			else if (camera.SharkPos.x > -100)
 			{
-				rotateshark += 0.5;
+				sceneFloats[ROTATE_SHARK] += 0.5;
 				camera.SharkPos.y -= 0.1;
 				camera.SharkChaseMove();
 			}
@@ -344,18 +314,18 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 			{
 				camera.SharkPos.x = 100;
 				camera.SharkPos.z = 0;
-				sharkdir = 0;
-				sharkattack = false;
-				Tempcounter = 0;
-				sharkcircle = 1;
-				rotateshark = 0;
+				sceneFloats[SHARK_DIRECTION] = 0;
+				sceneBools[SHARK_ATTACK] = false;
+				sceneInts[TEMP_COUNTER] = 0;
+				sceneInts[SHARK_CIRCLE] = 1;
+				sceneFloats[ROTATE_SHARK] = 0;
 				camera.SharkPos.y = 0;
 			}
 		}
 		else
 		{
-			sharkcircle += 1;
-			sharkcircleangle += 0.5;
+			sceneInts[SHARK_CIRCLE] += 1;
+			sceneFloats[SHARK_CIRCLE_ANGLE] += 0.5;
 		}
 		camera.Update(dt, mouse);
 	}
@@ -666,7 +636,6 @@ void SceneRyan::Render()
 	);
 	modelStack.LoadIdentity();
 
-
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
@@ -687,10 +656,10 @@ void SceneRyan::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Rotate(-sharkcircleangle, 0, 1, 0);
+	modelStack.Rotate(-sceneFloats[SHARK_CIRCLE_ANGLE], 0, 1, 0);
 	modelStack.Translate(camera.SharkPos.x, camera.SharkPos.y, camera.SharkPos.z);
-	modelStack.Rotate(sharkdir, 0, 1, 0);
-	modelStack.Rotate(rotateshark, 1, 0, 0);
+	modelStack.Rotate(sceneFloats[SHARK_DIRECTION], 0, 1, 0);
+	modelStack.Rotate(sceneFloats[ROTATE_SHARK], 1, 0, 0);
 	modelStack.Scale(3, 3, 3);
 	RenderShark();
 	modelStack.PopMatrix();
@@ -700,9 +669,6 @@ void SceneRyan::Render()
 	modelStack.Scale(200, 150, 200);
 	RenderMesh(meshList[GEO_BEACH], true);
 	modelStack.PopMatrix();
-
-
-
 }
 void SceneRyan::RenderShark()
 {
@@ -714,13 +680,13 @@ void SceneRyan::RenderShark()
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -2.5, 4);
-	modelStack.Rotate((rotatetail * 2), 0, 1, 0);
+	modelStack.Rotate((sceneFloats[ROTATE_TAIL] * 2), 0, 1, 0);
 	modelStack.Scale(1.1, 1.1, 1.1);
 	RenderMesh(meshList[GEO_SHARKFIN], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Rotate(rotatetail, 0, 1, 0);
+	modelStack.Rotate(sceneFloats[ROTATE_TAIL], 0, 1, 0);
 	RenderMesh(meshList[GEO_SHARKBTM], true);
 	modelStack.PopMatrix();
 }
@@ -734,5 +700,21 @@ void SceneRyan::Exit() {
 }
 
 void SceneRyan::Reset() {
+	Mtx44 projection;
+	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
+	projectionStack.LoadMatrix(projection);
+	camera.Init(Vector3(5, 8, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.orthographic_size = 45.f;
 
+	sceneBools[ROTATE] = true;
+	sceneBools[SHARK_ATTACK] = false;
+	sceneInts[TEMP_COUNTER] = 0;
+	sceneFloats[ROTATE_TAIL] = 0;
+	sceneInts[SHARK_CIRCLE] = 1;
+	camera.SharkPos.x = 100;
+	camera.SharkPos.y = 0;
+	camera.SharkPos.z = 0;
+	sceneInts[SURVIVE_COUNTER] = 0;
+	sceneBools[SCENE_TRANSITION] = true;
+	sceneInts[SCENE_COUNTER] = 0;
 }

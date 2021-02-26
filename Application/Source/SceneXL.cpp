@@ -65,11 +65,6 @@ void SceneXL::PrintPosition()
 
 void SceneXL::Init()
 {
-	talktognome = false;
-	talktorobot = false;
-	talktojetpack = false;
-	GotGnome = false;
-	movingdummy = false;
 	// Clear background color to blue
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	// Generate shaders
@@ -82,11 +77,6 @@ void SceneXL::Init()
 	light[1].position.Set(0, 0, 0);
 
 	InitGL();
-
-	Mtx44 projection;
-	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
-	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 10, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0),(float) 50);
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
@@ -170,40 +160,25 @@ void SceneXL::Init()
 	meshList[GEO_JETPACK]->transform.Translate(-2.83, 0, 45);
 	meshList[GEO_JETPACK]->transform.Scale(0.4, 0.4, 0.4);
 
-	meshList[GEO_BORDERTEXT] = MeshBuilder::GenerateFaceQuad("border for text", WHITE, 1.f, 1.f);
+	meshList[GEO_BORDERTEXT] = MeshBuilder::GenerateFaceQuad("border for text", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BORDERTEXT]->textureID = LoadTGA("Image//bordertext.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.f, 1.f);
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
 
-	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.5f, 0.3f);
+	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", Colors::WHITE, 1.5f, 0.3f);
 	meshList[GEO_UI2]->textureID = LoadTGA("Image//blueblacktextbox.tga");
 
 	meshList[GEO_MINIGUN] = MeshBuilder::GenerateOBJMTL("Minigun", "OBJ//Minigun.obj", "OBJ//Minigun.mtl");
 
 	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("Bullet", Color(1, 1, 1), 36, 36, 1);
 
-	Shootingspin = 0.01;
+	Reset();
 
-	srand((unsigned)time(0));
-
-	for (int i = 0; i < 10; i++) 
-	{
-		int x = (rand() % 3);
-
-		int y = (rand() % 3);
-
-		int z = (rand() % 3);
-		temp = new MinigameEntity;
-		temp->pos = Vector3(x, y, z);
-
-		targetList.push_back(temp); 
-	}
 	Application::log("Scene XL initialized");
-
 }
 
 void SceneXL::RenderMesh(Mesh* mesh, bool enableLight)
@@ -333,23 +308,23 @@ void SceneXL::DetectGnome()
 {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
-	if (meshList[GEO_GNOME] && !GotGnome)
+	if (meshList[GEO_GNOME] && !sceneBools[B_GOT_GNOMED])
 	{
-		if (isNear(meshList[GEO_GNOME], (float)10.f) && talktognome == false)
+		if (isNear(meshList[GEO_GNOME], (float)10.f) && sceneBools[B_TALK_TO_GNOME] == false)
 		{
 			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to talk.", Color(1,1,1), 4, 3*w/800, 6*h/600);
 
 			if (Application::IsKeyPressedOnce('F'))
 			{
 				camera.Init(Vector3(5, 3, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
-				talktognome = true;
+				sceneBools[B_TALK_TO_GNOME] = true;
 			}
 		}
-		if (isNear(meshList[GEO_GNOME], (float)10.f) && talktognome == true)
+		if (isNear(meshList[GEO_GNOME], (float)10.f) && sceneBools[B_TALK_TO_GNOME] == true)
 		{
-			GotGnome = true;
+			sceneBools[B_GOT_GNOMED] = true;
 		}
-		if (GotGnome)
+		if (sceneBools[B_GOT_GNOMED])
 		{
 			if (meshList[GEO_GNOME])
 			{
@@ -361,14 +336,14 @@ void SceneXL::DetectGnome()
 	}
 	else  
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "Get GNOMED! ", RED, 3, 5 * w / 800, 1 * h / 600);
-		RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Get GNOMED! ", Colors::RED, 3, 5 * w / 800, 1 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 	}
 }
 
 void SceneXL::RenderGnome()
 {
-	if (meshList[GEO_GNOME] && !GotGnome)
+	if (meshList[GEO_GNOME] && !sceneBools[B_GOT_GNOMED])
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(meshList[GEO_GNOME]->transform.translate.x, meshList[GEO_GNOME]->transform.translate.y, meshList[GEO_GNOME]->transform.translate.z);
@@ -380,17 +355,17 @@ void SceneXL::RenderGnome()
 
 void SceneXL::RenderMinigame()
 {
-	for (int i = 0; i < targetList.size(); i++ && movingdummy == false)
+	for (int i = 0; i < targetList.size(); i++ && sceneBools[B_MOVING_DUMMY] == false)
 	{
 		if (targetList[i]) {
 			modelStack.PushMatrix();
 			modelStack.Translate(1.55 + targetList[i]->pos.x, 5, -79 + targetList[i]->pos.z);
-			modelStack.Rotate(RotateAngle, 0, 1, 0);
+			modelStack.Rotate(sceneFloats[F_ROTATE_ANGLE], 0, 1, 0);
 			modelStack.Scale(2, 2, 2);
 			RenderMesh(meshList[GEO_DUMMY], true);
 			modelStack.PopMatrix();
 		}
-		movingdummy = true;
+		sceneBools[B_MOVING_DUMMY] = true;
 	} //10 target dummies for the minigame/target shooting
 }
 
@@ -411,25 +386,25 @@ void SceneXL::RenderSurroundings()
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-100, 0, 50);
-	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Rotate(sceneFloats[F_ROTATE_ANGLE], 0, 1, 0);
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_SWING], true);
 	modelStack.PopMatrix(); //swing ride
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-100, 0, -30);
-	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Rotate(sceneFloats[F_ROTATE_ANGLE], 0, 1, 0);
 	modelStack.Scale(0.1, 0.1, 0.1);
-	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Rotate(sceneFloats[F_ROTATE_ANGLE], 0, 1, 0);
 	modelStack.Translate(50, 0, 0);
 	RenderMesh(meshList[GEO_TEACUP], true);
 	modelStack.PopMatrix(); //tea cup
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-100, 0, -30);
-	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Rotate(sceneFloats[F_ROTATE_ANGLE], 0, 1, 0);
 	modelStack.Scale(0.1, 0.1, 0.1);
-	modelStack.Rotate(RotateAngle, 0, 1, 0);
+	modelStack.Rotate(sceneFloats[F_ROTATE_ANGLE], 0, 1, 0);
 	modelStack.Translate(180, 0, 0);
 	RenderMesh(meshList[GEO_TEACUP], true);
 	modelStack.PopMatrix(); //tea cup 2
@@ -444,7 +419,7 @@ void SceneXL::RenderSurroundings()
 	modelStack.PushMatrix();
 	modelStack.Translate(100, 48, 30);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Rotate(RotateAngle, 0, 0, 1);
+	modelStack.Rotate(sceneFloats[F_ROTATE_ANGLE], 0, 0, 1);
 	modelStack.Scale(10, 10, 10);
 	RenderMesh(meshList[GEO_WHEEL], true);
 	modelStack.PopMatrix(); //ferris wheel 
@@ -472,18 +447,18 @@ void SceneXL::DetectJetpack()
 {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
-	if (meshList[GEO_JETPACK] && !GotJetpack)
+	if (meshList[GEO_JETPACK] && !sceneBools[B_GOT_JETPACK])
 	{
-		if (isNear(meshList[GEO_JETPACK], (float)15.f) && talktojetpack == false)
+		if (isNear(meshList[GEO_JETPACK], (float)15.f) && sceneBools[B_TALK_TO_JETPACK] == false)
 		{
 			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to equip.", Color(0.541, 0.169, 0.886), 4, 1.8, 6.2);
 			if (Application::IsKeyPressedOnce('F'))
 			{
-				talktojetpack = true;
-				GotJetpack = true;
+				sceneBools[B_TALK_TO_JETPACK] = true;
+				sceneBools[B_GOT_JETPACK] = true;
 			}
 		}
-		if (GotJetpack)
+		if (sceneBools[B_GOT_JETPACK])
 		{
 			if (meshList[GEO_JETPACK])
 			{
@@ -494,14 +469,14 @@ void SceneXL::DetectJetpack()
 	}
 	else
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "JETPACK EQUIPPED", BLUE, 3, 5 * w / 800, 2 * h / 600);
-		RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+		RenderTextOnScreen(meshList[GEO_TEXT], "JETPACK EQUIPPED", Colors::BLUE, 3, 5 * w / 800, 2 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 	}
 }
 
 void SceneXL::RenderJetpack()
 {
-	if (meshList[GEO_JETPACK] && !GotJetpack)
+	if (meshList[GEO_JETPACK] && !sceneBools[B_GOT_JETPACK])
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(meshList[GEO_JETPACK]->transform.translate.x, meshList[GEO_JETPACK]->transform.translate.y, meshList[GEO_JETPACK]->transform.translate.z);
@@ -519,45 +494,15 @@ bool isNearDummy(GameObject* o1, MinigameEntity* o2, const float& distance = 1.f
 
 void SceneXL::Update(double dt, Mouse mouse) {
 
-	RotateAngle += (float)(50 * dt);
+	sceneFloats[F_ROTATE_ANGLE] += (float)(50 * dt);
 
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-
-	else if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
-	static const float LSPEED = 40.f;
-	if (Application::IsKeyPressed('I'))
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('P'))
-		light[0].position.y += (float)(LSPEED * dt);
-
-	if (talktojetpack == false)
-	{
+	if (!sceneBools[B_TALK_TO_JETPACK]) {
 		camera.Update(dt, mouse);
-	}
-
-	if (talktojetpack == true)
-	{
+	} else {
 		camera.UpdateFlying(dt, mouse);
 	}
 
-	if (movingdummy == true)
+	if (sceneBools[B_MOVING_DUMMY])
 	{
 		srand((unsigned)time(0));
 		for (int i = 0; i < targetList.size(); i++)
@@ -576,26 +521,26 @@ void SceneXL::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Rotate == true)
+	if (sceneBools[B_ROTATE_2])
 	{
-		RotateAngle += (float)(100 * dt);
-		if (RotateAngle > 360)
-			rotate -= 360;
+		sceneFloats[F_ROTATE_ANGLE] += (float)(100 * dt);
+		if (sceneFloats[F_ROTATE_ANGLE] > 360)
+			sceneBools[B_ROTATE_1] -= 360;
 	}
 
 	if (Application::IsMousePressed(0))
 	{
-		if (Shootingspin > 0 && tempspin == 0)
+		if (sceneFloats[F_ROTATE_ANGLE] > 0 && tempspin == 0)
 		{
-			Shootingspin += Shootingspin;
-			if (Shootingspin > 360)
+			sceneFloats[F_SHOOTING_SPIN] += sceneFloats[F_SHOOTING_SPIN];
+			if (sceneFloats[F_SHOOTING_SPIN] > 360)
 			{
 				tempspin++;
 			}
 		}
-		else if (Shootingspin > 0 && tempspin == 1)
+		else if (sceneFloats[F_SHOOTING_SPIN] > 0 && tempspin == 1)
 		{
-			Shootingspin -= Shootingspin;
+			sceneFloats[F_SHOOTING_SPIN] -= sceneFloats[F_SHOOTING_SPIN];
 			if (bullets.size() < Player::getAmmo())
 			{
 				GameObject* bullet = new GameObject(meshList[GEO_BULLET]);
@@ -621,7 +566,7 @@ void SceneXL::Update(double dt, Mouse mouse) {
 		}
 		else
 		{
-			Shootingspin += 0.01;
+			sceneFloats[F_SHOOTING_SPIN] += 0.01;
 			tempspin = 0;
 		}
 	}
@@ -657,8 +602,6 @@ void SceneXL::Update(double dt, Mouse mouse) {
 
 void SceneXL::InitGL()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -705,8 +648,6 @@ void SceneXL::InitGL()
 	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
 	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
-
-
 
 	// Make sure you pass uniform parameters after glUseProgram()
 
@@ -760,8 +701,6 @@ void SceneXL::InitGL()
 
 void SceneXL::InitGLXray()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -808,8 +747,6 @@ void SceneXL::InitGLXray()
 	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
 	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
-
-
 
 	// Make sure you pass uniform parameters after glUseProgram()
 
@@ -869,7 +806,7 @@ void SceneXL::Update(double dt)
 
 void SceneXL::DetectRobot()
 {
-	if (isNear(meshList[GEO_ROBOT], (float)5.f) && talktorobot == false)
+	if (isNear(meshList[GEO_ROBOT], (float)5.f) && sceneBools[B_TALK_TO_ROBOT] == false)
 	{
 		unsigned w = Application::GetWindowWidth();
 		unsigned h = Application::GetWindowHeight();
@@ -879,10 +816,10 @@ void SceneXL::DetectRobot()
 		if (Application::IsKeyPressedOnce('F'))
 		{
 			camera.Init(Vector3(1.1, 10, -30.3), Vector3(1.1, 10, -30.4), Vector3(0, 1, 0), (float)50);
-			talktorobot = true;
+			sceneBools[B_TALK_TO_ROBOT] = true;
 		}
 	}
-	if (talktorobot == true)
+	if (sceneBools[B_TALK_TO_ROBOT] == true)
 	{
 		RenderMinigame();
 	}
@@ -985,12 +922,6 @@ void SceneXL::Render()
 	projectionStack.LoadMatrix(view);
 
 	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix(); //axis
-
-
-
-	modelStack.PushMatrix();
 	modelStack.Translate(camera.position.x, camera.position.y, camera.position.z);
 	modelStack.Scale(4.5, 4.5, 4.5);
 	RenderSkybox();
@@ -1008,7 +939,7 @@ void SceneXL::Render()
 	modelStack.Rotate(meshList[GEO_MINIGUN]->transform.rotate, 0, 1, 0);
 	modelStack.Rotate(90, 0, 0, 1);
 	modelStack.Scale(0.07, 0.07, 0.07);
-	modelStack.Rotate(Shootingspin, 0, 1, 0);
+	modelStack.Rotate(sceneFloats[F_SHOOTING_SPIN], 0, 1, 0);
 	RenderMesh(meshList[GEO_MINIGUN], true);
 	modelStack.PopMatrix();
 
@@ -1017,16 +948,14 @@ void SceneXL::Render()
 	DetectRobot();
 	RenderRobot();
 	RenderMeshOnScreen(meshList[GEO_UI2], 40, 40, 7);
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 	RenderJetpack();
 	DetectJetpack();
-
 
 	PrintPosition();
 
 	DetectGnome();
 	RenderGnome();
-	RenderUI();
 	for (auto o : bullets) {
 		if (o && o->transform) {
 			modelStack.PushMatrix();
@@ -1037,17 +966,18 @@ void SceneXL::Render()
 			modelStack.PopMatrix();
 		}
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+	RenderUI();
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 }
 
 void SceneXL::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5 * w / 800, 19 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), BLACK, 2, 0.5 * w / 800, 18 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), BLACK, 2, 0.5 * w / 800, 17 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), Colors::BLACK, 2, 0.5 * w / 800, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), Colors::BLACK, 2, 0.5 * w / 800, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), Colors::BLACK, 2, 0.5 * w / 800, 17 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 }
 
 void SceneXL::RenderRobot()
@@ -1061,6 +991,7 @@ void SceneXL::RenderRobot()
 
 void SceneXL::Minigun()
 {
+	GunOrigin = Vector3(-1, 0, 0);
 	MinigunHold = meshList[GEO_MINIGUN];
 	MinigunHold->prevTransform = MinigunHold->transform;
 	MinigunHold->transform.translate.x = camera.position.x;
@@ -1068,19 +999,7 @@ void SceneXL::Minigun()
 	MinigunHold->transform.translate.y = camera.position.y - 2;
 	Vector3 origin = (MinigunHold->transform.translate + GunOrigin).Normalized();
 	MinigunHold->transform.rotate = camera.getRotation(GunOrigin);
-	GunOrigin = Vector3(-1, 0, 0);
 }
-
-void SceneXL::Bullets()
-{
-	if (meshList[GEO_BULLET])
-	{
-		modelStack.PushMatrix();
-		RenderMesh(meshList[GEO_BULLET], true);
-		modelStack.PopMatrix();
-	}
-}
-
 
 void SceneXL::Exit() {
 	for (auto mesh : meshList) {
@@ -1091,15 +1010,54 @@ void SceneXL::Exit() {
 			delete b;
 		}
 	}
+	bullets.clear();
 	for (auto d : targetList) {
 		if (d) {
 			delete d;
 		}
 	}
+	targetList.clear();
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 }
 
 void SceneXL::Reset() {
+	Mtx44 projection;
+	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
+	projectionStack.LoadMatrix(projection);
+	camera.Init(Vector3(5, 10, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.orthographic_size = 45.f;
 
+	for (auto b : bullets) {
+		if (b) {
+			delete b;
+		}
+	}
+	bullets.clear();
+	for (auto d : targetList) {
+		if (d) {
+			delete d;
+		}
+	}
+	targetList.clear();
+	sceneFloats[F_SHOOTING_SPIN] = 0.01;
+	sceneBools[B_TALK_TO_GNOME] = false;
+	sceneBools[B_TALK_TO_ROBOT] = false;
+	sceneBools[B_TALK_TO_JETPACK] = false;
+	sceneBools[B_GOT_GNOMED] = false;
+	sceneBools[B_MOVING_DUMMY] = false;
+	srand((unsigned)time(0));
+
+	for (int i = 0; i < 10; i++)
+	{
+		int x = (rand() % 3);
+
+		int y = (rand() % 3);
+
+		int z = (rand() % 3);
+		temp = new MinigameEntity;
+		temp->pos = Vector3(x, y, z);
+
+		targetList.push_back(temp);
+	}
 }

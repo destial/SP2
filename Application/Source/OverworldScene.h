@@ -105,32 +105,13 @@ class OverworldScene : public Scene {
 		NUM_TASKS
 	};
 private:
+	MS modelStack, viewStack, projectionStack;
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
 	unsigned m_colorBuffer[NUM_GEOMETRY];
 	unsigned m_indexBuffer[NUM_GEOMETRY];
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	void RenderSkybox();
-	void RenderObjects();
-	void RenderTasks();
-	void RenderRobo();
-	void RenderSpeedometer();
-	void RoadTeleport();
-	void RenderTeleportText();
-	void CompleteTasks();
-	void GetInCar();
-	void EnterBuilding();
-	void DetectCollision();
-	void UpdateRobo(double &dt);
-	void UpdatePlanes(double& dt);
-	void CreateCityObjects();
-	void MoveBack();
-	void RenderUI();
-	bool isNear(Mesh* mesh, const float& distance = 1.f);
-	bool isNearObject(GameObject* o, const float& distance = 1.f);
-	bool isHit(GameObject* o1, GameObject* o2, const float& distance = 1.f);
-
 	Mesh* meshList[NUM_GEOMETRY];
 	Mesh* currentCar;
 	GameObject* currentCarObject;
@@ -156,8 +137,27 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
-public:
+	void RenderSkybox();
+	void RenderObjects();
+	void RenderTasks();
+	void RenderRobo();
+	void RenderSpeedometer();
+	void RoadTeleport();
+	void RenderTeleportText();
+	void CompleteTasks();
+	void GetInCar();
+	void EnterBuilding();
+	void DetectCollision();
+	void UpdateRobo(double& dt);
+	void UpdatePlanes(double& dt);
+	void CreateCityObjects();
+	void MoveBack();
+	void RenderUI();
+	bool isNear(Mesh* mesh, const float& distance = 1.f);
+	bool isNearObject(GameObject* o, const float& distance = 1.f);
+	bool isHit(GameObject* o1, GameObject* o2, const float& distance = 1.f);
 
+public:
 	OverworldScene();
 	~OverworldScene();
 
@@ -169,8 +169,6 @@ public:
 	virtual void Render();
 	virtual void Exit();
 	virtual void Reset();
-
-	MS modelStack, viewStack, projectionStack;
 };
 
 #endif

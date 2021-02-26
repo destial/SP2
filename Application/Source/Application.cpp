@@ -119,23 +119,24 @@ static void scroll_callback(GLFWwindow* window, double nan, double offSet) {
 }
 
 static void mouse_callback(GLFWwindow* window, double x, double y) {
-	if (x < Application::m_width / 2) {
+	if (x < Application::GetWindowWidth() / 2) {
 		mouse.left = true;
 		mouse.right = false;
-		mouse.x = (Application::m_width / 2) - x;
-	} else if (x > Application::m_width / 2) {
+		mouse.x = (Application::GetWindowWidth() / 2) - x;
+	} else if (x > Application::GetWindowWidth() / 2) {
 		mouse.left = false;
 		mouse.right = true;
-		mouse.x = x - (Application::m_width / 2);
+		mouse.x = x - (Application::GetWindowWidth() / 2);
 	}
-	if (y < Application::m_height / 2) {
+
+	if (y < Application::GetWindowHeight() / 2) {
 		mouse.up = true;
 		mouse.down = false;
-		mouse.y = (Application::m_height / 2) - y;
-	} else if (y > Application::m_height / 2) {
+		mouse.y = (Application::GetWindowHeight() / 2) - y;
+	} else if (y > Application::GetWindowHeight() / 2) {
 		mouse.up = false;
 		mouse.down = true;
-		mouse.y = y - (Application::m_height / 2);
+		mouse.y = y - (Application::GetWindowHeight() / 2);
 	}
 }
 
@@ -329,7 +330,8 @@ void Application::Run() {
 	// Main Loop
 	while (!glfwWindowShouldClose(m_window) && !Application::quit) {
 		for (std::set<unsigned short>::iterator i = activeKeys.begin(); i != activeKeys.end(); i++) {
-			if (((GetAsyncKeyState(*i) & 0x8001) != 0)) continue;
+			unsigned short key = *i;
+			if ((GetAsyncKeyState(key) & 0x8001) != 0) continue;
 			else {
 				activeKeys.erase(i);
 				break;

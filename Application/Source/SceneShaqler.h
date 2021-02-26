@@ -115,6 +115,7 @@ private:
 	bool doorhasopened;
 	bool stopOpendoor;
 	bool isBuying;
+	bool stoptextbox;
 
 	float bookX;
 	float bookY;

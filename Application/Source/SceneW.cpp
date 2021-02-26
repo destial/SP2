@@ -638,21 +638,24 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressedOnce('R'))
 	{
-		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && Claymorelimit == true)
+		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 
+			&& Claymorelimit == true && collectedClaymore == false)
 		{
 			claymoreX = 1000;
 			collectedClaymore = true;
 			Player::setSword(Player::getSword() + 1);
 		}
 
-		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && armourlimit == true)
+		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33
+			&& armourlimit == true && collectedArmour == false)
 		{
 			armourX = 1000;
 			collectedArmour = true;
 			Player::setArmourplate(Player::getArmourplate() + 1);
 		}
 
-		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && helmetlimit == true)
+		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53
+			&& helmetlimit == true && collectedHelmet == false)
 		{
 			helmetX = 1000;
 			collectedHelmet = true;

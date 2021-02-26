@@ -28,7 +28,7 @@ void SceneShaqler::Init() {
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(3.87, 5, 15.7), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)20);
+	camera.Init(Vector3(3.87, 5, 15.7), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)19);
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
@@ -134,20 +134,23 @@ void SceneShaqler::Init() {
 	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", WHITE, 1.5f, 0.4f);
 	meshList[GEO_UI2]->textureID = LoadTGA("Image//blueblacktextbox.tga");
 
+	// initialised
 	bookX = -17;
 	bookY = 2.85;
 	bookZ = 1.6;
-	rotateBook = 270; // just commit
+	rotateBook = 270;
 	rotateDoor = 180;
 	bookCollected = false;
-	TextX = 10; // just comment
-	TextY = 5; // almost done with scene 2
+	TextX = 10;
+	TextY = 5; 
 	TextZ = -8000;
 	ScreenX = 8000;
 	ScreenY = 30;
 	textworldsceenY = 1000;
 
 	Bookhasbeenbaught = false;
+	isBuying = false;
+	stoptextbox = false;
 
 	amount = 30;
 
@@ -324,9 +327,10 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('P'))
 		light[0].position.y += (float)(LSPEED * dt);
 
+	// book will constantly spin and float until collected from the shelf
 	rotateBook += (float)(40 * dt);
 
-	if (bookY > 2.85 && heightlimit == false)
+	if (bookY > 2.85 && heightlimit == false) // cant go past 3.5 in y axis and below 2.85 in x axis
 	{
 		bookY -= (float)(2 * dt);
 	}
@@ -344,28 +348,26 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 	}
 
 
-	if (Application::IsKeyPressed('E')) // -0.685 and 4.75 for z x// -12.5 -15
+	if (Application::IsKeyPressed('E')) // E to pickup book from shelf and place on counter. Also to open door
 	{
-		if (camera.position.x >= -15 && camera.position.x <= -12 && camera.position.z >= -0.685 && camera.position.z <= 4.75)
+		if (camera.position.x >= -15 && camera.position.x <= -12 && camera.position.z >= -0.685 
+			&& camera.position.z <= 4.75 && Bookhasbeenbaught == false) // pickup book, bookhasbeenbaught = false stops from continuously picking up book
 		{
-			bookCollected = true;
+			bookCollected = true; // book will be held by the player if bookCollected = true 
 			bookX = 10.9;
 			bookY = 6;
 			bookZ = -11.5;
 		}
 
-		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75)
+		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75) // place book on counter
 		{
-			bookCollected = false;
+			bookCollected = false; // book will be placed on counter if bookCollected == false
 			Purchasebook = true;
-			/*bookX = 10.9;
-			bookY = 4;
-			bookZ = 11.5;*/
 		}
 
-		if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 14 && camera.position.z <= 20 && !stopOpendoor)
+		if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 14 && camera.position.z <= 20 && !stopOpendoor) // open door
 		{
-			doorhasopened = true;
+			doorhasopened = true; // same logic as my first Scene using location coordinates
 		}
 
 		/*if (rotateDoor >= 300)
@@ -384,40 +386,36 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		if (rotateDoor >= 290)
 		{
 			stopOpendoor = true;
-		}
+		} // stops door opening at 290 degrees
 	}
 
 	if (stopOpendoor == true)
 	{
 		textworldsceenY = 8.3;
-	}
+	} // text again
 
 	if (bookCollected == true)
 	{
-		Book();
+		Book(); // this is how book will teleport on to player after pressing e at the shelf
 	}
 
 	if (Purchasebook == true)
 	{
-		rotateBook = 270;
-		bookY = 3.1;
-		TextZ = -13.5;
+		rotateBook = 270; // stops from rotating on the counter
+		bookY = 3.1; 
+		TextZ = -13.5; // text will appear
 	}
 
 	if (Application::IsKeyPressed('T'))
 	{
-		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75 )
+		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75 && Bookhasbeenbaught == false)
 		{
-			/*ScreenX = 40;
-			TextX = 1000;
-			bookX = 1000;*/
-			isBuying = true;
+			isBuying = true; //isBuying will cause text box to appear
 			
 			if (isBuying == true)
 			{
-				ScreenX = 40;
-			    TextX = 1000; // world text 
-			    //bookX = 1000; // book
+				ScreenX = 40; // Textbox 
+			    TextX = 1000; // world text disappears
 			}
 
 
@@ -425,24 +423,26 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Application::IsKeyPressedOnce('Y') && isBuying == true)
+	// isBuying == true will stop book count on UI to continue decreasing 
+	// if you keep pressing y
+	if (Application::IsKeyPressedOnce('Y') && isBuying == true) 
 	{
-		bookX = 1000;
-		isBuying = false;
+		bookX = 1000; // book disappears. I had hoped to do a bag system to keep the books inside but didnt have time
+		isBuying = false; // text box closes
 		Bookhasbeenbaught = true;
-		Player::setMoney(Player::getMoney() - 30);
+		Player::setMoney(Player::getMoney() - 30); // money will go down if book gets purhcased for 30 from 100
 
 	}
 
 	if (Application::IsKeyPressed('N'))
 	{
-		isBuying = false;
-		Bookhasbeenbaught = false;
+		isBuying = false; // text box closes
+		//Bookhasbeenbaught = false;
 	}
 
 	if (Application::IsKeyPressedOnce('F') && camera.position.x >= 1.13 && camera.position.x <= 6.6 
 		&& camera.position.z >= 14 && camera.position.z <= 20 && stopOpendoor == true) {
-		Application::sceneswitch = Application::SCENESHAQ;
+		Application::sceneswitch = Application::SCENESHAQ; // smae logic with outside mart open door
 	}
 
 
@@ -790,12 +790,12 @@ void SceneShaqler::RenderUI()
 {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
-	if (isBuying == true && Bookhasbeenbaught == false)
+	if (isBuying == true && Bookhasbeenbaught == false) // text and ui will appear during the buying phase and will close when the buying is done
 	{
 		RenderMeshOnScreen(meshList[GEO_UI2], 50, 40, 8 * h / 600);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book?", WHITE, 2, 5 * w / 800, 3 * h / 600);
 		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", WHITE, 2, 10 * w / 800, 2 * h / 600);
-		RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
+		RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0); // 
 	}
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), BLACK, 2, 0.5 * w / 800, 19 * h / 600);
@@ -804,6 +804,7 @@ void SceneShaqler::RenderUI()
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, 0);
 }
 
+// walls rendered
 void SceneShaqler::RenderWalls() 
 {
 	modelStack.PushMatrix();
@@ -851,6 +852,7 @@ void SceneShaqler::RenderWalls()
 	modelStack.PopMatrix();
 }
 
+// objs like couch, shelves and table
 void SceneShaqler::RenderInatimateobjects()
 {
 	modelStack.PushMatrix();
@@ -935,6 +937,7 @@ void SceneShaqler::RenderInatimateobjects()
 
 }
 
+// text
 void SceneShaqler::RenderText()
 {
 	modelStack.PushMatrix();
@@ -976,6 +979,7 @@ void SceneShaqler::RenderText()
 
 }
 
+// floating books
 void SceneShaqler:: RenderBooks()
 {
 	if (bookCollected == false)
@@ -999,6 +1003,7 @@ void SceneShaqler:: RenderBooks()
 	}
 }
 
+// regular books
 void SceneShaqler::RenderBooks2()
 {
 	modelStack.PushMatrix();
@@ -1096,6 +1101,7 @@ void SceneShaqler::RenderBooks2()
 	modelStack.PopMatrix();
 }
 
+// function to put book at "waist" of camera. 
 void SceneShaqler::Book()
 {
 	BookHold = meshList[GEO_BOOK];
@@ -1112,6 +1118,7 @@ void SceneShaqler::Book()
 	}
 }
 
+// cashier to purchase from and stranger in mart
 void SceneShaqler::RenderNPC()
 {
 	modelStack.PushMatrix();

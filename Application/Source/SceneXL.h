@@ -90,64 +90,64 @@ class SceneXL : public Scene
 		U_TOTAL,
 	};
 
+	enum SCENE_BOOLS {
+		B_ROTATE_1,
+		B_ROTATE_2,
+		B_TALK_TO_GNOME,
+		B_TALK_TO_JETPACK,
+		B_TALK_TO_ROBOT,
+		B_MOVING_DUMMY,
+		B_GOT_GNOMED,
+		B_GOT_JETPACK,
+		NUM_SCENE_BOOLS,
+	};
+
+	enum SCENE_FLOATS {
+		F_ROTATE_ANGLE, //rotating of my dummy target
+		F_SHOOTING_SPIN,
+		NUM_SCENE_FLOATS,
+	};
 
 private:
+	MS modelStack, viewStack, projectionStack;
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
 	unsigned m_colorBuffer[NUM_GEOMETRY];
 	unsigned m_indexBuffer[NUM_GEOMETRY];
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	void RenderSkybox();
-
-	bool rotate;
-	bool talktognome;
-	bool talktorobot;
-	bool talktojetpack;
-	bool movingdummy;
-
+	bool sceneBools[NUM_SCENE_BOOLS];
+	float sceneFloats[NUM_SCENE_FLOATS];
 	Mesh* meshList[NUM_GEOMETRY];
+	std::vector<GameObject*> bullets;
+	std::vector<MinigameEntity*> targetList;
 
 	Light light[2];
 
 	Camera3 camera;
+	MinigameEntity* temp;
+	Mesh* MinigunHold;
+	Vector3 GunOrigin;	
+	int tempspin;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
-
 	void PrintPosition();
-
 	void DetectGnome();
 	void RenderGnome();
-
 	void DetectRobot();
 	void RenderRobot();
-
 	void RenderMinigame();
-
 	void RenderSurroundings();
 	void RenderUI();
-
 	void DetectJetpack();
 	void RenderJetpack();
-
+	void RenderSkybox();
 	bool isNear(Mesh* mesh, const float& distance);
-
-	std::vector<GameObject*> bullets;
-	float Shootingspin;
-	Mesh* MinigunHold;
-	Vector3 GunOrigin;
-
-
 	void Minigun();
-	void Bullets();
-	int tempspin;
-
-
 public:
-
 	SceneXL();
 	~SceneXL();
 
@@ -159,30 +159,6 @@ public:
 	virtual void Render();
 	virtual void Exit();
 	virtual void Reset();
-
-	bool GotGnome;
-
-
-	bool Rotate;
-	float RotateAngle; //rotating of my dummy target
-
-
-	std::vector<MinigameEntity*> targetList;
-	MinigameEntity* temp;
-
-	Color RED = Color(1.f, 0.f, 0.f);
-	Color GREEN = Color(0.f, 1.f, 0.f);
-	Color BLUE = Color(0.f, 0.f, 1.f);
-	Color WHITE = Color(1.f, 1.f, 1.f);
-	Color YELLOW = Color(1.f, 1.f, 0.f);
-	Color PURPLE = Color(1.f, 0.f, 1.f);
-	Color CYAN = Color(0.f, 1.f, 1.f);
-	Color BROWN = Color(.6f, .1f, .2f);
-	Color BLACK = Color(0.f, 0.f, 0.f);
-	Color ORANGE = Color((195 / 255), (82 / 255), (20 / 255));
-	Color GRAY = Color(0.4f, 0.4f, 0.4f);
-
-	MS modelStack, viewStack, projectionStack;
 };
 
 #endif

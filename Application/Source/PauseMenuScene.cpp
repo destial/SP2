@@ -223,9 +223,6 @@ void PauseMenuScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 }
 
 void PauseMenuScene::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::MENUSCENE) {
-		InitGL();
-	}
 	//Mouse Inputs
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
@@ -280,8 +277,6 @@ void PauseMenuScene::Update(double dt, Mouse mouse) {
 
 void PauseMenuScene::InitGL()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

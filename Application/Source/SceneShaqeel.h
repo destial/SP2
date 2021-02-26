@@ -92,18 +92,53 @@ class SceneShaqeel : public Scene
 		U_TOTAL,
 	};
 
+	enum SCENE_FLOATS {
+		F_TRANSLATE_WORD_Y,
+		F_TRANSLATE_TRUCK_Z,
+		F_TRANSLATE_BUS_Z,
+		F_TRANSLATE_CAR1_Z,
+		F_TRANSLATE_CAR2_Z,
+		F_TRANSLATE_PLANE_X,
+		F_TRANSLATE_PLANE_Z,
+		F_ROTATE_DOOR,
+		F_BUS_Z,
+		F_ROTATE_LEFT_LEG,
+		F_ROTATE_RIGHT_LEG,
+		F_TRANSLATE_SPHERE_Z,
+		F_TRANSLATE_SPHERE_Z_2,
+		NUM_SCENE_FLOATS
+	};
 
+	enum SCENE_BOOLS {
+		B_ROTATE,
+		B_DOOR_OPENED,
+		B_STOP_OPEN_DOOR,
+		B_LEFT_LEG_LIMIT,
+		B_LEFT_LEG_LIMIT_2,
+		B_RIGHT_LEG_LIMIT,
+		NUM_SCENE_BOOLS
+	};
 private:
+	MS modelStack, viewStack, projectionStack;
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
 	unsigned m_colorBuffer[NUM_GEOMETRY];
 	unsigned m_indexBuffer[NUM_GEOMETRY];
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
+	bool sceneBools[NUM_SCENE_BOOLS];
+	float sceneFloats[NUM_SCENE_FLOATS];
+
+	Mesh* meshList[NUM_GEOMETRY];
+	Light light[2];
+	Camera3 camera;
+
+	void RenderMesh(Mesh* mesh, bool enableLight);
+	void RenderText(Mesh* mesh, std::string text, Color color);
+	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
+	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 	void RenderSkybox();
 	bool isNear(Mesh* mesh, const float& distance);
-
-	// items and objs are rendered inside here
 	void RenderQuad();
 	void Rendervehicles();
 	void Rendertrees();
@@ -111,49 +146,6 @@ private:
 	void RenderNPC();
 	void RenderMytext();
 	void RenderUI();
-
-	bool rotate;
-	bool doorhasopened; 
-	bool stopopenDoor;
-	bool leftleglimit;
-
-	float translateWordY;
-	float translateTruckZ;
-	float translateBusZ;
-	float translateCar1Z;
-	float translateCar2Z;
-	float translatePlaneX;
-	float translatePlaneZ;
-	float rotatedoor;
-	float busZ;
-	float rotateleftleg;
-	float rotaterightleg;
-	float translateSphereZ;
-	float translateSphereZ2;
-
-	Mesh* meshList[NUM_GEOMETRY];
-
-	Light light[2];
-
-	Camera3 camera;
-
-	void RenderMesh(Mesh* mesh, bool enableLight);
-	void RenderText(Mesh* mesh, std::string text, Color color);
-	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
-
-	Color RED = Color(1.f, 0.f, 0.f);
-	Color GREEN = Color(0.f, 1.f, 0.f);
-	Color BLUE = Color(0.f, 0.f, 1.f);
-	Color WHITE = Color(1.f, 1.f, 1.f);
-	Color YELLOW = Color(1.f, 1.f, 0.f);
-	Color PURPLE = Color(1.f, 0.f, 1.f);
-	Color CYAN = Color(0.f, 1.f, 1.f);
-	Color BROWN = Color(.6f, .1f, .2f);
-	Color BLACK = Color(0.f, 0.f, 0.f);
-	Color ORANGE = Color((195 / 255), (82 / 255), (20 / 255));
-	Color GRAY = Color(0.4f, 0.4f, 0.4f);
-
 public:
 
 	SceneShaqeel();
@@ -167,7 +159,6 @@ public:
 	virtual void Render();
 	virtual void Exit();
 	virtual void Reset();
-	MS modelStack, viewStack, projectionStack;
 };
 
 #endif

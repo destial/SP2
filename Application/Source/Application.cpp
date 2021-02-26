@@ -68,6 +68,11 @@ int Player::getHelmet()
 	return helmet;
 }
 
+int Player::getJetpack()
+{
+	return jetpackequipped;
+}
+
 void Player::setAmmo(unsigned a) {
 	ammo = a;
 }
@@ -92,6 +97,11 @@ void Player::setArmourplate(int ap)
 void Player::setHelmet(int ht)
 {
 	helmet = ht;
+}
+
+void Player::setJetpack(bool jp)
+{
+	jetpackequipped = jp;
 }
 
 std::set<unsigned short> Application::activeKeys;

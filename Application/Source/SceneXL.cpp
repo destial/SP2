@@ -536,6 +536,7 @@ void SceneXL::Update(double dt, Mouse mouse) {
 
 	if (Application::IsMousePressed(0))
 	{
+		//Spinning animation
 		if (sceneFloats[F_ROTATE_ANGLE] > 0 && tempspin == 0)
 		{
 			sceneFloats[F_SHOOTING_SPIN] += sceneFloats[F_SHOOTING_SPIN];
@@ -549,6 +550,7 @@ void SceneXL::Update(double dt, Mouse mouse) {
 			sceneFloats[F_SHOOTING_SPIN] -= sceneFloats[F_SHOOTING_SPIN];
 			if (bullets.size() < Player::getAmmo())
 			{
+				//Uses player view and gives it to the bullet so that it will travel forward and not follow player view after he turns
 				GameObject* bullet = new GameObject(meshList[GEO_BULLET]);
 				bullet->transform->Translate(camera.position.x, camera.position.y - 2, camera.position.z);
 				bullet->transform->Scale(0.5);
@@ -558,7 +560,7 @@ void SceneXL::Update(double dt, Mouse mouse) {
 				Vector3 face = Vector3(0, 1, 0).Cross(right).Normalized();
 				bullet->view = face;
 				bullets.push_back(bullet);
-				Player::setAmmo(Player::getAmmo() - 1);
+				Player::setAmmo(Player::getAmmo() - 1); //Bullet - 1
 			}
 			else {
 				for (auto b : bullets) {
@@ -567,7 +569,7 @@ void SceneXL::Update(double dt, Mouse mouse) {
 					}
 				}
 				bullets.clear();
-				Player::setAmmo(256);
+				Player::setAmmo(256);//Set ammo back to 256
 			}
 		}
 		else
@@ -997,6 +999,7 @@ void SceneXL::RenderRobot()
 
 void SceneXL::Minigun()
 {
+	//Sets the gun to follow the player position and rotation
 	GunOrigin = Vector3(-1, 0, 0);
 	MinigunHold = meshList[GEO_MINIGUN];
 	MinigunHold->prevTransform = MinigunHold->transform;

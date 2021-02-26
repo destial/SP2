@@ -81,6 +81,7 @@ void SceneOfTheBeach::Init()
 	meshList[GEO_CABIN] = MeshBuilder::GenerateOBJ("Cabin", "OBJ//beachcabin.obj");
 	meshList[GEO_CABIN]->textureID = LoadTGA("Image//BeachCabin.tga");
 
+	//Reset all variables
 	Reset();
 
 	Application::log("Scene beach initialized");
@@ -270,6 +271,10 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 		{
 			sceneBools[OPEN_TEXT_BOX] = true;
 		}
+		else
+		{
+			sceneBools[OPEN_TEXT_BOX] = false;
+		}
 	}
 
 	if (Application::IsKeyPressed('N') && sceneBools[OPEN_TEXT_BOX] == true)
@@ -282,32 +287,19 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 		Application::sceneswitch = Application::SCENERYAN;
 	}
 
-	if (Application::IsKeyPressedOnce('F'))
-	{
-		if (sceneBools[GL] == false)
-		{
-			InitGLXray();
-			sceneBools[GL] = true;
-		}
-		else if (sceneBools[GL] == true)
-		{
-			InitGL();
-			sceneBools[GL] = false;
-		}
-
-	}
-
+	//Crab movement 
 	sceneFloats[CRAB_SPEED] = (float)(5 * dt);
-
+	
 	if (sceneFloats[CRAB_MOVING] < sceneFloats[RANDOM_MOVE] - sceneFloats[CRAB_SPEED] * 1.5 || sceneFloats[CRAB_MOVING] > sceneFloats[RANDOM_MOVE] + sceneFloats[CRAB_SPEED] * 1.5)
 	{
-		float direction = Direction(sceneFloats[RANDOM_MOVE] - sceneFloats[CRAB_MOVING]);
+		float direction = Direction(sceneFloats[RANDOM_MOVE] - sceneFloats[CRAB_MOVING]);//Randomly chooses a direction
 		sceneFloats[CRAB_MOVING] += sceneFloats[CRAB_SPEED] * direction;
 	}
 	else
 	{
-		sceneFloats[RANDOM_MOVE] = Math::RandFloatMinMax(-5, 5);
+		sceneFloats[RANDOM_MOVE] = Math::RandFloatMinMax(-5, 5);//Randomly chooses a number inbetween -5 to 5
 	}
+	//Dolphin jumping code (Simple rotation)
 	if (sceneFloats[ROTATE_DOLPHIN] == 360)
 	{
 		sceneFloats[ROTATE_DOLPHIN] = 0;
@@ -319,6 +311,7 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 
 int SceneOfTheBeach::Direction(float value)
 {
+	//Decides to move in positive/negative direction
 	if (value > 0)
 	{
 		return 1;

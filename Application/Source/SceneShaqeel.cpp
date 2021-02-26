@@ -135,6 +135,7 @@ void SceneShaqeel::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
+	// initialised
 	translateTruckZ = 10;
 	busZ = 0;
 	translateCar1Z = -10;
@@ -144,8 +145,6 @@ void SceneShaqeel::Init()
 	rotateleftleg = 0;
 	rotaterightleg = 0;
 	leftleglimit = false;
-	leftleglimit2 = false;
-	rightleglimit = false;
 	translateSphereZ = -19.6;
 	translateSphereZ2 = 19.6;
 	translatePlaneX = 40;
@@ -298,20 +297,45 @@ void SceneShaqeel::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) 
 }
 
 void SceneShaqeel::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::SCENESHAQ) {
-		InitGL();
-	}
+	if (Application::IsKeyPressed('1'))
+		glEnable(GL_CULL_FACE);
+
+	else if (Application::IsKeyPressed('2'))
+		glDisable(GL_CULL_FACE);
+
+	else if (Application::IsKeyPressed('3'))
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
+
+	else if (Application::IsKeyPressed('4'))
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
+
+	static const float LSPEED = 40.f;
+	if (Application::IsKeyPressed('I'))
+		light[0].position.z -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('K'))
+		light[0].position.z += (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('J'))
+		light[0].position.x -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('L'))
+		light[0].position.x += (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('O'))
+		light[0].position.y -= (float)(LSPEED * dt);
+	if (Application::IsKeyPressed('P'))
+		light[0].position.y += (float)(LSPEED * dt);
 
 	// vehicle movement
-	translateTruckZ += (float)(7 * dt); // 3.87 15.7
+	translateTruckZ += (float)(7 * dt); 
 	translateBusZ -= (float)(7 * dt);
 	translateCar1Z += (float)(10 * dt);
 	translateCar2Z -= (float)(15 * dt);
-	translateSphereZ += (float)(2.5 * dt);
-	translateSphereZ2 -= (float)(2.75 * dt);
 	translatePlaneX -= (float)(7 * dt);
 	translatePlaneZ -= (float)(1.2 * dt);
 
+	// character moving using hierach modelling
+	translateSphereZ += (float)(2.5 * dt);
+	translateSphereZ2 -= (float)(2.75 * dt);
+
+	// vehicles will respawn once they cross certain distance 
 	if (translateTruckZ >= 40)
 	{
 		translateTruckZ = -40;
@@ -338,6 +362,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		translatePlaneZ = 10;
 	}
 
+	// same with robos
 	if (translateSphereZ >= 25)
 	{
 		translateSphereZ = -25;
@@ -348,8 +373,10 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		translateSphereZ2 = 20;
 	}
 
+	// press e to open the door
 	if (Application::IsKeyPressed('E'))
 	{
+		// using the location of where the camera is 
 		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.z <= 1.5 && camera.position.z >= -1.5)
 		{
 			doorhasopened = true;
@@ -358,6 +385,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 
 	}
 
+	// ensures door doesnt open past a certain point
 	if (doorhasopened == true)
 	{
 		if (!stopopenDoor)
@@ -371,11 +399,13 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		}
 	}
 
+	// text will appear telling you that you can now enter 
 	if (stopopenDoor == true)
 	{
 		translateWordY = 2.5;
 	}
 
+	// F to enter the mart using same x and z coords as opening door
 	if (Application::IsKeyPressedOnce('F') && camera.position.x <= -10 && camera.position.x >= -15 && 
 		camera.position.z <= 1.5 && camera.position.z >= -1.5 && stopopenDoor == true) {
 		Application::sceneswitch = Application::SCENESHAQLER;
@@ -387,6 +417,8 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 
 	// robot movement
 
+	// using bool and angles to make sure limbs wont go past certain points
+	// and then go back and forth 
 	if (leftleglimit == true)
 	{
 		rotateleftleg += 1;
@@ -407,6 +439,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	camera.prevPosition = camera.position;
 	camera.Update(dt, mouse);
 
+	// collision of the mart
 	if (isNear(meshList[GEO_MART], 2.f)) {
 		// Get the current view vector and current y position
 		Vector3 view = (camera.target - camera.position).Normalized();
@@ -743,6 +776,7 @@ void SceneShaqeel::Render()
 	modelStack.PopMatrix();
 	RenderSkybox();
 
+	// items are rendered in the functions below
 	RenderQuad();
 	Rendervehicles();
 	Rendertrees();
@@ -764,6 +798,7 @@ void SceneShaqeel::RenderUI() {
 
 void SceneShaqeel::RenderQuad()
 {
+	// road quad is smaller and very slightly above the ground quad
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -2, 0);
 	modelStack.Scale(10, 10, 40);
@@ -777,10 +812,11 @@ void SceneShaqeel::RenderQuad()
 	modelStack.PopMatrix();
 }
 
+// vehicles such as truck and plane are rendered here
 void SceneShaqeel::Rendervehicles()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(-1.3, -0.8, translateTruckZ);
+	modelStack.Translate(-1.3, -0.8, translateTruckZ); // if translateTruckZ is past a certain point, it will respawn
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(0.022, 0.022, 0.022);
 	RenderMesh(meshList[GEO_TRUCK], true);
@@ -815,6 +851,7 @@ void SceneShaqeel::Rendervehicles()
 	modelStack.PopMatrix();
 }
 
+// trees and bushes
 void SceneShaqeel::Rendertrees()
 {
 	modelStack.PushMatrix();
@@ -881,6 +918,7 @@ void SceneShaqeel::Rendertrees()
 	modelStack.PopMatrix();
 }
 
+// buildings, streetlight, mart etc...
 void SceneShaqeel::Rendercityobjects()
 {
 	modelStack.PushMatrix();
@@ -979,6 +1017,7 @@ void SceneShaqeel::Rendercityobjects()
 
 }
 
+// text for door
 void SceneShaqeel::RenderMytext()
 {
 	modelStack.PushMatrix();
@@ -1006,6 +1045,7 @@ void SceneShaqeel::RenderMytext()
 
 }
 
+// robos
 void SceneShaqeel::RenderNPC()
 {
 	modelStack.PushMatrix();

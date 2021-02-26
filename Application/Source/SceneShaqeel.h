@@ -103,6 +103,7 @@ private:
 	void RenderSkybox();
 	bool isNear(Mesh* mesh, const float& distance);
 
+	// items and objs are rendered inside here
 	void RenderQuad();
 	void Rendervehicles();
 	void Rendertrees();
@@ -112,11 +113,9 @@ private:
 	void RenderUI();
 
 	bool rotate;
-	bool doorhasopened;
+	bool doorhasopened; 
 	bool stopopenDoor;
 	bool leftleglimit;
-	bool leftleglimit2;
-	bool rightleglimit;
 
 	float translateWordY;
 	float translateTruckZ;

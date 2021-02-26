@@ -51,7 +51,7 @@ void SceneXL::PrintPosition()
 	std::stringstream ssY;
 	std::stringstream ssZ;
 	ssX.precision(3);
-	ssX << "X:" << camera.position.x;
+	ssX << "Xupdata:" << camera.position.x;
 	ssX.precision(3);
 	ssX << "Y:" << camera.position.y;
 	ssZ.precision(3);

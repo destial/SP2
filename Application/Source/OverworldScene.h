@@ -53,7 +53,8 @@ class OverworldScene : public Scene {
 		NUM_GEOMETRY,
 	};
 
-	enum UNIFORM_TYPE {
+	enum UNIFORM_TYPE
+	{
 		U_MVP = 0,
 		U_MODELVIEW,
 		U_MODELVIEW_INVERSE_TRANSPOSE,

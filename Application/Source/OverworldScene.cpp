@@ -316,11 +316,6 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	if (Application::previousscene != Application::OVERWORLD) {
 		InitGL();
 	}
-	if (Application::IsKeyPressedOnce('X'))
-	{
-		InitGL();
-	}
-
 
 	if (!currentCarObject) {
 		camera.Update(dt, mouse);
@@ -339,8 +334,6 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 
 void OverworldScene::InitGL()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -396,10 +389,10 @@ void OverworldScene::InitGL()
 	//light[0].type = Light::LIGHT_POINT;
 	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
-	light[0].power = 1;
-	light[0].kC = 1.f;
-	light[0].kL = 0.01f;
-	light[0].kQ = 0.001f;
+	light[1].power = 1;
+	light[1].kC = 1.f;
+	light[1].kL = 0.01f;
+	light[1].kQ = 0.001f;
 	light[0].cosCutoff = cos(Math::DegreeToRadian(45));
 	light[0].cosInner = cos(Math::DegreeToRadian(30));
 	light[0].exponent = 3.f;
@@ -442,8 +435,6 @@ void OverworldScene::InitGL()
 
 void OverworldScene::InitGLXray()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -499,10 +490,10 @@ void OverworldScene::InitGLXray()
 	//light[0].type = Light::LIGHT_POINT;
 	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
-	light[0].power = 1;
-	light[0].kC = 1.f;
-	light[0].kL = 0.01f;
-	light[0].kQ = 0.001f;
+	light[1].power = 1;
+	light[1].kC = 1.f;
+	light[1].kL = 0.01f;
+	light[1].kQ = 0.001f;
 	light[0].cosCutoff = cos(Math::DegreeToRadian(45));
 	light[0].cosInner = cos(Math::DegreeToRadian(30));
 	light[0].exponent = 3.f;
@@ -1379,6 +1370,41 @@ bool OverworldScene::isHit(GameObject* o1, GameObject* o2, const float& distance
 void OverworldScene::Render() {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	if (light[0].type == Light::LIGHT_DIRECTIONAL) {
+		Vector3 lightDir(light[0].position.x, light[0].position.y, light[0].position.z);
+		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
+
+		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_cameraspace.x);
+	}
+	else if (light[0].type == Light::LIGHT_SPOT) {
+		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
+		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
+
+		Vector3 spotDirection_cameraspace = viewStack.Top() * light[0].spotDirection;
+		glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
+	}
+	else {
+		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
+		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
+	}
+
+	if (light[1].type == Light::LIGHT_DIRECTIONAL) {
+		Vector3 lightDir(light[1].position.x, light[1].position.y, light[1].position.z);
+		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
+		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
+	}
+	else if (light[1].type == Light::LIGHT_SPOT) {
+		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
+		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
+
+		Vector3 spotDirection_cameraspace = viewStack.Top() * light[1].spotDirection;
+		glUniform3fv(m_parameters[U_LIGHT1_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
+	}
+	else {
+		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
+		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
+	}
 
 	viewStack.LoadIdentity();
 	viewStack.LookAt(

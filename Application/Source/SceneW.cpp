@@ -97,17 +97,17 @@ void SceneW::Init() {
 	meshList[CAMERA] = new Mesh("camera");
 	meshList[CAMERA]->type = Mesh::CAMERA;
 
-
-	rotateChest = 0;
+	// lot of initialised
+	rotateChest = 0; // rotatechest only applies to the top part of the chest not the bottom
 	rotateChest2 = 0;
 	rotateChest3 = 0;
 	rotateChest4 = 0;
 	rotateChest5 = 0;
 	countChest = 0;
 
-	rotateDoor = 0;
+	rotateDoor = 0; // door logic again
 
-	claymoreX = -45.3;
+	claymoreX = -45.3; // claymore, armour and helmet are all tiny and set at these locations
 	claymoreY = 1.5;
 
 	armourX = -23;
@@ -116,19 +116,19 @@ void SceneW::Init() {
 	helmetX = 20.5;
 	helmetY = 1.5;
 
-	scaleCLX = 0.25; // 1
-	scaleCLY = 0.25; // 1 
-	scaleCLZ = 0.25; // 1
+	scaleCLX = 0.25; // claymore, armour and helmet size will grow
+	scaleCLY = 0.25;
+	scaleCLZ = 0.25;
 
-	scaleARX = 0.05; // 1
-	scaleARY = 0.05; // 1 
-	scaleARZ = 0.05; // 1
+	scaleARX = 0.05;
+	scaleARY = 0.05;
+	scaleARZ = 0.05;
 
-	scaleHLX = 0.2; // 1
-	scaleHLY = 0.2; // 1 
-	scaleHLZ = 0.2; // 1
+	scaleHLX = 0.2; 
+	scaleHLY = 0.2; 
+	scaleHLZ = 0.2; 
 
-	Chestlimit = false;
+	Chestlimit = false; // set all bools to false
 	Chestlimit2 = false;
 	Chestlimit3 = false;
 	Chestlimit4 = false;
@@ -148,20 +148,6 @@ void SceneW::Init() {
 	collectedHelmet = false;
 
 	Dooropen = false;
-
-	translateSPHERE1X = -45.7;
-	translateSPHERE1Y = 1;
-
-	translateSPHERE2X = -47;
-
-	scaleSPX = 0.1;
-	scaleSPY = 0.1;
-	scaleSPZ = 0.1;
-
-	particles1spawn = false;
-	particles1limit = false;
-
-	heightlimit4 = false;
 
 	sceneManager = new SceneManager(this, camera.bounds);
 	CreateMaze();
@@ -318,31 +304,9 @@ void SceneW::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 }
 
 void SceneW::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-
-	else if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
-	static const float LSPEED = 40.f;
-	if (Application::IsKeyPressed('I'))
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('P'))
-		light[0].position.y += (float)(LSPEED * dt);
+	if (Application::previousscene != Application::SCENEWALTON) {
+		InitGL();
+	}
 
 	if (Application::IsKeyPressedOnce('F'))
 	{
@@ -359,82 +323,58 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 	}
 
-	if (Application::IsKeyPressed('E'))
+	if (Application::IsKeyPressed('E')) // to open chest and door
 	{
-		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && Chestlimit == false)
+		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49
+			&& camera.position.z >= 35 && Chestlimit == false) // using location coords
 		{
-			chestOpen = true;
-			/*rotateChest -= (float)(40 * dt);*/
-			particles1spawn = true;
-			ClaymoreSpawn = true;
-			/*if (rotateChest <= -70)
-			{
-				Chestlimit = true;
-			}*/
+			chestOpen = true; // set chest to open 
+			ClaymoreSpawn = true; // sets claymore to begin spawn
 		}
 
 		if (camera.position.x <= -18 && camera.position.x >= -28 && camera.position.z <= 16.5 && camera.position.z >= 13.5 && Chestlimit2 == false)
 		{
 			chestOpen2 = true;
-			/*rotateChest2 -= (float)(40 * dt);*/
-			/*if (rotateChest2 <= -70)
-			{
-				Chestlimit2 = true;
-			}*/
 		}
 
 		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && Chestlimit3 == false)
 		{
 			chestOpen3 = true;
-			/*rotateChest3 -= (float)(45 * dt);*/
-			ArmourSpawn = true;
-			/*if (rotateChest3 <= -120)
-			{
-				Chestlimit3 = true;
-			}*/
+			ArmourSpawn = true; // sets armour to spawn at the third chest
 		}
 
 		if (camera.position.x <= 36.6 && camera.position.x >= 29.4 && camera.position.z <= -26.3 && camera.position.z >= -36.3 && Chestlimit4 == false)
 		{
 			chestOpen4 = true;
-			/*rotateChest4 -= (float)(40 * dt);*/
-			/*if (rotateChest4 <= -70)
-			{
-				Chestlimit4 = true;
-			}*/
 		}
 
 		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && Chestlimit5 == false)
 		{
 			chestOpen5 = true;
-			/*rotateChest5 -= (float)(45 * dt);*/
-			HelmetSpawn = true;
-			/*if (rotateChest5 <= -120)
-			{
-				Chestlimit5 = true;
-			}*/
+			HelmetSpawn = true; // sets helmet to spawn 
 		}
 
 		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45)
 		{
-			doorhasopened = true;
+			doorhasopened = true; // same logic in my 2 scenes
 		}
 
 	}
 
-	if (doorhasopened == true)
+	if (doorhasopened == true) 
 	{
 		if (!stopopendoor)
 		{
 			rotateDoor -= (float)(40 * dt);
 		}
 
-		if (rotateDoor <= -90)
+		if (rotateDoor <= -90) // will stop at - 90
 		{
 			stopopendoor = true;
 		}
 	}
 
+	// same chest logic for all 5 chests (some will stop opening at -70 and others will stop at -120
 	if (chestOpen == true)
 	{
 		if (!Chestlimit)
@@ -442,7 +382,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 			rotateChest -= (float)(40 * dt);;
 		}
 
-		if (rotateChest <= -70)
+		if (rotateChest <= -70) 
 		{
 			Chestlimit = true;
 		}
@@ -468,7 +408,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 			rotateChest3 -= (float)(45 * dt);;
 		}
 
-		if (rotateChest3 <= -120)
+		if (rotateChest3 <= -120) // stops at -120 due to bigger items appearing out of chest
 		{
 			Chestlimit3 = true;
 		}
@@ -494,23 +434,23 @@ void SceneW::Update(double dt, Mouse mouse) {
 			rotateChest5 -= (float)(45 * dt);;
 		}
 
-		if (rotateChest5 <= -120)
+		if (rotateChest5 <= -120) // same for chest 3 and 5
 		{
 			Chestlimit5 = true;
 		}
 	}
 
-	if (Application::IsKeyPressed('F'))
+	if (Application::IsKeyPressed('F')) // F to leave area at the end of the maze (open door first)
 	{
 		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && stopopendoor == true)
 		{
-			Application::sceneswitch = Application::OVERWORLD;
+			Application::sceneswitch = Application::OVERWORLD; // f will bring you back to overworld
 		}
 	}
 
-	if (ClaymoreSpawn == true)
+	if (ClaymoreSpawn == true) // opening the first chest will cause the claymore to spawn
 	{
-		if (scaleCLX < 1.05 && scaleCLY < 1.05 && scaleCLZ < 1.05 && Claymorelimit == false) //does not bendup z -
+		if (scaleCLX < 1.05 && scaleCLY < 1.05 && scaleCLZ < 1.05 && Claymorelimit == false) // after opening up the chest, claymore will start to grow
 		{
 			scaleCLX += (float)(10 * dt);
 			scaleCLY += (float)(10 * dt);
@@ -518,17 +458,18 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 		else if (scaleCLX >= 1.05 && scaleCLY >= 1.05 && scaleCLZ >= 1.05)
 		{
-			Claymorelimit = true;
+			Claymorelimit = true; // stops growing when x y and z are 1.05 in size
 			//rotateAngle2;
 		}
 
+		// this is for floating animation
 		if (claymoreY > 1.5 && heightlimit == false)
 		{
 			claymoreY -= (float)(2 * dt);
 		}
 		else if (claymoreY >= -3.5 && claymoreY <= 3.5)
 		{
-			heightlimit = true;
+			heightlimit = true; // stops floating at 3.5
 		}
 		if (claymoreY >= -3.5 && claymoreY < 3.5 && heightlimit == true)
 		{
@@ -540,6 +481,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
+	// same logic for claymore
 	if (ArmourSpawn == true)
 	{
 		if (scaleARX < 0.4 && scaleARY < 0.4 && scaleARZ < 0.4 && armourlimit == false) //does not bendup z -
@@ -572,6 +514,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
+	// same logic for helmet
 	if (HelmetSpawn == true)
 	{
 		if (scaleHLX < 2 && scaleHLY < 2 && scaleHLZ < 2 && helmetlimit == false) //does not bendup z -
@@ -604,55 +547,26 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (particles1spawn == true)
+	if (Application::IsKeyPressedOnce('R')) // r to collect items
 	{
-		if (scaleSPX < 0.5 && scaleSPY < 0.65 && scaleSPZ < 0.5 && particles1limit == false) //does not bendup z -
+		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 
+			&& Claymorelimit == true && collectedClaymore == false) 
 		{
-			scaleSPX += (float)(1 * dt);
-			scaleSPY += (float)(1.3 * dt);
-			scaleSPZ += (float)(1 * dt);
-		}
-
-		else if (scaleSPX >= 0.5 && scaleSPY >= 0.65 && scaleSPZ >= 0.5)
-		{
-			particles1limit = true;
-		}
-
-		if (translateSPHERE1Y >= -3.5 && translateSPHERE1Y < 3.5 && heightlimit4 == false)
-		{
-			translateSPHERE1Y += (float)(1 * dt);
-			translateSPHERE1X += (float)(0.3 * dt);
-			translateSPHERE2X -= (float)(0.3 * dt);
-		}
-		else if (translateSPHERE1Y >= 3.5)
-		{
-			heightlimit4 = true;
-		}
-		if (heightlimit4 == true)
-		{
-			translateSPHERE1X = 1000;
-			translateSPHERE2X = 1000;
-		}
-
-	}
-
-	if (Application::IsKeyPressedOnce('R'))
-	{
-		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && Claymorelimit == true)
-		{
-			claymoreX = 1000;
+			claymoreX = 1000; 
 			collectedClaymore = true;
-			Player::setSword(Player::getSword() + 1);
+			Player::setSword(Player::getSword() + 1); // once collected, items will go up by 1
 		}
 
-		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && armourlimit == true)
+		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33
+			&& armourlimit == true && collectedArmour == false)
 		{
 			armourX = 1000;
 			collectedArmour = true;
 			Player::setArmourplate(Player::getArmourplate() + 1);
 		}
 
-		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && helmetlimit == true)
+		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53
+			&& helmetlimit == true && collectedHelmet == false)
 		{
 			helmetX = 1000;
 			collectedHelmet = true;
@@ -1074,7 +988,7 @@ void SceneW::Render()
 	RenderText(meshList[GEO_TEXT], "collect treasures", RED);
 	modelStack.PopMatrix();
 
-	RenderBoxes();
+	RenderBoxes(); // boxes are chests
 	RenderMaze();
 
 	std::stringstream ssX;
@@ -1094,8 +1008,7 @@ void SceneW::Render()
 
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3);
 	RenderUI();
-	RenderItems();
-	/*RenderParticles();*/
+	RenderItems(); 
 }
 
 void SceneW::Exit() {
@@ -1179,7 +1092,7 @@ void SceneW::RenderRoom() {
 
 void SceneW::RenderBoxes() {
 	
-	modelStack.PushMatrix();
+	modelStack.PushMatrix(); // splited up chest top and bottom
 	modelStack.Translate(-46.5, 2, 45);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Rotate(rotateChest, 1, 0, 0);
@@ -1211,12 +1124,6 @@ void SceneW::RenderBoxes() {
 	modelStack.PopMatrix();
 
 	// Box 3
-	//modelStack.PushMatrix();
-	//modelStack.Translate(-24, 0, 34);
-	////modelStack.Rotate(90, 0, 1, 0);
-	//modelStack.Scale(10, 10, 10);
-	//RenderMesh(meshList[BOX], true);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-24, 1.4, 35);
@@ -1234,11 +1141,7 @@ void SceneW::RenderBoxes() {
 	modelStack.PopMatrix();
 
 	// Box 4
-	/*modelStack.PushMatrix();
-	modelStack.Translate(33.5, 0, -35);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[BOX], true);
-	modelStack.PopMatrix();*/
+
 
 	modelStack.PushMatrix();
 	modelStack.Translate(33.5, 1.4, -35);
@@ -1254,12 +1157,7 @@ void SceneW::RenderBoxes() {
 	modelStack.PopMatrix();
 
 	// Box 5
-	/*modelStack.PushMatrix();
-	modelStack.Translate(20, 0, -5);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[BOX], true);
-	modelStack.PopMatrix();*/
+
 
 	modelStack.PushMatrix();
 	modelStack.Translate(20, 1.4, -5);
@@ -1275,31 +1173,16 @@ void SceneW::RenderBoxes() {
 	modelStack.PopMatrix();
 }
 
-void SceneW::RenderParticles()
-{
-	/*modelStack.PushMatrix();
-	modelStack.Translate(translateSPHERE1X, translateSPHERE1Y, 43);
-	modelStack.Scale(scaleSPX, scaleSPY, scaleSPZ);
-	RenderMesh(meshList[GEO_SPHERE], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(translateSPHERE2X, translateSPHERE1Y, 43);
-	modelStack.Scale(scaleSPX, scaleSPY, scaleSPZ);
-	RenderMesh(meshList[GEO_SPHERE2], true);
-	modelStack.PopMatrix();*/
-}
-
 void SceneW::RenderItems() // inside chest
 {
-	modelStack.PushMatrix();
+	modelStack.PushMatrix(); // render claymore
 	modelStack.Translate(claymoreX, claymoreY, 43.5);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(scaleCLX, scaleCLY, scaleCLZ);
 	RenderMesh(meshList[GEO_CLAYMORE], true);
 	modelStack.PopMatrix(); 
 
-	modelStack.PushMatrix();
+	modelStack.PushMatrix(); // render armour
 	modelStack.Translate(armourX, armourY, 35);
 	modelStack.Rotate(270, 1, 0, 0);
 	modelStack.Rotate(90, 0, 0, 1);
@@ -1307,7 +1190,7 @@ void SceneW::RenderItems() // inside chest
 	RenderMesh(meshList[GEO_ARMOURPLATE], true);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
+	modelStack.PushMatrix(); // render helmet
 	modelStack.Translate(helmetX, helmetY, -3.7);
 	modelStack.Rotate(270, 1, 0, 0);
 	modelStack.Scale(scaleHLX, scaleHLY, scaleHLZ);

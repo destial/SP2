@@ -270,17 +270,9 @@ void SceneOfTheBeach::RenderMeshOnScreen(Mesh* mesh, float size, float x, float 
 }
 
 void SceneOfTheBeach::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-
-	else if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
+	if (Application::previousscene != Application::SCENEBEACH) {
+		InitGL();
+	}
 
 
 	if (Application::IsKeyPressed('E'))
@@ -299,21 +291,6 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('Y') && OpenTextBox == true)
 	{
 		Application::sceneswitch = Application::SCENERYAN;
-	}
-
-	if (Application::IsKeyPressedOnce('F'))
-	{
-		if (gl == false)
-		{
-			InitGLXray();
-			gl = true;
-		}
-		else if (gl == true)
-		{
-			InitGL();
-			gl = false;
-		}
-
 	}
 
 	Crabspeed = (float)(5 * dt);
@@ -754,6 +731,7 @@ void SceneOfTheBeach::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(-CrabMoving, -5, -80);
 	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(CrabMoving, 1, 0, 0);
 	modelStack.Scale(0.7, 0.7, 0.7);
 	RenderMesh(meshList[GEO_SHIP], true);
 	modelStack.PopMatrix();

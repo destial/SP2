@@ -96,6 +96,8 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	void RenderSkybox();
 
+	// these bool and floats are done by shaq. He' ll explain his parts 
+	// bool for door open, chest open, and item spawn
 	bool rotate;
 	bool doorhasopened;
 	bool stopopendoor;
@@ -159,20 +161,6 @@ private:
 	float scaleHLX;
 	float scaleHLY;
 	float scaleHLZ;
-
-	float translateSPHERE1X;
-	float translateSPHERE1Y;
-
-	float translateSPHERE2X;
-
-	float scaleSPX;
-	float scaleSPY;
-	float scaleSPZ;
-
-	bool particles1spawn;
-	bool particles1limit;
-
-	bool heightlimit4;
 
 	bool gl;
 

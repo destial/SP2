@@ -304,7 +304,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('E')) // E to pickup book from shelf and place on counter. Also to open door
 	{
 		if (camera.position.x >= -15 && camera.position.x <= -12 && camera.position.z >= -0.685 
-			&& camera.position.z <= 4.75 && Bookhasbeenbaught == false) // pickup book, bookhasbeenbaught = false stops from continuously picking up book
+			&& camera.position.z <= 4.75 && sceneBools[B_BOOK_BOUGHT] == false) // pickup book, bookhasbeenbaught = false stops from continuously picking up book
 		{
 			sceneBools[B_BOOK_COLLECTED] = true;
 			sceneVectors[V_BOOK].x = 10.9;
@@ -356,7 +356,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('T'))
 	{
-		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75 && Bookhasbeenbaught == false)
+		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75 && sceneBools[B_BOOK_BOUGHT] == false)
 		{
 			sceneBools[B_IS_BUYING] = true;
 			

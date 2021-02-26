@@ -161,7 +161,7 @@ public:
 	virtual void Reset();
 
 	bool GotGnome;
-	bool GotJetpack;
+
 
 	bool Rotate;
 	float RotateAngle; //rotating of my dummy target

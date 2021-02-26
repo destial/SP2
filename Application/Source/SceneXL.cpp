@@ -472,18 +472,18 @@ void SceneXL::DetectJetpack()
 {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
-	if (meshList[GEO_JETPACK] && !GotJetpack)
+	if (meshList[GEO_JETPACK] && !Player::getJetpack())
 	{
-		if (isNear(meshList[GEO_JETPACK], (float)15.f) && talktojetpack == false)
+		if (isNear(meshList[GEO_JETPACK], (float)15.f) && Player::getJetpack() == false)
 		{
 			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to equip.", Color(0.541, 0.169, 0.886), 4, 1.8, 6.2);
 			if (Application::IsKeyPressedOnce('F'))
 			{
 				talktojetpack = true;
-				GotJetpack = true;
+				Player::setJetpack(true);
 			}
 		}
-		if (GotJetpack)
+		if (Player::getJetpack())
 		{
 			if (meshList[GEO_JETPACK])
 			{
@@ -501,7 +501,7 @@ void SceneXL::DetectJetpack()
 
 void SceneXL::RenderJetpack()
 {
-	if (meshList[GEO_JETPACK] && !GotJetpack)
+	if (meshList[GEO_JETPACK] && !Player::getJetpack())
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(meshList[GEO_JETPACK]->transform.translate.x, meshList[GEO_JETPACK]->transform.translate.y, meshList[GEO_JETPACK]->transform.translate.z);
@@ -525,12 +525,12 @@ void SceneXL::Update(double dt, Mouse mouse) {
 		InitGL();
 	}
 
-	if (talktojetpack == false)
+	if (Player::getJetpack() == false)
 	{
 		camera.Update(dt, mouse);
 	}
 
-	if (talktojetpack == true)
+	if (Player::getJetpack() == true)
 	{
 		camera.UpdateFlying(dt, mouse);
 	}

@@ -40,6 +40,7 @@ int Player::money;
 int Player::sword;
 int Player::armourplate;
 int Player::helmet;
+bool Player::jetpackequipped;
 
 unsigned Player::getAmmo() {
 	return ammo;
@@ -255,6 +256,7 @@ void Application::Init() {
 	Player::setMoney(100);
 	Player::setAmmo(256);
 	Player::setHealth(100);
+	Player::setJetpack(false);
 	// sword armour and helmet all zero so dun need initalise
 	m_window = glfwCreateWindow(m_width, m_height, "SP2 - Group 2", NULL, NULL);
 	quit = restart = false;

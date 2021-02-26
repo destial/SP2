@@ -1,0 +1,13 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl 10305_picture_frame_V1
+Ns 10.000002
+Ka 1.000000 1.000000 1.000000
+Kd 0.588200 0.588200 0.588200
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd C:\\Users\\zshaq\\Downloads\\10305_picture_frame_v2_L3.123ccb6bd6b4-0f6a-44a4-84c0-0b1b1626ff22\\10305_picture_frame_v2_L3.123ccb6bd6b4-0f6a-44a4-84c0-0b1b1626ff22\\10305_picture_frame_V1_Diffuse.jpg

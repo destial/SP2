@@ -115,8 +115,6 @@ class SceneW : public Scene
 		B_COLLECTED_ARMOR,
 		B_COLLECTED_HELMET,
 		B_DOOR_OPEN,
-		B_PARTICLES_SPAWN_1,
-		B_PARTICLES_LIMIT_1,
 		B_GL,
 		NUM_SCENE_BOOLS,
 	};
@@ -139,8 +137,6 @@ class SceneW : public Scene
 		V_SCALE_ARMOR,
 		V_SCALE_HELMET,
 		V_SCALE_SP,
-		V_TRANSLATE_SPHERE_1,
-		V_TRANSLATE_SPHERE_2,
 		NUM_SCENE_VECTORS,
 	};
 private:
@@ -174,7 +170,6 @@ private:
 	void RenderUI();
 	void RenderRoom();
 	void RenderItems();
-	void RenderParticles();
 	void moveBack(GameObject* object);
 	void DetectCollision();
 	bool isNear(GameObject* object);

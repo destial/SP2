@@ -75,6 +75,9 @@ void SceneShaqler::Init() {
 
 	meshList[GEO_TABLE] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//BrownRoundTable.obj", "OBJ//BrownRoundTable.mtl");
 
+	meshList[GEO_PAINTING] = MeshBuilder::GenerateOBJ("Painting", "OBJ//paintingframe.obj"); // Try 1 first
+	meshList[GEO_PAINTING]->textureID = LoadTGA("Image//brownColour.tga");
+
 	meshList[GEO_BOOKSTACK] = MeshBuilder::GenerateOBJ("Bookstack", "OBJ//BookStack.obj"); // Try 1 first
 	meshList[GEO_BOOKSTACK]->textureID = LoadTGA("Image//BookStack.tga");
 
@@ -322,6 +325,12 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		{
 			sceneBools[B_DOOR_OPENED] = true;
 		}
+
+		if (camera.position.x <= -13 && camera.position.x >= -20 && camera.position.z >= 4.4 && camera.position.z <= 9
+			&& sceneBools[B_FINDMONEY] == false && sceneBools[B_CASHCOLLECTED] == false)
+		{
+			sceneBools[B_FINDMONEY] = true;
+		}
 	}
 
 	if (sceneBools[B_DOOR_OPENED] == true)
@@ -371,34 +380,45 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Application::IsKeyPressedOnce('Y') && sceneBools[B_IS_BUYING] == true)
+	if (Application::IsKeyPressedOnce('Y'))
 	{
-		sceneVectors[V_BOOK].x = 1000;
-		sceneBools[B_IS_BUYING] = false;
-		sceneBools[B_BOOK_BOUGHT] = true;
-		Player::setMoney(Player::getMoney() - 30);
+		if (sceneBools[B_IS_BUYING] == true)
+		{
+			sceneVectors[V_BOOK].x = 1000;
+			sceneBools[B_IS_BUYING] = false;
+			sceneBools[B_BOOK_BOUGHT] = true;
+			Player::setMoney(Player::getMoney() - 30);
+		}
+
+		if (sceneBools[B_FINDMONEY] == true)
+		{
+			Player::setMoney(Player::getMoney() + 50);
+			sceneBools[B_FINDMONEY] = false;
+			sceneBools[B_CASHCOLLECTED] = true;
+
+		}
 
 	}
 
 	if (Application::IsKeyPressed('N'))
 	{
 		sceneBools[B_IS_BUYING] = false;
-		sceneBools[B_BOOK_BOUGHT] = false;
 	}
 
-	if (Application::IsKeyPressedOnce('F') && camera.position.x >= 1.13 && camera.position.x <= 6.6 
-		&& camera.position.z >= 14 && camera.position.z <= 20 && sceneBools[B_STOP_OPEN_DOOR] == true) {
-		Application::sceneswitch = Application::SCENESHAQ;
+	if (Application::IsKeyPressedOnce('F'))
+	{
+		if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 14 && camera.position.z <= 20
+			&& sceneBools[B_STOP_OPEN_DOOR] == true)
+		{
+			Application::sceneswitch = Application::SCENESHAQ;
+		}	
 	}
-
-
 
 	if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
 		Application::sceneswitch = Application::STARTSCENE;
 	}
 
 	camera.Update(dt, mouse);
-	/*Application::sceneswitch = Application::SCENESHAQ;*/
 }
 
 void SceneShaqler::InitGL()
@@ -714,7 +734,6 @@ void SceneShaqler::Render()
 
 	RenderWalls();
 	RenderInatimateobjects();
-	RenderText();
 	RenderNPC();
 	RenderBooks();
 	RenderBooks2();
@@ -730,6 +749,7 @@ void SceneShaqler::Render()
 	modelStack.PopMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 	RenderUI();
+	RenderText();
 }
 
 void SceneShaqler::RenderUI()
@@ -743,6 +763,15 @@ void SceneShaqler::RenderUI()
 		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", Colors::WHITE, 2, 10 * w / 800, 2 * h / 600);
 		RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 	}
+
+	if (sceneBools[B_FINDMONEY] == true && sceneBools[B_CASHCOLLECTED] == false)
+	{
+		RenderMeshOnScreen(meshList[GEO_UI2], 50, 40, 8 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], "You found some cash behind this painting! ", Colors::WHITE, 2, 5 * w / 800, 3 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press Y to collect", Colors::WHITE, 2, 10 * w / 800, 2 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
+	}
+
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), Colors::BLACK, 2, 0.5 * w / 800, 19 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), Colors::BLACK, 2, 0.5 * w / 800, 18 * h / 600);
@@ -875,6 +904,27 @@ void SceneShaqler::RenderInatimateobjects()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
+	modelStack.Translate(19.7, 6, 1);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(1.3, 1.3, 1.3);
+	RenderMesh(meshList[GEO_PAINTING], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-19.7, 6, 6.2);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1.3, 1.3, 1.3);
+	RenderMesh(meshList[GEO_PAINTING], true); // hidden money
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-19.7, 6, -6.5);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1.3, 1.3, 1.3);
+	RenderMesh(meshList[GEO_PAINTING], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
 	modelStack.Translate(16, 0, 17);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(0.4, 0.4, 0.4);
@@ -906,6 +956,8 @@ void SceneShaqler::RenderText()
 	RenderMesh(meshList[GEO_CUBE], true);
 	modelStack.PopMatrix();
 
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::BLACK, 200, 0, 500);
+
 	std::stringstream ssX;
 	std::stringstream ssY;
 	std::stringstream ssZ;
@@ -918,14 +970,11 @@ void SceneShaqler::RenderText()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Colors::RED, 20, 0, 10);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 2, 0, 7);
 	modelStack.PopMatrix();
-
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::BLACK, 200, 0, 500);
-
 }
 
-// floating books
+// floating book
 void SceneShaqler:: RenderBooks()
 {
 	if (sceneBools[B_BOOK_COLLECTED] == false)
@@ -1115,7 +1164,7 @@ void SceneShaqler::Reset() {
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(3.87, 5, 15.7), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)20);
+	camera.Init(Vector3(3.87, 5, 15.7), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)19);
 	camera.orthographic_size = 45.f;
 
 	sceneVectors[V_BOOK].x = -17;
@@ -1132,6 +1181,8 @@ void SceneShaqler::Reset() {
 	sceneVectors[V_TEXT_WORLD_SCREEN].y = 1000;
 
 	sceneBools[B_BOOK_BOUGHT] = false;
+	sceneBools[B_FINDMONEY] = false;
+	sceneBools[B_CASHCOLLECTED] = false;
 
 	sceneFloats[F_AMOUNT] = 30;
 	sceneVectors[V_BOOK_ORIGIN] = Vector3(-1, 0, 0);

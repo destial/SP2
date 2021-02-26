@@ -126,6 +126,8 @@ class SceneShaqler : public Scene
 		B_DOOR_OPENED,
 		B_STOP_OPEN_DOOR,
 		B_IS_BUYING,
+		B_FINDMONEY,
+		B_CASHCOLLECTED,
 		NUM_SCENE_BOOLS
 	};
 private:

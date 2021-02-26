@@ -232,17 +232,9 @@ void SceneRyan::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 }
 
 void SceneRyan::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-
-	else if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
+	if (Application::previousscene != Application::SCENERYAN) {
+		InitGL();
+	}
 	
 	float dist = Math::sqrt(Math::Square(camera.SharkPos.x - camera.position.x + Math::Square(camera.SharkPos.z - camera.position.z)));
 
@@ -467,8 +459,6 @@ void SceneRyan::InitGL()
 
 void SceneRyan::InitGLXray()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

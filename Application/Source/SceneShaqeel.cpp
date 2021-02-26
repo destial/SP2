@@ -298,31 +298,9 @@ void SceneShaqeel::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) 
 }
 
 void SceneShaqeel::Update(double dt, Mouse mouse) {
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-
-	else if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-
-	else if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
-	static const float LSPEED = 40.f;
-	if (Application::IsKeyPressed('I'))
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('P'))
-		light[0].position.y += (float)(LSPEED * dt);
+	if (Application::previousscene != Application::SCENESHAQ) {
+		InitGL();
+	}
 
 	// vehicle movement
 	translateTruckZ += (float)(7 * dt); // 3.87 15.7
@@ -408,10 +386,6 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	}
 
 	// robot movement
-
-	if (Application::previousscene != Application::SCENESHAQ) {
-		InitGL();
-	}
 
 	if (leftleglimit == true)
 	{

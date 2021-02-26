@@ -316,11 +316,6 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	if (Application::previousscene != Application::OVERWORLD) {
 		InitGL();
 	}
-	if (Application::IsKeyPressedOnce('X'))
-	{
-		InitGL();
-	}
-
 
 	if (!currentCarObject) {
 		camera.Update(dt, mouse);

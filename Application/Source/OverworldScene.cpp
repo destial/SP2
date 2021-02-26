@@ -317,10 +317,24 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 		InitGL();
 	}
 
-	if (!currentCarObject) {
-		camera.Update(dt, mouse);
-	} else {
-		camera.UpdateCar(dt, mouse, 6.f);
+	if (Player::getJetpack() == false)
+	{
+		if (!currentCarObject) {
+			camera.Update(dt, mouse);
+		}
+		else {
+			camera.UpdateCar(dt, mouse, 6.f);
+		}
+	}
+
+	if (Player::getJetpack() == true)
+	{
+		if (!currentCarObject) {
+			camera.UpdateFlying(dt, mouse);
+		}
+		else {
+			camera.UpdateCar(dt, mouse, 6.f);
+		}
 	}
 
 	RoadTeleport();

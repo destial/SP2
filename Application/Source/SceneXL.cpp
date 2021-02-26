@@ -447,18 +447,18 @@ void SceneXL::DetectJetpack()
 {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
-	if (meshList[GEO_JETPACK] && !sceneBools[B_GOT_JETPACK])
+	if (meshList[GEO_JETPACK] && !Player::getJetpack())
 	{
-		if (isNear(meshList[GEO_JETPACK], (float)15.f) && sceneBools[B_TALK_TO_JETPACK] == false)
+		if (isNear(meshList[GEO_JETPACK], (float)15.f) && Player::getJetpack() == false)
 		{
 			RenderTextOnScreen(meshList[GEO_TEXT], "Press F to equip.", Color(0.541, 0.169, 0.886), 4, 1.8, 6.2);
 			if (Application::IsKeyPressedOnce('F'))
 			{
 				sceneBools[B_TALK_TO_JETPACK] = true;
-				sceneBools[B_GOT_JETPACK] = true;
+				Player::setJetpack(true);
 			}
 		}
-		if (sceneBools[B_GOT_JETPACK])
+		if (Player::getJetpack())
 		{
 			if (meshList[GEO_JETPACK])
 			{
@@ -476,7 +476,7 @@ void SceneXL::DetectJetpack()
 
 void SceneXL::RenderJetpack()
 {
-	if (meshList[GEO_JETPACK] && !sceneBools[B_GOT_JETPACK])
+	if (meshList[GEO_JETPACK] && !Player::getJetpack())
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(meshList[GEO_JETPACK]->transform.translate.x, meshList[GEO_JETPACK]->transform.translate.y, meshList[GEO_JETPACK]->transform.translate.z);
@@ -498,9 +498,13 @@ void SceneXL::Update(double dt, Mouse mouse) {
 	}
 	sceneFloats[F_ROTATE_ANGLE] += (float)(50 * dt);
 
-	if (!sceneBools[B_TALK_TO_JETPACK]) {
+	if (Player::getJetpack() == false)
+	{
 		camera.Update(dt, mouse);
-	} else {
+	}
+
+	if (Player::getJetpack() == true)
+	{
 		camera.UpdateFlying(dt, mouse);
 	}
 

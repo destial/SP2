@@ -933,12 +933,14 @@ void SceneW::Render()
 	RenderSkybox();
 	RenderRoom();
 	
+	// ground mesh
 	modelStack.PushMatrix();
 	modelStack.Translate(0, .1, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 	
+	// instruction on the wall
 	modelStack.PushMatrix();
 	modelStack.Translate(-49.5, 10, 0);
 	modelStack.Rotate(90, 0, 1, 0);
@@ -963,6 +965,7 @@ void SceneW::Render()
 	modelStack.Scale(0.5, 0.5, 0.5);
 	RenderText(meshList[GEO_TEXT], "treasures", RED);
 	modelStack.PopMatrix();
+	// Instruction on how to open chest and get equipment
 	modelStack.PushMatrix();
 	modelStack.Translate(-43, 10, 44.8);
 	modelStack.Rotate(180, 0, 1, 0);
@@ -1006,7 +1009,7 @@ void SceneW::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), RED, 2, 0, 7);
 	modelStack.PopMatrix();
 
-	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", WHITE, 0, 0, -3); // to ensure the quad rendered on scene is the correct color
 	RenderUI();
 	RenderItems(); 
 }
@@ -1081,7 +1084,7 @@ void SceneW::RenderRoom() {
 	modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();
-
+	// cube to interact and go to other scene
 	modelStack.PushMatrix();
 	modelStack.Translate(25.3, 0, 51.5);
 	modelStack.Scale(0.65, 2.5, 1);
@@ -1091,7 +1094,7 @@ void SceneW::RenderRoom() {
 }
 
 void SceneW::RenderBoxes() {
-	
+	// chest 1
 	modelStack.PushMatrix(); // splited up chest top and bottom
 	modelStack.Translate(-46.5, 2, 45);
 	modelStack.Rotate(180, 0, 1, 0);
@@ -1107,7 +1110,7 @@ void SceneW::RenderBoxes() {
 	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
 
-	// Box 2
+	// chest 2
 	modelStack.PushMatrix();
 	modelStack.Translate(-20, 1.4, 15);
 	modelStack.Rotate(270, 0, 1, 0);
@@ -1123,8 +1126,7 @@ void SceneW::RenderBoxes() {
 	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
 
-	// Box 3
-
+	// chest 3
 	modelStack.PushMatrix();
 	modelStack.Translate(-24, 1.4, 35);
 	modelStack.Rotate(90, 0, 1, 0);
@@ -1140,9 +1142,7 @@ void SceneW::RenderBoxes() {
 	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
 
-	// Box 4
-
-
+	// chest 4
 	modelStack.PushMatrix();
 	modelStack.Translate(33.5, 1.4, -35);
 	modelStack.Rotate(rotateChest4, 1, 0, 0);
@@ -1156,9 +1156,7 @@ void SceneW::RenderBoxes() {
 	RenderMesh(meshList[CHESTBOTTOM], true);
 	modelStack.PopMatrix();
 
-	// Box 5
-
-
+	// chest 5
 	modelStack.PushMatrix();
 	modelStack.Translate(20, 1.4, -5);
 	modelStack.Rotate(rotateChest5, 1, 0, 0);
@@ -1216,7 +1214,7 @@ void SceneW::RenderMaze() {
 	}
 }
 
-void SceneW::CreateMaze() {
+void SceneW::CreateMaze() { // Use for collision
 	GameObject* object = new GameObject(meshList[MWALL]);
 	object->transform->Translate(-40, 2.5, -50);
 	object->transform->Scale(5, 5, 5);

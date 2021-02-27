@@ -215,19 +215,37 @@ void OverworldScene::RoadTeleport() {
 			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 0 * w / 800, 10 * h / 600);
 		}
 	}
+	else if (camera.position.x >= 39.3 &&
+		camera.position.x <= 74.3 &&
+		camera.position.z >= -100 &&
+		camera.position.z <= -80) {
+		if (currentCarObject) {
+			Application::sceneswitch = Application::SCENEXL;
+			Application::previousscene = Application::OVERWORLD;
+			camera.position.z = 70;
+		}
+		else {
+			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 0 * w / 800, 10 * h / 600);
+		}
+	}
 }
 
 void OverworldScene::RenderTeleportText() {
 	modelStack.PushMatrix();
 	modelStack.Translate(74.3, 5, 100);
 	modelStack.Rotate(180, 0, 1, 0);
-	RenderText(meshList[GEO_TEXT], "This way to the beach!", Colors::WHITE);
+	RenderText(meshList[GEO_TEXT], "This way to the Beach!", Colors::WHITE);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-36.4, 4, 100);
 	modelStack.Rotate(180, 0, 1, 0);
-	RenderText(meshList[GEO_TEXT], "This way to the mart!", Colors::WHITE);
+	RenderText(meshList[GEO_TEXT], "This way to the Mart!", Colors::WHITE);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(54.3, 5, -100);
+	RenderText(meshList[GEO_TEXT], "This way to the Carnival!", Colors::WHITE);
 	modelStack.PopMatrix();
 }
 

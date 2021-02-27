@@ -19,9 +19,9 @@ void SceneShaqler::Init() {
 	glBindVertexArray(m_vertexArrayID);
 
 	light[0].type = Light::LIGHT_POINT;
-	light[0].position.Set(0, 0, 0);
+	light[0].position.Set(0, 10, 0);
 	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(0, 0, 0);
+	light[1].position.Set(200, 0, 0);
 
 	InitGL();
 

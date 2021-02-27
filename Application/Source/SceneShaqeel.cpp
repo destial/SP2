@@ -20,9 +20,9 @@ void SceneShaqeel::Init()
 	glBindVertexArray(m_vertexArrayID);
 
 	light[0].type = Light::LIGHT_POINT;
-	light[0].position.Set(0, 0, 0);
+	light[0].position.Set(0, 10, 0);
 	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(0, 0, 0);
+	light[1].position.Set(200, 0, 0);
 
 	InitGL();
 
@@ -481,7 +481,7 @@ void SceneShaqeel::InitGL()
 	//light[0].type = Light::LIGHT_POINT;
 	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
-	light[0].power = 1;
+	light[0].power = 2;
 	light[0].kC = 1.f;
 	light[0].kL = 0.01f;
 	light[0].kQ = 0.001f;

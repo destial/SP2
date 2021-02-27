@@ -324,10 +324,6 @@ void OverworldScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 
 void OverworldScene::Update(double dt, Mouse mouse) {
 
-	if (Application::IsKeyPressedOnce('P')) {
-		Application::sceneswitch = Application::MENUSCENE;
-		Application::previousscene = Application::OVERWORLD;
-	}
 	if (Application::IsKeyPressedOnce('G')) {
 		showTaskbar = showTaskbar ? 0 : 1;
 	}

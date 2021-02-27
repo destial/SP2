@@ -196,6 +196,7 @@ void OverworldScene::RoadTeleport() {
 		camera.position.z <= 100 && 
 		camera.position.z >= 80) {
 		if (currentCarObject) {
+			Reset();
 			Application::sceneswitch = Application::SCENEBEACH;
 			Application::previousscene = Application::OVERWORLD;
 			camera.position.z = 70;
@@ -208,6 +209,7 @@ void OverworldScene::RoadTeleport() {
 		camera.position.z <= 100 &&
 		camera.position.z >= 80) {
 		if (currentCarObject) {
+			Reset();
 			Application::sceneswitch = Application::SCENESHAQ;
 			Application::previousscene = Application::OVERWORLD;
 			camera.position.z = 70;
@@ -220,6 +222,7 @@ void OverworldScene::RoadTeleport() {
 		camera.position.z >= -100 &&
 		camera.position.z <= -80) {
 		if (currentCarObject) {
+			Reset();
 			Application::sceneswitch = Application::SCENEXL;
 			Application::previousscene = Application::OVERWORLD;
 			camera.position.z = 70;
@@ -321,6 +324,10 @@ void OverworldScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 
 void OverworldScene::Update(double dt, Mouse mouse) {
 
+	if (Application::IsKeyPressedOnce('P')) {
+		Application::sceneswitch = Application::MENUSCENE;
+		Application::previousscene = Application::OVERWORLD;
+	}
 	if (Application::IsKeyPressedOnce('G')) {
 		showTaskbar = showTaskbar ? 0 : 1;
 	}

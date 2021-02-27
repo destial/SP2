@@ -592,6 +592,16 @@ void SceneXL::Update(double dt, Mouse mouse) {
 	}
 	
 	Minigun();
+	if (camera.position.x <= 50 &&
+		camera.position.x >= 36 &&
+		camera.position.z <= -20 &&
+		camera.position.z >= -40)
+	{
+		camera.position.x = 10;
+		camera.position.z = 10;
+		Application::sceneswitch = Application::OVERWORLD;
+		Application::previousscene = Application::SCENEXL;
+	}
 
 }
 

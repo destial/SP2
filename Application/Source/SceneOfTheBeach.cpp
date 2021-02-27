@@ -323,9 +323,9 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 
 	if (camera.position.x > 45)
 	{
+		Reset();
 		Application::sceneswitch = Application::OVERWORLD;
 		Application::previousscene = Application::SCENEBEACH;
-		camera.position.z = 70;
 	}
 
 	//Collision for trees

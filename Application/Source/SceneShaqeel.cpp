@@ -405,6 +405,16 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		// Set the correct target according to player's position and set the car speed to 0
 		camera.target = camera.position + view;
 	}
+
+	if (camera.position.x <= 8 &&
+		camera.position.x >= -8 &&
+		camera.position.z <= 30 &&
+		camera.position.z >= 24)
+	{
+		Reset();
+		Application::sceneswitch = Application::OVERWORLD;
+		Application::previousscene = Application::SCENESHAQ;
+	}
 }
 
 bool SceneShaqeel::isNear(Mesh* mesh, const float& distance) {

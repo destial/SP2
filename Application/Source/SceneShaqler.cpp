@@ -41,6 +41,15 @@ void SceneShaqler::Init() {
 	meshList[GEO_QUAD3] = MeshBuilder::GenerateQuad("quad3", Color(1, 1, 1), 1.f);
 	meshList[GEO_QUAD3]->textureID = LoadTGA("Image//BlackWallpaper.tga");
 
+	meshList[GEO_QUAD4] = MeshBuilder::GenerateQuad("quad4", Color(1, 1, 1), 1.f);
+	meshList[GEO_QUAD4]->textureID = LoadTGA("Image//bigdj.tga");
+
+	meshList[GEO_QUAD5] = MeshBuilder::GenerateQuad("quad5", Color(1, 1, 1), 1.f);
+	meshList[GEO_QUAD5]->textureID = LoadTGA("Image//obamium.tga");
+
+	meshList[GEO_QUAD6] = MeshBuilder::GenerateQuad("quad6", Color(1, 1, 1), 1.f);
+	meshList[GEO_QUAD6]->textureID = LoadTGA("Image//knuckles.tga");
+
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", 4, 4, 4);
 	meshList[GEO_CUBE]->material.kAmbient.Set(0.5f, 1.f, 0.5f);
 	meshList[GEO_CUBE]->material.kDiffuse.Set(0.5f, 1.f, 0.5f);
@@ -911,6 +920,14 @@ void SceneShaqler::RenderInatimateobjects()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
+	modelStack.Translate(19.8, 8.15, 1.025);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.75, 3.5, 1.1);
+	RenderMesh(meshList[GEO_QUAD4], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
 	modelStack.Translate(-19.7, 6, 6.2);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(1.3, 1.3, 1.3);
@@ -918,10 +935,26 @@ void SceneShaqler::RenderInatimateobjects()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
+	modelStack.Translate(-19.8, 8.15, 6.25);
+	modelStack.Rotate(270, 1, 0, 0);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Scale(1.2, 1.2, 1);
+	RenderMesh(meshList[GEO_QUAD5], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
 	modelStack.Translate(-19.7, 6, -6.5);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(1.3, 1.3, 1.3);
 	RenderMesh(meshList[GEO_PAINTING], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-19.8, 8.15, -6.45);
+	modelStack.Rotate(270, 1, 0, 0);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Scale(0.75, 1, 1);
+	RenderMesh(meshList[GEO_QUAD6], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();

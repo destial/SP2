@@ -474,9 +474,9 @@ void SceneW::Update(double dt, Mouse mouse) {
 	{
 		if (sceneVectors[V_SCALE_HELMET].x < 2 && sceneVectors[V_SCALE_HELMET].y < 2 && sceneVectors[V_SCALE_HELMET].z < 2 && !sceneBools[B_HELMET_LIMIT]) //does not bendup z -
 		{
-			sceneVectors[V_SCALE_HELMET].x += (float)(1 * dt);
-			sceneVectors[V_SCALE_HELMET].y += (float)(1 * dt);
-			sceneVectors[V_SCALE_HELMET].z += (float)(1 * dt);
+			sceneVectors[V_SCALE_HELMET].x += (float)(0.5 * dt);
+			sceneVectors[V_SCALE_HELMET].y += (float)(0.5 * dt);
+			sceneVectors[V_SCALE_HELMET].z += (float)(0.5 * dt);
 		}
 
 		else if (sceneVectors[V_SCALE_HELMET].x >= 2 && sceneVectors[V_SCALE_HELMET].y >= 2 && sceneVectors[V_SCALE_HELMET].z >= 2)
@@ -484,9 +484,9 @@ void SceneW::Update(double dt, Mouse mouse) {
 			sceneBools[B_HELMET_LIMIT] = true;
 		}
 
-		if (sceneVectors[V_HELMET].y > 1.5 && sceneBools[B_HEIGHT_LIMIT_3])
+		if (sceneVectors[V_HELMET].y > 1.5 && !sceneBools[B_HEIGHT_LIMIT_3])
 		{
-			sceneVectors[V_HELMET].y -= (float)(1 * dt);
+			sceneVectors[V_HELMET].y -= (float)(0.8 * dt);
 		}
 		else if (sceneVectors[V_HELMET].y >= -3.5 && sceneVectors[V_HELMET].y <= 3.5)
 		{
@@ -494,7 +494,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 		if (sceneVectors[V_HELMET].y >= -3.5 && sceneVectors[V_HELMET].y < 3.5 && sceneBools[B_HEIGHT_LIMIT_3])
 		{
-			sceneVectors[V_HELMET].y += (float)(1 * dt);
+			sceneVectors[V_HELMET].y += (float)(0.8 * dt);
 		}
 		else if (sceneVectors[V_HELMET].y >= 3.5)
 		{

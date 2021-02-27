@@ -90,6 +90,8 @@ void SceneOfTheBeach::Init()
 
 	meshList[GEO_CABIN] = MeshBuilder::GenerateOBJ("Cabin", "OBJ//beachcabin.obj");
 	meshList[GEO_CABIN]->textureID = LoadTGA("Image//BeachCabin.tga");
+	meshList[GEO_CABIN]->transform.Translate(15, -4, 40);
+	meshList[GEO_CABIN]->transform.Scale(3, 3, 3);
 
 	//Reset all variables
 	Reset();
@@ -319,6 +321,13 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 	camera.prevPosition = camera.position;
 	camera.Update(dt, mouse);
 
+	if (camera.position.x > 45)
+	{
+		Application::sceneswitch = Application::OVERWORLD;
+		Application::previousscene = Application::SCENEBEACH;
+		camera.position.z = 70;
+	}
+
 	//Collision for trees
 	if (isNear(meshList[GEO_TREE], 2.f)) {
 		// Get the current view vector and current y position
@@ -345,6 +354,18 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 		camera.target = camera.position + view;
 	}
 	if (isNear(meshList[GEO_TREE3], 2.f)) {
+		// Get the current view vector and current y position
+		Vector3 view = (camera.target - camera.position).Normalized();
+		float y = camera.position.y;
+
+		// Set the player back to previous position but current y position (only x & z collision)
+		camera.position = camera.prevPosition;
+		camera.position.y = y;
+
+		// Set the correct target according to player's position and set the car speed to 0
+		camera.target = camera.position + view;
+	}
+	if (isNear(meshList[GEO_CABIN], 5.f)) {
 		// Get the current view vector and current y position
 		Vector3 view = (camera.target - camera.position).Normalized();
 		float y = camera.position.y;

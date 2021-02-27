@@ -42,6 +42,7 @@ class SceneXL : public Scene
 		GEO_BULLET,
 		GEO_SITDROPTOWER,
 		GEO_DROPTOWER,
+		GEO_ROAD,
 		GEO_BORDERTEXT,
 		GEO_UI,
 		GEO_UI2,

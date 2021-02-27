@@ -93,6 +93,10 @@ void SceneXL::Init()
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//bluecloud_rt.tga");
 
+	meshList[GEO_ROAD] = MeshBuilder::GenerateQuad("road",
+		Color(1, 1, 1), 50.1f);
+	meshList[GEO_ROAD]->textureID = LoadTGA("Image//grass.tga");
+
 	meshList[GEO_FLOORFUTURE] = MeshBuilder::GenerateQuad("floor",
 		Color(1, 1, 1), 50.1f);
 	meshList[GEO_FLOORFUTURE]->textureID = LoadTGA("Image//floorfuture.tga");
@@ -111,7 +115,7 @@ void SceneXL::Init()
 	meshList[GEO_ROBOT] = MeshBuilder::GenerateOBJ("robot",
 		"OBJ//robo.obj");
 	meshList[GEO_ROBOT]->textureID = LoadTGA("Image//robo_normal.tga"); //robo_normal
-	meshList[GEO_ROBOT]->transform.Translate(-19.3, 0, -43.6); //robot
+	meshList[GEO_ROBOT]->transform.Translate(-19.3, 0, -40.6); //robot
 
 	meshList[GEO_BOOTH] = MeshBuilder::GenerateOBJMTL("ticket booth",
 		"OBJ//ticketboothlmao.obj", "OBJ//ticketboothlmao.mtl"); //ticket booth
@@ -392,7 +396,7 @@ void SceneXL::RenderSurroundings() //scene decorations
 	modelStack.PopMatrix(); //tea cup 2
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-100, 0, -30);
+	modelStack.Translate(-110, 0, -65);
 	//modelStack.Rotate(RotateAngle, 0, 1, 0);
 	modelStack.Scale(0.3, 0.3, 0.3);
 	RenderMesh(meshList[GEO_TEACUPSHEL], true);
@@ -959,6 +963,34 @@ void SceneXL::Render()
 	}
 	RenderUI();
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
+
+	std::stringstream ssX;
+	std::stringstream ssY;
+	std::stringstream ssZ;
+	ssX.precision(3);
+	ssX << "X:" << camera.position.x;
+	ssX.precision(3);
+	ssX << "Y:" << camera.position.y;
+	ssZ.precision(3);
+	ssZ << "Z:" << camera.position.z;
+
+	modelStack.PushMatrix();
+	modelStack.Scale(2, 2, 2);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 4, 0, 10);
+	modelStack.PopMatrix();
+	
+	modelStack.PushMatrix();
+	modelStack.Translate(50, 20,-38.5);
+	modelStack.Rotate(-90, 0, 1, 0);
+	RenderText(meshList[GEO_TEXT], "This way to the Beach!", Colors::BLACK);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(120, 0.1, -30.5);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.3, 3, 1.6);
+	RenderMesh(meshList[GEO_ROAD], false);
+	modelStack.PopMatrix(); //road
 }
 
 void SceneXL::RenderUI() {

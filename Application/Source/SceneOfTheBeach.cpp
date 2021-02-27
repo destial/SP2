@@ -71,6 +71,16 @@ void SceneOfTheBeach::Init()
 	meshList[GEO_CRAB] = MeshBuilder::GenerateOBJMTL("Crab", "OBJ//crab.obj", "OBJ//crab.mtl");
 
 	meshList[GEO_TREE] = MeshBuilder::GenerateOBJMTL("Tree", "OBJ//palmtree.obj", "OBJ//palmtree.mtl");
+	meshList[GEO_TREE]->transform.Translate(10, 0, 0);
+	meshList[GEO_TREE]->transform.Scale(0.5, 0.2, 0.5);
+
+	meshList[GEO_TREE2] = MeshBuilder::GenerateOBJMTL("Tree", "OBJ//palmtree.obj", "OBJ//palmtree.mtl");
+	meshList[GEO_TREE2]->transform.Translate(-25, 0, 20);;
+	meshList[GEO_TREE2]->transform.Scale(0.5, 0.2, 0.5);
+
+	meshList[GEO_TREE3] = MeshBuilder::GenerateOBJMTL("Tree", "OBJ//palmtree.obj", "OBJ//palmtree.mtl");
+	meshList[GEO_TREE3]->transform.Translate(20, 0, -30);
+	meshList[GEO_TREE3]->transform.Scale(0.5, 0.2, 0.5);
 
 	meshList[GEO_DOLPHIN] = MeshBuilder::GenerateOBJMTL("Dolphin", "OBJ//Dolphin.obj", "OBJ//Dolphin.mtl");
 
@@ -306,7 +316,54 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 	}
 	sceneFloats[ROTATE_DOLPHIN]++;
 
+	camera.prevPosition = camera.position;
 	camera.Update(dt, mouse);
+
+	//Collision for trees
+	if (isNear(meshList[GEO_TREE], 2.f)) {
+		// Get the current view vector and current y position
+		Vector3 view = (camera.target - camera.position).Normalized();
+		float y = camera.position.y;
+
+		// Set the player back to previous position but current y position (only x & z collision)
+		camera.position = camera.prevPosition;
+		camera.position.y = y;
+
+		// Set the correct target according to player's position and set the car speed to 0
+		camera.target = camera.position + view;
+	}
+	if (isNear(meshList[GEO_TREE2], 2.f)) {
+		// Get the current view vector and current y position
+		Vector3 view = (camera.target - camera.position).Normalized();
+		float y = camera.position.y;
+
+		// Set the player back to previous position but current y position (only x & z collision)
+		camera.position = camera.prevPosition;
+		camera.position.y = y;
+
+		// Set the correct target according to player's position and set the car speed to 0
+		camera.target = camera.position + view;
+	}
+	if (isNear(meshList[GEO_TREE3], 2.f)) {
+		// Get the current view vector and current y position
+		Vector3 view = (camera.target - camera.position).Normalized();
+		float y = camera.position.y;
+
+		// Set the player back to previous position but current y position (only x & z collision)
+		camera.position = camera.prevPosition;
+		camera.position.y = y;
+
+		// Set the correct target according to player's position and set the car speed to 0
+		camera.target = camera.position + view;
+	}
+
+}
+
+bool SceneOfTheBeach::isNear(Mesh* mesh, const float& distance) {
+
+	// Get distance between object and camera
+	double d = Math::sqrt(Math::Square(mesh->transform.translate.x - camera.position.x) + Math::Square(mesh->transform.translate.z - camera.position.z));
+	return (d - (4 * distance)) <= 0;
 }
 
 int SceneOfTheBeach::Direction(float value)
@@ -707,13 +764,13 @@ void SceneOfTheBeach::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(20, 0, -30);
 	modelStack.Scale(0.5, 0.2, 0.5);
-	RenderMesh(meshList[GEO_TREE], true);
+	RenderMesh(meshList[GEO_TREE2], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-25, 0, 20);
 	modelStack.Scale(0.5, 0.2, 0.5);
-	RenderMesh(meshList[GEO_TREE], true);
+	RenderMesh(meshList[GEO_TREE3], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();

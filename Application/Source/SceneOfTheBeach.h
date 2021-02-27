@@ -24,6 +24,8 @@ class SceneOfTheBeach : public Scene
 		GEO_TEXT,
 		GEO_DRIZZLE,
 		GEO_TREE,
+		GEO_TREE2,
+		GEO_TREE3,
 		GEO_CRAB,
 		GEO_DOLPHIN,
 		GEO_SHIP,
@@ -120,6 +122,7 @@ private:
 	int Direction(float value);
 	void RenderNPC();
 	void RenderUI();
+	bool isNear(Mesh* mesh, const float& distance);
 public:
 	SceneOfTheBeach();
 	~SceneOfTheBeach();

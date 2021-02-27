@@ -293,8 +293,10 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 	if (Application::previousscene != Application::SCENESHAQLER) {
 		InitGL();
 	}
+	// book that can be bought will be floating and rotating on shelf if not taken
 	sceneFloats[F_ROTATE_BOOK] += (float)(40 * dt);
 
+	// book floating
 	if (sceneVectors[V_BOOK].y > 2.85 && sceneBools[B_HEIGHT_LIMIT] == false)
 	{
 		sceneVectors[V_BOOK].y -= (float)(2 * dt);
@@ -330,11 +332,13 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 			sceneBools[B_PURCHASE_BOOK] = true;
 		}
 
+		// door animation, same as  my first scene outside the mart with the same logic
 		if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 14 && camera.position.z <= 20 && !sceneBools[B_STOP_OPEN_DOOR])
 		{
 			sceneBools[B_DOOR_OPENED] = true;
 		}
 
+		// there is money behind a painting, stand near the painting within these x and z coords to collect
 		if (camera.position.x <= -13 && camera.position.x >= -20 && camera.position.z >= 4.4 && camera.position.z <= 9
 			&& sceneBools[B_FINDMONEY] == false && sceneBools[B_CASHCOLLECTED] == false)
 		{
@@ -342,6 +346,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		}
 	}
 
+	// prevents door from going to far
 	if (sceneBools[B_DOOR_OPENED] == true)
 	{
 		if (!sceneBools[B_STOP_OPEN_DOOR])
@@ -355,16 +360,19 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		}
 	}
 
+	// text again
 	if (sceneBools[B_STOP_OPEN_DOOR] == true)
 	{
 		sceneVectors[V_TEXT_WORLD_SCREEN].y = 8.3;
 	}
+
 
 	if (sceneBools[B_BOOK_COLLECTED] == true)
 	{
 		Book(); // this is how book will teleport on to player after pressing e at the shelf
 	}
 
+	// book on the counter will be still so i used hardcoded values to ensure it will stop rotating right on top of the counter
 	if (sceneBools[B_PURCHASE_BOOK] == true)
 	{
 		sceneFloats[F_ROTATE_BOOK] = 270;
@@ -372,13 +380,17 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		sceneVectors[V_TEXT].z = -13.5;
 	}
 
+	// press t to purchase
 	if (Application::IsKeyPressed('T'))
 	{
-		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75 && sceneBools[B_BOOK_BOUGHT] == false)
+		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75 
+			&& sceneBools[B_BOOK_BOUGHT] == false)  
+			// b_book_baught == true will ensure 
+			// that the player cant purchase the book after buying it once
 		{
 			sceneBools[B_IS_BUYING] = true;
 			
-			if (sceneBools[B_IS_BUYING] == true)
+			if (sceneBools[B_IS_BUYING] == true)// triggers textbox
 			{
 				sceneVectors[V_SCREEN].x = 40;
 				sceneVectors[V_TEXT].x = 1000; // world text 
@@ -389,29 +401,30 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Application::IsKeyPressedOnce('Y'))
+	if (Application::IsKeyPressedOnce('Y')) // y to purchase the book
 	{
 		if (sceneBools[B_IS_BUYING] == true)
 		{
-			sceneVectors[V_BOOK].x = 1000;
-			sceneBools[B_IS_BUYING] = false;
-			sceneBools[B_BOOK_BOUGHT] = true;
-			Player::setMoney(Player::getMoney() - 30);
+			sceneVectors[V_BOOK].x = 1000; // book will disapper. I wanted to a bag system to store the book inside but i didnt have the time
+			sceneBools[B_IS_BUYING] = false; // without this statement, money will continue to go down if player keeps pressing y near the counter
+			sceneBools[B_BOOK_BOUGHT] = true; // since bbookbaught == true now, player cant repeat purchase interaction again
+			Player::setMoney(Player::getMoney() - 30); // money decreases
 		}
 
 		if (sceneBools[B_FINDMONEY] == true)
 		{
-			Player::setMoney(Player::getMoney() + 50);
-			sceneBools[B_FINDMONEY] = false;
-			sceneBools[B_CASHCOLLECTED] = true;
+			Player::setMoney(Player::getMoney() + 50); // money increases when pressed y
+			sceneBools[B_FINDMONEY] = false; // money can no longer be collected
+			sceneBools[B_CASHCOLLECTED] = true; 
 
 		}
 
 	}
 
-	if (Application::IsKeyPressed('N'))
+	if (Application::IsKeyPressed('N')) // press n if you dont want to purchase. book will stay at the counter
 	{
 		sceneBools[B_IS_BUYING] = false;
+		// if i put bbookhasbeenbaught = false here, the interaction can happen again even if i press y the first time
 	}
 
 	if (Application::IsKeyPressedOnce('F'))
@@ -419,7 +432,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 14 && camera.position.z <= 20
 			&& sceneBools[B_STOP_OPEN_DOOR] == true)
 		{
-			Application::sceneswitch = Application::SCENESHAQ;
+			Application::sceneswitch = Application::SCENESHAQ; // leave mart and change scene
 		}	
 	}
 
@@ -741,6 +754,7 @@ void SceneShaqler::Render()
 	modelStack.PopMatrix();
 	RenderSkybox();
 
+	// objects and npcs below
 	RenderWalls();
 	RenderInatimateobjects();
 	RenderNPC();

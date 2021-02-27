@@ -93,6 +93,8 @@ class SceneShaqeel : public Scene
 	};
 
 	enum SCENE_FLOATS {
+
+		// floats for movements
 		F_TRANSLATE_WORD_Y,
 		F_TRANSLATE_TRUCK_Z,
 		F_TRANSLATE_BUS_Z,
@@ -110,6 +112,7 @@ class SceneShaqeel : public Scene
 	};
 
 	enum SCENE_BOOLS {
+		// bools to start and end movements
 		B_ROTATE,
 		B_DOOR_OPENED,
 		B_STOP_OPEN_DOOR,
@@ -139,7 +142,9 @@ private:
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
 	void RenderSkybox();
 	bool isNear(Mesh* mesh, const float& distance);
-	void RenderQuad();
+
+	// render objects and background in functions below
+	void RenderQuad(); 
 	void Rendervehicles();
 	void Rendertrees();
 	void Rendercityobjects();

@@ -282,7 +282,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	if (Application::previousscene != Application::SCENESHAQ) {
 		InitGL();
 	}
-	// vehicle movement
+	// vehicle movement using translate in render
 	sceneFloats[F_TRANSLATE_TRUCK_Z] += (float)(7 * dt); // 3.87 15.7
 	sceneFloats[F_TRANSLATE_BUS_Z] -= (float)(7 * dt);
 	sceneFloats[F_TRANSLATE_CAR1_Z] += (float)(10 * dt);
@@ -292,6 +292,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	sceneFloats[F_TRANSLATE_PLANE_X] -= (float)(7 * dt);
 	sceneFloats[F_TRANSLATE_PLANE_Z] -= (float)(1.2 * dt);
 
+	// if vehicle travels to a certain point it will respawn and start again
 	if (sceneFloats[F_TRANSLATE_TRUCK_Z] >= 40)
 	{
 		sceneFloats[F_TRANSLATE_TRUCK_Z] = -40;
@@ -340,6 +341,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 
 	}
 
+	// bool to ensure the door cant open infinitely
 	if (sceneBools[B_DOOR_OPENED] == true)
 	{
 		if (!sceneBools[B_STOP_OPEN_DOOR])
@@ -370,10 +372,10 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 
 	// robot movement
 
-	if (sceneBools[B_LEFT_LEG_LIMIT] == true)
+	if (sceneBools[B_LEFT_LEG_LIMIT] == true) // this bool statement is used for all of robo limbs
 	{
 		sceneFloats[F_ROTATE_LEFT_LEG] += 1;
-		if (sceneFloats[F_ROTATE_LEFT_LEG] > 30)
+		if (sceneFloats[F_ROTATE_LEFT_LEG] > 30) // ensures limbs dont go too far and will rotate back and forth
 		{
 			sceneBools[B_LEFT_LEG_LIMIT] = false;
 		}
@@ -963,7 +965,7 @@ void SceneShaqeel::Rendercityobjects()
 void SceneShaqeel::RenderMytext()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(-14.8, sceneFloats[F_TRANSLATE_WORD_Y], 0.9);
+	modelStack.Translate(-14.8, sceneFloats[F_TRANSLATE_WORD_Y], 0.9); // text will appear once door is open
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(0.15, 0.15, 0.15);
 	RenderText(meshList[GEO_TEXT], " Press F to Enter", Colors::WHITE);
@@ -990,6 +992,7 @@ void SceneShaqeel::RenderMytext()
 // robos
 void SceneShaqeel::RenderNPC()
 {
+	// robo done with hierarch modelling with small sphere at the centre
 	modelStack.PushMatrix();
 	modelStack.Translate(-13.2, 0, sceneFloats[F_TRANSLATE_SPHERE_Z]);
 	modelStack.Scale(0.25, 0.25, 0.25);
@@ -1032,7 +1035,6 @@ void SceneShaqeel::RenderNPC()
 	modelStack.PopMatrix();
 
 	// 2nd robot
-
 
 	modelStack.PushMatrix();
 	modelStack.Translate(13.2, 0, sceneFloats[F_TRANSLATE_SPHERE_Z_2]);
@@ -1092,6 +1094,7 @@ void SceneShaqeel::Reset() {
 	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)30);
 	camera.orthographic_size = 45.f;
 
+	// initialised
 	sceneFloats[F_TRANSLATE_TRUCK_Z] = 10;
 	sceneFloats[F_BUS_Z] = 0;
 	sceneFloats[F_TRANSLATE_CAR1_Z] = -10;

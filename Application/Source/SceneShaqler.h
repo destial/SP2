@@ -102,6 +102,7 @@ class SceneShaqler : public Scene
 	};
 
 	enum SCENE_FLOATS {
+		// similar to my first scene where there is floats for movements
 		F_ROTATE_BOOK,
 		F_ROTATE_DOOR,
 		F_AMOUNT,
@@ -121,6 +122,7 @@ class SceneShaqler : public Scene
 	};
 
 	enum SCENE_BOOLS {
+		// bool for movement limit and begin movement/interactions with npc and objects
 		B_ROTATE,
 		B_HEIGHT_LIMIT,
 		B_BOOK_COLLECTED,

@@ -399,7 +399,7 @@ void MazeScene::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Application::IsKeyPressedOnce('F')) // F to leave area at the end of the maze (open door first)
+	if (Application::IsKeyPressed('F')) // F to leave area at the end of the maze (open door first) try iskeypressedonce
 	{
 		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45
 			&& sceneBools[B_STOP_DOOR_OPEN] == true && sceneBools[B_COLLECTED_CLAYMORE] == true &&

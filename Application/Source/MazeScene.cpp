@@ -410,6 +410,8 @@ void MazeScene::Update(double dt, Mouse mouse) {
 		}
 	}
 
+
+
 	if (sceneBools[B_CLAYMORE_SPAWN])
 	{
 		if (sceneVectors[V_SCALE_CLAYMORE].x < 1.05 && sceneVectors[V_SCALE_CLAYMORE].y < 1.05 && sceneVectors[V_SCALE_CLAYMORE].z < 1.05 && sceneBools[B_CLAYMORE_LIMIT] == false) //does not bendup z -

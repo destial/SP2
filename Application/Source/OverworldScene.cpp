@@ -197,8 +197,8 @@ void OverworldScene::RoadTeleport() {
 		if (currentCarObject) {
 			camera.currentCarSpeed = 0;
 			Vector3 view = (camera.position - camera.carTarget);
-			Application::sceneswitch = Application::SCENEBEACH;
-			Application::previousscene = Application::OVERWORLD;
+			Application::sceneswitch = Application::BEACH_SCENE;
+			Application::previousscene = Application::OVERWORLD_SCENE;
 			camera.position.z = 70;
 			camera.carTarget = camera.position - view;
 		} else {
@@ -212,8 +212,8 @@ void OverworldScene::RoadTeleport() {
 		if (currentCarObject) {
 			camera.currentCarSpeed = 0;
 			Vector3 view = (camera.position - camera.carTarget);
-			Application::sceneswitch = Application::SCENESHAQ;
-			Application::previousscene = Application::OVERWORLD;
+			Application::sceneswitch = Application::DISTRICT_SCENE;
+			Application::previousscene = Application::OVERWORLD_SCENE;
 			camera.position.z = 70;
 			camera.carTarget = camera.position - view;
 		} else {
@@ -227,8 +227,8 @@ void OverworldScene::RoadTeleport() {
 		if (currentCarObject) {
 			camera.currentCarSpeed = 0;
 			Vector3 view = (camera.position - camera.carTarget);
-			Application::sceneswitch = Application::SCENEXL;
-			Application::previousscene = Application::OVERWORLD;
+			Application::sceneswitch = Application::CARNIVAL_SCENE;
+			Application::previousscene = Application::OVERWORLD_SCENE;
 			camera.position.z = -70;
 			camera.carTarget = camera.position - view;
 		} else {
@@ -335,7 +335,7 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	meshList[MOON]->transform.translate = camera.position;
 	meshList[MOON]->transform.translate.y = camera.position.y + (2 * camera.bounds);
 
-	if (Application::previousscene != Application::OVERWORLD) {
+	if (Application::previousscene != Application::OVERWORLD_SCENE) {
 		InitGL();
 	}
 
@@ -346,8 +346,8 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	} else {
 		camera.Update(dt, mouse);
 	}
-	if (Player::getSharkSurvived() == true && Player::getMazeComplete() == true && Player::getBookPurchased() == true && Player::getShootingComplete() == true) {
-		Application::sceneswitch = Application::WINSCENE;
+	if (Player::getSharkSurvived() && Player::getMazeComplete()  && Player::getBookPurchased()  && Player::getShootingComplete()) {
+		Application::sceneswitch = Application::WIN_SCENE;
 	}
 
 	RoadTeleport();
@@ -757,9 +757,11 @@ void OverworldScene::CompleteTasks() {
 		//showTaskbar = 1;
 	}
 	if (!tasks[JUMP]) {
-		if (Application::IsKeyPressedOnce(' ')) {
-			tasks[JUMP] = 1;
-			showTaskbar = 1;
+		if (!currentCarObject) {
+			if (Application::IsKeyPressedOnce(' ')) {
+				tasks[JUMP] = 1;
+				showTaskbar = 1;
+			}
 		}
 	}
 	if (showTaskbar && showTaskbarFrame == 30) {
@@ -1111,9 +1113,9 @@ void OverworldScene::EnterBuilding() {
 	for (auto b : sceneManager->allObjects) {
 		if (b && b->mesh->name == "skyscraper") {
 			if (isNearObject(b, 2.5 * b->transform->scale.x)) {
-				if (Application::IsKeyPressed('F')) {
-					Application::sceneswitch = Application::SCENEWALTON;
-					Application::previousscene = Application::OVERWORLD;
+				if (Application::IsKeyPressedOnce('F')) {
+					Application::sceneswitch = Application::MAZE_SCENE;
+					Application::previousscene = Application::OVERWORLD_SCENE;
 					tasks[ENTER_BUILDING] = 1;
 				}
 			}
@@ -1478,8 +1480,8 @@ void OverworldScene::Render() {
 
 	RenderSkybox();
 	RenderObjects();
-	RenderTasks();
 	RenderRobo();
+	RenderTasks();
 	RenderTeleportText();
 	RenderUI();
 	if (currentCarObject) {

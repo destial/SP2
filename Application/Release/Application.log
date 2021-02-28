@@ -1,0 +1,54 @@
+﻿  Application.cpp
+D:\Github\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\MinigameEntity.h(28,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(31,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(34,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(37,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(40,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(43,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(46,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\Application.cpp(172,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\Application.cpp(179,49): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Github\SP2\Application\Source\Application.cpp(183,15): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Github\SP2\Application\Source\Application.cpp(189,50): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Github\SP2\Application\Source\Application.cpp(193,15): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  SharkScene.cpp
+D:\Github\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\SharkScene.cpp(61,64): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\SharkScene.cpp(62,64): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\SharkScene.cpp(220,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\SharkScene.cpp(245,27): warning C4305: '-=': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\SharkScene.cpp(311,29): warning C4305: '+=': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\SharkScene.cpp(317,29): warning C4305: '-=': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\SharkScene.cpp(323,29): warning C4305: '-=': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\SharkScene.cpp(683,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\SharkScene.cpp(690,32): warning C4305: 'argument': truncation from 'double' to 'float'
+  StartMenuScene.cpp
+D:\Github\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(36,78): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(241,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(242,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(511,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(517,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(524,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(531,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(613,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(620,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(637,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(644,64): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(644,50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(645,64): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(645,50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(646,109): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(646,95): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(647,88): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(647,73): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(648,85): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\StartMenuScene.cpp(648,72): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  Generating code
+D:\Github\SP2\Application\Source\BeachScene.cpp(401): warning C4715: 'BeachScene::Direction': not all control paths return a value
+  451 of 1711 functions (26.4%) were compiled, the rest were copied from previous compilation.
+    206 functions were new in current compilation
+    139 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Application.vcxproj -> D:\Github\SP2\Release\Application.exe

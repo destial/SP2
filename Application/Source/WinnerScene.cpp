@@ -241,7 +241,7 @@ void WinnerScene::Update(double dt, Mouse mouse) {
 		{
 			std::cout << "Hit!" << std::endl;
 			Application::restart = 1;
-			Application::sceneswitch = Application::STARTSCENE;
+			Application::sceneswitch = Application::START_SCENE;
 		}
 		else if (posX > 29 * w / 800 && posX < 50 * w / 800 && posY > 14 * h / 600 && posY < 26 * h / 600)
 		{
@@ -643,7 +643,7 @@ void WinnerScene::Render()
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[BUTTON], 20, 40 * w / 800, 35 * h / 600);
 	RenderMeshOnScreen(meshList[BUTTON], 20, 40 * w / 800, 20 * h / 600);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Congratz! You have completed the game", Colors::WHITE, 4, 1 * w / 750, 10 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Congratz! You have completed the game", Colors::WHITE, 4, 0.5 * w / 750, 10 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Return to", Colors::BLUE, 3, 7.25 * w / 750, 8.5 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Main Menu", Colors::BLUE, 3, 7.25 * w / 750, 8 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Quit", Colors::BLUE, 3, 9 * w / 750, 4.5 * h / 600);

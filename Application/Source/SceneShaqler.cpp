@@ -344,6 +344,12 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		{
 			sceneBools[B_FINDMONEY] = true;
 		}
+
+		//if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 14 && camera.position.z <= 20
+		//	&& sceneBools[B_STOP_OPEN_DOOR] == true)
+		//{
+		//	Application::sceneswitch = Application::SCENESHAQ; // leave mart and change scene
+		//}
 	}
 
 	// prevents door from going to far

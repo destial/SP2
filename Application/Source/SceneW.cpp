@@ -243,7 +243,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 		InitGL();
 	}
 
-	if (Application::IsKeyPressedOnce('F'))
+	if (Application::IsKeyPressedOnce('X'))
 	{
 		if (sceneBools[B_GL] == false)
 		{

@@ -224,11 +224,8 @@ void WinnerScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 
 void WinnerScene::Update(double dt, Mouse mouse) {
 	//Mouse Inputs
-	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0))
+	if (Application::IsMousePressedOnce(0))
 	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
 		//Converting Viewport space to UI space
 		double x, y;
 		Application::GetCursorPos(&x, &y);
@@ -236,40 +233,15 @@ void WinnerScene::Update(double dt, Mouse mouse) {
 		unsigned h = Application::GetWindowHeight();
 		float posX = x / w * Application::GetUIWidth(); //convert (0,800) to (0,80)
 		float posY = (1.f - y / h) * Application::GetUIHeight(); //convert (600,0) to (0,60)
-		std::cout << "posX:" << posX << " , posY:" << posY << std::endl;
 		if (posX > 29 * w / 800 && posX < 50 * w / 800 && posY > 29 * h / 600 && posY < 41 * h / 600)
 		{
-			std::cout << "Hit!" << std::endl;
-			Application::restart = 1;
-			Application::sceneswitch = Application::START_SCENE;
+			Application::restart = true;
 		}
 		else if (posX > 29 * w / 800 && posX < 50 * w / 800 && posY > 14 * h / 600 && posY < 26 * h / 600)
 		{
-			std::cout << "Hit!" << std::endl;
-			Application::quit = 1;
-		}
-		else
-		{
-			std::cout << "Miss!" << std::endl;
+			Application::quit = true;
 		}
 	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
-	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
-	}
-
 	rotateangle++;
 
 

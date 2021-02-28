@@ -1,54 +1,456 @@
 ﻿  Application.cpp
-D:\Github\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\MinigameEntity.h(28,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\MinigameEntity.h(31,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\MinigameEntity.h(34,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\MinigameEntity.h(37,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\MinigameEntity.h(40,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\MinigameEntity.h(43,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\MinigameEntity.h(46,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\Application.cpp(172,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\Application.cpp(179,49): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-D:\Github\SP2\Application\Source\Application.cpp(183,15): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-D:\Github\SP2\Application\Source\Application.cpp(189,50): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-D:\Github\SP2\Application\Source\Application.cpp(193,15): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(28,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(31,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(34,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(37,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(40,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(43,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(46,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Application.cpp(172,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Application.cpp(179,49): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Application.cpp(183,15): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Application.cpp(189,50): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Application.cpp(193,15): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  Camera3.cpp
+D:\Lenovo\Documents\SP2\Application\Source\Camera3.cpp(428,28): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Camera3.cpp(429,26): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Camera3.cpp(625,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Camera3.cpp(642,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Camera3.cpp(660,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Camera3.cpp(673,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  GameObject.cpp
+  LoadOBJ.cpp
+  LoadTGA.cpp
+  main.cpp
+  Mesh.cpp
+  MeshBuilder.cpp
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(27,6): warning C4101: 'index': unreferenced local variable
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(111,17): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(125,20): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(131,17): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(137,20): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(144,30): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(144,17): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(309,6): warning C4101: 'index': unreferenced local variable
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(460,20): warning C4018: '<=': signed/unsigned mismatch
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(467,20): warning C4018: '<': signed/unsigned mismatch
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(499,45): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(499,17): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(490,6): warning C4101: 'index': unreferenced local variable
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(524,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(530,34): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(529,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(528,43): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(538,41): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(537,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(536,50): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MeshBuilder.cpp(767,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+  PauseMenuScene.cpp
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(36,78): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(235,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(236,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(482,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(488,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(495,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(502,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(584,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(591,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(608,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(615,64): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(615,50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(616,64): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(616,50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(617,109): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(617,95): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(618,93): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(618,78): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(619,93): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(619,80): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(620,95): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\PauseMenuScene.cpp(620,80): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Quad.cpp
+D:\Lenovo\Documents\SP2\Application\Source\Quad.cpp(7,21): warning C4244: '=': conversion from 'float' to 'unsigned int', possible loss of data
+  OverworldScene.cpp
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(205,124): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(205,110): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(242,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(248,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(254,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(590,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(596,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(603,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(610,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(638,29): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(652,120): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(652,76): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(692,121): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(692,77): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(771,23): warning C4018: '>': signed/unsigned mismatch
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(779,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(780,128): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(780,112): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(781,126): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(781,112): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(782,130): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(782,114): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(788,51): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(789,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(832,51): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(834,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(876,50): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(877,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(919,52): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(921,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(965,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1007,51): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1009,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1064,107): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1064,94): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1116,28): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1130,46): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1160,27): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1197,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1197,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1213,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1219,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1225,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1231,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1240,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1247,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1254,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1261,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1270,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1277,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1284,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1291,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1300,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1307,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1314,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1321,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1330,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1337,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1344,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1351,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1520,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1544,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1556,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1564,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1616,26): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\OverworldScene.cpp(1617,26): warning C4305: '=': truncation from 'double' to 'float'
+  SceneManager.cpp
+  BeachScene.cpp
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(31,78): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(75,51): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(79,52): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(83,52): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(308,19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(724,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(731,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(785,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(791,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(797,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(806,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(814,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(820,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(839,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(852,69): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(859,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(860,116): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(861,116): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(862,118): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
   SharkScene.cpp
-D:\Github\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\SharkScene.cpp(61,64): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\SharkScene.cpp(62,64): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\SharkScene.cpp(220,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\SharkScene.cpp(245,27): warning C4305: '-=': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\SharkScene.cpp(311,29): warning C4305: '+=': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\SharkScene.cpp(317,29): warning C4305: '-=': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\SharkScene.cpp(323,29): warning C4305: '-=': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\SharkScene.cpp(683,32): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\SharkScene.cpp(690,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\SharkScene.cpp(61,64): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\SharkScene.cpp(62,64): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\SharkScene.cpp(221,13): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\SharkScene.cpp(244,27): warning C4305: '-=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\SharkScene.cpp(310,29): warning C4305: '+=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\SharkScene.cpp(316,29): warning C4305: '-=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\SharkScene.cpp(322,29): warning C4305: '-=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\SharkScene.cpp(682,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\SharkScene.cpp(689,32): warning C4305: 'argument': truncation from 'double' to 'float'
+  DistrictScene.cpp
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(30,78): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(39,80): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(82,57): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(83,51): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(662,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(668,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(675,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(682,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(752,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(753,126): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(753,112): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(754,126): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(754,112): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(755,128): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(755,114): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(768,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(778,67): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(780,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(785,62): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(787,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(794,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(799,65): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(801,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(817,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(824,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(831,39): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(838,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(845,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(852,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(859,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(866,39): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(915,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(920,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(922,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(927,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(929,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(934,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(935,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(940,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(941,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(946,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(947,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(952,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(954,30): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(959,39): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(965,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(976,66): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(978,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(988,66): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(1031,67): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(1085,31): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(1097,43): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\DistrictScene.cpp(1098,44): warning C4305: '=': truncation from 'double' to 'float'
+  MartScene.cpp
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(29,78): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(325,33): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(373,44): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(386,31): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(680,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(686,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(693,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(700,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(783,55): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(784,120): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(784,107): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(785,100): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(785,87): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(791,55): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(792,125): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(792,112): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(793,102): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(793,89): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(797,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(798,126): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(798,112): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(799,126): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(799,112): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(800,128): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(800,114): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(808,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(856,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(876,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(883,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(885,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(890,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(892,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(898,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(904,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(910,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(915,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(917,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(922,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(924,31): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(929,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(931,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(936,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(939,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(944,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(946,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(951,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(954,30): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(959,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(961,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(966,41): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(976,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(993,70): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(995,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1000,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1036,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1043,39): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1050,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1057,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1065,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1072,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1079,39): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1086,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1093,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1100,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1107,40): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1114,41): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1122,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1146,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1155,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1160,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1167,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1175,33): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1198,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1202,31): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MartScene.cpp(1203,30): warning C4305: '=': truncation from 'double' to 'float'
+  MazeScene.cpp
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(29,78): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(759,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(760,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(877,31): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(909,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(915,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(921,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(927,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(953,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(954,128): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(954,114): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(955,135): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(955,121): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(956,130): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(956,116): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(1013,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(1014,31): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(1039,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(1055,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(1071,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(1085,34): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(1116,79): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(2131,36): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(2144,38): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(2145,38): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(2146,38): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(2148,38): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(2149,38): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MazeScene.cpp(2150,38): warning C4305: '=': truncation from 'double' to 'float'
+  CarnivalScene.cpp
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(28,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(31,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(34,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(37,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(40,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(43,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\MinigameEntity.h(46,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(64,78): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(107,44): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(118,58): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(146,57): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(147,54): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(301,92): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(301,83): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(325,93): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(325,80): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(344,20): warning C4018: '<': signed/unsigned mismatch
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(348,30): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(361,36): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(383,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(392,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(399,37): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(401,32): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(440,89): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(440,103): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(458,98): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(458,85): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(478,10): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(502,21): warning C4018: '<': signed/unsigned mismatch
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(522,33): warning C4804: '-=': unsafe use of type 'bool' in operation
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(565,40): warning C4305: '+=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(826,87): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(826,116): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(826,101): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(827,87): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(827,116): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(827,101): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(830,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(830,63): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(953,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(961,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(963,30): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(1001,59): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(1002,126): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(1002,112): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(1003,126): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(1003,112): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(1004,128): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(1004,114): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(1069,37): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(1085,29): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(1085,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\CarnivalScene.cpp(1085,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  shader.cpp
   StartMenuScene.cpp
-D:\Github\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(36,78): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(241,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(242,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(511,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(517,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(524,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(531,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(613,35): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(620,35): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(637,38): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(644,64): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(644,50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(645,64): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(645,50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(646,109): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(646,95): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(647,88): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(647,73): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(648,85): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-D:\Github\SP2\Application\Source\StartMenuScene.cpp(648,72): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(36,78): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(238,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(239,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(508,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(514,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(521,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(528,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(610,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(617,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(634,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(641,64): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(641,50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(642,64): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(642,50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(643,109): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(643,95): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(644,88): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(644,73): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(645,85): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\StartMenuScene.cpp(645,72): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  Compiling...
+  TemplateScene.cpp
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\TemplateScene.cpp(31,78): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\TemplateScene.cpp(421,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\TemplateScene.cpp(427,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\TemplateScene.cpp(434,76): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\TemplateScene.cpp(441,76): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\TemplateScene.cpp(509,31): warning C4305: 'argument': truncation from 'double' to 'float'
+  Utility.cpp
+  WinnerScene.cpp
+D:\Lenovo\Documents\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(36,78): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(237,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(238,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(511,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(517,60): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(524,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(531,72): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(613,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(620,35): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(637,38): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(644,64): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(644,50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(645,64): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(645,50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(646,122): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(646,108): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(647,95): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(647,80): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(648,93): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(648,80): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(649,87): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Lenovo\Documents\SP2\Application\Source\WinnerScene.cpp(649,72): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
   Generating code
-D:\Github\SP2\Application\Source\BeachScene.cpp(401): warning C4715: 'BeachScene::Direction': not all control paths return a value
-  451 of 1711 functions (26.4%) were compiled, the rest were copied from previous compilation.
-    206 functions were new in current compilation
-    139 functions had inline decision re-evaluated but remain unchanged
+  Previous IPDB not found, fall back to full compilation.
+D:\Lenovo\Documents\SP2\Application\Source\BeachScene.cpp(405): warning C4715: 'BeachScene::Direction': not all control paths return a value
+  All 1715 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
-  Application.vcxproj -> D:\Github\SP2\Release\Application.exe
+  Application.vcxproj -> D:\Lenovo\Documents\SP2\Release\Application.exe

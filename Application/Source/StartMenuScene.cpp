@@ -223,16 +223,8 @@ void StartMenuScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 }
 
 void StartMenuScene::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::START_SCENE) {
-		InitGL();
-	}
-
 	//Mouse Inputs
-	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressedOnce(0))
-	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
+	if (Application::IsMousePressedOnce(0)) {
 		//Converting Viewport space to UI space
 		double x, y;
 		Application::GetCursorPos(&x, &y);
@@ -240,37 +232,12 @@ void StartMenuScene::Update(double dt, Mouse mouse) {
 		unsigned h = Application::GetWindowHeight();
 		float posX = x / w * Application::GetUIWidth(); //convert (0,800) to (0,80)
 		float posY = (1.f - y / h) * Application::GetUIHeight(); //convert (600,0) to (0,60)
-		std::cout << "posX:" << posX << " , posY:" << posY << std::endl;
-		if (posX > 32 * w / 800 && posX < 48 * w / 800 && posY > 31 * h / 600 && posY < 39 * h / 600)
-		{
-			std::cout << "Hit!" << std::endl;
+		if (posX > 32 * w / 800 && posX < 48 * w / 800 && posY > 31 * h / 600 && posY < 39 * h / 600) {
 			Application::sceneswitch = Application::OVERWORLD_SCENE;
 		}
-		else if (posX > 32 * w / 800 && posX < 48 * w / 800 && posY > 21 * h / 600 && posY < 29 * h / 600)
-		{
-			std::cout << "Hit!" << std::endl;
+		else if (posX > 32 * w / 800 && posX < 48 * w / 800 && posY > 21 * h / 600 && posY < 29 * h / 600) {
 			Application::quit = 1;
 		}
-		else
-		{
-			std::cout << "Miss!" << std::endl;
-		}
-	}
-	else if (bLButtonState && !Application::IsMousePressedOnce(0))
-	{
-		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
-	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-	}
-	else if (bRButtonState && !Application::IsMousePressedOnce(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
 	}
 
 	rotateangle++;

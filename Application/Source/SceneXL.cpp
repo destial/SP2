@@ -585,25 +585,16 @@ void SceneXL::Update(double dt, Mouse mouse) {
 				bullets.erase(b);
 				targetList.erase(d);
 				hit = true;
+				dummycounter++;
 				break;
 			}
 		}
 		if (hit) break;
 	}
 	
-	for (int i = 0; i < targetList.size(); i++)
+	if (dummycounter == targetList.size() && Player::getShootingComplete() == false)
 	{
-		if (targetList[i] == nullptr) {
-			dummycounter++;
-		}
-		if (dummycounter == targetList.size())
-		{
-			Player::setShootingComplete(true);
-		}
-	}
-	if (dummycounter != 0)
-	{
-		dummycounter = 0;
+		Player::setShootingComplete(true);
 	}
 
 	Minigun();

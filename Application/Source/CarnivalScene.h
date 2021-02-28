@@ -1,52 +1,51 @@
-#ifndef SCENE_SHAQEEL_H
-#define SCENE_SHAQEEL_H
+#ifndef SCENE_XL_H
+#define SCENE_XL_H
 
 #include "Scene.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
 #include "Camera3.h"
+#include <vector>
+#include "MinigameEntity.h"
+#include "GameObject.h"
+#include "SceneManager.h"
 
-class SceneShaqeel : public Scene
+class CarnivalScene : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
 		GEO_AXES = 0,
 		GEO_QUAD,
-		GEO_QUAD1,
-		GEO_QUAD2,
-		GEO_CUBE,
-		GEO_SPHERE,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
+		GEO_LIGHTBALL,
 		GEO_TEXT,
-		GEO_TRUCK,
-		GEO_TRASHCAN,
-		GEO_STREETLIGHT,
-		GEO_YELLOWSIGN,
-		GEO_BUS,
-		GEO_CAR1,
-		GEO_CAR2,
-		GEO_PLANE,
-		GEO_TUNNEL,
-		GEO_TREE,
-		GEO_BUSH,
-		GEO_BENCH,
-		GEO_MART,
-		GEO_ROBOBODY,
-		GEO_ROBOLEFTARM,
-		GEO_ROBORIGHTARM,
-		GEO_ROBOLEFTLEG,
-		GEO_ROBORIGHTLEG,
-		GEO_DOOR,
-		GEO_CITY1,
-		GEO_CITY2,
-		GEO_CITY3,
+		GEO_FLOORFUTURE,
+		GEO_GNOME,
+		GEO_DUMMY,
+		GEO_RANGE,
+		GEO_ROBOT,
+		GEO_BOOTH,
+		GEO_WHEEL,
+		GEO_BODYWHEEL,
+		GEO_ROUND,
+		GEO_SWING,
+		GEO_TEACUP,
+		GEO_TEACUPSHEL,
+		GEO_JETPACK,
+		GEO_MINIGUN,
+		GEO_BULLET,
+		GEO_SITDROPTOWER,
+		GEO_DROPTOWER,
+		GEO_ROAD,
+		GEO_BORDERTEXT,
 		GEO_UI,
+		GEO_UI2,
 		NUM_GEOMETRY,
 	};
 
@@ -92,35 +91,24 @@ class SceneShaqeel : public Scene
 		U_TOTAL,
 	};
 
-	enum SCENE_FLOATS {
-
-		// floats for movements
-		F_TRANSLATE_WORD_Y,
-		F_TRANSLATE_TRUCK_Z,
-		F_TRANSLATE_BUS_Z,
-		F_TRANSLATE_CAR1_Z,
-		F_TRANSLATE_CAR2_Z,
-		F_TRANSLATE_PLANE_X,
-		F_TRANSLATE_PLANE_Z,
-		F_ROTATE_DOOR,
-		F_BUS_Z,
-		F_ROTATE_LEFT_LEG,
-		F_ROTATE_RIGHT_LEG,
-		F_TRANSLATE_SPHERE_Z,
-		F_TRANSLATE_SPHERE_Z_2,
-		NUM_SCENE_FLOATS
-	};
-
 	enum SCENE_BOOLS {
-		// bools to start and end movements
-		B_ROTATE,
-		B_DOOR_OPENED,
-		B_STOP_OPEN_DOOR,
-		B_LEFT_LEG_LIMIT,
-		B_LEFT_LEG_LIMIT_2,
-		B_RIGHT_LEG_LIMIT,
-		NUM_SCENE_BOOLS
+		B_ROTATE_1,
+		B_ROTATE_2,
+		B_TALK_TO_GNOME,
+		B_TALK_TO_JETPACK,
+		B_TALK_TO_ROBOT,
+		B_MOVING_DUMMY,
+		B_GOT_GNOMED,
+		B_GOT_JETPACK,
+		NUM_SCENE_BOOLS,
 	};
+
+	enum SCENE_FLOATS {
+		F_ROTATE_ANGLE, //rotating of my dummy target
+		F_SHOOTING_SPIN,
+		NUM_SCENE_FLOATS,
+	};
+
 private:
 	MS modelStack, viewStack, projectionStack;
 	unsigned m_vertexArrayID;
@@ -131,30 +119,38 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	bool sceneBools[NUM_SCENE_BOOLS];
 	float sceneFloats[NUM_SCENE_FLOATS];
-
 	Mesh* meshList[NUM_GEOMETRY];
+	std::vector<GameObject*> bullets;
+	std::vector<MinigameEntity*> targetList;
+
 	Light light[2];
+
 	Camera3 camera;
+	MinigameEntity* temp;
+	Mesh* MinigunHold;
+	Vector3 GunOrigin;	
+	int tempspin;
+	int dummycounter;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
+	void DetectGnome();
+	void RenderGnome();
+	void DetectRobot();
+	void RenderRobot();
+	void RenderMinigame();
+	void RenderSurroundings();
+	void RenderUI();
+	void DetectJetpack();
+	void RenderJetpack();
 	void RenderSkybox();
 	bool isNear(Mesh* mesh, const float& distance);
-
-	// render objects and background in functions below
-	void RenderQuad(); 
-	void Rendervehicles();
-	void Rendertrees();
-	void Rendercityobjects();
-	void RenderNPC();
-	void RenderMytext();
-	void RenderUI();
+	void Minigun();
 public:
-
-	SceneShaqeel();
-	~SceneShaqeel();
+	CarnivalScene();
+	~CarnivalScene();
 
 	virtual void Init();
 	virtual void Update(double dt);

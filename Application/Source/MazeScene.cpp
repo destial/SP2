@@ -1,4 +1,4 @@
-#include "SceneW.h"
+#include "MazeScene.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -8,11 +8,11 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneW::SceneW() {}
+MazeScene::MazeScene() {}
 
-SceneW::~SceneW() {}
+MazeScene::~MazeScene() {}
 
-void SceneW::Init() {
+void MazeScene::Init() {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	// Generate shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -95,7 +95,7 @@ void SceneW::Init() {
 	Application::log("Scene Walton initialized");
 }
 
-void SceneW::RenderMesh(Mesh* mesh, bool enableLight)
+void MazeScene::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -137,7 +137,7 @@ void SceneW::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void SceneW::RenderText(Mesh* mesh, std::string text, Color color)
+void MazeScene::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -164,7 +164,7 @@ void SceneW::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneW::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void MazeScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -206,7 +206,7 @@ void SceneW::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneW::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
+void MazeScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
@@ -238,8 +238,8 @@ void SceneW::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneW::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::SCENEWALTON) {
+void MazeScene::Update(double dt, Mouse mouse) {
+	if (Application::previousscene != Application::MAZE_SCENE) {
 		InitGL();
 	}
 
@@ -404,8 +404,8 @@ void SceneW::Update(double dt, Mouse mouse) {
 			&& sceneBools[B_STOP_DOOR_OPEN] == true && sceneBools[B_COLLECTED_CLAYMORE] == true &&
 			sceneBools[B_COLLECTED_ARMOR] == true && sceneBools[B_COLLECTED_HELMET] == true)
 		{
-			Application::sceneswitch = Application::OVERWORLD; // f will bring you back to overworld
-			Application::previousscene = Application::SCENEWALTON;
+			Application::sceneswitch = Application::OVERWORLD_SCENE; // f will bring you back to overworld
+			Application::previousscene = Application::MAZE_SCENE;
 		}
 	}
 
@@ -538,7 +538,7 @@ void SceneW::Update(double dt, Mouse mouse) {
 	DetectCollision();
 }
 
-void SceneW::InitGL()
+void MazeScene::InitGL()
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -637,7 +637,7 @@ void SceneW::InitGL()
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 }
 
-void SceneW::InitGLXray()
+void MazeScene::InitGLXray()
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -736,7 +736,7 @@ void SceneW::InitGLXray()
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 }
 
-void SceneW::DetectCollision() {
+void MazeScene::DetectCollision() {
 	for (auto object : sceneManager->allObjects) {
 		if (!object->camera) {
 			if (isNear(object)) {
@@ -746,13 +746,13 @@ void SceneW::DetectCollision() {
 	}
 }
 
-bool SceneW::isNear(GameObject* object) {
+bool MazeScene::isNear(GameObject* object) {
 	// Get distance between object and camera
 	float d = Math::Square(object->transform->translate.x - camera.position.x) + Math::Square(object->transform->translate.z - camera.position.z);
 	return (d - 2.5*object->transform->scale.x <= 0);
 }
 
-void SceneW::moveBack(GameObject* object) {
+void MazeScene::moveBack(GameObject* object) {
 	Vector3 view = (camera.target - camera.position).Normalized();
 
 	float zDistance = Math::sqrt(Math::Square(object->transform->translate.z - camera.position.z));
@@ -767,13 +767,13 @@ void SceneW::moveBack(GameObject* object) {
 	camera.target = camera.position + view;
 }
 
-void SceneW::Update(double dt)
+void MazeScene::Update(double dt)
 {
 	Mouse mouse;
 	Update(dt, mouse);
 }
 
-void SceneW::RenderSkybox() {
+void MazeScene::RenderSkybox() {
 	float translate = 50;
 	float scaleVal = 100;//(translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
@@ -820,7 +820,7 @@ void SceneW::RenderSkybox() {
 	modelStack.PopMatrix();
 }
 
-void SceneW::Render()
+void MazeScene::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -937,7 +937,7 @@ void SceneW::Render()
 	RenderItems(); 
 }
 
-void SceneW::Exit() {
+void MazeScene::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}
@@ -946,7 +946,7 @@ void SceneW::Exit() {
 	glDeleteProgram(m_programID);
 }
 
-void SceneW::RenderUI() {
+void MazeScene::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
@@ -955,7 +955,7 @@ void SceneW::RenderUI() {
 	RenderTextOnScreen(meshList[GEO_TEXT], "Helmet:" + std::to_string(Player::getHelmet()), Colors::BLACK, 2, 0.5 * w / 800, 17 * h / 600);
 }
 
-void SceneW::RenderRoom() {
+void MazeScene::RenderRoom() {
 	// left side of the room
 	modelStack.PushMatrix();
 	modelStack.Translate(-50, 0, -40);
@@ -1016,7 +1016,7 @@ void SceneW::RenderRoom() {
 
 }
 
-void SceneW::RenderBoxes() {
+void MazeScene::RenderBoxes() {
 	// chest 1
 	modelStack.PushMatrix(); // splited up chest top and bottom
 	modelStack.Translate(-46.5, 2, 45);
@@ -1094,7 +1094,7 @@ void SceneW::RenderBoxes() {
 	modelStack.PopMatrix();
 }
 
-void SceneW::RenderItems() // inside chest
+void MazeScene::RenderItems() // inside chest
 {
 	modelStack.PushMatrix();
 	modelStack.Translate(sceneVectors[V_CLAYMORE].x, sceneVectors[V_CLAYMORE].y, 43.5);
@@ -1120,7 +1120,7 @@ void SceneW::RenderItems() // inside chest
 
 }
 
-void SceneW::RenderMaze() {
+void MazeScene::RenderMaze() {
 
 	// maze
 	for (auto object : sceneManager->root->gameObjects)
@@ -1137,7 +1137,7 @@ void SceneW::RenderMaze() {
 	}
 }
 
-void SceneW::CreateMaze() { // Use for collision
+void MazeScene::CreateMaze() { // Use for collision
 	GameObject* object = new GameObject(meshList[MWALL]);
 	object->transform->Translate(-40, 2.5, -50);
 	object->transform->Scale(5, 5, 5);
@@ -2111,7 +2111,7 @@ void SceneW::CreateMaze() { // Use for collision
 	sceneManager->push(object);
 }
 
-void SceneW::Reset() {
+void MazeScene::Reset() {
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);

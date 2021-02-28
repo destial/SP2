@@ -1,5 +1,5 @@
-#ifndef SCENE_OFTHEBEACH_H
-#define SCENE_OFTHEBEACH_H
+#ifndef SCENE_SHAQEEL_H
+#define SCENE_SHAQEEL_H
 
 #include "Scene.h"
 #include "Mesh.h"
@@ -7,14 +7,16 @@
 #include "Light.h"
 #include "Camera3.h"
 
-class SceneOfTheBeach : public Scene 
+class DistrictScene : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
 		GEO_AXES = 0,
 		GEO_QUAD,
-		GEO_OCEAN,
-		GEO_ROAD,
+		GEO_QUAD1,
+		GEO_QUAD2,
+		GEO_CUBE,
+		GEO_SPHERE,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
@@ -22,18 +24,29 @@ class SceneOfTheBeach : public Scene
 		GEO_FRONT,
 		GEO_BACK,
 		GEO_TEXT,
-		GEO_DRIZZLE,
+		GEO_TRUCK,
+		GEO_TRASHCAN,
+		GEO_STREETLIGHT,
+		GEO_YELLOWSIGN,
+		GEO_BUS,
+		GEO_CAR1,
+		GEO_CAR2,
+		GEO_PLANE,
+		GEO_TUNNEL,
 		GEO_TREE,
-		GEO_TREE2,
-		GEO_TREE3,
-		GEO_CRAB,
-		GEO_DOLPHIN,
-		GEO_SHIP,
-		GEO_UMBRELLA,
-		GEO_CABIN,
-		GEO_BUOY,
+		GEO_BUSH,
+		GEO_BENCH,
+		GEO_MART,
+		GEO_ROBOBODY,
+		GEO_ROBOLEFTARM,
+		GEO_ROBORIGHTARM,
+		GEO_ROBOLEFTLEG,
+		GEO_ROBORIGHTLEG,
+		GEO_DOOR,
+		GEO_CITY1,
+		GEO_CITY2,
+		GEO_CITY3,
 		GEO_UI,
-		GEO_UI2,
 		NUM_GEOMETRY,
 	};
 
@@ -79,27 +92,37 @@ class SceneOfTheBeach : public Scene
 		U_TOTAL,
 	};
 
-	enum SCENE_FLOATS 
-	{
-		CRAB_MOVING,
-		CRAB_SPEED,
-		RANDOM_MOVE,
-		ROTATE_DOLPHIN,
+	enum SCENE_FLOATS {
 
+		// floats for movements
+		F_TRANSLATE_WORD_Y,
+		F_TRANSLATE_TRUCK_Z,
+		F_TRANSLATE_BUS_Z,
+		F_TRANSLATE_CAR1_Z,
+		F_TRANSLATE_CAR2_Z,
+		F_TRANSLATE_PLANE_X,
+		F_TRANSLATE_PLANE_Z,
+		F_ROTATE_DOOR,
+		F_BUS_Z,
+		F_ROTATE_LEFT_LEG,
+		F_ROTATE_RIGHT_LEG,
+		F_TRANSLATE_SPHERE_Z,
+		F_TRANSLATE_SPHERE_Z_2,
 		NUM_SCENE_FLOATS
 	};
 
-	enum SCENE_BOOLS 
-	{
-		ROTATE,
-		OPEN_TEXT_BOX,
-		GL,
-
+	enum SCENE_BOOLS {
+		// bools to start and end movements
+		B_ROTATE,
+		B_DOOR_OPENED,
+		B_STOP_OPEN_DOOR,
+		B_LEFT_LEG_LIMIT,
+		B_LEFT_LEG_LIMIT_2,
+		B_RIGHT_LEG_LIMIT,
 		NUM_SCENE_BOOLS
 	};
 private:
 	MS modelStack, viewStack, projectionStack;
-
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
 	unsigned m_colorBuffer[NUM_GEOMETRY];
@@ -108,6 +131,7 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	bool sceneBools[NUM_SCENE_BOOLS];
 	float sceneFloats[NUM_SCENE_FLOATS];
+
 	Mesh* meshList[NUM_GEOMETRY];
 	Light light[2];
 	Camera3 camera;
@@ -115,17 +139,22 @@ private:
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-	void RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
-	void RenderQuad();
 	void RenderSkybox();
-	int Direction(float value);
-	void RenderNPC();
-	void RenderUI();
 	bool isNear(Mesh* mesh, const float& distance);
+
+	// render objects and background in functions below
+	void RenderQuad(); 
+	void Rendervehicles();
+	void Rendertrees();
+	void Rendercityobjects();
+	void RenderNPC();
+	void RenderMytext();
+	void RenderUI();
 public:
-	SceneOfTheBeach();
-	~SceneOfTheBeach();
+
+	DistrictScene();
+	~DistrictScene();
 
 	virtual void Init();
 	virtual void Update(double dt);

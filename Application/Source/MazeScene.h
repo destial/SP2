@@ -1,33 +1,46 @@
-#ifndef SCENE_RYAN_H
-#define SCENE_RYAN_H
+#ifndef SCENE_W_H
+#define SCENE_W_H
 
 #include "Scene.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
 #include "Camera3.h"
-#include "GameObject.h"
+#include "SceneManager.h"
 
-class SceneRyan : public Scene
+class MazeScene : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
 		GEO_AXES = 0,
 		GEO_QUAD,
+		GEO_SPHERE,
+		GEO_SPHERE2,
+		GEO_SPHERE3,
+		GEO_SPHERE4,
+		GEO_SPHERE5,
+		GEO_CUBE,
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
-		GEO_SHARKTOP,
-		GEO_SHARKBTM,
-		GEO_SHARKFIN,
-		GEO_BEACH,
-		GEO_MINIGUN,
-		GEO_BULLET,
 		GEO_TEXT,
+		GEO_DOOR,
+		GEO_DOOROPEN,
+		GEO_WALL,
 		GEO_UI,
+		GEO_CLAYMORE,
+		GEO_ARMOURPLATE,
+		GEO_HELMET,
+		MWALL,
+		BOX,
+		BOXOPEN,
+		CHESTTOP,
+		CHESTBOTTOM,
+		GEO_WALLDOOR,
+		CAMERA,
 		NUM_GEOMETRY,
 	};
 
@@ -73,31 +86,60 @@ class SceneRyan : public Scene
 		U_TOTAL,
 	};
 
-	enum SCENE_FLOATS {
-		ROTATE_SHARK,
-		ROTATE_TAIL,
-		SHARK_CIRCLE_ANGLE,
-		SHARK_DIRECTION,
-		TEMP_TIME,
-		NUM_SCENE_FLOATS
-	};
-
 	enum SCENE_BOOLS {
-		ROTATE,
-		SHARK_ATTACK,
-		SCENE_TRANSITION,
-		NUM_SCENE_BOOLS
+		B_ROTATE,
+		B_DOOR_OPENED,
+		B_STOP_DOOR_OPEN,
+		B_CHEST_OPEN_1,
+		B_CHEST_OPEN_2,
+		B_CHEST_OPEN_3,
+		B_CHEST_OPEN_4,
+		B_CHEST_OPEN_5,
+		B_CHEST_LIMIT_1,
+		B_CHEST_LIMIT_2,
+		B_CHEST_LIMIT_3,
+		B_CHEST_LIMIT_4,
+		B_CHEST_LIMIT_5,
+		B_CLAYMORE_SPAWN,
+		B_ARMOR_SPAWN,
+		B_HELMET_SPAWN,
+		B_HEIGHT_LIMIT_1,
+		B_HEIGHT_LIMIT_2,
+		B_HEIGHT_LIMIT_3,
+		B_HEIGHT_LIMIT_4,
+		B_HEIGHT_LIMIT_5,
+		B_CLAYMORE_LIMIT,
+		B_HELMET_LIMIT,
+		B_ARMOR_LIMIT,
+		B_COLLECTED_CLAYMORE,
+		B_COLLECTED_ARMOR,
+		B_COLLECTED_HELMET,
+		B_DOOR_OPEN,
+		B_GL,
+		NUM_SCENE_BOOLS,
 	};
 
-	enum SCENE_INTS {
-		SURVIVE_COUNTER,
-		SHARK_CIRCLE,
-		TEMP_COUNTER,
-		SCENE_COUNTER,
-		NUM_SCENE_INTS
+	enum SCENE_FLOATS {
+		F_ROTATE_CHEST_1,
+		F_ROTATE_CHEST_2,
+		F_ROTATE_CHEST_3,
+		F_ROTATE_CHEST_4,
+		F_ROTATE_CHEST_5,
+		F_ROTATE_DOOR,
+		NUM_SCENE_FLOATS,
+	};
+
+	enum SCENE_VECTORS {
+		V_ARMOR,
+		V_HELMET,
+		V_CLAYMORE,
+		V_SCALE_CLAYMORE,
+		V_SCALE_ARMOR,
+		V_SCALE_HELMET,
+		V_SCALE_SP,
+		NUM_SCENE_VECTORS,
 	};
 private:
-
 	MS modelStack, viewStack, projectionStack;
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
@@ -106,9 +148,13 @@ private:
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	bool sceneBools[NUM_SCENE_BOOLS];
+	Vector3 sceneVectors[NUM_SCENE_VECTORS];
 	float sceneFloats[NUM_SCENE_FLOATS];
-	int sceneInts[NUM_SCENE_INTS];
+
+	int countChest;
+
 	Mesh* meshList[NUM_GEOMETRY];
+	SceneManager* sceneManager;
 
 	Light light[2];
 
@@ -118,13 +164,19 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMeshOnScreen(Mesh* mesh, float size, float x, float y);
+	void RenderMaze();
+	void CreateMaze();
 	void RenderSkybox();
 	void RenderUI();
-	void RenderShark();
+	void RenderRoom();
+	void RenderItems();
+	void moveBack(GameObject* object);
+	void DetectCollision();
+	bool isNear(GameObject* object);
+	void RenderBoxes();
 public:
-
-	SceneRyan();
-	~SceneRyan();
+	MazeScene();
+	~MazeScene();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -132,8 +184,8 @@ public:
 	virtual void InitGL();
 	virtual void InitGLXray();
 	virtual void Render();
-	virtual void Reset();
 	virtual void Exit();
+	virtual void Reset();
 };
 
 #endif

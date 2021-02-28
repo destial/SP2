@@ -1,4 +1,4 @@
-#include "SceneShaqeel.h"
+#include "MartScene.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -8,12 +8,11 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneShaqeel::SceneShaqeel() {}
+MartScene::MartScene() {}
 
-SceneShaqeel::~SceneShaqeel() {}
+MartScene::~MartScene() {}
 
-void SceneShaqeel::Init()
-{
+void MartScene::Init() {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	// Generate shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -34,9 +33,22 @@ void SceneShaqeel::Init()
 	meshList[GEO_QUAD]->textureID = LoadTGA("Image//color.tga");
 
 	meshList[GEO_QUAD1] = MeshBuilder::GenerateQuad("quad1", Color(1, 1, 1), 1.f);
-	meshList[GEO_QUAD1]->textureID = LoadTGA("Image//RoadTopDown.tga");
+	meshList[GEO_QUAD1]->textureID = LoadTGA("Image//FutureFloor1.tga");
 
-	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad2", Color(1.6, 0.82, 0.45), 1.f);
+	meshList[GEO_QUAD2] = MeshBuilder::GenerateQuad("quad2", Color(1, 1, 1), 1.f);
+	meshList[GEO_QUAD2]->textureID = LoadTGA("Image//BlackWallpaper1.tga");
+
+	meshList[GEO_QUAD3] = MeshBuilder::GenerateQuad("quad3", Color(1, 1, 1), 1.f);
+	meshList[GEO_QUAD3]->textureID = LoadTGA("Image//BlackWallpaper.tga");
+
+	meshList[GEO_QUAD4] = MeshBuilder::GenerateQuad("quad4", Color(1, 1, 1), 1.f);
+	meshList[GEO_QUAD4]->textureID = LoadTGA("Image//bigdj.tga");
+
+	meshList[GEO_QUAD5] = MeshBuilder::GenerateQuad("quad5", Color(1, 1, 1), 1.f);
+	meshList[GEO_QUAD5]->textureID = LoadTGA("Image//obamium.tga");
+
+	meshList[GEO_QUAD6] = MeshBuilder::GenerateQuad("quad6", Color(1, 1, 1), 1.f);
+	meshList[GEO_QUAD6]->textureID = LoadTGA("Image//knuckles.tga");
 
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", 4, 4, 4);
 	meshList[GEO_CUBE]->material.kAmbient.Set(0.5f, 1.f, 0.5f);
@@ -44,67 +56,63 @@ void SceneShaqeel::Init()
 	meshList[GEO_CUBE]->material.kSpecular.Set(0.5f, 1.f, 0.5f);
 	meshList[GEO_CUBE]->material.kShininess = 1.f;
 
-	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", Colors::BLUE, 30, 30, 0.5);
-	meshList[GEO_SPHERE]->material.kAmbient.Set(0.5f, 1.f, 0.5f);
-	meshList[GEO_SPHERE]->material.kDiffuse.Set(0.5f, 1.f, 0.5f);
-	meshList[GEO_SPHERE]->material.kSpecular.Set(0.5f, 1.f, 0.5f);
-	meshList[GEO_SPHERE]->material.kShininess = 1.f;
+	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", Color(1, 0, 0), 30, 30, 1);
+	meshList[GEO_SPHERE]->textureID = LoadTGA("Image//BlackWallpaper.tga");
 
-	meshList[GEO_TRUCK] = MeshBuilder::GenerateOBJ("truck", "OBJ//NewTruck2.obj"); // Try 1 first
-	meshList[GEO_TRUCK]->textureID = LoadTGA("Image//BlueVehicle.tga");
+	meshList[GEO_SOFA] = MeshBuilder::GenerateOBJMTL("Sofa", "OBJ//BlueSofa.obj", "OBJ//BlueSofa.mtl");
 
-	meshList[GEO_BUS] = MeshBuilder::GenerateOBJ("bus", "OBJ//NewBus.obj"); // Try 1 first
-	meshList[GEO_BUS]->textureID = LoadTGA("Image//Vehicle_Silver.tga");
+	meshList[GEO_DESKCORNER] = MeshBuilder::GenerateOBJMTL("DeskCounter", "OBJ//deskCorner.obj", "OBJ//deskCorner.mtl");
 
-	meshList[GEO_CAR1] = MeshBuilder::GenerateOBJ("Car1", "OBJ//NewCar1.obj"); // Try 1 first
-	meshList[GEO_CAR1]->textureID = LoadTGA("Image//GreenVehicle.tga");
+	meshList[GEO_CHAIR] = MeshBuilder::GenerateOBJMTL("Chair", "OBJ//chair.obj", "OBJ//chair.mtl");
 
-	meshList[GEO_CAR2] = MeshBuilder::GenerateOBJ("Car2", "OBJ//NewCar2.obj"); // Try 1 first
-	meshList[GEO_CAR2]->textureID = LoadTGA("Image//RedVehicle.tga");
+	meshList[GEO_COMPUTERSCREEN] = MeshBuilder::GenerateOBJMTL("Screen", "OBJ//computerScreen.obj", "OBJ//computerScreen.mtl");
 
-	meshList[GEO_PLANE] = MeshBuilder::GenerateOBJ("Plane", "OBJ//planewithoutwheels.obj"); // Try 1 first
-	meshList[GEO_PLANE]->textureID = LoadTGA("Image//whitemistcolour.tga");
+	meshList[GEO_KEYBOARD] = MeshBuilder::GenerateOBJMTL("Keyboard", "OBJ//computerKeyboard.obj", "OBJ//computerKeyboard.mtl");
 
-	meshList[GEO_BUSH] = MeshBuilder::GenerateOBJ("Bush", "OBJ//Bush_2.obj"); // Try 1 first
-	meshList[GEO_BUSH]->textureID = LoadTGA("Image//Tree_Texture2.tga");
+	meshList[GEO_STATUE] = MeshBuilder::GenerateOBJMTL("Statue", "OBJ//tom1.obj", "OBJ//tom.mtl");
 
-	meshList[GEO_TREE] = MeshBuilder::GenerateOBJ("Tree", "OBJ//Tree_4.obj"); // Try 1 first
-	meshList[GEO_TREE]->textureID = LoadTGA("Image//Tree_Texture2.tga");
+	//meshList[GEO_TABLEANDCHAIR] = MeshBuilder::GenerateOBJMTL("Tableandchair", "OBJ//diningSet.obj", "OBJ//diningSet.mtl"); // Try 1 first
 
-	meshList[GEO_BENCH] = MeshBuilder::GenerateOBJ("Bench", "OBJ//NewBench1.obj"); // Try 1 first
-	meshList[GEO_BENCH]->textureID = LoadTGA("Image//bench.tga");
+	meshList[GEO_KURENAI] = MeshBuilder::GenerateOBJMTL("Kurenai", "OBJ//Kurenai.obj", "OBJ//Kurenai.mtl"); // Try 1 first
+	// ELSE TRY OBJ
 
-	meshList[GEO_STREETLIGHT] = MeshBuilder::GenerateOBJ("Bench", "OBJ//StreetLight.obj"); // Try 1 first
-	meshList[GEO_STREETLIGHT]->textureID = LoadTGA("Image//StreetLight.tga");
+	meshList[GEO_SAMIDAL] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//Samidalwithoutarms.obj", "OBJ//Samidalwithoutarms.mtl");
 
-	meshList[GEO_MART] = MeshBuilder::GenerateOBJ("Mart", "OBJ//newmartoffset.obj"); // Try 1 first
-	meshList[GEO_MART]->textureID = LoadTGA("Image//blueColour.tga");
-	meshList[GEO_MART]->transform.Translate(-21.3, -2, -0.1);
-	meshList[GEO_MART]->transform.Scale(0.6, 0.6, 0.6);
+	meshList[GEO_SAMIDALRIGHTARM] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//Samidalrightarm.obj", "OBJ//Samidalrightarm.mtl");
 
-	meshList[GEO_ROBOBODY] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Robowithoutarmsandlegs.obj"); // Try 1 first
-	meshList[GEO_ROBOBODY]->textureID = LoadTGA("Image//robo_normal.tga");
+	meshList[GEO_SAMIDALLEFTARM] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//Samidalleftarm.obj", "OBJ//Samidalleftarm.mtl");
 
-	meshList[GEO_ROBOLEFTLEG] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roboleftleg.obj"); // Try 1 first
-	meshList[GEO_ROBOLEFTLEG]->textureID = LoadTGA("Image//robo_normal.tga");
+	meshList[GEO_TABLE] = MeshBuilder::GenerateOBJMTL("Samidal", "OBJ//BrownRoundTable.obj", "OBJ//BrownRoundTable.mtl");
 
-	meshList[GEO_ROBORIGHTLEG] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightleg.obj"); // Try 1 first
-	meshList[GEO_ROBORIGHTLEG]->textureID = LoadTGA("Image//robo_normal.tga");
+	meshList[GEO_PAINTING] = MeshBuilder::GenerateOBJ("Painting", "OBJ//paintingframe.obj"); // Try 1 first
+	meshList[GEO_PAINTING]->textureID = LoadTGA("Image//brownColour.tga");
 
-	meshList[GEO_ROBOLEFTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roboleftarm.obj"); // Try 1 first
-	meshList[GEO_ROBOLEFTARM]->textureID = LoadTGA("Image//robo_normal.tga");
+	meshList[GEO_BOOKSTACK] = MeshBuilder::GenerateOBJ("Bookstack", "OBJ//BookStack.obj"); // Try 1 first
+	meshList[GEO_BOOKSTACK]->textureID = LoadTGA("Image//BookStack.tga");
 
-	meshList[GEO_ROBORIGHTARM] = MeshBuilder::GenerateOBJ("Mart", "OBJ//Roborightarm.obj"); // Try 1 first
-	meshList[GEO_ROBORIGHTARM]->textureID = LoadTGA("Image//robo_normal.tga");
-	//LATER RENAME TO BUILDING
-	meshList[GEO_CITY1] = MeshBuilder::GenerateOBJ("Mart", "OBJ//NYBuilding.obj"); // Try 1 first
-	meshList[GEO_CITY1]->textureID = LoadTGA("Image//NYBuilding.tga");
+	meshList[GEO_BOOK] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK]->textureID = LoadTGA("Image//1984book.tga");
 
-	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJ("Door", "OBJ//MartDoor1.obj"); // Try 1 first
+	meshList[GEO_BOOK2] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK2]->textureID = LoadTGA("Image//brownColour.tga");
+
+	meshList[GEO_BOOK3] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK3]->textureID = LoadTGA("Image//blueColour.tga");
+
+	meshList[GEO_BOOK4] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK4]->textureID = LoadTGA("Image//redColour.tga");
+
+	meshList[GEO_BOOK5] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK5]->textureID = LoadTGA("Image//orangeColour.tga");
+
+	meshList[GEO_BOOK6] = MeshBuilder::GenerateOBJ("Book", "OBJ//1984book.obj"); // Try 1 first
+	meshList[GEO_BOOK6]->textureID = LoadTGA("Image//greenColour.tga");
+
+	meshList[GEO_DOOR] = MeshBuilder::GenerateOBJ("Book", "OBJ//MartDoor1.obj"); // Try 1 first
 	meshList[GEO_DOOR]->textureID = LoadTGA("Image//RedColour.tga");
 
-	meshList[GEO_TUNNEL] = MeshBuilder::GenerateOBJ("Tunnel", "OBJ//Tunnel1.obj"); // Try 1 first
-	meshList[GEO_TUNNEL]->textureID = LoadTGA("Image//DarkGray.tga");
+	meshList[GEO_BOOKCASE] = MeshBuilder::GenerateOBJ("Bookcase", "OBJ//BookCase.obj"); // Try 1 first
+	meshList[GEO_BOOKCASE]->textureID = LoadTGA("Image//brownColour.tga");
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateSkybox("front", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front-space.tga");
@@ -124,17 +132,21 @@ void SceneShaqeel::Init()
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateSkybox("bottom", Colors::WHITE, 1.f, 1.f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom-space.tga");
 
-	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", Colors::WHITE, 1.f, 1.f);
-	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
-
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", Colors::WHITE, 1.f, 1.f);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//button.tga");
+
+	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", Colors::WHITE, 1.5f, 0.4f);
+	meshList[GEO_UI2]->textureID = LoadTGA("Image//blueblacktextbox.tga");
+
 	Reset();
-	Application::log("Scene Shaqeel initialized");
+
+	Application::log("Scene Shaqler initialized");
 }
 
-void SceneShaqeel::RenderMesh(Mesh* mesh, bool enableLight)
+void MartScene::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -176,7 +188,7 @@ void SceneShaqeel::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void SceneShaqeel::RenderText(Mesh* mesh, std::string text, Color color)
+void MartScene::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -203,7 +215,7 @@ void SceneShaqeel::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneShaqeel::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void MartScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -231,7 +243,7 @@ void SceneShaqeel::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(0.5f + i * 0.7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -245,7 +257,7 @@ void SceneShaqeel::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneShaqeel::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
+void MartScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
@@ -277,155 +289,167 @@ void SceneShaqeel::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) 
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneShaqeel::Update(double dt, Mouse mouse) {
-
-	if (Application::previousscene != Application::SCENESHAQ) {
+void MartScene::Update(double dt, Mouse mouse) {
+	if (Application::previousscene != Application::MART_SCENE) {
 		InitGL();
 	}
-	// vehicle movement using translate in render
-	sceneFloats[F_TRANSLATE_TRUCK_Z] += (float)(7 * dt); // 3.87 15.7
-	sceneFloats[F_TRANSLATE_BUS_Z] -= (float)(7 * dt);
-	sceneFloats[F_TRANSLATE_CAR1_Z] += (float)(10 * dt);
-	sceneFloats[F_TRANSLATE_CAR2_Z] -= (float)(15 * dt);
-	sceneFloats[F_TRANSLATE_SPHERE_Z] += (float)(2.5 * dt);
-	sceneFloats[F_TRANSLATE_SPHERE_Z_2] -= (float)(2.75 * dt);
-	sceneFloats[F_TRANSLATE_PLANE_X] -= (float)(7 * dt);
-	sceneFloats[F_TRANSLATE_PLANE_Z] -= (float)(1.2 * dt);
+	// book that can be bought will be floating and rotating on shelf if not taken
+	sceneFloats[F_ROTATE_BOOK] += (float)(40 * dt);
 
-	// if vehicle travels to a certain point it will respawn and start again
-	if (sceneFloats[F_TRANSLATE_TRUCK_Z] >= 40)
+	// book floating
+	if (sceneVectors[V_BOOK].y > 2.85 && sceneBools[B_HEIGHT_LIMIT] == false)
 	{
-		sceneFloats[F_TRANSLATE_TRUCK_Z] = -40;
+		sceneVectors[V_BOOK].y -= (float)(2 * dt);
+	}
+	else if (sceneVectors[V_BOOK].y >= -3.5 && sceneVectors[V_BOOK].y <= 3.5)
+	{
+		sceneBools[B_HEIGHT_LIMIT] = true;
+	}
+	if (sceneVectors[V_BOOK].y >= -3.5 && sceneVectors[V_BOOK].y < 3.5 && sceneBools[B_HEIGHT_LIMIT] == true)
+	{
+		sceneVectors[V_BOOK].y += (float)(2 * dt);
+	}
+	else if (sceneVectors[V_BOOK].y >= 3.5)
+	{
+		sceneBools[B_HEIGHT_LIMIT] = false;
 	}
 
-	if (sceneFloats[F_TRANSLATE_CAR1_Z] >= 40)
-	{
-		sceneFloats[F_TRANSLATE_CAR1_Z] = -40;
-	}
 
-	if (sceneFloats[F_TRANSLATE_BUS_Z] <= -40)
+	if (Application::IsKeyPressed('E')) // E to pickup book from shelf and place on counter. Also to open door
 	{
-		sceneFloats[F_TRANSLATE_BUS_Z] = 40;
-	}
+		if (camera.position.x >= -15 && camera.position.x <= -12 && camera.position.z >= -0.685 
+			&& camera.position.z <= 4.75 && sceneBools[B_BOOK_BOUGHT] == false) // pickup book, bookhasbeenbaught = false stops from continuously picking up book
+		{
+			sceneBools[B_BOOK_COLLECTED] = true;
+			sceneVectors[V_BOOK].x = 10.9;
+			sceneVectors[V_BOOK].y = 6;
+			sceneVectors[V_BOOK].z = -11.5;
+		}
 
-	if (sceneFloats[F_TRANSLATE_CAR2_Z] <= -40)
-	{
-		sceneFloats[F_TRANSLATE_CAR2_Z] = 40;
-	}
+		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75) // place book on counter
+		{
+			sceneBools[B_BOOK_COLLECTED] = false;
+			sceneBools[B_PURCHASE_BOOK] = true;
+		}
 
-	if (sceneFloats[F_TRANSLATE_PLANE_X] <= -40)
-	{
-		sceneFloats[F_TRANSLATE_PLANE_X] = 40;
-		sceneFloats[F_TRANSLATE_PLANE_Z] = 10;
-	}
-
-	if (sceneFloats[F_TRANSLATE_SPHERE_Z] >= 25)
-	{
-		sceneFloats[F_TRANSLATE_SPHERE_Z] = -25;
-	}
-
-	if (sceneFloats[F_TRANSLATE_SPHERE_Z_2] <= -30)
-	{
-		sceneFloats[F_TRANSLATE_SPHERE_Z_2] = 20;
-	}
-
-	// press e to open the door
-	if (Application::IsKeyPressed('E'))
-	{
-		// using the location of where the camera is 
-		if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.z <= 1.5 && camera.position.z >= -1.5)
+		// door animation, same as  my first scene outside the mart with the same logic
+		if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 14 && camera.position.z <= 20 && !sceneBools[B_STOP_OPEN_DOOR])
 		{
 			sceneBools[B_DOOR_OPENED] = true;
 		}
 
+		// there is money behind a painting, stand near the painting within these x and z coords to collect
+		if (camera.position.x <= -13 && camera.position.x >= -20 && camera.position.z >= 4.4 && camera.position.z <= 9
+			&& sceneBools[B_FINDMONEY] == false && sceneBools[B_CASHCOLLECTED] == false)
+		{
+			sceneBools[B_FINDMONEY] = true;
+		}
+
+		//if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 14 && camera.position.z <= 20
+		//	&& sceneBools[B_STOP_OPEN_DOOR] == true)
+		//{
+		//	Application::sceneswitch = Application::SCENESHAQ; // leave mart and change scene
+		//}
 	}
 
-	/*if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.z <= 1.5 && camera.position.z >= -1.5)
-	{
-		sceneBools[B_DOOR_OPENED] = true;
-	}*/
-
-	// bool to ensure the door cant open infinitely
+	// prevents door from going to far
 	if (sceneBools[B_DOOR_OPENED] == true)
 	{
 		if (!sceneBools[B_STOP_OPEN_DOOR])
 		{
-			sceneFloats[F_ROTATE_DOOR] -= (float)(40 * dt);
+			sceneFloats[F_ROTATE_DOOR] += (float)(40 * dt);
 		}
 
-		if (sceneFloats[F_ROTATE_DOOR] <= -30)
+		if (sceneFloats[F_ROTATE_DOOR] >= 290)
 		{
 			sceneBools[B_STOP_OPEN_DOOR] = true;
 		}
 	}
 
+	// text again
 	if (sceneBools[B_STOP_OPEN_DOOR] == true)
 	{
-		sceneFloats[F_TRANSLATE_WORD_Y] = 2.5;
+		sceneVectors[V_TEXT_WORLD_SCREEN].y = 8.3;
 	}
 
-	// F to enter the mart using same x and z coords as opening door
-	if (Application::IsKeyPressedOnce('F') && camera.position.x <= -10 && camera.position.x >= -15 && 
-		camera.position.z <= 1.5 && camera.position.z >= -1.5 && sceneBools[B_STOP_OPEN_DOOR] == true) {
-		Application::sceneswitch = Application::SCENESHAQLER;
-		Application::previousscene = Application::SCENESHAQ;
-	}
 
-	// robot movement
-
-	if (sceneBools[B_LEFT_LEG_LIMIT] == true) // this bool statement is used for all of robo limbs
+	if (sceneBools[B_BOOK_COLLECTED] == true)
 	{
-		sceneFloats[F_ROTATE_LEFT_LEG] += 1;
-		if (sceneFloats[F_ROTATE_LEFT_LEG] > 30) // ensures limbs dont go too far and will rotate back and forth
+		Book(); // this is how book will teleport on to player after pressing e at the shelf
+	}
+
+	// book on the counter will be still so i used hardcoded values to ensure it will stop rotating right on top of the counter
+	if (sceneBools[B_PURCHASE_BOOK] == true)
+	{
+		sceneFloats[F_ROTATE_BOOK] = 270;
+		sceneVectors[V_BOOK].y = 3.1;
+		sceneVectors[V_TEXT].z = -13.5;
+	}
+
+	// press t to purchase
+	if (Application::IsKeyPressed('T'))
+	{
+		if (camera.position.x >= 6 && camera.position.x <= 19.6 && camera.position.z >= -19.1 && camera.position.z <= -7.75 
+			&& sceneBools[B_BOOK_BOUGHT] == false)  
+			// b_book_baught == true will ensure 
+			// that the player cant purchase the book after buying it once
 		{
-			sceneBools[B_LEFT_LEG_LIMIT] = false;
+			sceneBools[B_IS_BUYING] = true;
+			
+			if (sceneBools[B_IS_BUYING] == true)// triggers textbox
+			{
+				sceneVectors[V_SCREEN].x = 40;
+				sceneVectors[V_TEXT].x = 1000; // world text 
+			}
+
+
+
 		}
 	}
-	else if (sceneBools[B_LEFT_LEG_LIMIT] == false)
+
+	if (Application::IsKeyPressedOnce('Y')) // y to purchase the book
 	{
-		sceneFloats[F_ROTATE_LEFT_LEG] -= 1;
-		if (sceneFloats[F_ROTATE_LEFT_LEG] < -30)
+		if (sceneBools[B_IS_BUYING] == true)
 		{
-			sceneBools[B_LEFT_LEG_LIMIT] = true;
+			sceneVectors[V_BOOK].x = 1000; // book will disapper. I wanted to a bag system to store the book inside but i didnt have the time
+			sceneBools[B_IS_BUYING] = false; // without this statement, money will continue to go down if player keeps pressing y near the counter
+			sceneBools[B_BOOK_BOUGHT] = true; // since bbookbaught == true now, player cant repeat purchase interaction again
+			Player::setMoney(Player::getMoney() - 30); // money decreases
+			Player::setBookPurchased(true);
 		}
+
+		if (sceneBools[B_FINDMONEY] == true)
+		{
+			Player::setMoney(Player::getMoney() + 50); // money increases when pressed y
+			sceneBools[B_FINDMONEY] = false; // money can no longer be collected
+			sceneBools[B_CASHCOLLECTED] = true; 
+
+		}
+
 	}
 
-	camera.prevPosition = camera.position;
+	if (Application::IsKeyPressed('N')) // press n if you dont want to purchase. book will stay at the counter
+	{
+		sceneBools[B_IS_BUYING] = false;
+		// if i put bbookhasbeenbaught = false here, the interaction can happen again even if i press y the first time
+	}
+
+	if (Application::IsKeyPressedOnce('F'))
+	{
+		if (camera.position.x >= 1.13 && camera.position.x <= 6.6 && camera.position.z >= 14 && camera.position.z <= 20
+			&& sceneBools[B_STOP_OPEN_DOOR] == true)
+		{
+			Application::sceneswitch = Application::DISTRICT_SCENE; // leave mart and change scene
+		}	
+	}
+
 	camera.Update(dt, mouse);
-
-	// collision of the mart
-	if (isNear(meshList[GEO_MART], 2.f)) {
-		// Get the current view vector and current y position
-		Vector3 view = (camera.target - camera.position).Normalized();
-		float y = camera.position.y;
-
-		// Set the player back to previous position but current y position (only x & z collision)
-		camera.position = camera.prevPosition;
-		camera.position.y = y;
-
-		// Set the correct target according to player's position and set the car speed to 0
-		camera.target = camera.position + view;
-	}
-
-	if (camera.position.x <= 8 &&
-		camera.position.x >= -8 &&
-		camera.position.z <= 30 &&
-		camera.position.z >= 24)
-	{
-		Application::sceneswitch = Application::OVERWORLD;
-		Application::previousscene = Application::SCENESHAQ;
-	}
 }
 
-bool SceneShaqeel::isNear(Mesh* mesh, const float& distance) {
-
-	// Get distance between object and camera
-	double d = Math::sqrt(Math::Square(mesh->transform.translate.x - camera.position.x) + Math::Square(mesh->transform.translate.z - camera.position.z));
-	return (d - (4 * distance)) <= 0;
-}
-
-void SceneShaqeel::InitGL()
+void MartScene::InitGL()
 {
+
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -481,7 +505,7 @@ void SceneShaqeel::InitGL()
 	//light[0].type = Light::LIGHT_POINT;
 	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
-	light[0].power = 2;
+	light[0].power = 1;
 	light[0].kC = 1.f;
 	light[0].kL = 0.01f;
 	light[0].kQ = 0.001f;
@@ -525,10 +549,8 @@ void SceneShaqeel::InitGL()
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 }
 
-void SceneShaqeel::InitGLXray()
+void MartScene::InitGLXray()
 {
-
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -628,17 +650,13 @@ void SceneShaqeel::InitGLXray()
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 }
 
-void SceneShaqeel::Update(double dt)
+void MartScene::Update(double dt)
 {
 	Mouse mouse;
-
 	Update(dt, mouse);
-
-	/*sceneFloats[F_TRANSLATE_TRUCK_Z] -= (float)(30 * dt);*/
-
 }
 
-void SceneShaqeel::RenderSkybox() {
+void MartScene::RenderSkybox() {
 	float translate = 50;
 	float scaleVal = (translate * 2) + (translate * 0.01f);
 	modelStack.PushMatrix();
@@ -685,7 +703,7 @@ void SceneShaqeel::RenderSkybox() {
 	modelStack.PopMatrix();
 }
 
-void SceneShaqeel::Render()
+void MartScene::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -730,346 +748,441 @@ void SceneShaqeel::Render()
 	modelStack.LoadIdentity();
 
 	Mtx44 view;
-	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
+	view.SetToPerspective(camera.orthographic_size, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
 	RenderSkybox();
 
-	// items are rendered in the functions below
-	RenderQuad();
-	Rendervehicles();
-	Rendertrees();
-	Rendercityobjects();
-	RenderMytext();
+	// objects and npcs below
+	RenderWalls();
+	RenderInatimateobjects();
 	RenderNPC();
+	RenderBooks();
+	RenderBooks2();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, -27);
+	RenderBooks2();
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, -13.5);
+	RenderBooks2();
+	modelStack.PopMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 	RenderUI();
+	RenderText();
 }
 
-void SceneShaqeel::RenderUI() {
+void MartScene::RenderUI()
+{
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
+	if (sceneBools[B_IS_BUYING] == true && sceneBools[B_BOOK_BOUGHT] == false)
+	{
+		RenderMeshOnScreen(meshList[GEO_UI2], 50, 40, 8 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to purchase this book?", Colors::WHITE, 2, 5 * w / 800, 3 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", Colors::WHITE, 2, 10 * w / 800, 2 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
+	}
+
+	if (sceneBools[B_FINDMONEY] == true && sceneBools[B_CASHCOLLECTED] == false)
+	{
+		RenderMeshOnScreen(meshList[GEO_UI2], 50, 40, 8 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], "You found some cash behind this painting! ", Colors::WHITE, 2, 5 * w / 800, 3 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press Y to collect", Colors::WHITE, 2, 10 * w / 800, 2 * h / 600);
+		RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
+	}
+
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), Colors::BLACK, 2, 0.5 * w / 800, 19 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), Colors::BLACK, 2, 0.5 * w / 800, 18 * h / 600);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), Colors::BLACK, 2, 0.5 * w / 800, 17 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 }
 
-void SceneShaqeel::RenderQuad()
+// walls rendered
+void MartScene::RenderWalls() 
 {
-	// road quad is smaller and very slightly above the ground quad
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -2, 0);
-	modelStack.Scale(10, 10, 40);
+	modelStack.Translate(0, 0.022, 0);
+	modelStack.Scale(15, 15, 15);
 	RenderMesh(meshList[GEO_QUAD1], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -2.02, 0);
-	modelStack.Scale(30, 30, 40);
+	modelStack.Translate(20, 15, 0);
+	modelStack.Rotate(90, 0, 0, 1);
+	//modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(15, 20, 20);
 	RenderMesh(meshList[GEO_QUAD2], true);
 	modelStack.PopMatrix();
-}
 
-// vehicles such as truck and plane are rendered here
-void SceneShaqeel::Rendervehicles()
-{
 	modelStack.PushMatrix();
-	modelStack.Translate(-1.3, -0.8, sceneFloats[F_TRANSLATE_TRUCK_Z]);
+	modelStack.Translate(-20, 15, 0);
+	modelStack.Rotate(90, 0, 0, 1);
+	//modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(15, 20, 20);
+	RenderMesh(meshList[GEO_QUAD2], true);
+	modelStack.PopMatrix(); // x -18.2 z 15.5
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 15, 20);
+	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.022, 0.022, 0.022);
-	RenderMesh(meshList[GEO_TRUCK], true);
+	modelStack.Scale(15, 20, 20);
+	RenderMesh(meshList[GEO_QUAD2], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(5, -0.6, sceneFloats[F_TRANSLATE_BUS_Z]);
+	modelStack.Translate(0, 15, -20);
+	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.038, 0.038, 0.038);
-	RenderMesh(meshList[GEO_BUS], true);
+	modelStack.Scale(15, 20, 20);
+	RenderMesh(meshList[GEO_QUAD2], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-6, -0.5, sceneFloats[F_TRANSLATE_CAR1_Z]);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.095, 0.095, 0.095);
-	RenderMesh(meshList[GEO_CAR1], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(5.5, -0.7, sceneFloats[F_TRANSLATE_CAR2_Z]);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.09, 0.09, 0.09);
-	RenderMesh(meshList[GEO_CAR2], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(sceneFloats[F_TRANSLATE_PLANE_X], 42, sceneFloats[F_TRANSLATE_PLANE_Z]);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(1, 1, 1);
-	RenderMesh(meshList[GEO_PLANE], true);
+	modelStack.Translate(0, 0, 0);
+	modelStack.Scale(20, 20, 20);
+	RenderMesh(meshList[GEO_QUAD3], true);
 	modelStack.PopMatrix();
 }
 
-// trees and bushes
-void SceneShaqeel::Rendertrees()
+// objs like couch, shelves and table
+void MartScene::RenderInatimateobjects()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(-20, -2.03, 20);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.25, 0.25);
-	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.Translate(19.8, 0, -19.8);
+	modelStack.Scale(12, 8, 12);
+	RenderMesh(meshList[GEO_DESKCORNER], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-20, -2.03, -20);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.25, 0.25);
-	RenderMesh(meshList[GEO_TREE], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-27.5, -2.03, 28);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.25, 0.25);
-	RenderMesh(meshList[GEO_TREE], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-27.5, -2.03, -28);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.25, 0.25);
-	RenderMesh(meshList[GEO_TREE], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(20, -2.03, 20);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.25, 0.25);
-	RenderMesh(meshList[GEO_TREE], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(20, -2.03, -20);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.25, 0.25);
-	RenderMesh(meshList[GEO_TREE], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(27.5, -2.03, 28);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.25, 0.25);
-	RenderMesh(meshList[GEO_TREE], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(27.5, -2.03, -28);
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.25, 0.25);
-	RenderMesh(meshList[GEO_TREE], true);
-	modelStack.PopMatrix();
-}
-
-// buildings, streetlight, mart etc...
-void SceneShaqeel::Rendercityobjects()
-{
-	modelStack.PushMatrix();
-	modelStack.Translate(-18, -2, 23);
-	//modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-18, -2, -23);
-	//modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(18, -2, 23);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(18, -2, -23);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(0.5, 0.5, 0.5);
-	RenderMesh(meshList[GEO_BENCH], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(meshList[GEO_MART]->transform.translate.x, meshList[GEO_MART]->transform.translate.y, meshList[GEO_MART]->transform.translate.z);
+	modelStack.Translate(16, 0, -17.5);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(meshList[GEO_MART]->transform.scale.x, meshList[GEO_MART]->transform.scale.y, meshList[GEO_MART]->transform.scale.z);
-	RenderMesh(meshList[GEO_MART], true);
+	modelStack.Scale(11, 9, 13);
+	RenderMesh(meshList[GEO_CHAIR], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-15, -2, 1);
-	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Translate(10, 3, -14);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(9, 9, 9);
+	RenderMesh(meshList[GEO_COMPUTERSCREEN], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(11, 3.1, -14.5); //3.1
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(7, 7, 7);
+	RenderMesh(meshList[GEO_KEYBOARD], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(17.2, 0, -7.1);
+	modelStack.Rotate(300, 0, 1, 0);
+	modelStack.Scale(0.1, 0.1, 0.1);
+	RenderMesh(meshList[GEO_STATUE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, 3.1, -10);
+	modelStack.Rotate(270, 1, 0, 0);
+	modelStack.Scale(0.2, 0.2, 0.2);
+	RenderMesh(meshList[GEO_BOOKSTACK], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-17, 0, 17);
+	modelStack.Scale(0.15, 0.15, 0.2);
+	RenderMesh(meshList[GEO_BOOKCASE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-17, 0, -10);
+	modelStack.Scale(0.15, 0.15, 0.2);
+	RenderMesh(meshList[GEO_BOOKCASE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-17, 0, 3.5);
+	modelStack.Scale(0.15, 0.15, 0.2);
+	RenderMesh(meshList[GEO_BOOKCASE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(1.3, 0, 19.55);
 	modelStack.Rotate(sceneFloats[F_ROTATE_DOOR], 0, 1, 0);
-	modelStack.Scale(0.61, 0.61, 0.61);
+	modelStack.Scale(1.12, 1.18, 1);
 	RenderMesh(meshList[GEO_DOOR], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-2.8, -2, -50); // X 3.6
-	/*modelStack.Rotate(180, 0, 1, 0);*/
-	modelStack.Scale(0.77, 0.77, 0.77);
-	RenderMesh(meshList[GEO_TUNNEL], true);
+	modelStack.Translate(17.2, 0, 8.5);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.7, 0.7,0.7);
+	RenderMesh(meshList[GEO_SOFA], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(2.8, -2, 50); // X 3.6
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(0.77, 0.77, 0.77);
-	RenderMesh(meshList[GEO_TUNNEL], true);
+	modelStack.Translate(19.7, 6, 1);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(1.3, 1.3, 1.3);
+	RenderMesh(meshList[GEO_PAINTING], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(22.1, -2, 0);
+	modelStack.Translate(19.8, 8.15, 1.025);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.75, 3.5, 1.1);
+	RenderMesh(meshList[GEO_QUAD4], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-19.7, 6, 6.2);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1.3, 1.3, 1.3);
+	RenderMesh(meshList[GEO_PAINTING], true); // hidden money
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-19.8, 8.15, 6.25);
+	modelStack.Rotate(270, 1, 0, 0);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Scale(1.2, 1.2, 1);
+	RenderMesh(meshList[GEO_QUAD5], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-19.7, 6, -6.5);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1.3, 1.3, 1.3);
+	RenderMesh(meshList[GEO_PAINTING], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-19.8, 8.15, -6.45);
+	modelStack.Rotate(270, 1, 0, 0);
+	modelStack.Rotate(90, 0, 0, 1);
+	modelStack.Scale(0.75, 1, 1);
+	RenderMesh(meshList[GEO_QUAD6], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(16, 0, 17);
+	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(0.4, 0.4, 0.4);
-	RenderMesh(meshList[GEO_CITY1], true);
+	RenderMesh(meshList[GEO_TABLE], true);
+	modelStack.PopMatrix();
+
+}
+
+// text
+void MartScene::RenderText()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(sceneVectors[V_TEXT].x, 5, sceneVectors[V_TEXT].z);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(0.25, 0.25, 0.25);
+	RenderText(meshList[GEO_TEXT], " Press T to purchase", Colors::WHITE);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(22.1, -2, -9);
-	modelStack.Scale(0.38, 0.38, 0.38);
-	RenderMesh(meshList[GEO_CITY1], true);
+	modelStack.Translate(5.85, sceneVectors[V_TEXT_WORLD_SCREEN].y, 19.5);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(0.3, 0.3, 0.3);
+	RenderText(meshList[GEO_TEXT], " Press F to leave", Colors::WHITE);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(22.1, -2, 9);
-	modelStack.Scale(0.38, 0.38, 0.38);
-	RenderMesh(meshList[GEO_CITY1], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-16.5, 0, -0.18); // X 3.6
-	/*modelStack.Rotate(180, 0, 1, 0);*/
-	modelStack.Scale(0.5, 1, 0.9);
+	modelStack.Translate(3.4, 0, 21.9);
+	modelStack.Scale(1, 4, 1);
 	RenderMesh(meshList[GEO_CUBE], true);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(-11.7, -2, -13.2);
-	modelStack.Scale(1, 1, 1);
-	RenderMesh(meshList[GEO_STREETLIGHT], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(11.7, -2, 13.2);
-	modelStack.Scale(1, 1, 1);
-	RenderMesh(meshList[GEO_STREETLIGHT], true);
-	modelStack.PopMatrix();
-
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::BLACK, 200, 0, 500);
 }
 
-// text for door
-void SceneShaqeel::RenderMytext()
+// floating book
+void MartScene:: RenderBooks()
+{
+	if (sceneBools[B_BOOK_COLLECTED] == false)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(sceneVectors[V_BOOK].x, sceneVectors[V_BOOK].y, sceneVectors[V_BOOK].z); // 2.85
+		modelStack.Rotate(sceneFloats[F_ROTATE_BOOK], 0, 1, 0);
+		modelStack.Scale(1, 1, 1);
+		RenderMesh(meshList[GEO_BOOK], true);
+		modelStack.PopMatrix();
+	}
+
+	if (sceneBools[B_BOOK_COLLECTED] == true)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(meshList[GEO_BOOK]->transform.translate.x, meshList[GEO_BOOK]->transform.translate.y, meshList[GEO_BOOK]->transform.translate.z);
+		modelStack.Rotate(meshList[GEO_BOOK]->transform.rotate, 0, 1, 0);
+		modelStack.Rotate(270, 0, 1, 0);
+		RenderMesh(meshList[GEO_BOOK], true);
+		modelStack.PopMatrix();
+	}
+}
+
+// regular books
+void MartScene::RenderBooks2()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(-14.8, sceneFloats[F_TRANSLATE_WORD_Y], 0.9); // text will appear once door is open
+	modelStack.Translate(-16.5, 2.85, 11.5); // 2.85
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.15, 0.15, 0.15);
-	RenderText(meshList[GEO_TEXT], " Press F to Enter", Colors::WHITE);
-	modelStack.PopMatrix();
-}
-
-// robos
-void SceneShaqeel::RenderNPC()
-{
-	// robo done with hierarch modelling with small sphere at the centre
-	modelStack.PushMatrix();
-	modelStack.Translate(-13.2, 0, sceneFloats[F_TRANSLATE_SPHERE_Z]);
-	modelStack.Scale(0.25, 0.25, 0.25);
-	RenderMesh(meshList[GEO_SPHERE], true);
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Rotate(sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
-	modelStack.Scale(3.5, 3.5, 3.5);
-	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Rotate(-sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
-	modelStack.Scale(3.5, 3.5, 3.5);
-	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+	modelStack.Translate(-16.5, 3.1, 11.5); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK2], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-2.25, 4.5, 0);
-	modelStack.Rotate(-sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
-	modelStack.Scale(3.5, 3.5, 3.5);
-	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
+	modelStack.Translate(-16.5, 3.35, 11.5); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK3], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(2.25, 4.5, 0);
-	modelStack.Rotate(sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
-	modelStack.Scale(3.5, 3.5, 3.5);
-	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
+	modelStack.Translate(-16, 5.5, 10.85); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(30, 0, 0, 1);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK6], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -8.5, 0);
-	modelStack.Scale(3.5, 3.5, 3.5);
-	RenderMesh(meshList[GEO_ROBOBODY], true);
+	modelStack.Translate(-16.5, 5, 15.1); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK5], true);
 	modelStack.PopMatrix();
-
-	modelStack.PopMatrix();
-
-	// 2nd robot
 
 	modelStack.PushMatrix();
-	modelStack.Translate(13.2, 0, sceneFloats[F_TRANSLATE_SPHERE_Z_2]);
+	modelStack.Translate(-16.5, 5.25, 15.1); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK2], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 0.5, 15.1); // 2.85
+	/*modelStack.Rotate(90, 0, 1, 0);*/
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK5], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 0.85, 15.1); // 2.85
+	/*modelStack.Rotate(90, 0, 1, 0);*/
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK2], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 7.35, 11.5); // 2.85
+	/*modelStack.Rotate(90, 0, 1, 0);*/
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK6], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 7.70, 11.5); // 2.85
+	/*modelStack.Rotate(90, 0, 1, 0);*/
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK4], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.5, 7.35, 11.5); // 2.85
 	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK6], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.8, 1.05, 12.45); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(-40, 0, 0, 1);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK4], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-16.8, 7.95, 16); // 2.85
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(-40, 0, 0, 1);
+	modelStack.Scale(1, 1, 1);
+	RenderMesh(meshList[GEO_BOOK6], true);
+	modelStack.PopMatrix();
+}
+
+// function to put book at "waist" of camera. 
+void MartScene::Book()
+{
+	BookHold = meshList[GEO_BOOK];
+	BookHold->prevTransform = BookHold->transform;
+	BookHold->transform.translate.x = camera.position.x;
+	BookHold->transform.translate.z = camera.position.z;
+	BookHold->transform.translate.y = camera.position.y - 1;
+	Vector3 origin = (BookHold->transform.translate + sceneVectors[V_BOOK_ORIGIN]).Normalized();
+	BookHold->transform.rotate = camera.getRotation(sceneVectors[V_BOOK_ORIGIN]);
+}
+
+// cashier to purchase from and stranger in mart
+void MartScene::RenderNPC()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(14.2, 0, -15.8);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(3.5, 3.5, 3.5);
+	RenderMesh(meshList[GEO_KURENAI], true);
+	modelStack.PopMatrix();
+
+	// use hierach modelling
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-9, 3.5, -13.8);
 	modelStack.Scale(0.25, 0.25, 0.25);
 	RenderMesh(meshList[GEO_SPHERE], true);
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Rotate(sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
-	modelStack.Scale(3.5, 3.5, 3.5);
-	RenderMesh(meshList[GEO_ROBOLEFTLEG], true);
+	modelStack.Translate(0.32, -13, 1);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Scale(16, 16, 16);
+	RenderMesh(meshList[GEO_SAMIDAL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Rotate(-sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
-	modelStack.Scale(3.5, 3.5, 3.5);
-	RenderMesh(meshList[GEO_ROBORIGHTLEG], true);
+	modelStack.Translate(0.32, 6, -3);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Rotate(40, 0, 0, 1);
+	modelStack.Scale(21, 18, 18);
+	RenderMesh(meshList[GEO_SAMIDALRIGHTARM], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-2.25, 4.5, 0);
-	modelStack.Rotate(-sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
-	modelStack.Scale(3.5, 3.5, 3.5);
-	RenderMesh(meshList[GEO_ROBOLEFTARM], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(2.25, 4.5, 0);
-	modelStack.Rotate(sceneFloats[F_ROTATE_LEFT_LEG], 1, 0, 0);
-	modelStack.Scale(3.5, 3.5, 3.5);
-	RenderMesh(meshList[GEO_ROBORIGHTARM], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, -8.5, 0);
-	modelStack.Scale(3.5, 3.5, 3.5);
-	RenderMesh(meshList[GEO_ROBOBODY], true);
+	modelStack.Translate(0.32, 6, 5);
+	modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Rotate(-40, 0, 0, 1);
+	modelStack.Scale(21, 18, 18);
+	RenderMesh(meshList[GEO_SAMIDALLEFTARM], true);
 	modelStack.PopMatrix();
 
 	modelStack.PopMatrix();
+
 }
 
-void SceneShaqeel::Exit() {
+void MartScene::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}
@@ -1077,28 +1190,30 @@ void SceneShaqeel::Exit() {
 	glDeleteProgram(m_programID);
 }
 
-void SceneShaqeel::Reset() {
+void MartScene::Reset() {
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 0.4, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)30);
+	camera.Init(Vector3(3.87, 5, 15.7), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)19);
 	camera.orthographic_size = 45.f;
 
-	// initialised
-	sceneFloats[F_TRANSLATE_TRUCK_Z] = 10;
-	sceneFloats[F_BUS_Z] = 0;
-	sceneFloats[F_TRANSLATE_CAR1_Z] = -10;
-	sceneFloats[F_TRANSLATE_CAR2_Z] = 20;
-	sceneFloats[F_ROTATE_DOOR] = 90;
-	sceneFloats[F_TRANSLATE_WORD_Y] = 1000;
-	sceneFloats[F_ROTATE_LEFT_LEG] = 0;
-	sceneFloats[F_ROTATE_RIGHT_LEG] = 0;
-	sceneFloats[F_TRANSLATE_SPHERE_Z] = -19.6;
-	sceneFloats[F_TRANSLATE_SPHERE_Z_2] = 19.6;
-	sceneFloats[F_TRANSLATE_PLANE_X] = 40;
-	sceneFloats[F_TRANSLATE_PLANE_Z] = 10;
+	sceneVectors[V_BOOK].x = -17;
+	sceneVectors[V_BOOK].y = 2.85;
+	sceneVectors[V_BOOK].z = 1.6;
+	sceneFloats[F_ROTATE_BOOK] = 270;
+	sceneFloats[F_ROTATE_DOOR] = 180;
+	sceneBools[B_BOOK_COLLECTED] = false;
+	sceneVectors[V_TEXT].x = 10;
+	sceneVectors[V_TEXT].y = 5;
+	sceneVectors[V_TEXT].z = -8000;
+	sceneVectors[V_SCREEN].x = 8000;
+	sceneVectors[V_SCREEN].y = 30;
+	sceneVectors[V_TEXT_WORLD_SCREEN].y = 1000;
 
-	sceneBools[B_LEFT_LEG_LIMIT] = false;
-	sceneBools[B_LEFT_LEG_LIMIT_2] = false;
-	sceneBools[B_RIGHT_LEG_LIMIT] = false;
+	sceneBools[B_BOOK_BOUGHT] = false;
+	sceneBools[B_FINDMONEY] = false;
+	sceneBools[B_CASHCOLLECTED] = false;
+
+	sceneFloats[F_AMOUNT] = 30;
+	sceneVectors[V_BOOK_ORIGIN] = Vector3(-1, 0, 0);
 }

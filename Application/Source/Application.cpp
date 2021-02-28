@@ -12,15 +12,14 @@
 #include <stdlib.h>
 #include "StartMenuScene.h"
 #include "OverworldScene.h"
-#include "SceneShaqeel.h"
-#include "SceneShaqler.h"
-#include "SceneW.h"
-#include "SceneOfTheBeach.h"
-#include "SceneRyan.h"
-#include "SceneXL.h"
+#include "DistrictScene.h"
+#include "MazeScene.h"
+#include "MartScene.h"
+#include "BeachScene.h"
+#include "SharkScene.h"
+#include "CarnivalScene.h"
 #include "PauseMenuScene.h"
 #include "WinnerScene.h"
-
 
 GLFWwindow* m_window;
 unsigned Application::FPS = 120; // FPS of this game
@@ -297,7 +296,7 @@ void Application::Init() {
 	m_height = 600;
 	ui_height = 60;
 	ui_width = 80;
-	sceneswitch = STARTSCENE;
+	sceneswitch = START_SCENE;
 	Player::setMoney(100);
 	Player::setAmmo(256);
 	Player::setHealth(100);
@@ -338,20 +337,20 @@ void Application::Init() {
 
 void toggleState() {
 	switch (Application::sceneswitch) {
-	case Application::MENUSCENE:
-	case Application::WINSCENE:
-	case Application::STARTSCENE:
+	case Application::MENU_SCENE:
+	case Application::WIN_SCENE:
+	case Application::START_SCENE:
 
 		// Use mouse positioning to click on UI menu
 		glfwSetCursorPosCallback(m_window, NULL);
 		glfwSetScrollCallback(m_window, NULL);
 		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		break;
-	case Application::SCENESHAQ:
-	case Application::SCENEWALTON:
-	case Application::SCENERYAN:
-	case Application::SCENEXL:
-	case Application::SCENESHAQLER:
+	case Application::DISTRICT_SCENE:
+	case Application::MAZE_SCENE:
+	case Application::SHARK_SCENE:
+	case Application::CARNIVAL_SCENE:
+	case Application::MART_SCENE:
 	default:
 
 		// Use mouse movement for playing and looking
@@ -366,16 +365,16 @@ void toggleState() {
 
 void Application::Run() {
 	// Initialize and create scenes
-	scene[SCENESHAQ] = new SceneShaqeel();
-	scene[SCENEWALTON] = new SceneW();
-	scene[SCENEBEACH] = new SceneOfTheBeach();
-	scene[SCENERYAN] = new SceneRyan();
-	scene[SCENEXL] = new SceneXL();
-	scene[OVERWORLD] = new OverworldScene();
-	scene[SCENESHAQLER] = new SceneShaqler();
-	scene[STARTSCENE] = new StartMenuScene();
-	scene[MENUSCENE] = new PauseMenuScene();
-	scene[WINSCENE] = new WinnerScene();
+	scene[DISTRICT_SCENE] = new DistrictScene();
+	scene[MAZE_SCENE] = new MazeScene();
+	scene[BEACH_SCENE] = new BeachScene();
+	scene[SHARK_SCENE] = new SharkScene();
+	scene[CARNIVAL_SCENE] = new CarnivalScene();
+	scene[OVERWORLD_SCENE] = new OverworldScene();
+	scene[MART_SCENE] = new MartScene();
+	scene[START_SCENE] = new StartMenuScene();
+	scene[MENU_SCENE] = new PauseMenuScene();
+	scene[WIN_SCENE] = new WinnerScene();
 
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
 		if (scene[i])
@@ -402,7 +401,7 @@ void Application::Run() {
 					scene[i]->Reset();
 				}
 			}
-			Application::sceneswitch = Application::previousscene = STARTSCENE;
+			Application::sceneswitch = Application::previousscene = START_SCENE;
 			restart = false;
 		}
 
@@ -416,30 +415,30 @@ void Application::Run() {
 			}
 
 		} else {
-			Application::sceneswitch = STARTSCENE;
+			Application::sceneswitch = START_SCENE;
 		}
 
 		// Toggle mouse states depending on scene
 		toggleState();
 
 		switch (Application::sceneswitch) {
-		case Application::MENUSCENE:
+		case Application::MENU_SCENE:
 			/*if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
 				Application::sceneswitch = Application::previousscene;
 			}*/
 			break;
-		case Application::STARTSCENE:
+		case Application::START_SCENE:
 			if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
 				Application::quit = true;
 			}
 			break;
-		case Application::WINSCENE:
+		case Application::WIN_SCENE:
 			restart = true;
 			break;
 		default:
 			if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
 				Application::previousscene = Application::sceneswitch;
-				Application::sceneswitch = MENUSCENE;
+				Application::sceneswitch = MENU_SCENE;
 			}
 			break;
 		}

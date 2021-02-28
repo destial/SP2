@@ -7,7 +7,7 @@
 #include "Light.h"
 #include "Camera3.h"
 
-class SceneShaqler : public Scene
+class MartScene : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
@@ -168,8 +168,8 @@ private:
 	void RenderSkybox();
 
 public:
-	SceneShaqler();
-	~SceneShaqler();
+	MartScene();
+	~MartScene();
 
 	virtual void Init();
 	virtual void Update(double dt);

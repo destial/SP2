@@ -240,7 +240,7 @@ void PauseMenuScene::Update(double dt, Mouse mouse) {
 		}
 		else if (posX > 29 * w / 800 && posX < 50 * w / 800 && posY > 14 * h / 600 && posY < 26 * h / 600)
 		{
-			Application::sceneswitch = Application::STARTSCENE;
+			Application::sceneswitch = Application::START_SCENE;
 		}
 	}
 

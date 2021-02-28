@@ -223,7 +223,7 @@ void StartMenuScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 }
 
 void StartMenuScene::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::STARTSCENE) {
+	if (Application::previousscene != Application::START_SCENE) {
 		InitGL();
 	}
 
@@ -244,7 +244,7 @@ void StartMenuScene::Update(double dt, Mouse mouse) {
 		if (posX > 32 * w / 800 && posX < 48 * w / 800 && posY > 31 * h / 600 && posY < 39 * h / 600)
 		{
 			std::cout << "Hit!" << std::endl;
-			Application::sceneswitch = Application::OVERWORLD;
+			Application::sceneswitch = Application::OVERWORLD_SCENE;
 		}
 		else if (posX > 32 * w / 800 && posX < 48 * w / 800 && posY > 21 * h / 600 && posY < 29 * h / 600)
 		{

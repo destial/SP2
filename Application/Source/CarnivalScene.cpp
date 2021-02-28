@@ -1,4 +1,4 @@
-#include "SceneXL.h"
+#include "CarnivalScene.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -9,11 +9,11 @@
 #include <sstream>
 
 
-SceneXL::SceneXL() {}
+CarnivalScene::CarnivalScene() {}
 
-SceneXL::~SceneXL() {}
+CarnivalScene::~CarnivalScene() {}
 
-void SceneXL::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
+void CarnivalScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) return;
 
 	glDisable(GL_DEPTH_TEST);
@@ -45,7 +45,7 @@ void SceneXL::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneXL::Init()
+void CarnivalScene::Init()
 {
 	// Clear background color to blue
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -167,7 +167,7 @@ void SceneXL::Init()
 	Application::log("Scene XL initialized");
 }
 
-void SceneXL::RenderMesh(Mesh* mesh, bool enableLight)
+void CarnivalScene::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -209,7 +209,7 @@ void SceneXL::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void SceneXL::RenderText(Mesh* mesh, std::string text, Color color)
+void CarnivalScene::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -236,7 +236,7 @@ void SceneXL::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneXL::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void CarnivalScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -279,7 +279,7 @@ void SceneXL::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, floa
 }
 
 
-bool SceneXL::isNear(Mesh* mesh, const float& distance) 
+bool CarnivalScene::isNear(Mesh* mesh, const float& distance) 
 {
 	if (mesh->type == Mesh::TYPE::OBJECT) {
 		return (camera.position.x <= (mesh->transform.translate.x + distance) &&
@@ -290,7 +290,7 @@ bool SceneXL::isNear(Mesh* mesh, const float& distance)
 	return false;
 }
 
-void SceneXL::DetectGnome() //detects if you have interacted with the gnome or not, if yes then gnomed
+void CarnivalScene::DetectGnome() //detects if you have interacted with the gnome or not, if yes then gnomed
 {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
@@ -327,7 +327,7 @@ void SceneXL::DetectGnome() //detects if you have interacted with the gnome or n
 	}
 }
 
-void SceneXL::RenderGnome() //rendering of the gnome
+void CarnivalScene::RenderGnome() //rendering of the gnome
 {
 	if (meshList[GEO_GNOME] && !sceneBools[B_GOT_GNOMED])
 	{
@@ -339,7 +339,7 @@ void SceneXL::RenderGnome() //rendering of the gnome
 	}
 }
 
-void SceneXL::RenderMinigame() //rendering of the minigames
+void CarnivalScene::RenderMinigame() //rendering of the minigames
 {
 	for (int i = 0; i < targetList.size(); i++ && sceneBools[B_MOVING_DUMMY] == false)
 	{
@@ -355,7 +355,7 @@ void SceneXL::RenderMinigame() //rendering of the minigames
 	} //10 target dummies for the minigame/target shooting
 }
 
-void SceneXL::RenderSurroundings() //scene decorations
+void CarnivalScene::RenderSurroundings() //scene decorations
 {
 	modelStack.PushMatrix();
 	modelStack.Translate(-1.07, 1, -50);
@@ -429,7 +429,7 @@ void SceneXL::RenderSurroundings() //scene decorations
 	modelStack.PopMatrix(); //drop tower
 }
 
-void SceneXL::DetectJetpack() //Detecting whether the jetpack has been interacted or not
+void CarnivalScene::DetectJetpack() //Detecting whether the jetpack has been interacted or not
 {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
@@ -460,7 +460,7 @@ void SceneXL::DetectJetpack() //Detecting whether the jetpack has been interacte
 	}
 }
 
-void SceneXL::RenderJetpack() //render my jetpack
+void CarnivalScene::RenderJetpack() //render my jetpack
 {
 	if (meshList[GEO_JETPACK] && !Player::getJetpack())
 	{
@@ -479,8 +479,8 @@ bool isNearDummy(GameObject* o1, MinigameEntity* o2, const float& distance = 1.f
 	return (d <= distance);
 }
 
-void SceneXL::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::SCENEXL) {
+void CarnivalScene::Update(double dt, Mouse mouse) {
+	if (Application::previousscene != Application::CARNIVAL_SCENE) {
 		InitGL();
 	}
 	sceneFloats[F_ROTATE_ANGLE] += (float)(50 * dt);
@@ -605,13 +605,13 @@ void SceneXL::Update(double dt, Mouse mouse) {
 	{
 		camera.position.x = 10;
 		camera.position.z = 10;
-		Application::sceneswitch = Application::OVERWORLD;
-		Application::previousscene = Application::SCENEXL;
+		Application::sceneswitch = Application::OVERWORLD_SCENE;
+		Application::previousscene = Application::CARNIVAL_SCENE;
 	}
 
 }
 
-void SceneXL::InitGL()
+void CarnivalScene::InitGL()
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -710,7 +710,7 @@ void SceneXL::InitGL()
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 }
 
-void SceneXL::InitGLXray()
+void CarnivalScene::InitGLXray()
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -809,13 +809,13 @@ void SceneXL::InitGLXray()
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 }
 
-void SceneXL::Update(double dt)
+void CarnivalScene::Update(double dt)
 {
 	Mouse mouse;
 	Update(dt, mouse);
 }
 
-void SceneXL::DetectRobot()
+void CarnivalScene::DetectRobot()
 {
 	if (isNear(meshList[GEO_ROBOT], (float)5.f) && sceneBools[B_TALK_TO_ROBOT] == false)
 	{
@@ -836,7 +836,7 @@ void SceneXL::DetectRobot()
 	}
 }
 
-void SceneXL::RenderSkybox() {
+void CarnivalScene::RenderSkybox() {
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -50, 0);
 	//modelStack.Scale(5, 5, 5);
@@ -884,7 +884,7 @@ void SceneXL::RenderSkybox() {
 	modelStack.PopMatrix();
 }
 
-void SceneXL::Render()
+void CarnivalScene::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -994,7 +994,7 @@ void SceneXL::Render()
 
 }
 
-void SceneXL::RenderUI() {
+void CarnivalScene::RenderUI() {
 	unsigned w = Application::GetWindowWidth();
 	unsigned h = Application::GetWindowHeight();
 	RenderMeshOnScreen(meshList[GEO_UI], 25, 12.5, 53.75 * h / 600);
@@ -1004,7 +1004,7 @@ void SceneXL::RenderUI() {
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 }
 
-void SceneXL::RenderRobot()
+void CarnivalScene::RenderRobot()
 {
 	modelStack.PushMatrix();
 	modelStack.Translate(meshList[GEO_ROBOT]->transform.translate.x, meshList[GEO_ROBOT]->transform.translate.y, meshList[GEO_ROBOT]->transform.translate.z);
@@ -1013,7 +1013,7 @@ void SceneXL::RenderRobot()
 	modelStack.PopMatrix(); // robot
 }
 
-void SceneXL::Minigun()
+void CarnivalScene::Minigun()
 {
 	//Sets the gun to follow the player position and rotation
 	GunOrigin = Vector3(-1, 0, 0);
@@ -1026,7 +1026,7 @@ void SceneXL::Minigun()
 	MinigunHold->transform.rotate = camera.getRotation(GunOrigin);
 }
 
-void SceneXL::Exit() {
+void CarnivalScene::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}
@@ -1046,7 +1046,7 @@ void SceneXL::Exit() {
 	glDeleteProgram(m_programID);
 }
 
-void SceneXL::Reset() {
+void CarnivalScene::Reset() {
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);

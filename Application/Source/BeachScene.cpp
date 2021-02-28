@@ -1,4 +1,4 @@
-#include "SceneRyan.h"
+#include "BeachScene.h"
 #include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
@@ -8,67 +8,98 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneRyan::SceneRyan() {}
+BeachScene::BeachScene() {}
 
-SceneRyan::~SceneRyan() {}
+BeachScene::~BeachScene() {}
 
-void SceneRyan::Init()
+void BeachScene::Init()
 {
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); //bg colour
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
 	//shaders
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	light[0].type = Light::LIGHT_POINT;
-	light[0].position.Set(0, 0, 0);
-	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(0, 0, 0);
+	light[0].type = Light::LIGHT_DIRECTIONAL;
+	light[0].position.Set(50, 20, 50);
+	light[1].type = Light::LIGHT_DIRECTIONAL;
+	light[1].position.Set(-50, 20, -50);
 
 	InitGL();
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1, 1, 1);
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(0.486, 0.988, 0), 1);
 
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad",Color(1, 1, 1), 10.1f);
-	meshList[GEO_QUAD]->textureID = LoadTGA("Image//Ocean.tga");
-	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front",Color(1, 1, 1), 50.1f);
-	meshList[GEO_FRONT]->textureID = LoadTGA("Image//OceanBack.tga");
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 1.f);
+	meshList[GEO_QUAD]->textureID = LoadTGA("Image//Sandtexture.tga");
 
-	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back",Color(1, 1, 1), 50.1f);
-	meshList[GEO_BACK]->textureID = LoadTGA("Image//OceanFront.tga");
+	meshList[GEO_OCEAN] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 1.f);
+	meshList[GEO_OCEAN]->textureID = LoadTGA("Image//Ocean.tga");
 
-	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top",Color(1, 1, 1), 50.1f);
-	meshList[GEO_TOP]->textureID = LoadTGA("Image//OceanTop.tga");
+	meshList[GEO_ROAD] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 1.f);
+	meshList[GEO_ROAD]->textureID = LoadTGA("Image//RoadTopDown.tga");
 
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom",Color(1, 1, 1), 50.1f);
-	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//OceanBottom.tga");
+	meshList[GEO_DRIZZLE] = MeshBuilder::GenerateOBJMTL("Drizzle", "OBJ//drizzle.obj", "OBJ//drizzle.mtl");
 
-	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left",Color(1, 1, 1), 50.1f);
-	meshList[GEO_LEFT]->textureID = LoadTGA("Image//OceanLeft.tga");
+	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 50.1f);
+	meshList[GEO_FRONT]->textureID = LoadTGA("Image//BeachFront.tga");
 
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right",Color(1, 1, 1), 50.1f);
-	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//OceanRight.tga");
+	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", Color(1, 1, 1), 50.1f);
+	meshList[GEO_BACK]->textureID = LoadTGA("Image//BeachBack.tga");
+
+	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", Color(1, 1, 1), 50.1f);
+	meshList[GEO_TOP]->textureID = LoadTGA("Image//BeachBottom.tga");
+
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", Color(1, 1, 1), 50.1f);
+	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//BeachTop.tga");
+
+	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 50.1f);
+	meshList[GEO_LEFT]->textureID = LoadTGA("Image//BeachLeft.tga");
+
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 50.1f);
+	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//BeachRight.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	meshList[GEO_SHARKTOP] = MeshBuilder::GenerateOBJMTL("SharkTop","OBJ//SharkTop.obj", "OBJ//SharkTop.mtl");
+	meshList[GEO_UI] = MeshBuilder::GenerateFaceQuad("UIBackboard", Colors::WHITE, 1.5f, 0.3f);
+	meshList[GEO_UI]->textureID = LoadTGA("Image//blueblacktextbox.tga");
 
-	meshList[GEO_SHARKBTM] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkBtm.obj", "OBJ//SharkBtm.mtl");
+	meshList[GEO_UI2] = MeshBuilder::GenerateFaceQuad("UIBackboard", Colors::WHITE, 1.f, 1.f);
+	meshList[GEO_UI2]->textureID = LoadTGA("Image//button.tga");
 
-	meshList[GEO_SHARKFIN] = MeshBuilder::GenerateOBJMTL("SharkBtm", "OBJ//SharkFin.obj", "OBJ//SharkFin.mtl");
+	meshList[GEO_CRAB] = MeshBuilder::GenerateOBJMTL("Crab", "OBJ//crab.obj", "OBJ//crab.mtl");
 
-	meshList[GEO_BEACH] = MeshBuilder::GenerateHemisphere("Beach", Color(1, 1, 1), 36, 36, 1);
-	meshList[GEO_BEACH]->material.kAmbient.Set(0.900, 0.843, 0.000);
-	meshList[GEO_BEACH]->material.kDiffuse.Set(0.900, 0.843, 0.000);
-	meshList[GEO_BEACH]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_BEACH]->material.kShininess = 0.6f;
+	meshList[GEO_TREE] = MeshBuilder::GenerateOBJMTL("Tree", "OBJ//palmtree.obj", "OBJ//palmtree.mtl");
+	meshList[GEO_TREE]->transform.Translate(10, 0, 0);
+	meshList[GEO_TREE]->transform.Scale(0.5, 0.2, 0.5);
 
+	meshList[GEO_TREE2] = MeshBuilder::GenerateOBJMTL("Tree", "OBJ//palmtree.obj", "OBJ//palmtree.mtl");
+	meshList[GEO_TREE2]->transform.Translate(-25, 0, 20);;
+	meshList[GEO_TREE2]->transform.Scale(0.5, 0.2, 0.5);
+
+	meshList[GEO_TREE3] = MeshBuilder::GenerateOBJMTL("Tree", "OBJ//palmtree.obj", "OBJ//palmtree.mtl");
+	meshList[GEO_TREE3]->transform.Translate(20, 0, -30);
+	meshList[GEO_TREE3]->transform.Scale(0.5, 0.2, 0.5);
+
+	meshList[GEO_DOLPHIN] = MeshBuilder::GenerateOBJMTL("Dolphin", "OBJ//Dolphin.obj", "OBJ//Dolphin.mtl");
+
+	meshList[GEO_SHIP] = MeshBuilder::GenerateOBJMTL("Ship", "OBJ//ship_light.obj", "OBJ//ship_light.mtl");
+
+	meshList[GEO_UMBRELLA] = MeshBuilder::GenerateOBJMTL("Umbrella", "OBJ//Umbrella.obj", "OBJ//Umbrella.mtl");
+
+	meshList[GEO_CABIN] = MeshBuilder::GenerateOBJ("Cabin", "OBJ//beachcabin.obj");
+	meshList[GEO_CABIN]->textureID = LoadTGA("Image//BeachCabin.tga");
+	meshList[GEO_CABIN]->transform.Translate(15, -4, 40);
+	meshList[GEO_CABIN]->transform.Scale(3, 3, 3);
+
+	//Reset all variables
 	Reset();
 
-	Application::log("Scene Ryan initialized");
+	Application::log("Scene beach initialized");
 }
 
-void SceneRyan::RenderMesh(Mesh* mesh, bool enableLight)
+void BeachScene::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -110,7 +141,7 @@ void SceneRyan::RenderMesh(Mesh* mesh, bool enableLight)
 
 }
 
-void SceneRyan::RenderText(Mesh* mesh, std::string text, Color color)
+void BeachScene::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -137,14 +168,14 @@ void SceneRyan::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void BeachScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, Application::GetWindowWidth(), 0, Application::GetWindowHeight(), -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -179,7 +210,7 @@ void SceneRyan::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneRyan::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
+void BeachScene::RenderMeshOnScreen(Mesh* mesh, Color color, float size, float x, float y) {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
 
@@ -212,144 +243,165 @@ void SceneRyan::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneRyan::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::SCENERYAN) {
-		InitGL();
-	}
-	//Ensures distance between player and shark is positive
-	float dist = Math::sqrt(Math::Square(camera.SharkPos.x - camera.position.x + Math::Square(camera.SharkPos.z - camera.position.z)));
+void BeachScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
+	if (!mesh || mesh->textureID <= 0) return;
 
-	//The shark hitbox agaisnt the player
-	if (dist < 0.5)
+	glDisable(GL_DEPTH_TEST);
+	Mtx44 ortho;
+	ortho.SetToOrtho(0, Application::GetUIWidth(), 0, Application::GetUIHeight(), -10, 10); //size of screen UI
+	projectionStack.PushMatrix();
+	projectionStack.LoadMatrix(ortho);
+	viewStack.PushMatrix();
+	viewStack.LoadIdentity(); //No need camera for ortho mode
+	modelStack.PushMatrix();
+	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.Translate(x, y, 0);
+	modelStack.Scale(size, size, size);
+
+	glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
+	glUniform1i(m_parameters[U_LIGHTENABLED], 0);
+	glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
+	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+	mesh->Render();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
+	projectionStack.PopMatrix();
+	viewStack.PopMatrix();
+	modelStack.PopMatrix();
+	glEnable(GL_DEPTH_TEST);
+}
+
+void BeachScene::Update(double dt, Mouse mouse) {
+
+	if (Application::IsKeyPressed('E'))
 	{
-		Application::sceneswitch = Application::SCENEBEACH;
-		Application::previousscene = Application::SCENERYAN;
-	}
-	//Player must survive 5 shark attack then will switch to next scene on the 6th attack
-	if (sceneInts[SURVIVE_COUNTER] == 6)
-	{
-		Player::setSharkSurvived(true);
-		Application::sceneswitch = Application::SCENEBEACH;
-		Application::previousscene = Application::SCENERYAN;
-	}
-
-	//Make Camera slowly pan down
-	if (sceneBools[SCENE_TRANSITION] == true)
-	{
-		//
-		if (sceneInts[SCENE_COUNTER] == 0)
+		if (camera.position.x <= -35.6 && camera.position.x >= -41.6 && camera.position.z <= 34 && camera.position.z >= 28.8)
 		{
-			camera.position.y = 60;
-			sceneInts[SCENE_COUNTER]++;
-		}
-		camera.position.y -= 0.1;
-		if (camera.position.y <= 8)
-		{
-			sceneBools[SCENE_TRANSITION] = false;
-		}
-
-		//Shark animation
-		if (sceneBools[ROTATE] == true)
-		{
-			sceneFloats[ROTATE_TAIL] += 1;
-			if (sceneFloats[ROTATE_TAIL] > 20)
-			{
-				sceneBools[ROTATE] = false;
-			}
-		}
-		else if (sceneBools[ROTATE] == false)
-		{
-			sceneFloats[ROTATE_TAIL] -= 1;
-			if (sceneFloats[ROTATE_TAIL] < -20)
-			{
-				sceneBools[ROTATE] = true;
-			}
-		}
-		sceneInts[SHARK_CIRCLE] += 1;
-		sceneFloats[SHARK_CIRCLE_ANGLE] += 0.5;
-
-	}
-	else
-	{
-		//Shark animation
-		if (sceneBools[ROTATE] == true)
-		{
-			sceneFloats[ROTATE_TAIL] += 1;
-			if (sceneFloats[ROTATE_TAIL] > 20)
-			{
-				sceneBools[ROTATE] = false;
-			}
-		}
-		else if (sceneBools[ROTATE] == false)
-		{
-			sceneFloats[ROTATE_TAIL] -= 1;
-			if (sceneFloats[ROTATE_TAIL] < -20)
-			{
-				sceneBools[ROTATE] = true;
-			}
-		}
-		if ((sceneInts[SHARK_CIRCLE] % 720) == 0 && sceneBools[SHARK_ATTACK] == false)
-		{
-			sceneBools[SHARK_ATTACK] = true;
-		}
-		//Shark attack starts
-		if (sceneBools[SHARK_ATTACK] == true && (sceneInts[SHARK_CIRCLE] % 720) == 0)
-		{
-			//Takes the current position of player
-			if (sceneInts[TEMP_COUNTER] == 0)
-			{
-				camera.SharkChaseinit();
-				Vector3 origin = Vector3(-1, 0, 0);
-				sceneFloats[SHARK_DIRECTION] = camera.getSharkRotation(origin) - 90;
-				sceneInts[TEMP_COUNTER] = 1;
-				sceneInts[SURVIVE_COUNTER]++;
-			}
-
-			if (camera.SharkPos.x > 30)
-			{
-				sceneFloats[ROTATE_SHARK] -= 0.5;//Rotate Shark to face player
-				camera.SharkPos.y += 0.1;//Shark jumps from the water
-				camera.SharkChaseMove();//Shark moves to the temp position of player
-			}
-			else if (camera.SharkPos.x > 30)
-			{
-				sceneFloats[ROTATE_SHARK] += 0.5;
-				camera.SharkPos.y -= 0.1;
-				camera.SharkChaseMove();
-			}
-			else if (camera.SharkPos.x > -100)
-			{
-				sceneFloats[ROTATE_SHARK] += 0.5;
-				camera.SharkPos.y -= 0.1;
-				camera.SharkChaseMove();
-			}
-			else
-			{
-				//Reset
-				camera.SharkPos.x = 100;
-				camera.SharkPos.z = 0;
-				sceneFloats[SHARK_DIRECTION] = 0;
-				sceneBools[SHARK_ATTACK] = false;
-				sceneInts[TEMP_COUNTER] = 0;
-				sceneInts[SHARK_CIRCLE] = 1;
-				sceneFloats[ROTATE_SHARK] = 0;
-				camera.SharkPos.y = 0;
-			}
+			sceneBools[OPEN_TEXT_BOX] = true;
 		}
 		else
 		{
-			sceneInts[SHARK_CIRCLE] += 1;
-			sceneFloats[SHARK_CIRCLE_ANGLE] += 0.5;
+			sceneBools[OPEN_TEXT_BOX] = false;
 		}
-		camera.Update(dt, mouse);
+	}
+
+	if (Application::IsKeyPressed('N') && sceneBools[OPEN_TEXT_BOX] == true)
+	{
+		sceneBools[OPEN_TEXT_BOX] = false;
+	}
+
+	if (Application::IsKeyPressed('Y') && sceneBools[OPEN_TEXT_BOX] == true)
+	{
+		Application::sceneswitch = Application::SHARK_SCENE;
+		Application::previousscene = Application::BEACH_SCENE;
+	}
+
+	//Crab movement 
+	sceneFloats[CRAB_SPEED] = (float)(5 * dt);
+	
+	if (sceneFloats[CRAB_MOVING] < sceneFloats[RANDOM_MOVE] - sceneFloats[CRAB_SPEED] * 1.5 || sceneFloats[CRAB_MOVING] > sceneFloats[RANDOM_MOVE] + sceneFloats[CRAB_SPEED] * 1.5)
+	{
+		float direction = Direction(sceneFloats[RANDOM_MOVE] - sceneFloats[CRAB_MOVING]);//Randomly chooses a direction
+		sceneFloats[CRAB_MOVING] += sceneFloats[CRAB_SPEED] * direction;
+	}
+	else
+	{
+		sceneFloats[RANDOM_MOVE] = Math::RandFloatMinMax(-5, 5);//Randomly chooses a number inbetween -5 to 5
+	}
+	//Dolphin jumping code (Simple rotation)
+	if (sceneFloats[ROTATE_DOLPHIN] == 360)
+	{
+		sceneFloats[ROTATE_DOLPHIN] = 0;
+	}
+	sceneFloats[ROTATE_DOLPHIN]++;
+
+	camera.prevPosition = camera.position;
+	camera.Update(dt, mouse);
+
+	if (camera.position.x > 45)
+	{
+		Application::sceneswitch = Application::OVERWORLD_SCENE;
+		Application::previousscene = Application::BEACH_SCENE;
+	}
+
+	//Collision for trees
+	if (isNear(meshList[GEO_TREE], 2.f)) {
+		// Get the current view vector and current y position
+		Vector3 view = (camera.target - camera.position).Normalized();
+		float y = camera.position.y;
+
+		// Set the player back to previous position but current y position (only x & z collision)
+		camera.position = camera.prevPosition;
+		camera.position.y = y;
+
+		// Set the correct target according to player's position and set the car speed to 0
+		camera.target = camera.position + view;
+	}
+	if (isNear(meshList[GEO_TREE2], 2.f)) {
+		// Get the current view vector and current y position
+		Vector3 view = (camera.target - camera.position).Normalized();
+		float y = camera.position.y;
+
+		// Set the player back to previous position but current y position (only x & z collision)
+		camera.position = camera.prevPosition;
+		camera.position.y = y;
+
+		// Set the correct target according to player's position and set the car speed to 0
+		camera.target = camera.position + view;
+	}
+	if (isNear(meshList[GEO_TREE3], 2.f)) {
+		// Get the current view vector and current y position
+		Vector3 view = (camera.target - camera.position).Normalized();
+		float y = camera.position.y;
+
+		// Set the player back to previous position but current y position (only x & z collision)
+		camera.position = camera.prevPosition;
+		camera.position.y = y;
+
+		// Set the correct target according to player's position and set the car speed to 0
+		camera.target = camera.position + view;
+	}
+	if (isNear(meshList[GEO_CABIN], 5.f)) {
+		// Get the current view vector and current y position
+		Vector3 view = (camera.target - camera.position).Normalized();
+		float y = camera.position.y;
+
+		// Set the player back to previous position but current y position (only x & z collision)
+		camera.position = camera.prevPosition;
+		camera.position.y = y;
+
+		// Set the correct target according to player's position and set the car speed to 0
+		camera.target = camera.position + view;
 	}
 
 }
 
-void SceneRyan::InitGL()
+bool BeachScene::isNear(Mesh* mesh, const float& distance) {
+
+	// Get distance between object and camera
+	double d = Math::sqrt(Math::Square(mesh->transform.translate.x - camera.position.x) + Math::Square(mesh->transform.translate.z - camera.position.z));
+	return (d - (4 * distance)) <= 0;
+}
+
+int BeachScene::Direction(float value)
 {
+	//Decides to move in positive/negative direction
+	if (value > 0)
+	{
+		return 1;
+	}
+	else if (value < 0)
+	{
+		return -1;
+	} 
+}
 
-
+void BeachScene::InitGL()
+{
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -404,11 +456,11 @@ void SceneRyan::InitGL()
 	//Replace previous code
 	//light[0].type = Light::LIGHT_POINT;
 	//light[0].position.Set(0, 0, 0);
-	light[0].color.Set(1, 1, 1);
-	light[0].power = 1;
-	light[0].kC = 1.f;
-	light[0].kL = 0.01f;
-	light[0].kQ = 0.001f;
+	light[0].color.Set(1, 1,  1);
+	light[1].power = 1;
+	light[1].kC = 1.f;
+	light[1].kL = 0.01f;
+	light[1].kQ = 0.001f;
 	light[0].cosCutoff = cos(Math::DegreeToRadian(45));
 	light[0].cosInner = cos(Math::DegreeToRadian(30));
 	light[0].exponent = 3.f;
@@ -449,7 +501,7 @@ void SceneRyan::InitGL()
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 }
 
-void SceneRyan::InitGLXray()
+void BeachScene::InitGLXray()
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -506,10 +558,10 @@ void SceneRyan::InitGLXray()
 	//light[0].type = Light::LIGHT_POINT;
 	//light[0].position.Set(0, 0, 0);
 	light[0].color.Set(1, 1, 1);
-	light[0].power = 1;
-	light[0].kC = 1.f;
-	light[0].kL = 0.01f;
-	light[0].kQ = 0.001f;
+	light[1].power = 1;
+	light[1].kC = 1.f;
+	light[1].kL = 0.01f;
+	light[1].kQ = 0.001f;
 	light[0].cosCutoff = cos(Math::DegreeToRadian(45));
 	light[0].cosInner = cos(Math::DegreeToRadian(30));
 	light[0].exponent = 3.f;
@@ -550,13 +602,13 @@ void SceneRyan::InitGLXray()
 	glUniform1i(m_parameters[U_NUMLIGHTS], 2);
 }
 
-void SceneRyan::Update(double dt)
+void BeachScene::Update(double dt)
 {
 	Mouse mouse;
 	Update(dt, mouse);
 }
 
-void SceneRyan::RenderSkybox() {
+void BeachScene::RenderSkybox() {
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -50, 0);
 	//modelStack.Scale(5, 5, 5);
@@ -598,13 +650,13 @@ void SceneRyan::RenderSkybox() {
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 50, 0);
 	modelStack.Rotate(180, 1, 0, 0);
-	modelStack.Rotate(-90, 0, 1, 0);
+	/*modelStack.Rotate(90, 0, 1, 0);*/
 	//modelStack.Scale(5, 5, 5);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
 }
 
-void SceneRyan::Render()
+void BeachScene::Render()
 {
 	//Clear the color buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -649,7 +701,7 @@ void SceneRyan::Render()
 	modelStack.LoadIdentity();
 
 	Mtx44 view;
-	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
+	view.SetToPerspective(camera.orthographic_size, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
 
 	modelStack.PushMatrix();
@@ -659,47 +711,154 @@ void SceneRyan::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Scale(400, 1, 400);
+	modelStack.Translate(-10, 0, 0);
+	modelStack.Scale(50, 40, 50);
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Rotate(-sceneFloats[SHARK_CIRCLE_ANGLE], 0, 1, 0);
-	modelStack.Translate(camera.SharkPos.x, camera.SharkPos.y, camera.SharkPos.z);
-	modelStack.Rotate(sceneFloats[SHARK_DIRECTION], 0, 1, 0);
-	modelStack.Rotate(sceneFloats[ROTATE_SHARK], 1, 0, 0);
-	modelStack.Scale(3, 3, 3);
-	RenderShark();
+	modelStack.Translate(-50, -0.03, 0);
+	modelStack.Translate(sceneFloats[CRAB_MOVING], 0, sceneFloats[CRAB_MOVING]);
+	modelStack.Scale(100, 100, 100);
+	RenderMesh(meshList[GEO_OCEAN], true);
 	modelStack.PopMatrix();
-	
+
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -145, 0);
-	modelStack.Scale(200, 150, 200);
-	RenderMesh(meshList[GEO_BEACH], true);
+	modelStack.Translate(50, -0.02, 0);
+	modelStack.Scale(10, 1, 120);
+	RenderMesh(meshList[GEO_ROAD], true);
 	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-40, 0.5, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate(sceneFloats[CRAB_MOVING], 0, 0);
+	modelStack.Scale(1, 3, 1);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0.5, -40);
+	modelStack.Translate(sceneFloats[CRAB_MOVING], 0, 0);
+	modelStack.Scale(1, 3, 1);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 0.5, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate(sceneFloats[CRAB_MOVING], 0, 0);
+	modelStack.Scale(1, 3, 1);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(23, 0.5, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate((sceneFloats[CRAB_MOVING] * 2), 0, 0);
+	modelStack.Scale(1, 3, 1);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 0.5, 20);
+	modelStack.Translate(sceneFloats[CRAB_MOVING], 0, 0);
+	modelStack.Scale(1, 3, 1);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(16, 8, 0);
+	modelStack.Rotate(-90, 0, 0, 1);
+	modelStack.Translate(sceneFloats[CRAB_MOVING], 0, 0);
+	modelStack.Scale(1, 3, 1);
+	RenderMesh(meshList[GEO_CRAB], true);
+	modelStack.PopMatrix();
+
+
+	modelStack.PushMatrix();
+	modelStack.Translate(10, 0, 0);
+	modelStack.Scale(0.5, 0.2, 0.5);
+	RenderMesh(meshList[GEO_TREE], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 0, -30);
+	modelStack.Scale(0.5, 0.2, 0.5);
+	RenderMesh(meshList[GEO_TREE2], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-25, 0, 20);
+	modelStack.Scale(0.5, 0.2, 0.5);
+	RenderMesh(meshList[GEO_TREE3], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-80, -2, 0);
+	modelStack.Rotate(sceneFloats[ROTATE_DOLPHIN], 1, 0, 0);
+	modelStack.Translate(0, 0, 30);
+	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Scale(0.1, 0.1, 0.1);
+	RenderMesh(meshList[GEO_DOLPHIN], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-sceneFloats[CRAB_MOVING], -5, -80);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(sceneFloats[CRAB_MOVING], 1, 0, 0);
+	modelStack.Scale(0.7, 0.7, 0.7);
+	RenderMesh(meshList[GEO_SHIP], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 0, -40);
+	modelStack.Scale(0.1, 0.1, 0.1);
+	RenderMesh(meshList[GEO_UMBRELLA], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(15, -4, 40);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(3, 3, 3);
+	RenderMesh(meshList[GEO_CABIN], true);
+	modelStack.PopMatrix();
+
+	RenderNPC();
+	RenderUI();
+	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 }
-void SceneRyan::RenderShark()
+
+void BeachScene::RenderNPC()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -2.5, 4);
-	modelStack.Scale(1.1, 1.1, 1.1);
-	RenderMesh(meshList[GEO_SHARKTOP], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, -2.5, 4);
-	modelStack.Rotate((sceneFloats[ROTATE_TAIL] * 2), 0, 1, 0);
-	modelStack.Scale(1.1, 1.1, 1.1);
-	RenderMesh(meshList[GEO_SHARKFIN], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Rotate(sceneFloats[ROTATE_TAIL], 0, 1, 0);
-	RenderMesh(meshList[GEO_SHARKBTM], true);
+	modelStack.Translate(-39.6, 0, 31.4);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(2, 2, 2);
+	RenderMesh(meshList[GEO_DRIZZLE], true);
 	modelStack.PopMatrix();
 }
 
-void SceneRyan::Exit() {
+void BeachScene::RenderUI()
+{
+	unsigned w = Application::GetWindowWidth();
+	unsigned h = Application::GetWindowHeight();
+	if (sceneBools[OPEN_TEXT_BOX] == true)
+	{
+		RenderMeshOnScreen(meshList[GEO_UI], Colors::WHITE, 50, 40, 8 * h / 600); // 40 screenx
+		RenderTextOnScreen(meshList[GEO_TEXT], "Would you like to go to Shark Island?", Colors::WHITE, 2, 5, 3);
+		RenderTextOnScreen(meshList[GEO_TEXT], "(Y) Yes   (N) No", Colors::WHITE, 2, 10, 2); //X 1.5 AND Z 19.5
+		RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
+	}
+
+	
+	RenderMeshOnScreen(meshList[GEO_UI2], 25, 12.5, 53.75 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "HP:" + std::to_string(Player::getHealth()), Colors::BLACK, 2, 0.5, 19 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Ammo:" + std::to_string(Player::getAmmo()), Colors::BLACK, 2, 0.5, 18 * h / 600);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(Player::getMoney()), Colors::BLACK, 2, 0.5, 17 * h / 600);
+}
+
+void BeachScene::Exit() {
 	for (auto mesh : meshList) {
 		if (mesh) delete mesh;
 	}
@@ -707,22 +866,17 @@ void SceneRyan::Exit() {
 	glDeleteProgram(m_programID);
 }
 
-void SceneRyan::Reset() {
+void BeachScene::Reset() {
 	Mtx44 projection;
-	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
+	projection.SetToPerspective(45.f, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-	camera.Init(Vector3(5, 8, 5), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
+	camera.Init(Vector3(40, 3, -40), Vector3(1, 0.5, 1), Vector3(0, 1, 0), (float)50);
 	camera.orthographic_size = 45.f;
 
-	sceneBools[ROTATE] = true;
-	sceneBools[SHARK_ATTACK] = false;
-	sceneInts[TEMP_COUNTER] = 0;
-	sceneFloats[ROTATE_TAIL] = 0;
-	sceneInts[SHARK_CIRCLE] = 1;
-	camera.SharkPos.x = 100;
-	camera.SharkPos.y = 0;
-	camera.SharkPos.z = 0;
-	sceneInts[SURVIVE_COUNTER] = 0;
-	sceneBools[SCENE_TRANSITION] = true;
-	sceneInts[SCENE_COUNTER] = 0;
+	for (unsigned i = 0; i < NUM_SCENE_BOOLS; i++) {
+		sceneBools[i] = false;
+	}
+	for (unsigned i = 0; i < NUM_SCENE_FLOATS; i++) {
+		sceneFloats[i] = 0;
+	}
 }

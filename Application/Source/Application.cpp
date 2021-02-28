@@ -257,13 +257,9 @@ bool Application::IsMousePressedOnce(unsigned short key) {
 }
 
 bool Application::IsKeyPressedOnce(unsigned short key) {
-	std::pair<std::set<unsigned short>::iterator, bool> ret;
 	if ((GetAsyncKeyState(key) & 0x8001) != 0) {
-		ret = activeKeys.insert(key);
-		if (!ret.second)
-			return false;
-		else
-			return true;
+		std::pair<std::set<unsigned short>::iterator, bool> ret = activeKeys.insert(key);
+		return (ret.second);
 	} else {
 		activeKeys.erase(key);
 		return false;

@@ -109,7 +109,7 @@ private:
 	float sceneFloats[NUM_SCENE_FLOATS];
 	int sceneInts[NUM_SCENE_INTS];
 	Mesh* meshList[NUM_GEOMETRY];
-
+	int GLcounter;
 	Light light[2];
 
 	Camera3 camera;

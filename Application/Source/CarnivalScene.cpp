@@ -480,8 +480,9 @@ bool isNearDummy(GameObject* o1, MinigameEntity* o2, const float& distance = 1.f
 }
 
 void CarnivalScene::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::CARNIVAL_SCENE) {
+	if (GLcounter == 0) {
 		InitGL();
+		GLcounter++;
 	}
 	sceneFloats[F_ROTATE_ANGLE] += (float)(50 * dt);
 
@@ -1087,4 +1088,5 @@ void CarnivalScene::Reset() {
 	}
 	dummycounter = 0;
 	tempspin = 0;
+	GLcounter = 0;
 }

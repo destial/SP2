@@ -290,8 +290,9 @@ void MartScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 }
 
 void MartScene::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::MART_SCENE) {
+	if (GLcounter == 0) {
 		InitGL();
+		GLcounter++;
 	}
 	// book that can be bought will be floating and rotating on shelf if not taken
 	sceneFloats[F_ROTATE_BOOK] += (float)(40 * dt);
@@ -1216,4 +1217,5 @@ void MartScene::Reset() {
 
 	sceneFloats[F_AMOUNT] = 30;
 	sceneVectors[V_BOOK_ORIGIN] = Vector3(-1, 0, 0);
+	GLcounter = 0;
 }

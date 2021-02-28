@@ -99,7 +99,7 @@ class BeachScene : public Scene
 	};
 private:
 	MS modelStack, viewStack, projectionStack;
-
+	int GLcounter;
 	unsigned m_vertexArrayID;
 	unsigned m_vertexBuffer[NUM_GEOMETRY];
 	unsigned m_colorBuffer[NUM_GEOMETRY];

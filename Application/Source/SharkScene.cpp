@@ -20,9 +20,9 @@ void SharkScene::Init()
 	glBindVertexArray(m_vertexArrayID);
 
 	light[0].type = Light::LIGHT_POINT;
-	light[0].position.Set(0, 0, 0);
+	light[0].position.Set(0, 30, 0);
 	light[1].type = Light::LIGHT_POINT;
-	light[1].position.Set(0, 0, 0);
+	light[1].position.Set(100, 0, 0);
 
 	InitGL();
 
@@ -213,8 +213,9 @@ void SharkScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 }
 
 void SharkScene::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::SHARK_SCENE) {
+	if (GLcounter == 0) {
 		InitGL();
+		GLcounter++;
 	}
 	//Ensures distance between player and shark is positive
 	float dist = Math::sqrt(Math::Square(camera.SharkPos.x - camera.position.x + Math::Square(camera.SharkPos.z - camera.position.z)));
@@ -223,14 +224,12 @@ void SharkScene::Update(double dt, Mouse mouse) {
 	if (dist < 0.5)
 	{
 		Application::sceneswitch = Application::BEACH_SCENE;
-		Application::previousscene = Application::SHARK_SCENE;
 	}
 	//Player must survive 5 shark attack then will switch to next scene on the 6th attack
 	if (sceneInts[SURVIVE_COUNTER] == 6)
 	{
 		Player::setSharkSurvived(true);
 		Application::sceneswitch = Application::BEACH_SCENE;
-		Application::previousscene = Application::SHARK_SCENE;
 	}
 
 	//Make Camera slowly pan down
@@ -657,7 +656,7 @@ void SharkScene::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Scale(400, 1, 400);
+	modelStack.Scale(800, 1, 800);
 	RenderMesh(meshList[GEO_QUAD], true);
 	modelStack.PopMatrix();
 
@@ -723,4 +722,5 @@ void SharkScene::Reset() {
 	sceneInts[SURVIVE_COUNTER] = 0;
 	sceneBools[SCENE_TRANSITION] = true;
 	sceneInts[SCENE_COUNTER] = 0;
+	GLcounter = 0;
 }

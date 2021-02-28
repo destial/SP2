@@ -239,8 +239,9 @@ void MazeScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y) {
 }
 
 void MazeScene::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::MAZE_SCENE) {
+	if (GLcounter == 0) {
 		InitGL();
+		GLcounter++;
 	}
 
 	if (Application::IsKeyPressedOnce('X'))
@@ -2181,4 +2182,5 @@ void MazeScene::Reset() {
 	cameraObject->camera = 1;
 	sceneManager->push(cameraObject);
 	cameraObject->id = sceneManager->totalObjects;
+	GLcounter = 0;
 }

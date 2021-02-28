@@ -335,8 +335,9 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	meshList[MOON]->transform.translate = camera.position;
 	meshList[MOON]->transform.translate.y = camera.position.y + (2 * camera.bounds);
 
-	if (Application::previousscene != Application::OVERWORLD_SCENE) {
+	if (GLcounter == 0) {
 		InitGL();
+		GLcounter++;
 	}
 
 	if (Player::getJetpack() && !currentCarObject) {
@@ -1616,4 +1617,5 @@ void OverworldScene::Reset() {
 	translateSphereZ2 = 19.6;
 	translateSphereX1 = 0;
 	translateSphereX2 = 0;
+	GLcounter = 0;
 }

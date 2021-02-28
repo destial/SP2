@@ -14,7 +14,6 @@
 # Folders
 .vs/
 Debug/
-Release/
 
 # Executables
 *.exe

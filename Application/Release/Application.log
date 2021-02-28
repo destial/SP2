@@ -1,0 +1,20 @@
+﻿  Application.cpp
+D:\Github\SP2\Application\Source\Light.h(26,1): warning C4305: '=': truncation from 'double' to 'float'
+D:\Github\SP2\Application\Source\MinigameEntity.h(28,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(31,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(34,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(37,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(40,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(43,1): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\MinigameEntity.h(46,1): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\Application.cpp(173,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Github\SP2\Application\Source\Application.cpp(180,49): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Github\SP2\Application\Source\Application.cpp(184,15): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Github\SP2\Application\Source\Application.cpp(190,50): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Github\SP2\Application\Source\Application.cpp(194,15): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  Generating code
+  2 of 1716 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    28 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Application.vcxproj -> D:\Github\SP2\Release\Application.exe

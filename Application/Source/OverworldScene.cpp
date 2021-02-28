@@ -1478,8 +1478,8 @@ void OverworldScene::Render() {
 
 	RenderSkybox();
 	RenderObjects();
-	RenderTasks();
 	RenderRobo();
+	RenderTasks();
 	RenderTeleportText();
 	RenderUI();
 	if (currentCarObject) {

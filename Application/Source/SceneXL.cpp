@@ -983,7 +983,7 @@ void SceneXL::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(50, 20,-38.5);
 	modelStack.Rotate(-90, 0, 1, 0);
-	RenderText(meshList[GEO_TEXT], "This back way to the City!", Colors::BLACK);
+	RenderText(meshList[GEO_TEXT], "This way back to the City!", Colors::BLACK);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();

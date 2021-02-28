@@ -223,9 +223,6 @@ void StartMenuScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y
 }
 
 void StartMenuScene::Update(double dt, Mouse mouse) {
-	if (Application::previousscene != Application::START_SCENE) {
-		InitGL();
-	}
 
 	//Mouse Inputs
 	static bool bLButtonState = false;

@@ -355,6 +355,13 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 		}
 	}
 
+	if (Player::getSharkSurvived() == true && Player::getMazeComplete() == true && Player::getBookPurchased() == true && Player::getShootingComplete() == true)
+	{
+		Reset();
+		Application::sceneswitch = Application::WINSCENE;
+		Application::previousscene = Application::OVERWORLD;
+	}
+
 	RoadTeleport();
 	DetectCollision();
 	GetInCar();
@@ -1118,6 +1125,7 @@ void OverworldScene::EnterBuilding() {
 			if (isNearObject(b, 2.5 * b->transform->scale.x)) {
 				if (Application::IsKeyPressed('F')) {
 					Application::sceneswitch = Application::SCENEWALTON;
+					Application::previousscene = Application::OVERWORLD;
 					tasks[ENTER_BUILDING] = 1;
 				}
 			}

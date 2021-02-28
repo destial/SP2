@@ -90,6 +90,10 @@ private:
 	static int armourplate;
 	static int helmet;
 	static bool jetpackequipped;
+	static bool SharkSurvived;
+	static bool MazeComplete;
+	static bool BookPurchased;
+	static bool ShootingComplete;
 public:
 	Player() {};
 	~Player() {};
@@ -99,7 +103,11 @@ public:
 	static int getSword();
 	static int getArmourplate();
 	static int getHelmet();
-	static int getJetpack();
+	static bool getJetpack();
+	static bool getSharkSurvived();
+	static bool getMazeComplete();
+	static bool getBookPurchased();
+	static bool getShootingComplete();
 	static void setAmmo(unsigned a);
 	static void setMoney(int m);
 	static void setHealth(int h);
@@ -107,6 +115,10 @@ public:
 	static void setArmourplate(int ap);
 	static void setHelmet(int ht);
 	static void setJetpack(bool jp);
+	static void setSharkSurvived(bool Ss);
+	static void setMazeComplete(bool Mc);
+	static void setBookPurchased(bool Bp);
+	static void setShootingComplete(bool Sc);
 };
 
 #endif

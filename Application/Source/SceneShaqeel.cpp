@@ -364,6 +364,7 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressedOnce('F') && camera.position.x <= -10 && camera.position.x >= -15 && 
 		camera.position.z <= 1.5 && camera.position.z >= -1.5 && sceneBools[B_STOP_OPEN_DOOR] == true) {
 		Application::sceneswitch = Application::SCENESHAQLER;
+		Application::previousscene = Application::SCENESHAQ;
 	}
 
 	if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
@@ -732,9 +733,6 @@ void SceneShaqeel::Render()
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, 800.f / 600.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
-	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();
 	RenderSkybox();
 
 	// items are rendered in the functions below
@@ -980,23 +978,6 @@ void SceneShaqeel::RenderMytext()
 	modelStack.Scale(0.15, 0.15, 0.15);
 	RenderText(meshList[GEO_TEXT], " Press F to Enter", Colors::WHITE);
 	modelStack.PopMatrix();
-
-	std::stringstream ssX;
-	std::stringstream ssY;
-	std::stringstream ssZ;
-	ssX.precision(3);
-	ssX << "X:" << camera.position.x;
-	ssX.precision(3);
-	ssX << "Y:" << camera.position.y;
-	ssZ.precision(3);
-	ssZ << "Z:" << camera.position.z;
-
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 2, 0, 7);
-	modelStack.PopMatrix();
-
-
 }
 
 // robos

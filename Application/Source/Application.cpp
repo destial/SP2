@@ -365,7 +365,6 @@ void toggleState() {
 }
 
 void Application::Run() {
-	int i = 0;
 	// Initialize and create scenes
 	scene[SCENESHAQ] = new SceneShaqeel();
 	scene[SCENEWALTON] = new SceneW();
@@ -378,7 +377,6 @@ void Application::Run() {
 	scene[MENUSCENE] = new PauseMenuScene();
 	scene[WINSCENE] = new WinnerScene();
 
-	/*scene[SHAQLER]*/
 	for (unsigned i = 0; i < Application::TOTALSCENES; i++) {
 		if (scene[i])
 			scene[i]->Init();
@@ -413,15 +411,13 @@ void Application::Run() {
 			int previousScene = Application::sceneswitch;
 			scene[previousScene]->Update(m_timer.getElapsedTime(), mouse);
 			scene[previousScene]->Render();
-			Application::previousscene = Application::sceneswitch;
 			if (previousScene != Application::sceneswitch) {
 				scene[Application::sceneswitch]->InitGL();
-				continue;
+				Application::previousscene = Application::sceneswitch;
 			}
 
 		} else {
 			Application::sceneswitch = STARTSCENE;
-			continue;
 		}
 
 		// Toggle mouse states depending on scene
@@ -429,68 +425,22 @@ void Application::Run() {
 
 		switch (Application::sceneswitch) {
 		case Application::MENUSCENE:
-			Application::sceneswitch = Application::previousscene;
+			/*if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
+				Application::sceneswitch = Application::previousscene;
+			}*/
 			break;
 		case Application::STARTSCENE:
+			if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
+				Application::quit = true;
+			}
+			break;
 		case Application::WINSCENE:
+			restart = true;
 			break;
 		default:
 			if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
 				Application::previousscene = Application::sceneswitch;
 				Application::sceneswitch = MENUSCENE;
-			}
-			break;
-		}
-
-		// Switch scenes
-		switch (Application::sceneswitch) {
-		case Application::SCENESHAQ:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::SCENEWALTON;
-			}
-			break;
-		case Application::SCENEWALTON:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::SCENEBEACH;
-			}
-			break;
-		case Application::SCENEBEACH:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::SCENERYAN;
-			}
-			break;
-		case Application::SCENERYAN:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::SCENEXL;
-			}
-			break;
-		case Application::SCENEXL:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::MENUSCENE;
-			}
-			break;
-		case Application::STARTSCENE:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::OVERWORLD;
-			}
-		case Application::WINSCENE:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::MENUSCENE;
-			}
-			break;
-		case Application::MENUSCENE:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::WINSCENE;
-			}
-			break;
-		case Application::OVERWORLD:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::SCENESHAQ;
-			}
-			break;
-		default:
-			if (Application::IsKeyPressedOnce(VK_F1)) {
-				Application::sceneswitch = Application::OVERWORLD;
 			}
 			break;
 		}

@@ -338,8 +338,12 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 			sceneBools[B_DOOR_OPENED] = true;
 		}
 
-
 	}
+
+	/*if (camera.position.x <= -10 && camera.position.x >= -15 && camera.position.z <= 1.5 && camera.position.z >= -1.5)
+	{
+		sceneBools[B_DOOR_OPENED] = true;
+	}*/
 
 	// bool to ensure the door cant open infinitely
 	if (sceneBools[B_DOOR_OPENED] == true)

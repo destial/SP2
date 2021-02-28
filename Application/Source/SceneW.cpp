@@ -398,13 +398,14 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Application::IsKeyPressed('F')) // F to leave area at the end of the maze (open door first)
+	if (Application::IsKeyPressedOnce('F')) // F to leave area at the end of the maze (open door first)
 	{
-		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && sceneBools[B_STOP_DOOR_OPEN] == true)
+		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45
+			&& sceneBools[B_STOP_DOOR_OPEN] == true && sceneBools[B_COLLECTED_CLAYMORE] == true &&
+			sceneBools[B_COLLECTED_ARMOR] == true && sceneBools[B_COLLECTED_HELMET] == true)
 		{
 			Application::sceneswitch = Application::OVERWORLD; // f will bring you back to overworld
 			Application::previousscene = Application::SCENEWALTON;
-			Player::setMazeComplete(true);
 		}
 	}
 
@@ -932,6 +933,21 @@ void SceneW::Render()
 
 	RenderBoxes(); // boxes are chests
 	RenderMaze();
+
+	std::stringstream ssX;
+	std::stringstream ssY;
+	std::stringstream ssZ;
+	ssX.precision(3);
+	ssX << "X:" << camera.position.x;
+	ssX.precision(3);
+	ssX << "Y:" << camera.position.y;
+	ssZ.precision(3);
+	ssZ << "Z:" << camera.position.z;
+
+	modelStack.PushMatrix();
+	modelStack.Scale(2, 2, 2);
+	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Colors::RED, 2, 0, 7);
+	modelStack.PopMatrix();
 
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, -3);
 	RenderUI();

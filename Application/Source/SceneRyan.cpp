@@ -220,15 +220,17 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 	float dist = Math::sqrt(Math::Square(camera.SharkPos.x - camera.position.x + Math::Square(camera.SharkPos.z - camera.position.z)));
 
 	//The shark hitbox agaisnt the player
-	if (dist < 1)
+	if (dist < 0.5)
 	{
 		Application::sceneswitch = Application::SCENEBEACH;
+		Application::previousscene = Application::SCENERYAN;
 	}
 	//Player must survive 5 shark attack then will switch to next scene on the 6th attack
 	if (sceneInts[SURVIVE_COUNTER] == 6)
 	{
-		//something like bool win = true
+		Player::setSharkSurvived(true);
 		Application::sceneswitch = Application::SCENEBEACH;
+		Application::previousscene = Application::SCENERYAN;
 	}
 
 	//Make Camera slowly pan down

@@ -330,7 +330,7 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 
 	meshList[MOON]->transform.translate = camera.position;
 	meshList[MOON]->transform.translate.y = camera.position.y + (2 * camera.bounds);
-	
+
 	if (Application::previousscene != Application::OVERWORLD) {
 		InitGL();
 	}
@@ -353,6 +353,13 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 		else {
 			camera.UpdateCar(dt, mouse, 6.f);
 		}
+	}
+
+	if (Player::getSharkSurvived() == true && Player::getMazeComplete() == true && Player::getBookPurchased() == true && Player::getShootingComplete() == true)
+	{
+		Reset();
+		Application::sceneswitch = Application::WINSCENE;
+		Application::previousscene = Application::OVERWORLD;
 	}
 
 	RoadTeleport();
@@ -1118,6 +1125,7 @@ void OverworldScene::EnterBuilding() {
 			if (isNearObject(b, 2.5 * b->transform->scale.x)) {
 				if (Application::IsKeyPressed('F')) {
 					Application::sceneswitch = Application::SCENEWALTON;
+					Application::previousscene = Application::OVERWORLD;
 					tasks[ENTER_BUILDING] = 1;
 				}
 			}

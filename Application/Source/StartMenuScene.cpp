@@ -229,7 +229,7 @@ void StartMenuScene::Update(double dt, Mouse mouse) {
 
 	//Mouse Inputs
 	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0))
+	if (!bLButtonState && Application::IsMousePressedOnce(0))
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
@@ -256,7 +256,7 @@ void StartMenuScene::Update(double dt, Mouse mouse) {
 			std::cout << "Miss!" << std::endl;
 		}
 	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
+	else if (bLButtonState && !Application::IsMousePressedOnce(0))
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
@@ -267,14 +267,13 @@ void StartMenuScene::Update(double dt, Mouse mouse) {
 		bRButtonState = true;
 		std::cout << "RBUTTON DOWN" << std::endl;
 	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
+	else if (bRButtonState && !Application::IsMousePressedOnce(1))
 	{
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
 
 	rotateangle++;
-
 
 	camera.Update(dt, mouse);
 }

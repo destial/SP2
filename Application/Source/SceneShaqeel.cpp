@@ -371,10 +371,6 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		Application::previousscene = Application::SCENESHAQ;
 	}
 
-	if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
-		Application::sceneswitch = Application::STARTSCENE;
-	}
-
 	// robot movement
 
 	if (sceneBools[B_LEFT_LEG_LIMIT] == true) // this bool statement is used for all of robo limbs

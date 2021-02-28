@@ -346,7 +346,7 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 	} else {
 		camera.Update(dt, mouse);
 	}
-	if (Player::getSharkSurvived() == true && Player::getMazeComplete() == true && Player::getBookPurchased() == true && Player::getShootingComplete() == true) {
+	if (Player::getSharkSurvived() && Player::getMazeComplete()  && Player::getBookPurchased()  && Player::getShootingComplete()) {
 		Application::sceneswitch = Application::WINSCENE;
 	}
 
@@ -757,9 +757,11 @@ void OverworldScene::CompleteTasks() {
 		//showTaskbar = 1;
 	}
 	if (!tasks[JUMP]) {
-		if (Application::IsKeyPressedOnce(' ')) {
-			tasks[JUMP] = 1;
-			showTaskbar = 1;
+		if (!currentCarObject) {
+			if (Application::IsKeyPressedOnce(' ')) {
+				tasks[JUMP] = 1;
+				showTaskbar = 1;
+			}
 		}
 	}
 	if (showTaskbar && showTaskbarFrame == 30) {
@@ -1111,7 +1113,7 @@ void OverworldScene::EnterBuilding() {
 	for (auto b : sceneManager->allObjects) {
 		if (b && b->mesh->name == "skyscraper") {
 			if (isNearObject(b, 2.5 * b->transform->scale.x)) {
-				if (Application::IsKeyPressed('F')) {
+				if (Application::IsKeyPressedOnce('F')) {
 					Application::sceneswitch = Application::SCENEWALTON;
 					Application::previousscene = Application::OVERWORLD;
 					tasks[ENTER_BUILDING] = 1;

@@ -386,10 +386,10 @@ void Application::Run() {
 	m_timer.startTimer();
 
 	// Main Loop
-	while (!glfwWindowShouldClose(m_window) && !Application::quit) {
+	while (!glfwWindowShouldClose(m_window) || !Application::quit) {
 		for (std::set<unsigned short>::iterator i = activeKeys.begin(); i != activeKeys.end(); i++) {
 			unsigned short key = *i;
-			if ((GetAsyncKeyState(key) & 0x8001) != 0) continue;
+			if ((GetAsyncKeyState(key) & 0x8001) != 0) {}
 			else {
 				activeKeys.erase(i);
 				break;
@@ -413,7 +413,6 @@ void Application::Run() {
 			scene[previousScene]->Render();
 			if (previousScene != Application::sceneswitch) {
 				scene[Application::sceneswitch]->InitGL();
-				Application::previousscene = Application::sceneswitch;
 			}
 
 		} else {

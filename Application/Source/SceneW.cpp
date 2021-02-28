@@ -534,8 +534,6 @@ void SceneW::Update(double dt, Mouse mouse) {
 
 	camera.prevPosition = camera.position;
 	camera.Update(dt, mouse);
-	
-	//sceneManager->split(sceneManager->root);
 
 	DetectCollision();
 }

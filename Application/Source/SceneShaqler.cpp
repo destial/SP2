@@ -443,10 +443,6 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 		}	
 	}
 
-	if (Application::IsKeyPressedOnce(VK_ESCAPE)) {
-		Application::sceneswitch = Application::STARTSCENE;
-	}
-
 	camera.Update(dt, mouse);
 }
 

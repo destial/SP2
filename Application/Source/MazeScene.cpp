@@ -262,66 +262,44 @@ void MazeScene::Update(double dt, Mouse mouse) {
 	if (Application::IsKeyPressed('E')) // to open chest and door
 	{
 		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 && !sceneBools[B_CHEST_LIMIT_1])
+		// stand within these locations to open up chest and for claymore spawn
 		{
 			sceneBools[B_CHEST_OPEN_1] = true;
-			/*sceneFloats[F_ROTATE_CHEST_1] -= (float)(40 * dt);*/
 			sceneBools[B_CLAYMORE_SPAWN] = true;
-			/*if (sceneFloats[F_ROTATE_CHEST_1] <= -70)
-			{
-				sceneBools[B_CHEST_LIMIT_1] = true;
-			}*/
 		}
 
 		if (camera.position.x <= -18 && camera.position.x >= -28 && camera.position.z <= 16.5 && camera.position.z >= 13.5 && !sceneBools[B_CHEST_LIMIT_2])
+		// same for the rest of the chests
 		{
 			sceneBools[B_CHEST_OPEN_2] = true;
-			/*sceneFloats[F_ROTATE_CHEST_2] -= (float)(40 * dt);*/
-			/*if (sceneFloats[F_ROTATE_CHEST_2] <= -70)
-			{
-				sceneBools[B_CHEST_LIMIT_2] = true;
-			}*/
 		}
 
 		if (camera.position.x <= -13.9 && camera.position.x >= -26.4 && camera.position.z <= 36.5 && camera.position.z >= 33 && !sceneBools[B_CHEST_LIMIT_3])
 		{
 			sceneBools[B_CHEST_OPEN_3] = true;
-			/*sceneFloats[F_ROTATE_CHEST_3] -= (float)(45 * dt);*/
 			sceneBools[B_ARMOR_SPAWN] = true;
-			/*if (sceneFloats[F_ROTATE_CHEST_3] <= -120)
-			{
-				sceneBools[B_CHEST_LIMIT_3] = true;
-			}*/
 		}
 
 		if (camera.position.x <= 36.6 && camera.position.x >= 29.4 && camera.position.z <= -26.3 && camera.position.z >= -36.3 && !sceneBools[B_CHEST_LIMIT_4])
 		{
 			sceneBools[B_CHEST_OPEN_4] = true;
-			/*sceneFloats[F_ROTATE_CHEST_4] -= (float)(40 * dt);*/
-			/*if (sceneFloats[F_ROTATE_CHEST_4] <= -70)
-			{
-				sceneBools[B_CHEST_LIMIT_4] = true;
-			}*/
 		}
 
 		if (camera.position.x <= 24.6 && camera.position.x >= 18.3 && camera.position.z <= 1.83 && camera.position.z >= -6.53 && !sceneBools[B_CHEST_LIMIT_5])
 		{
 			sceneBools[B_CHEST_OPEN_5] = true;
-			/*sceneFloats[F_ROTATE_CHEST_5] -= (float)(45 * dt);*/
 			sceneBools[B_HELMET_SPAWN] = true;
-			/*if (sceneFloats[F_ROTATE_CHEST_5] <= -120)
-			{
-				sceneBools[B_CHEST_LIMIT_5] = true;
-			}*/
 		}
 
 		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45)
+		// leaving the maze scene is the same logic as mart scene and district scene
 		{
 			sceneBools[B_DOOR_OPENED] = true;
 		}
 
 	}
 
-	if (sceneBools[B_DOOR_OPENED])
+	if (sceneBools[B_DOOR_OPENED]) // bool statements to ensure door wont go past certain points and to leave the area
 	{
 		if (!sceneBools[B_STOP_DOOR_OPEN])
 		{
@@ -334,7 +312,7 @@ void MazeScene::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (sceneBools[B_CHEST_OPEN_1])
+	if (sceneBools[B_CHEST_OPEN_1]) // same with door, bool statements to ensure chest wont go over certain point
 	{
 		if (!sceneBools[B_CHEST_LIMIT_1])
 		{
@@ -399,7 +377,7 @@ void MazeScene::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Application::IsKeyPressedOnce('F')) // F to leave area at the end of the maze (open door first)
+	if (Application::IsKeyPressed('F')) // F to leave area at the end of the maze (open door first) try iskeypressedonce
 	{
 		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45
 			&& sceneBools[B_STOP_DOOR_OPEN] == true && sceneBools[B_COLLECTED_CLAYMORE] == true &&
@@ -414,7 +392,8 @@ void MazeScene::Update(double dt, Mouse mouse) {
 
 	if (sceneBools[B_CLAYMORE_SPAWN])
 	{
-		if (sceneVectors[V_SCALE_CLAYMORE].x < 1.05 && sceneVectors[V_SCALE_CLAYMORE].y < 1.05 && sceneVectors[V_SCALE_CLAYMORE].z < 1.05 && sceneBools[B_CLAYMORE_LIMIT] == false) //does not bendup z -
+		if (sceneVectors[V_SCALE_CLAYMORE].x < 1.05 && sceneVectors[V_SCALE_CLAYMORE].y < 1.05 && sceneVectors[V_SCALE_CLAYMORE].z < 1.05
+			&& sceneBools[B_CLAYMORE_LIMIT] == false) // allows items to grow in size after chest is open. Bool statement to begin item animation
 		{
 			sceneVectors[V_SCALE_CLAYMORE].x += (float)(10 * dt);
 			sceneVectors[V_SCALE_CLAYMORE].y += (float)(10 * dt);
@@ -444,7 +423,7 @@ void MazeScene::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (sceneBools[B_ARMOR_SPAWN])
+	if (sceneBools[B_ARMOR_SPAWN]) // same with the other items, bool to get them to spawn
 	{
 		if (sceneVectors[V_SCALE_ARMOR].x < 0.4 && sceneVectors[V_SCALE_ARMOR].y < 0.4 && sceneVectors[V_SCALE_ARMOR].z < 0.4 && !sceneBools[B_ARMOR_LIMIT]) //does not bendup z -
 		{
@@ -508,13 +487,13 @@ void MazeScene::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Application::IsKeyPressedOnce('R'))
+	if (Application::IsKeyPressedOnce('R')) // r to collect items
 	{
 		if (camera.position.x <= -42.5 && camera.position.x >= -49 && camera.position.z <= 49 && camera.position.z >= 35 
-			&& sceneBools[B_CLAYMORE_LIMIT] && sceneBools[B_COLLECTED_CLAYMORE] == false)
+			&& sceneBools[B_CLAYMORE_LIMIT] && sceneBools[B_COLLECTED_CLAYMORE] == false) // without  this bool, item can be collected even after being taken
 		{
-			sceneVectors[V_CLAYMORE].x = 1000;
-			sceneBools[B_COLLECTED_CLAYMORE] = true;
+			sceneVectors[V_CLAYMORE].x = 1000; // item will disappear by translating to a very far point.
+			sceneBools[B_COLLECTED_CLAYMORE] = true; // this bool will allow the player to leave the scene
 			Player::setSword(Player::getSword() + 1);
 		}
 

@@ -591,6 +591,21 @@ void SceneXL::Update(double dt, Mouse mouse) {
 		if (hit) break;
 	}
 	
+	for (int i = 0; i < targetList.size(); i++)
+	{
+		if (targetList[i] == nullptr) {
+			dummycounter++;
+		}
+		if (dummycounter == targetList.size())
+		{
+			Player::setShootingComplete(true);
+		}
+	}
+	if (dummycounter != 0)
+	{
+		dummycounter = 0;
+	}
+
 	Minigun();
 	if (camera.position.x <= 50 &&
 		camera.position.x >= 36 &&
@@ -977,7 +992,7 @@ void SceneXL::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(50, 20,-38.5);
 	modelStack.Rotate(-90, 0, 1, 0);
-	RenderText(meshList[GEO_TEXT], "This way to the Beach!", Colors::BLACK);
+	RenderText(meshList[GEO_TEXT], "This back way to the City!", Colors::BLACK);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -1079,4 +1094,6 @@ void SceneXL::Reset() {
 
 		targetList.push_back(temp);
 	}
+	dummycounter = 0;
+	tempspin = 0;
 }

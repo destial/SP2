@@ -330,7 +330,7 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 
 	meshList[MOON]->transform.translate = camera.position;
 	meshList[MOON]->transform.translate.y = camera.position.y + (2 * camera.bounds);
-	
+
 	if (Application::previousscene != Application::OVERWORLD) {
 		InitGL();
 	}
@@ -360,6 +360,23 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 		Reset();
 		Application::sceneswitch = Application::WINSCENE;
 		Application::previousscene = Application::OVERWORLD;
+	}
+
+	if (Player::getSharkSurvived() == true)
+	{
+		std::cout << "shark true" << std::endl;
+	}
+	if (Player::getMazeComplete() == true)
+	{
+		std::cout << "maze true" << std::endl;
+	}
+	if (Player::getBookPurchased() == true)
+	{
+		std::cout << "book true" << std::endl;
+	}
+	if (Player::getShootingComplete() == true)
+	{
+		std::cout << "shoot true" << std::endl;
 	}
 
 	RoadTeleport();

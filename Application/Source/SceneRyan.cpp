@@ -220,7 +220,7 @@ void SceneRyan::Update(double dt, Mouse mouse) {
 	float dist = Math::sqrt(Math::Square(camera.SharkPos.x - camera.position.x + Math::Square(camera.SharkPos.z - camera.position.z)));
 
 	//The shark hitbox agaisnt the player
-	if (dist < 1)
+	if (dist < 0.5)
 	{
 		Application::sceneswitch = Application::SCENEBEACH;
 		Application::previousscene = Application::SCENERYAN;

@@ -130,6 +130,7 @@ private:
 	Mesh* MinigunHold;
 	Vector3 GunOrigin;	
 	int tempspin;
+	int dummycounter;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);

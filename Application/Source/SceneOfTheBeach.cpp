@@ -296,7 +296,6 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('Y') && sceneBools[OPEN_TEXT_BOX] == true)
 	{
-		
 		Application::sceneswitch = Application::SCENERYAN;
 		Application::previousscene = Application::SCENEBEACH;
 	}
@@ -325,7 +324,6 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 
 	if (camera.position.x > 45)
 	{
-		Reset();
 		Application::sceneswitch = Application::OVERWORLD;
 		Application::previousscene = Application::SCENEBEACH;
 	}

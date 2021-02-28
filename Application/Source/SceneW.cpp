@@ -932,21 +932,6 @@ void SceneW::Render()
 	RenderBoxes(); // boxes are chests
 	RenderMaze();
 
-	std::stringstream ssX;
-	std::stringstream ssY;
-	std::stringstream ssZ;
-	ssX.precision(3);
-	ssX << "X:" << camera.position.x;
-	ssX.precision(3);
-	ssX << "Y:" << camera.position.y;
-	ssZ.precision(3);
-	ssZ << "Z:" << camera.position.z;
-
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Colors::RED, 2, 0, 7);
-	modelStack.PopMatrix();
-
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, -3);
 	RenderUI();
 	RenderItems(); 

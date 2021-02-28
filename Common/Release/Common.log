@@ -1,1 +1,6 @@
-﻿  Common.vcxproj -> D:\Github\SP2\Release\Common.lib
+﻿  MatrixStack.cpp
+  Mtx44.cpp
+  timer.cpp
+  Vector3.cpp
+D:\Github\SP2\Common\Source\Vector3.cpp(370,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Common.vcxproj -> D:\Github\SP2\Release\Common.lib

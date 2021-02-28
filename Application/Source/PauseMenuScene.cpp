@@ -226,7 +226,6 @@ void PauseMenuScene::Update(double dt, Mouse mouse) {
 	//Mouse Inputs
 	if (Application::IsMousePressedOnce(0))
 	{
-		std::cout << "LBUTTON DOWN" << std::endl;
 		//Converting Viewport space to UI space
 		double x, y;
 		Application::GetCursorPos(&x, &y);

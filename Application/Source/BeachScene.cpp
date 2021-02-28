@@ -388,7 +388,7 @@ bool BeachScene::isNear(Mesh* mesh, const float& distance) {
 
 	// Get distance between object and camera
 	double d = Math::sqrt(Math::Square(mesh->transform.translate.x - camera.position.x) + Math::Square(mesh->transform.translate.z - camera.position.z));
-	return (d - (4 * distance)) <= 0;
+	return (d - (4 * (double)distance)) <= 0;
 }
 
 int BeachScene::Direction(float value)
@@ -398,10 +398,7 @@ int BeachScene::Direction(float value)
 	{
 		return 1;
 	}
-	else if (value < 0)
-	{
-		return -1;
-	} 
+	return -1;
 }
 
 void BeachScene::InitGL()

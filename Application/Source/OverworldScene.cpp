@@ -161,7 +161,6 @@ void OverworldScene::RenderMesh(Mesh* mesh, bool enableLight) {
 	if (mesh->textureID > 0) {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-
 }
 
 void OverworldScene::RenderText(Mesh* mesh, std::string text, Color color) {
@@ -196,10 +195,12 @@ void OverworldScene::RoadTeleport() {
 		camera.position.z <= 100 && 
 		camera.position.z >= 80) {
 		if (currentCarObject) {
-			Reset();
+			camera.currentCarSpeed = 0;
+			Vector3 view = (camera.position - camera.carTarget);
 			Application::sceneswitch = Application::SCENEBEACH;
 			Application::previousscene = Application::OVERWORLD;
 			camera.position.z = 70;
+			camera.carTarget = camera.position - view;
 		} else {
 			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 0 * w / 800, 10 * h / 600);
 		}
@@ -209,12 +210,14 @@ void OverworldScene::RoadTeleport() {
 		camera.position.z <= 100 &&
 		camera.position.z >= 80) {
 		if (currentCarObject) {
-			Reset();
+			camera.currentCarSpeed = 0;
+			Vector3 view = (camera.position - camera.carTarget);
 			Application::sceneswitch = Application::SCENESHAQ;
 			Application::previousscene = Application::OVERWORLD;
 			camera.position.z = 70;
+			camera.carTarget = camera.position - view;
 		} else {
-			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 0 * w / 800, 10 * h / 600);
+			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 1, 10);
 		}
 	}
 	else if (camera.position.x >= 39.3 &&
@@ -222,13 +225,14 @@ void OverworldScene::RoadTeleport() {
 		camera.position.z >= -100 &&
 		camera.position.z <= -80) {
 		if (currentCarObject) {
-			Reset();
+			camera.currentCarSpeed = 0;
+			Vector3 view = (camera.position - camera.carTarget);
 			Application::sceneswitch = Application::SCENEXL;
 			Application::previousscene = Application::OVERWORLD;
-			camera.position.z = 70;
-		}
-		else {
-			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 0 * w / 800, 10 * h / 600);
+			camera.position.z = -70;
+			camera.carTarget = camera.position - view;
+		} else {
+			RenderTextOnScreen(meshList[GEO_TEXT], "You need to be in a vehicle to go here!", Colors::WHITE, 4, 1, 10);
 		}
 	}
 }
@@ -335,31 +339,15 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 		InitGL();
 	}
 
-	if (Player::getJetpack() == false)
-	{
-		if (!currentCarObject) {
-			camera.Update(dt, mouse);
-		}
-		else {
-			camera.UpdateCar(dt, mouse, 6.f);
-		}
+	if (Player::getJetpack() && !currentCarObject) {
+		camera.UpdateFlying(dt, mouse);
+	} else if (currentCarObject) {
+		camera.UpdateCar(dt, mouse, 6.f);
+	} else {
+		camera.Update(dt, mouse);
 	}
-
-	if (Player::getJetpack() == true)
-	{
-		if (!currentCarObject) {
-			camera.UpdateFlying(dt, mouse);
-		}
-		else {
-			camera.UpdateCar(dt, mouse, 6.f);
-		}
-	}
-
-	if (Player::getSharkSurvived() == true && Player::getMazeComplete() == true && Player::getBookPurchased() == true && Player::getShootingComplete() == true)
-	{
-		Reset();
+	if (Player::getSharkSurvived() == true && Player::getMazeComplete() == true && Player::getBookPurchased() == true && Player::getShootingComplete() == true) {
 		Application::sceneswitch = Application::WINSCENE;
-		Application::previousscene = Application::OVERWORLD;
 	}
 
 	RoadTeleport();
@@ -645,10 +633,10 @@ void OverworldScene::RenderObjects() {
 			modelStack.Scale(o->transform->scale.x, o->transform->scale.y, o->transform->scale.z);
 			RenderMesh(o->mesh, true);
 			modelStack.PopMatrix();
-		}
-		if (o->mesh->name == "skyscraper") {
-			if (isNearObject(o, 2.5 * o->transform->scale.x)) {
-				RenderTextOnScreen(meshList[GEO_TEXT], "Press F to enter Maze", Colors::WHITE, 4, 10, 10);
+			if (o->mesh->name == "skyscraper") {
+				if (isNearObject(o, 2.5 * o->transform->scale.x)) {
+					RenderTextOnScreen(meshList[GEO_TEXT], "Press F to enter Maze", Colors::WHITE, 4, 10, 10);
+				}
 			}
 		}
 	}

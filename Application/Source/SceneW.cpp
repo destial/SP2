@@ -398,11 +398,10 @@ void SceneW::Update(double dt, Mouse mouse) {
 		}
 	}
 
-	if (Application::IsKeyPressed('F')) // F to leave area at the end of the maze (open door first)
+	if (Application::IsKeyPressedOnce('F')) // F to leave area at the end of the maze (open door first)
 	{
 		if (camera.position.x <= 29 && camera.position.x >= 24 && camera.position.z <= 53 && camera.position.z >= 45 && sceneBools[B_STOP_DOOR_OPEN] == true)
 		{
-			Reset();
 			Application::sceneswitch = Application::OVERWORLD; // f will bring you back to overworld
 			Application::previousscene = Application::SCENEWALTON;
 			Player::setMazeComplete(true);

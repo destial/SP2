@@ -41,6 +41,10 @@ int Player::sword;
 int Player::armourplate;
 int Player::helmet;
 bool Player::jetpackequipped;
+bool Player::SharkSurvived;
+bool Player::MazeComplete;
+bool Player::BookPurchased;
+bool Player::ShootingComplete;
 
 unsigned Player::getAmmo() {
 	return ammo;
@@ -69,9 +73,29 @@ int Player::getHelmet()
 	return helmet;
 }
 
-int Player::getJetpack()
+bool Player::getJetpack()
 {
 	return jetpackequipped;
+}
+
+bool Player::getSharkSurvived()
+{
+	return SharkSurvived;
+}
+
+bool Player::getMazeComplete()
+{
+	return MazeComplete;
+}
+
+bool Player::getBookPurchased()
+{
+	return BookPurchased;
+}
+
+bool Player::getShootingComplete()
+{
+	return ShootingComplete;
 }
 
 void Player::setAmmo(unsigned a) {
@@ -103,6 +127,26 @@ void Player::setHelmet(int ht)
 void Player::setJetpack(bool jp)
 {
 	jetpackequipped = jp;
+}
+
+void Player::setSharkSurvived(bool Ss)
+{
+	SharkSurvived = Ss;
+}
+
+void Player::setMazeComplete(bool Mc)
+{
+	MazeComplete = Mc;
+}
+
+void Player::setBookPurchased(bool Bp)
+{
+	BookPurchased = Bp;
+}
+
+void Player::setShootingComplete(bool Sc)
+{
+	ShootingComplete = Sc;
 }
 
 std::set<unsigned short> Application::activeKeys;
@@ -258,6 +302,10 @@ void Application::Init() {
 	Player::setAmmo(256);
 	Player::setHealth(100);
 	Player::setJetpack(false);
+	Player::setSharkSurvived(false);
+	Player::setMazeComplete(false);
+	Player::setBookPurchased(false);
+	Player::setShootingComplete(false);
 	// sword armour and helmet all zero so dun need initalise
 	m_window = glfwCreateWindow(m_width, m_height, "SP2 - Group 2", NULL, NULL);
 	quit = restart = false;

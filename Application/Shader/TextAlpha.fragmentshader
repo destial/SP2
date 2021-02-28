@@ -27,7 +27,6 @@ struct Material {
 	vec3 kAmbient;
 	vec3 kDiffuse;
 	vec3 kSpecular;
-	float kAlpha;
 	float kShininess;
 };
 

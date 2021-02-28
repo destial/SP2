@@ -296,7 +296,9 @@ void SceneOfTheBeach::Update(double dt, Mouse mouse) {
 
 	if (Application::IsKeyPressed('Y') && sceneBools[OPEN_TEXT_BOX] == true)
 	{
+		
 		Application::sceneswitch = Application::SCENERYAN;
+		Application::previousscene = Application::SCENEBEACH;
 	}
 
 	//Crab movement 

@@ -409,6 +409,7 @@ void SceneShaqler::Update(double dt, Mouse mouse) {
 			sceneBools[B_IS_BUYING] = false; // without this statement, money will continue to go down if player keeps pressing y near the counter
 			sceneBools[B_BOOK_BOUGHT] = true; // since bbookbaught == true now, player cant repeat purchase interaction again
 			Player::setMoney(Player::getMoney() - 30); // money decreases
+			Player::setBookPurchased(true);
 		}
 
 		if (sceneBools[B_FINDMONEY] == true)
@@ -749,9 +750,6 @@ void SceneShaqler::Render()
 	Mtx44 view;
 	view.SetToPerspective(camera.orthographic_size, Application::GetWindowWidth() / Application::GetWindowHeight(), 0.1f, 1000.f);
 	projectionStack.LoadMatrix(view);
-	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();
 	RenderSkybox();
 
 	// objects and npcs below
@@ -1004,21 +1002,6 @@ void SceneShaqler::RenderText()
 	modelStack.PopMatrix();
 
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::BLACK, 200, 0, 500);
-
-	std::stringstream ssX;
-	std::stringstream ssY;
-	std::stringstream ssZ;
-	ssX.precision(3);
-	ssX << "X:" << camera.position.x;
-	ssX.precision(3);
-	ssX << "Y:" << camera.position.y;
-	ssZ.precision(3);
-	ssZ << "Z:" << camera.position.z;
-
-	modelStack.PushMatrix();
-	modelStack.Scale(2, 2, 2);
-	RenderTextOnScreen(meshList[GEO_TEXT], ssX.str() + ssY.str() + ssZ.str(), Color(0.863, 0.078, 0.235), 2, 0, 7);
-	modelStack.PopMatrix();
 }
 
 // floating book

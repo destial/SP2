@@ -279,8 +279,9 @@ void DistrictScene::RenderMeshOnScreen(Mesh* mesh, float size, float x, float y)
 
 void DistrictScene::Update(double dt, Mouse mouse) {
 
-	if (Application::previousscene != Application::DISTRICT_SCENE) {
+	if (GLcounter == 0) {
 		InitGL();
+		GLcounter++;
 	}
 	// vehicle movement using translate in render
 	sceneFloats[F_TRANSLATE_TRUCK_Z] += (float)(7 * dt); // 3.87 15.7
@@ -1101,4 +1102,5 @@ void DistrictScene::Reset() {
 	sceneBools[B_LEFT_LEG_LIMIT] = false;
 	sceneBools[B_LEFT_LEG_LIMIT_2] = false;
 	sceneBools[B_RIGHT_LEG_LIMIT] = false;
+	GLcounter = 0;
 }

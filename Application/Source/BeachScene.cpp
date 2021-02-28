@@ -377,6 +377,10 @@ void BeachScene::Update(double dt, Mouse mouse) {
 		// Set the correct target according to player's position and set the car speed to 0
 		camera.target = camera.position + view;
 	}
+	if (GLcounter == 0) {
+		InitGL();
+		GLcounter++;
+	}
 
 }
 
@@ -879,4 +883,5 @@ void BeachScene::Reset() {
 	for (unsigned i = 0; i < NUM_SCENE_FLOATS; i++) {
 		sceneFloats[i] = 0;
 	}
+	GLcounter = 0;
 }

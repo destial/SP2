@@ -152,6 +152,7 @@ private:
 	float sceneFloats[NUM_SCENE_FLOATS];
 
 	int countChest;
+	int GLcounter;
 
 	Mesh* meshList[NUM_GEOMETRY];
 	SceneManager* sceneManager;

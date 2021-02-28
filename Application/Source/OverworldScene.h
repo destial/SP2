@@ -133,6 +133,7 @@ private:
 	float translateSphereZ4;
 	float translateSphereX1;
 	float translateSphereX2;
+	int GLcounter;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);

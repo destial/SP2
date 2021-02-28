@@ -131,6 +131,7 @@ private:
 	Vector3 GunOrigin;	
 	int tempspin;
 	int dummycounter;
+	int GLcounter;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);

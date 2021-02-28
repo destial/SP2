@@ -135,6 +135,7 @@ private:
 	Mesh* meshList[NUM_GEOMETRY];
 	Light light[2];
 	Camera3 camera;
+	int GLcounter;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 	void RenderText(Mesh* mesh, std::string text, Color color);

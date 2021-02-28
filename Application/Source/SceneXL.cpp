@@ -956,14 +956,19 @@ void SceneXL::Render()
 
 	RenderSurroundings();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(120, 0.1, -30.5);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(0.3, 3, 1.6);
+	RenderMesh(meshList[GEO_ROAD], false);
+	modelStack.PopMatrix(); //road
+
 	DetectRobot();
 	RenderRobot();
 	RenderMeshOnScreen(meshList[GEO_UI2], 40, 40, 7);
 	RenderTextOnScreen(meshList[GEO_TEXT], ".", Colors::WHITE, 0, 0, 0);
 	RenderJetpack();
 	DetectJetpack();
-
-
 
 	DetectGnome();
 	RenderGnome();
@@ -986,12 +991,7 @@ void SceneXL::Render()
 	RenderText(meshList[GEO_TEXT], "This way back to the City!", Colors::BLACK);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(120, 0.1, -30.5);
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.3, 3, 1.6);
-	RenderMesh(meshList[GEO_ROAD], false);
-	modelStack.PopMatrix(); //road
+
 }
 
 void SceneXL::RenderUI() {

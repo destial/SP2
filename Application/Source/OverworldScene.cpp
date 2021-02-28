@@ -357,7 +357,6 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 
 	if (Player::getSharkSurvived() == true && Player::getMazeComplete() == true && Player::getBookPurchased() == true && Player::getShootingComplete() == true)
 	{
-		Reset();
 		Application::sceneswitch = Application::WINSCENE;
 		Application::previousscene = Application::OVERWORLD;
 	}
@@ -1490,8 +1489,8 @@ void OverworldScene::Render() {
 
 	RenderSkybox();
 	RenderObjects();
-	RenderTasks();
 	RenderRobo();
+	RenderTasks();
 	RenderTeleportText();
 	RenderUI();
 	if (currentCarObject) {

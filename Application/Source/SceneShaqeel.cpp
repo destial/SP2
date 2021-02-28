@@ -412,7 +412,6 @@ void SceneShaqeel::Update(double dt, Mouse mouse) {
 		camera.position.z <= 30 &&
 		camera.position.z >= 24)
 	{
-		Reset();
 		Application::sceneswitch = Application::OVERWORLD;
 		Application::previousscene = Application::SCENESHAQ;
 	}

@@ -334,7 +334,7 @@ void OverworldScene::Update(double dt, Mouse mouse) {
 
 	meshList[MOON]->transform.translate = camera.position;
 	meshList[MOON]->transform.translate.y = camera.position.y + (2 * camera.bounds);
-	
+
 	if (Application::previousscene != Application::OVERWORLD) {
 		InitGL();
 	}

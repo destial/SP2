@@ -396,7 +396,7 @@ void SceneXL::RenderSurroundings() //scene decorations
 	modelStack.PopMatrix(); //tea cup 2
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-110, 0, -65);
+	modelStack.Translate(-110, 0, -28.3);
 	//modelStack.Rotate(RotateAngle, 0, 1, 0);
 	modelStack.Scale(0.3, 0.3, 0.3);
 	RenderMesh(meshList[GEO_TEACUPSHEL], true);
@@ -585,12 +585,18 @@ void SceneXL::Update(double dt, Mouse mouse) {
 				bullets.erase(b);
 				targetList.erase(d);
 				hit = true;
+				dummycounter++;
 				break;
 			}
 		}
 		if (hit) break;
 	}
 	
+	if (dummycounter == targetList.size() && Player::getShootingComplete() == false)
+	{
+		Player::setShootingComplete(true);
+	}
+
 	Minigun();
 	if (camera.position.x <= 50 &&
 		camera.position.x >= 36 &&
@@ -977,7 +983,7 @@ void SceneXL::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(50, 20,-38.5);
 	modelStack.Rotate(-90, 0, 1, 0);
-	RenderText(meshList[GEO_TEXT], "This way to the Beach!", Colors::BLACK);
+	RenderText(meshList[GEO_TEXT], "This way back to the City!", Colors::BLACK);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -1079,4 +1085,6 @@ void SceneXL::Reset() {
 
 		targetList.push_back(temp);
 	}
+	dummycounter = 0;
+	tempspin = 0;
 }

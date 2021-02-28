@@ -396,7 +396,7 @@ void SceneXL::RenderSurroundings() //scene decorations
 	modelStack.PopMatrix(); //tea cup 2
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-110, 0, -65);
+	modelStack.Translate(-110, 0, -28.3);
 	//modelStack.Rotate(RotateAngle, 0, 1, 0);
 	modelStack.Scale(0.3, 0.3, 0.3);
 	RenderMesh(meshList[GEO_TEACUPSHEL], true);
@@ -992,7 +992,7 @@ void SceneXL::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(50, 20,-38.5);
 	modelStack.Rotate(-90, 0, 1, 0);
-	RenderText(meshList[GEO_TEXT], "This way to the Beach!", Colors::BLACK);
+	RenderText(meshList[GEO_TEXT], "This way to the Beachshelt!", Colors::BLACK);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
